@@ -26,6 +26,7 @@ interface CanvasProps {
 
 export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const boundsRef = useRef<DOMRect | null>(null);
   const [scale, setScale] = useState(0.5);
 
   const slide = useEditorStore((s) => s.getActiveSlide());
@@ -82,11 +83,14 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
     }
   }
 
+  function handlePointerEnter(e: React.PointerEvent) {
+    boundsRef.current = e.currentTarget.getBoundingClientRect();
+  }
+
   function handlePointerMove(e: React.PointerEvent) {
-    if (!onCursorMove) return;
-    const bounds = e.currentTarget.getBoundingClientRect();
-    const x = (e.clientX - bounds.left) / scale;
-    const y = (e.clientY - bounds.top) / scale;
+    if (!onCursorMove || !boundsRef.current) return;
+    const x = (e.clientX - boundsRef.current.left) / scale;
+    const y = (e.clientY - boundsRef.current.top) / scale;
     onCursorMove(x, y, activeSlideIndex);
   }
 
@@ -108,6 +112,7 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
           boxShadow: "0 2px 20px rgba(0,0,0,0.1)",
         }}
         onPointerDown={handleCanvasClick}
+        onPointerEnter={handlePointerEnter}
         onPointerMove={handlePointerMove}
         onPointerLeave={onCursorLeave}
       >

@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useState, memo } from "react";
+import { useRef, useState, memo, useMemo } from "react";
+import DOMPurify from "dompurify";
 import { useEditorStore } from "@/store/editorStore";
 import type { SlideElement, TextElement, ShapeElement } from "@/types/elements";
 
@@ -118,6 +119,10 @@ function TextRenderer({
   onBlur: (e: React.FocusEvent<HTMLDivElement>) => void;
 }) {
   const alignMap = { top: "flex-start", middle: "center", bottom: "flex-end" };
+  const sanitized = useMemo(
+    () => DOMPurify.sanitize(element.content),
+    [element.content]
+  );
 
   return (
     <div
@@ -142,9 +147,10 @@ function TextRenderer({
         wordBreak: "break-word",
       }}
     >
-      <span style={{ width: "100%", textAlign: element.textAlign }}>
-        {element.content}
-      </span>
+      <span
+        style={{ width: "100%", textAlign: element.textAlign }}
+        dangerouslySetInnerHTML={{ __html: sanitized }}
+      />
     </div>
   );
 }

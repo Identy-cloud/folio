@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import DOMPurify from "dompurify";
 import type { SlideElement, TextElement, ShapeElement } from "@/types/elements";
 
 const SLIDE_W = 1920;
@@ -187,6 +188,10 @@ function ViewerElement({ element }: { element: SlideElement }) {
 
 function ViewerText({ element }: { element: TextElement }) {
   const alignMap = { top: "flex-start", middle: "center", bottom: "flex-end" };
+  const sanitized = useMemo(
+    () => DOMPurify.sanitize(element.content),
+    [element.content]
+  );
   return (
     <div
       style={{
@@ -205,9 +210,10 @@ function ViewerText({ element }: { element: TextElement }) {
         wordBreak: "break-word",
       }}
     >
-      <span style={{ width: "100%", textAlign: element.textAlign }}>
-        {element.content}
-      </span>
+      <span
+        style={{ width: "100%", textAlign: element.textAlign }}
+        dangerouslySetInnerHTML={{ __html: sanitized }}
+      />
     </div>
   );
 }
