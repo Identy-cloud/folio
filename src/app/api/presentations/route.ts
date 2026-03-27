@@ -14,18 +14,23 @@ const createSchema = z.object({
 });
 
 export async function GET() {
-  const user = await getAuthenticatedUser();
-  if (!user) {
-    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  try {
+    const user = await getAuthenticatedUser();
+    if (!user) {
+      return Response.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const result = await db
+      .select()
+      .from(presentations)
+      .where(eq(presentations.userId, user.id))
+      .orderBy(desc(presentations.updatedAt));
+
+    return Response.json(result);
+  } catch (e) {
+    const message = e instanceof Error ? e.message : String(e);
+    return Response.json({ error: "Internal error", details: message }, { status: 500 });
   }
-
-  const result = await db
-    .select()
-    .from(presentations)
-    .where(eq(presentations.userId, user.id))
-    .orderBy(desc(presentations.updatedAt));
-
-  return Response.json(result);
 }
 
 export async function POST(request: Request) {
