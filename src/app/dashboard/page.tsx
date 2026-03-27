@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
 import { PresentationCard } from "./presentation-card";
 import { SkeletonGrid } from "./skeleton-grid";
+import { TemplateModal } from "./template-modal";
 
 interface Presentation {
   id: string;
@@ -16,10 +16,9 @@ interface Presentation {
 }
 
 export default function DashboardPage() {
-  const router = useRouter();
   const [presentations, setPresentations] = useState<Presentation[]>([]);
   const [loading, setLoading] = useState(true);
-  const [creating, setCreating] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const fetchPresentations = useCallback(async () => {
     const res = await fetch("/api/presentations");
@@ -33,29 +32,19 @@ export default function DashboardPage() {
     fetchPresentations();
   }, [fetchPresentations]);
 
-  async function handleCreate() {
-    setCreating(true);
-    const res = await fetch("/api/presentations", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({}),
-    });
-    if (res.ok) {
-      const p = await res.json();
-      router.push(`/editor/${p.id}`);
-    }
-    setCreating(false);
-  }
-
   async function handleDuplicate(id: string) {
     const original = presentations.find((p) => p.id === id);
     if (!original) return;
-    const res = await fetch("/api/presentations", {
+    await fetch("/api/presentations", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title: `${original.title} (copia)`, theme: original.theme }),
+      body: JSON.stringify({
+        title: `${original.title} (copia)`,
+        theme: original.theme,
+        useTemplate: false,
+      }),
     });
-    if (res.ok) fetchPresentations();
+    fetchPresentations();
   }
 
   async function handleRename(id: string) {
@@ -94,11 +83,10 @@ export default function DashboardPage() {
           MIS PRESENTACIONES
         </h2>
         <button
-          onClick={handleCreate}
-          disabled={creating}
-          className="bg-neutral-900 px-6 py-2.5 text-sm font-medium tracking-widest text-white uppercase hover:bg-neutral-700 disabled:opacity-50 transition-colors"
+          onClick={() => setModalOpen(true)}
+          className="bg-neutral-900 px-6 py-2.5 text-sm font-medium tracking-widest text-white uppercase hover:bg-neutral-700 transition-colors"
         >
-          {creating ? "Creando..." : "+ Nueva presentación"}
+          + Nueva presentación
         </button>
       </div>
 
@@ -111,9 +99,8 @@ export default function DashboardPage() {
             Crea tu primera presentación para empezar
           </p>
           <button
-            onClick={handleCreate}
-            disabled={creating}
-            className="mt-6 bg-neutral-900 px-8 py-3 text-sm font-medium tracking-widest text-white uppercase hover:bg-neutral-700 disabled:opacity-50 transition-colors"
+            onClick={() => setModalOpen(true)}
+            className="mt-6 bg-neutral-900 px-8 py-3 text-sm font-medium tracking-widest text-white uppercase hover:bg-neutral-700 transition-colors"
           >
             Crear presentación
           </button>
@@ -132,6 +119,11 @@ export default function DashboardPage() {
           ))}
         </div>
       )}
+
+      <TemplateModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+      />
     </div>
   );
 }
