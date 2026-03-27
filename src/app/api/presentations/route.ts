@@ -3,7 +3,15 @@ import { presentations, slides } from "@/db/schema";
 import { getAuthenticatedUser } from "@/lib/auth";
 import { eq, desc } from "drizzle-orm";
 import { nanoid } from "nanoid";
+import { z } from "zod";
 import { generateTemplate } from "@/lib/templates/generator";
+import { THEMES } from "@/lib/templates/themes";
+
+const createSchema = z.object({
+  title: z.string().max(255).optional(),
+  theme: z.enum(Object.keys(THEMES) as [string, ...string[]]).optional(),
+  useTemplate: z.boolean().optional(),
+});
 
 export async function GET() {
   const user = await getAuthenticatedUser();
@@ -26,10 +34,15 @@ export async function POST(request: Request) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const body = await request.json().catch(() => ({}));
-  const title = (body.title as string) || "Sin título";
-  const theme = (body.theme as string) || "editorial-blue";
-  const useTemplate = body.useTemplate !== false;
+  const raw = await request.json().catch(() => ({}));
+  const parsed = createSchema.safeParse(raw);
+  if (!parsed.success) {
+    return Response.json({ error: "Invalid input", details: parsed.error.flatten() }, { status: 400 });
+  }
+
+  const title = parsed.data.title ?? "Sin título";
+  const theme = parsed.data.theme ?? "editorial-blue";
+  const useTemplate = parsed.data.useTemplate !== false;
 
   const [presentation] = await db
     .insert(presentations)

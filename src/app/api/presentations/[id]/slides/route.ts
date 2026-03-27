@@ -2,7 +2,18 @@ import { db } from "@/db";
 import { slides, presentations } from "@/db/schema";
 import { getAuthenticatedUser } from "@/lib/auth";
 import { and, eq, asc } from "drizzle-orm";
+import { z } from "zod";
 import type { NextRequest } from "next/server";
+
+const slideSchema = z.object({
+  id: z.string().min(1),
+  order: z.number().int().min(0),
+  backgroundColor: z.string().max(50),
+  backgroundImage: z.string().url().nullable(),
+  elements: z.array(z.record(z.string(), z.unknown())),
+});
+
+const putSlidesSchema = z.array(slideSchema).max(200);
 
 export async function GET(
   _request: NextRequest,
@@ -47,19 +58,17 @@ export async function PUT(
 
   if (!pres) return Response.json({ error: "Not found" }, { status: 404 });
 
-  const body: Array<{
-    id: string;
-    order: number;
-    backgroundColor: string;
-    backgroundImage: string | null;
-    elements: unknown[];
-  }> = await request.json();
+  const raw = await request.json().catch(() => null);
+  const parsed = putSlidesSchema.safeParse(raw);
+  if (!parsed.success) {
+    return Response.json({ error: "Invalid slides data", details: parsed.error.flatten() }, { status: 400 });
+  }
 
   await db.delete(slides).where(eq(slides.presentationId, id));
 
-  if (body.length > 0) {
+  if (parsed.data.length > 0) {
     await db.insert(slides).values(
-      body.map((s) => ({
+      parsed.data.map((s) => ({
         id: s.id,
         presentationId: id,
         order: s.order,
