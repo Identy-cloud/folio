@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, memo } from "react";
 import { useEditorStore } from "@/store/editorStore";
 import type { SlideElement, TextElement, ShapeElement } from "@/types/elements";
 
@@ -10,7 +10,7 @@ interface Props {
   isSelected: boolean;
 }
 
-export function CanvasElement({ element, scale, isSelected }: Props) {
+export const CanvasElement = memo(function CanvasElement({ element, scale, isSelected }: Props) {
   const selectElement = useEditorStore((s) => s.selectElement);
   const updateElement = useEditorStore((s) => s.updateElement);
   const pushHistory = useEditorStore((s) => s.pushHistory);
@@ -106,7 +106,7 @@ export function CanvasElement({ element, scale, isSelected }: Props) {
       )}
     </div>
   );
-}
+});
 
 function TextRenderer({
   element,

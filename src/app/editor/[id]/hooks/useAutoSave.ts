@@ -1,6 +1,31 @@
 import { useEffect, useRef } from "react";
 import { useEditorStore } from "@/store/editorStore";
 
+const MAX_RETRIES = 3;
+const BASE_DELAY = 1000;
+
+async function saveWithRetry(presentationId: string, slides: unknown[]) {
+  for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+    try {
+      const res = await fetch(
+        `/api/presentations/${presentationId}/slides`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(slides),
+        }
+      );
+      if (res.ok) return true;
+    } catch {
+      /* retry */
+    }
+    if (attempt < MAX_RETRIES - 1) {
+      await new Promise((r) => setTimeout(r, BASE_DELAY * 2 ** attempt));
+    }
+  }
+  return false;
+}
+
 export function useAutoSave() {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -16,24 +41,12 @@ export function useAutoSave() {
           useEditorStore.getState();
 
         setSaveStatus("saving");
+        const ok = await saveWithRetry(presentationId, slides);
 
-        try {
-          const res = await fetch(
-            `/api/presentations/${presentationId}/slides`,
-            {
-              method: "PUT",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(slides),
-            }
-          );
-
-          if (res.ok) {
-            setSaveStatus("saved");
-            markClean();
-          } else {
-            setSaveStatus("error");
-          }
-        } catch {
+        if (ok) {
+          setSaveStatus("saved");
+          markClean();
+        } else {
           setSaveStatus("error");
         }
       }, 3000);

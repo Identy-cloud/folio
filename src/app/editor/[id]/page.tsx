@@ -3,6 +3,7 @@
 import { useEffect, useState, use } from "react";
 import { useEditorStore } from "@/store/editorStore";
 import { EditorLayout } from "./components/EditorLayout";
+import { EditorErrorBoundary } from "./components/EditorErrorBoundary";
 
 export default function EditorPage({
   params,
@@ -49,5 +50,9 @@ export default function EditorPage({
     );
   }
 
-  return <EditorLayout />;
+  return (
+    <EditorErrorBoundary>
+      <EditorLayout />
+    </EditorErrorBoundary>
+  );
 }
