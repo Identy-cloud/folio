@@ -6,15 +6,30 @@ import { useEditorStore } from "@/store/editorStore";
 import { CanvasElement } from "./CanvasElement";
 import { SelectionBox } from "./SelectionBox";
 import { SnapGuides } from "./SnapGuides";
+import { RemoteCursors } from "./RemoteCursors";
 
 const SLIDE_WIDTH = 1920;
 const SLIDE_HEIGHT = 1080;
 
-export function Canvas() {
+interface AwarenessUser {
+  name: string;
+  color: string;
+  cursor: { x: number; y: number; slideIndex: number } | null;
+  clientId: number;
+}
+
+interface CanvasProps {
+  peers?: AwarenessUser[];
+  onCursorMove?: (x: number, y: number, slideIndex: number) => void;
+  onCursorLeave?: () => void;
+}
+
+export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0.5);
 
   const slide = useEditorStore((s) => s.getActiveSlide());
+  const activeSlideIndex = useEditorStore((s) => s.activeSlideIndex);
   const selectedIds = useEditorStore((s) => s.selectedElementIds);
   const clearSelection = useEditorStore((s) => s.clearSelection);
   const activeTool = useEditorStore((s) => s.activeTool);
@@ -67,6 +82,14 @@ export function Canvas() {
     }
   }
 
+  function handlePointerMove(e: React.PointerEvent) {
+    if (!onCursorMove) return;
+    const bounds = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - bounds.left) / scale;
+    const y = (e.clientY - bounds.top) / scale;
+    onCursorMove(x, y, activeSlideIndex);
+  }
+
   if (!slide) return null;
 
   return (
@@ -85,6 +108,8 @@ export function Canvas() {
           boxShadow: "0 2px 20px rgba(0,0,0,0.1)",
         }}
         onPointerDown={handleCanvasClick}
+        onPointerMove={handlePointerMove}
+        onPointerLeave={onCursorLeave}
       >
         <SnapGuides scale={scale} />
         {slide.elements
@@ -103,6 +128,7 @@ export function Canvas() {
           if (!el) return null;
           return <SelectionBox key={`sel-${id}`} element={el} scale={scale} />;
         })}
+        <RemoteCursors peers={peers} />
       </div>
     </div>
   );

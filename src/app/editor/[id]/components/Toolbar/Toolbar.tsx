@@ -10,7 +10,12 @@ const TOOLS: { id: ActiveTool; label: string }[] = [
   { id: "shape", label: "Forma" },
 ];
 
-export function Toolbar() {
+interface ToolbarProps {
+  connected?: boolean;
+  peerCount?: number;
+}
+
+export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
   const activeTool = useEditorStore((s) => s.activeTool);
   const setActiveTool = useEditorStore((s) => s.setActiveTool);
   const undo = useEditorStore((s) => s.undo);
@@ -74,9 +79,24 @@ export function Toolbar() {
           ))}
         </div>
       </div>
-      <span className={`text-xs ${statusColor[saveStatus]}`}>
-        {statusText[saveStatus]}
-      </span>
+      <div className="flex items-center gap-4">
+        {peerCount > 0 && (
+          <span className="text-xs text-neutral-400">
+            {peerCount} colaborador{peerCount > 1 ? "es" : ""}
+          </span>
+        )}
+        {connected !== undefined && (
+          <span
+            className={`inline-block h-2 w-2 rounded-full ${
+              connected ? "bg-green-500" : "bg-neutral-300"
+            }`}
+            title={connected ? "Conectado" : "Desconectado"}
+          />
+        )}
+        <span className={`text-xs ${statusColor[saveStatus]}`}>
+          {statusText[saveStatus]}
+        </span>
+      </div>
     </div>
   );
 }
