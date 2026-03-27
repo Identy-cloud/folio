@@ -1,21 +1,53 @@
-export default async function EditorPage({
+"use client";
+
+import { useEffect, useState, use } from "react";
+import { useEditorStore } from "@/store/editorStore";
+import { EditorLayout } from "./components/EditorLayout";
+
+export default function EditorPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const { id } = await params;
+  const { id } = use(params);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const init = useEditorStore((s) => s.init);
 
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-neutral-100">
-      <div className="text-center">
-        <h1 className="font-display text-5xl tracking-tight">EDITOR</h1>
-        <p className="mt-2 text-sm text-neutral-500">
-          Presentación: {id}
-        </p>
-        <p className="mt-1 text-xs text-neutral-400">
-          Se implementará en Fase 3
-        </p>
+  useEffect(() => {
+    async function load() {
+      try {
+        const res = await fetch(`/api/presentations/${id}/slides`);
+        if (!res.ok) {
+          setError("No se pudo cargar la presentación");
+          return;
+        }
+        const slides = await res.json();
+        init(id, slides);
+      } catch {
+        setError("Error de conexión");
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, [id, init]);
+
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-neutral-100">
+        <p className="text-sm text-neutral-500">Cargando editor...</p>
       </div>
-    </div>
-  );
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-neutral-100">
+        <p className="text-sm text-red-500">{error}</p>
+      </div>
+    );
+  }
+
+  return <EditorLayout />;
 }

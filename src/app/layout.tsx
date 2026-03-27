@@ -14,7 +14,7 @@ const bebasNeue = Bebas_Neue({
 });
 
 export const metadata: Metadata = {
-  title: "Editorial Slides",
+  title: "Folio — Editorial Slides",
   description:
     "Presentaciones con estética editorial de agencia",
 };

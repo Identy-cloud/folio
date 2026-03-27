@@ -25,7 +25,7 @@ export default async function DashboardLayout({
     <div className="flex min-h-full flex-col bg-neutral-50">
       <header className="flex h-16 items-center justify-between border-b border-neutral-200 bg-white px-6">
         <h1 className="font-display text-2xl tracking-tight">
-          EDITORIAL SLIDES
+          FOLIO
         </h1>
         <div className="flex items-center gap-4">
           <span className="text-sm text-neutral-600">

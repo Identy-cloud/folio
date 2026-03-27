@@ -52,25 +52,26 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-full items-center justify-center bg-[#0a0a0a] px-4">
-      <div className="w-full max-w-md space-y-8">
+    <div className="flex min-h-screen items-center justify-center bg-[#0a0a0a] px-4">
+      <div className="w-full max-w-sm space-y-10">
         <div className="text-center">
-          <h1 className="font-display text-7xl tracking-tight text-white">
-            EDITORIAL
+          <h1 className="font-display text-8xl tracking-tight text-white leading-none">
+            FOLIO
           </h1>
-          <p className="mt-2 text-sm tracking-widest text-neutral-400 uppercase">
-            Slides
+          <p className="mt-1 text-[11px] tracking-[0.4em] text-neutral-500 uppercase">
+            Editorial Slides
           </p>
+          <div className="mx-auto mt-6 h-px w-12 bg-neutral-700" />
         </div>
 
-        <form onSubmit={handleEmailAuth} className="space-y-4">
+        <form onSubmit={handleEmailAuth} className="space-y-3">
           <input
             type="email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full rounded-none border border-neutral-700 bg-neutral-900 px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none focus:border-white transition-colors"
+            className="w-full border-b border-neutral-700 bg-transparent px-1 py-3 text-sm text-white placeholder-neutral-600 outline-none focus:border-white transition-colors"
           />
           <input
             type="password"
@@ -79,17 +80,17 @@ export default function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
             required
             minLength={6}
-            className="w-full rounded-none border border-neutral-700 bg-neutral-900 px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none focus:border-white transition-colors"
+            className="w-full border-b border-neutral-700 bg-transparent px-1 py-3 text-sm text-white placeholder-neutral-600 outline-none focus:border-white transition-colors"
           />
 
           {error && (
-            <p className="text-sm text-red-400">{error}</p>
+            <p className="pt-2 text-xs text-red-400">{error}</p>
           )}
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-white py-3 text-sm font-medium tracking-widest text-black uppercase hover:bg-neutral-200 disabled:opacity-50 transition-colors"
+            className="mt-4 w-full bg-white py-3 text-xs font-semibold tracking-[0.25em] text-black uppercase hover:bg-neutral-200 disabled:opacity-50 transition-colors"
           >
             {loading
               ? "..."
@@ -103,8 +104,8 @@ export default function LoginPage() {
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-neutral-800" />
           </div>
-          <div className="relative flex justify-center text-xs">
-            <span className="bg-[#0a0a0a] px-4 text-neutral-500 uppercase tracking-widest">
+          <div className="relative flex justify-center">
+            <span className="bg-[#0a0a0a] px-4 text-[10px] text-neutral-600 uppercase tracking-[0.3em]">
               o
             </span>
           </div>
@@ -112,19 +113,19 @@ export default function LoginPage() {
 
         <button
           onClick={handleGoogleLogin}
-          className="w-full border border-neutral-700 py-3 text-sm tracking-widest text-neutral-300 uppercase hover:border-white hover:text-white transition-colors"
+          className="w-full border border-neutral-700 py-3 text-xs tracking-[0.25em] text-neutral-400 uppercase hover:border-white hover:text-white transition-colors"
         >
           Continuar con Google
         </button>
 
-        <p className="text-center text-xs text-neutral-500">
+        <p className="text-center text-[11px] text-neutral-600">
           {isSignUp ? "¿Ya tienes cuenta?" : "¿No tienes cuenta?"}{" "}
           <button
             onClick={() => {
               setIsSignUp(!isSignUp);
               setError(null);
             }}
-            className="text-white underline underline-offset-4 hover:text-neutral-300"
+            className="text-neutral-300 underline underline-offset-4 hover:text-white transition-colors"
           >
             {isSignUp ? "Inicia sesión" : "Regístrate"}
           </button>
