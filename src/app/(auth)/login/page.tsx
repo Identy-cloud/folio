@@ -6,7 +6,6 @@ import { useState } from "react";
 
 export default function LoginPage() {
   const router = useRouter();
-  const supabase = createClient();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
@@ -17,6 +16,7 @@ export default function LoginPage() {
     e.preventDefault();
     setError(null);
     setLoading(true);
+    const supabase = createClient();
 
     try {
       const { error: authError } = isSignUp
@@ -45,6 +45,7 @@ export default function LoginPage() {
   }
 
   async function handleGoogleLogin() {
+    const supabase = createClient();
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: { redirectTo: `${window.location.origin}/auth/callback` },
