@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { LogoutButton } from "./logout-button";
@@ -32,10 +33,12 @@ export default async function DashboardLayout({
             {user.user_metadata?.full_name ?? user.email}
           </span>
           {user.user_metadata?.avatar_url ? (
-            <img
+            <Image
               src={user.user_metadata.avatar_url}
               alt=""
-              className="h-8 w-8 rounded-full"
+              width={32}
+              height={32}
+              className="rounded-full"
             />
           ) : (
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-900 text-xs font-medium text-white">

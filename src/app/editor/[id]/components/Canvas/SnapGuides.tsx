@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import { useEditorStore } from "@/store/editorStore";
 
 const SLIDE_WIDTH = 1920;
@@ -11,7 +12,7 @@ interface Guide {
   pos: number;
 }
 
-export function SnapGuides({ scale }: { scale: number }) {
+export const SnapGuides = memo(function SnapGuides({ scale }: { scale: number }) {
   const slide = useEditorStore((s) => s.getActiveSlide());
   const selectedIds = useEditorStore((s) => s.selectedElementIds);
 
@@ -78,4 +79,4 @@ export function SnapGuides({ scale }: { scale: number }) {
       )}
     </>
   );
-}
+});

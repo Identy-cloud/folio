@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, memo } from "react";
 import { useEditorStore } from "@/store/editorStore";
 import type { SlideElement } from "@/types/elements";
 
@@ -22,7 +22,7 @@ interface Props {
   scale: number;
 }
 
-export function SelectionBox({ element, scale }: Props) {
+export const SelectionBox = memo(function SelectionBox({ element, scale }: Props) {
   const updateElement = useEditorStore((s) => s.updateElement);
   const pushHistory = useEditorStore((s) => s.pushHistory);
 
@@ -176,4 +176,4 @@ export function SelectionBox({ element, scale }: Props) {
       />
     </div>
   );
-}
+});

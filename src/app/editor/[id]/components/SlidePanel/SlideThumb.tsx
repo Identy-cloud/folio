@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import type { Slide } from "@/types/elements";
 
 interface Props {
@@ -10,7 +11,7 @@ interface Props {
   onDelete?: () => void;
 }
 
-export function SlideThumb({ slide, index, isActive, onClick, onDelete }: Props) {
+export const SlideThumb = memo(function SlideThumb({ slide, index, isActive, onClick, onDelete }: Props) {
   return (
     <div
       onClick={onClick}
@@ -46,4 +47,4 @@ export function SlideThumb({ slide, index, isActive, onClick, onDelete }: Props)
       )}
     </div>
   );
-}
+});

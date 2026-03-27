@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import { useEditorStore } from "@/store/editorStore";
 
 interface AwarenessUser {
@@ -13,7 +14,7 @@ interface Props {
   peers: AwarenessUser[];
 }
 
-export function RemoteCursors({ peers }: Props) {
+export const RemoteCursors = memo(function RemoteCursors({ peers }: Props) {
   const activeSlideIndex = useEditorStore((s) => s.activeSlideIndex);
 
   const visible = peers.filter(
@@ -65,4 +66,4 @@ export function RemoteCursors({ peers }: Props) {
       ))}
     </>
   );
-}
+});
