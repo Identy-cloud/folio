@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { THEMES } from "@/lib/templates/themes";
+import { toast } from "sonner";
 
 interface Props {
   open: boolean;
@@ -19,30 +20,46 @@ export function TemplateModal({ open, onClose }: Props) {
 
   async function handleSelect(themeKey: string) {
     setCreating(themeKey);
-    const res = await fetch("/api/presentations", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ theme: themeKey, useTemplate: true }),
-    });
-    if (res.ok) {
-      const p = await res.json();
-      router.push(`/editor/${p.id}`);
+    try {
+      const res = await fetch("/api/presentations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ theme: themeKey, useTemplate: true }),
+      });
+      if (res.ok) {
+        const p = await res.json();
+        router.push(`/editor/${p.id}`);
+        router.refresh();
+      } else {
+        toast.error("Error al crear presentación");
+        setCreating(null);
+      }
+    } catch {
+      toast.error("Error de conexión");
+      setCreating(null);
     }
-    setCreating(null);
   }
 
   async function handleBlank() {
     setCreating("blank");
-    const res = await fetch("/api/presentations", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ useTemplate: false }),
-    });
-    if (res.ok) {
-      const p = await res.json();
-      router.push(`/editor/${p.id}`);
+    try {
+      const res = await fetch("/api/presentations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ useTemplate: false }),
+      });
+      if (res.ok) {
+        const p = await res.json();
+        router.push(`/editor/${p.id}`);
+        router.refresh();
+      } else {
+        toast.error("Error al crear presentación");
+        setCreating(null);
+      }
+    } catch {
+      toast.error("Error de conexión");
+      setCreating(null);
     }
-    setCreating(null);
   }
 
   return (
@@ -59,7 +76,8 @@ export function TemplateModal({ open, onClose }: Props) {
           </div>
           <button
             onClick={onClose}
-            className="text-neutral-400 hover:text-neutral-900 text-xl leading-none"
+            disabled={creating !== null}
+            className="text-neutral-400 hover:text-neutral-900 text-xl leading-none disabled:opacity-30"
           >
             ×
           </button>
@@ -124,6 +142,11 @@ export function TemplateModal({ open, onClose }: Props) {
                 En blanco
               </span>
             </div>
+            {creating === "blank" && (
+              <div className="absolute inset-0 flex items-center justify-center bg-white/80">
+                <span className="text-xs text-neutral-500">Creando...</span>
+              </div>
+            )}
           </button>
         </div>
       </div>

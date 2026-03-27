@@ -52,7 +52,7 @@ export function PresentationCard({
   const bg = THEME_COLORS[presentation.theme] ?? "bg-neutral-800";
 
   return (
-    <div className="group relative flex flex-col overflow-hidden border border-neutral-200 bg-white transition-shadow hover:shadow-lg">
+    <div className="group relative flex flex-col border border-neutral-200 bg-white transition-shadow hover:shadow-lg">
       <Link href={`/editor/${presentation.id}`} className="block">
         <div
           className={`flex aspect-video items-center justify-center ${bg}`}
@@ -78,7 +78,7 @@ export function PresentationCard({
         <div ref={menuRef} className="relative">
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="ml-2 rounded p-1 text-neutral-400 hover:bg-neutral-100 hover:text-neutral-700"
+            className="ml-2 rounded p-1.5 text-neutral-400 hover:bg-neutral-100 hover:text-neutral-700"
           >
             <svg
               width="16"
@@ -93,7 +93,7 @@ export function PresentationCard({
           </button>
 
           {menuOpen && (
-            <div className="absolute right-0 top-8 z-10 w-44 border border-neutral-200 bg-white py-1 shadow-lg">
+            <div className="absolute right-0 bottom-full mb-1 z-50 w-44 border border-neutral-200 bg-white py-1 shadow-lg rounded">
               <MenuItem
                 label="Renombrar"
                 onClick={() => {
