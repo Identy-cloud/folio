@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { toast } from "sonner";
 import { useEditorStore } from "@/store/editorStore";
 
 const MAX_RETRIES = 3;
@@ -48,6 +49,7 @@ export function useAutoSave() {
           markClean();
         } else {
           setSaveStatus("error");
+          toast.error("Error al guardar. Revisa tu conexión.");
         }
       }, 3000);
     });

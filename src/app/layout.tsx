@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { DM_Sans, Bebas_Neue } from "next/font/google";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 const dmSans = DM_Sans({
@@ -31,7 +32,10 @@ export default function RootLayout({
       lang="es"
       className={`${dmSans.variable} ${bebasNeue.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans">{children}</body>
+      <body className="min-h-full flex flex-col font-sans">
+        {children}
+        <Toaster position="bottom-right" richColors />
+      </body>
     </html>
   );
 }

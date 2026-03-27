@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { toast } from "sonner";
 import { PresentationCard } from "./presentation-card";
 import { SkeletonGrid } from "./skeleton-grid";
 import { TemplateModal } from "./template-modal";
@@ -51,26 +52,32 @@ export default function DashboardPage() {
     const current = presentations.find((p) => p.id === id);
     const title = prompt("Nuevo título:", current?.title);
     if (!title) return;
-    await fetch(`/api/presentations/${id}`, {
+    const res = await fetch(`/api/presentations/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title }),
     });
+    if (res.ok) toast.success("Renombrada");
+    else toast.error("Error al renombrar");
     fetchPresentations();
   }
 
   async function handleDelete(id: string) {
     if (!confirm("¿Eliminar esta presentación?")) return;
-    await fetch(`/api/presentations/${id}`, { method: "DELETE" });
+    const res = await fetch(`/api/presentations/${id}`, { method: "DELETE" });
+    if (res.ok) toast.success("Eliminada");
+    else toast.error("Error al eliminar");
     fetchPresentations();
   }
 
   async function handleTogglePublic(id: string, isPublic: boolean) {
-    await fetch(`/api/presentations/${id}`, {
+    const res = await fetch(`/api/presentations/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ isPublic: !isPublic }),
     });
+    if (res.ok) toast.success(isPublic ? "Ahora es privada" : "Ahora es pública");
+    else toast.error("Error al cambiar visibilidad");
     fetchPresentations();
   }
 
