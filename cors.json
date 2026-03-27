@@ -1,0 +1,15 @@
+{
+  "rules": [
+    {
+      "allowed": {
+        "origins": [
+          "http://localhost:3000",
+          "https://*.vercel.app"
+        ],
+        "methods": ["GET", "PUT", "POST", "DELETE"],
+        "headers": ["*"]
+      },
+      "maxAgeSeconds": 3000
+    }
+  ]
+}

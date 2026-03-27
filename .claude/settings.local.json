@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx:*)",
+      "Bash(yes)",
+      "Bash(npm install:*)",
+      "Bash(timeout 15 npm run dev)",
+      "Bash(ls -la /Users/identy/Documents/Identy/I+D/folio/editorial-slides/.env*)",
+      "Bash(find /Users/identy/Documents/Identy/I+D/folio/editorial-slides/node_modules/wrangler -type f \\\\\\(-name *.ts -o -name *.js -o -name *.json \\\\\\))",
+      "Bash(find /Users/identy/Documents/Identy/I+D/folio/editorial-slides/node_modules/wrangler -type f -name *.ts -o -name *.js)",
+      "Bash(find /Users/identy/Documents/Identy/I+D/folio/editorial-slides -type f \\\\\\(-name *.ts -o -name *.js -o -name *.json \\\\\\) -path */node_modules/*)",
+      "Bash(wrangler --version)",
+      "Bash(rm -rf editorial-slides/.git editorial-slides/.next)",
+      "Bash(mv editorial-slides/.env.local .)",
+      "Bash(mv editorial-slides/.gitignore .)",
+      "Bash(mv editorial-slides/* .)",
+      "Bash(git init:*)",
+      "Bash(git remote:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}
