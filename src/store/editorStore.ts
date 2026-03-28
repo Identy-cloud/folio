@@ -1,9 +1,11 @@
 import { create } from "zustand";
 import { nanoid } from "nanoid";
 import type { Slide, SlideElement, SlideTransition } from "@/types/elements";
+import { generateMobileElements } from "@/lib/mobile-layout";
 
 export type ActiveTool = "select" | "text" | "image" | "shape" | "arrow";
 export type SaveStatus = "saved" | "saving" | "error" | "unsaved";
+export type EditingMode = "desktop" | "mobile";
 
 interface EditorState {
   presentationId: string;
@@ -11,6 +13,7 @@ interface EditorState {
   activeSlideIndex: number;
   selectedElementIds: string[];
   activeTool: ActiveTool;
+  editingMode: EditingMode;
   clipboard: SlideElement[];
   saveStatus: SaveStatus;
 
@@ -32,7 +35,16 @@ interface EditorState {
   moveSlideToEnd: (id: string) => void;
 
   updateSlideBackground: (color: string) => void;
+  updateSlideBackgroundImage: (url: string | null) => void;
   updateSlideTransition: (slideId: string, transition: SlideTransition) => void;
+
+  setEditingMode: (mode: EditingMode) => void;
+  generateMobileLayout: () => void;
+
+  bringToFront: (elementId: string) => void;
+  sendToBack: (elementId: string) => void;
+  bringForward: (elementId: string) => void;
+  sendBackward: (elementId: string) => void;
 
   selectElement: (id: string, multi?: boolean) => void;
   clearSelection: () => void;
@@ -61,6 +73,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   activeSlideIndex: 0,
   selectedElementIds: [],
   activeTool: "select",
+  editingMode: "desktop",
   clipboard: [],
   saveStatus: "saved",
   history: [],
@@ -242,10 +255,96 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     get().pushHistory();
   },
 
+  setEditingMode: (mode) => {
+    const { slides, activeSlideIndex } = get();
+    if (mode === "mobile") {
+      const slide = slides[activeSlideIndex];
+      if (slide && !slide.mobileElements) {
+        const mobile = generateMobileElements(slide.elements);
+        const updated = slides.map((s, i) =>
+          i === activeSlideIndex ? { ...s, mobileElements: mobile } : s
+        );
+        set({ slides: updated, dirty: true, saveStatus: "unsaved" });
+      }
+    }
+    set({ editingMode: mode, selectedElementIds: [] });
+  },
+
+  generateMobileLayout: () => {
+    const { slides, activeSlideIndex } = get();
+    const slide = slides[activeSlideIndex];
+    if (!slide) return;
+    const mobile = generateMobileElements(slide.elements);
+    const updated = slides.map((s, i) =>
+      i === activeSlideIndex ? { ...s, mobileElements: mobile } : s
+    );
+    set({ slides: updated, dirty: true, saveStatus: "unsaved" });
+    get().pushHistory();
+  },
+
+  updateSlideBackgroundImage: (url) => {
+    const { slides, activeSlideIndex } = get();
+    const updated = slides.map((s, i) =>
+      i === activeSlideIndex ? { ...s, backgroundImage: url } : s
+    );
+    set({ slides: updated, dirty: true, saveStatus: "unsaved" });
+    get().pushHistory();
+  },
+
   updateSlideTransition: (slideId, transition) => {
     const { slides } = get();
     const updated = slides.map((s) =>
       s.id === slideId ? { ...s, transition } : s
+    );
+    set({ slides: updated, dirty: true, saveStatus: "unsaved" });
+    get().pushHistory();
+  },
+
+  bringToFront: (elementId) => {
+    const { slides, activeSlideIndex } = get();
+    const slide = slides[activeSlideIndex];
+    if (!slide) return;
+    const maxZ = Math.max(...slide.elements.map((e) => e.zIndex));
+    const updated = slides.map((s, i) =>
+      i === activeSlideIndex
+        ? { ...s, elements: s.elements.map((e) => e.id === elementId ? { ...e, zIndex: maxZ + 1 } : e) }
+        : s
+    );
+    set({ slides: updated, dirty: true, saveStatus: "unsaved" });
+    get().pushHistory();
+  },
+
+  sendToBack: (elementId) => {
+    const { slides, activeSlideIndex } = get();
+    const slide = slides[activeSlideIndex];
+    if (!slide) return;
+    const minZ = Math.min(...slide.elements.map((e) => e.zIndex));
+    const updated = slides.map((s, i) =>
+      i === activeSlideIndex
+        ? { ...s, elements: s.elements.map((e) => e.id === elementId ? { ...e, zIndex: minZ - 1 } : e) }
+        : s
+    );
+    set({ slides: updated, dirty: true, saveStatus: "unsaved" });
+    get().pushHistory();
+  },
+
+  bringForward: (elementId) => {
+    const { slides, activeSlideIndex } = get();
+    const updated = slides.map((s, i) =>
+      i === activeSlideIndex
+        ? { ...s, elements: s.elements.map((e) => e.id === elementId ? { ...e, zIndex: e.zIndex + 1 } : e) }
+        : s
+    );
+    set({ slides: updated, dirty: true, saveStatus: "unsaved" });
+    get().pushHistory();
+  },
+
+  sendBackward: (elementId) => {
+    const { slides, activeSlideIndex } = get();
+    const updated = slides.map((s, i) =>
+      i === activeSlideIndex
+        ? { ...s, elements: s.elements.map((e) => e.id === elementId ? { ...e, zIndex: Math.max(0, e.zIndex - 1) } : e) }
+        : s
     );
     set({ slides: updated, dirty: true, saveStatus: "unsaved" });
     get().pushHistory();

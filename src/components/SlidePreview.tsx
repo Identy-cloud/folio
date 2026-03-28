@@ -1,7 +1,7 @@
 "use client";
 
 import { memo } from "react";
-import type { Slide, SlideElement, TextElement, ShapeElement } from "@/types/elements";
+import type { Slide, SlideElement, TextElement, ShapeElement, ArrowElement, DividerElement } from "@/types/elements";
 
 const W = 1920;
 const H = 1080;
@@ -79,6 +79,8 @@ const PreviewElement = memo(function PreviewElement({ element }: { element: Slid
     >
       {element.type === "text" && <PreviewText element={element} />}
       {element.type === "shape" && <PreviewShape element={element} />}
+      {element.type === "arrow" && <PreviewArrow element={element} />}
+      {element.type === "divider" && <PreviewDivider element={element} />}
       {element.type === "image" && (
         <img
           src={element.src}
@@ -165,5 +167,23 @@ function PreviewShape({ element }: { element: ShapeElement }) {
           : "none",
       }}
     />
+  );
+}
+
+function PreviewArrow({ element }: { element: ArrowElement }) {
+  const rotate = { right: 0, down: 90, left: 180, up: 270 }[element.direction];
+  return (
+    <svg width="100%" height="100%" viewBox="0 0 100 50" preserveAspectRatio="none" style={{ transform: `rotate(${rotate}deg)` }}>
+      <line x1="0" y1="25" x2="85" y2="25" stroke={element.color} strokeWidth={element.strokeWidth} />
+      <polygon points="85,10 100,25 85,40" fill={element.color} />
+    </svg>
+  );
+}
+
+function PreviewDivider({ element }: { element: DividerElement }) {
+  return (
+    <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center" }}>
+      <div style={{ width: "100%", height: element.strokeWidth, backgroundColor: element.color }} />
+    </div>
   );
 }

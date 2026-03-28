@@ -8,8 +8,10 @@ import { SelectionBox } from "./SelectionBox";
 import { SnapGuides } from "./SnapGuides";
 import { RemoteCursors } from "./RemoteCursors";
 
-const SLIDE_WIDTH = 1920;
-const SLIDE_HEIGHT = 1080;
+const DESKTOP_W = 1920;
+const DESKTOP_H = 1080;
+const MOBILE_W = 430;
+const MOBILE_H = 932;
 
 interface AwarenessUser {
   name: string;
@@ -35,15 +37,20 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
   const clearSelection = useEditorStore((s) => s.clearSelection);
   const activeTool = useEditorStore((s) => s.activeTool);
   const addElement = useEditorStore((s) => s.addElement);
+  const editingMode = useEditorStore((s) => s.editingMode);
+
+  const isMobileMode = editingMode === "mobile";
+  const canvasW = isMobileMode ? MOBILE_W : DESKTOP_W;
+  const canvasH = isMobileMode ? MOBILE_H : DESKTOP_H;
 
   const updateScale = useCallback(() => {
     if (!wrapperRef.current) return;
     const rect = wrapperRef.current.getBoundingClientRect();
     const pad = rect.width < 768 ? 16 : 48;
-    const sx = (rect.width - pad) / SLIDE_WIDTH;
-    const sy = (rect.height - pad) / SLIDE_HEIGHT;
+    const sx = (rect.width - pad) / canvasW;
+    const sy = (rect.height - pad) / canvasH;
     setScale(Math.min(sx, sy, 1));
-  }, []);
+  }, [canvasW, canvasH]);
 
   useEffect(() => {
     updateScale();
@@ -105,8 +112,8 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
       <div
         data-slide-canvas
         style={{
-          width: SLIDE_WIDTH,
-          height: SLIDE_HEIGHT,
+          width: canvasW,
+          height: canvasH,
           transform: `scale(${scale})`,
           transformOrigin: "center center",
           position: "absolute",
@@ -119,7 +126,7 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
         onPointerLeave={onCursorLeave}
       >
         <SnapGuides />
-        {slide.elements
+        {(isMobileMode && slide.mobileElements ? slide.mobileElements : slide.elements)
           .slice()
           .sort((a, b) => a.zIndex - b.zIndex)
           .map((el) => (
@@ -131,7 +138,8 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
             />
           ))}
         {selectedIds.map((id) => {
-          const el = slide.elements.find((e) => e.id === id);
+          const els = isMobileMode && slide.mobileElements ? slide.mobileElements : slide.elements;
+          const el = els.find((e) => e.id === id);
           if (!el) return null;
           return <SelectionBox key={`sel-${id}`} element={el} scale={scale} />;
         })}

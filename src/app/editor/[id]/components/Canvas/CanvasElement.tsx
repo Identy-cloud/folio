@@ -4,7 +4,7 @@ import { useRef, useState, memo, useMemo } from "react";
 import DOMPurify from "dompurify";
 import { Camera } from "@phosphor-icons/react";
 import { useEditorStore } from "@/store/editorStore";
-import type { SlideElement, TextElement, ShapeElement } from "@/types/elements";
+import type { SlideElement, TextElement, ShapeElement, ArrowElement, DividerElement } from "@/types/elements";
 
 interface Props {
   element: SlideElement;
@@ -93,6 +93,8 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
         />
       )}
       {element.type === "shape" && <ShapeRenderer element={element} />}
+      {element.type === "arrow" && <ArrowRenderer element={element} />}
+      {element.type === "divider" && <DividerRenderer element={element} />}
       {element.type === "image" && (
         <div style={{ width: "100%", height: "100%", position: "relative" }}>
           <img
@@ -222,5 +224,23 @@ function ShapeRenderer({ element }: { element: ShapeElement }) {
             : "none",
       }}
     />
+  );
+}
+
+function ArrowRenderer({ element }: { element: ArrowElement }) {
+  const rotate = { right: 0, down: 90, left: 180, up: 270 }[element.direction];
+  return (
+    <svg width="100%" height="100%" viewBox="0 0 100 50" preserveAspectRatio="none" style={{ transform: `rotate(${rotate}deg)` }}>
+      <line x1="0" y1="25" x2="85" y2="25" stroke={element.color} strokeWidth={element.strokeWidth} />
+      <polygon points="85,10 100,25 85,40" fill={element.color} />
+    </svg>
+  );
+}
+
+function DividerRenderer({ element }: { element: DividerElement }) {
+  return (
+    <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center" }}>
+      <div style={{ width: "100%", height: element.strokeWidth, backgroundColor: element.color }} />
+    </div>
   );
 }

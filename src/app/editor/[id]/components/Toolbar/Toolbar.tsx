@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowCounterClockwise, ArrowClockwise, Cursor, TextT, Shapes, FilePdf, Image as ImageIcon } from "@phosphor-icons/react";
+import { ArrowCounterClockwise, ArrowClockwise, Cursor, TextT, Shapes, FilePdf, Image as ImageIcon, Desktop, DeviceMobile } from "@phosphor-icons/react";
 import { useEditorStore } from "@/store/editorStore";
 import type { ActiveTool } from "@/store/editorStore";
 import { exportToPdf } from "@/lib/export-pdf";
@@ -29,6 +29,8 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
   const slides = useEditorStore((s) => s.slides);
   const setActiveSlide = useEditorStore((s) => s.setActiveSlide);
 
+  const editingMode = useEditorStore((s) => s.editingMode);
+  const setEditingMode = useEditorStore((s) => s.setEditingMode);
   const { trigger: triggerUpload, uploading } = useImageUpload();
   const [exporting, setExporting] = useState(false);
   const [exportProgress, setExportProgress] = useState("");
@@ -111,6 +113,25 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
           <FilePdf size={14} weight="duotone" />
           {exporting ? exportProgress : "PDF"}
         </button>
+        <div className="hidden md:block h-5 w-px bg-neutral-700" />
+        <div className="hidden md:flex gap-0.5 rounded border border-neutral-700 p-0.5">
+          <button
+            onClick={() => setEditingMode("desktop")}
+            className={`flex items-center gap-1 rounded px-2 py-1 text-xs transition-colors ${
+              editingMode === "desktop" ? "bg-white text-[#161616]" : "text-neutral-500 hover:text-neutral-300"
+            }`}
+          >
+            <Desktop size={12} />
+          </button>
+          <button
+            onClick={() => setEditingMode("mobile")}
+            className={`flex items-center gap-1 rounded px-2 py-1 text-xs transition-colors ${
+              editingMode === "mobile" ? "bg-white text-[#161616]" : "text-neutral-500 hover:text-neutral-300"
+            }`}
+          >
+            <DeviceMobile size={12} />
+          </button>
+        </div>
       </div>
       <div className="flex items-center gap-2 md:gap-4">
         <ShareButton />

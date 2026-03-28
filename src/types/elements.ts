@@ -50,11 +50,18 @@ export interface ArrowElement extends BaseElement {
   strokeWidth: number;
 }
 
+export interface DividerElement extends BaseElement {
+  type: "divider";
+  color: string;
+  strokeWidth: number;
+}
+
 export type SlideElement =
   | TextElement
   | ImageElement
   | ShapeElement
-  | ArrowElement;
+  | ArrowElement
+  | DividerElement;
 
 export type SlideTransition = "fade" | "slide-left" | "slide-up" | "zoom" | "none";
 
