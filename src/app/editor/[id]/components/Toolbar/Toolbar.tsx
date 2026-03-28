@@ -1,7 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { useEditorStore } from "@/store/editorStore";
 import type { ActiveTool } from "@/store/editorStore";
+import { exportToPdf } from "@/lib/export-pdf";
 import Link from "next/link";
 
 const TOOLS: { id: ActiveTool; label: string }[] = [
@@ -21,19 +23,40 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
   const undo = useEditorStore((s) => s.undo);
   const redo = useEditorStore((s) => s.redo);
   const saveStatus = useEditorStore((s) => s.saveStatus);
+  const slides = useEditorStore((s) => s.slides);
+  const setActiveSlide = useEditorStore((s) => s.setActiveSlide);
+
+  const [exporting, setExporting] = useState(false);
+  const [exportProgress, setExportProgress] = useState("");
+
+  async function handleExport() {
+    setExporting(true);
+    const currentIndex = useEditorStore.getState().activeSlideIndex;
+
+    await exportToPdf({
+      title: "Presentation",
+      slideCount: slides.length,
+      getSlideElement: (index) => {
+        setActiveSlide(index);
+        return document.querySelector("[data-slide-canvas]") as HTMLElement;
+      },
+      onProgress: (current, total) => {
+        setExportProgress(`Exportando slide ${current} de ${total}...`);
+      },
+    });
+
+    setActiveSlide(currentIndex);
+    setExporting(false);
+    setExportProgress("");
+  }
 
   const statusText: Record<string, string> = {
-    saved: "Guardado",
-    saving: "Guardando...",
-    error: "Error al guardar",
-    unsaved: "Sin guardar",
+    saved: "Guardado", saving: "Guardando...",
+    error: "Error al guardar", unsaved: "Sin guardar",
   };
-
   const statusColor: Record<string, string> = {
-    saved: "text-green-600",
-    saving: "text-amber-600",
-    error: "text-red-600",
-    unsaved: "text-neutral-400",
+    saved: "text-green-600", saving: "text-amber-600",
+    error: "text-red-600", unsaved: "text-neutral-400",
   };
 
   return (
@@ -47,20 +70,8 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
         </Link>
         <div className="h-5 w-px bg-neutral-200" />
         <div className="flex gap-1">
-          <button
-            onClick={undo}
-            className="rounded px-2 py-1 text-xs text-neutral-600 hover:bg-neutral-100"
-            title="Deshacer (Ctrl+Z)"
-          >
-            ↩
-          </button>
-          <button
-            onClick={redo}
-            className="rounded px-2 py-1 text-xs text-neutral-600 hover:bg-neutral-100"
-            title="Rehacer (Ctrl+Y)"
-          >
-            ↪
-          </button>
+          <button onClick={undo} className="rounded px-2 py-1 text-xs text-neutral-600 hover:bg-neutral-100" title="Deshacer (Ctrl+Z)">↩</button>
+          <button onClick={redo} className="rounded px-2 py-1 text-xs text-neutral-600 hover:bg-neutral-100" title="Rehacer (Ctrl+Y)">↪</button>
         </div>
         <div className="h-5 w-px bg-neutral-200" />
         <div className="flex gap-1">
@@ -78,6 +89,14 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
             </button>
           ))}
         </div>
+        <div className="h-5 w-px bg-neutral-200" />
+        <button
+          onClick={handleExport}
+          disabled={exporting}
+          className="rounded px-3 py-1 text-xs text-neutral-600 hover:bg-neutral-100 disabled:opacity-50"
+        >
+          {exporting ? exportProgress : "Exportar PDF"}
+        </button>
       </div>
       <div className="flex items-center gap-4">
         {peerCount > 0 && (
