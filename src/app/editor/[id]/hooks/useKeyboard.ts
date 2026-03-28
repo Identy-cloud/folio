@@ -57,8 +57,9 @@ export function useKeyboard() {
         const step = e.shiftKey ? 10 : 1;
         const slide = state.getActiveSlide();
         if (!slide) return;
+        const els = state.editingMode === "mobile" && slide.mobileElements ? slide.mobileElements : slide.elements;
         state.selectedElementIds.forEach((id) => {
-          const el = slide.elements.find((el) => el.id === id);
+          const el = els.find((el) => el.id === id);
           if (!el) return;
           const updates: Record<string, number> = {};
           if (e.key === "ArrowUp") updates.y = el.y - step;

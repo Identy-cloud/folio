@@ -10,11 +10,13 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   async function handleEmailAuth(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+    setSuccess(null);
     setLoading(true);
     const supabase = createClient();
 
@@ -33,7 +35,7 @@ export default function LoginPage() {
       }
 
       if (isSignUp) {
-        setError("Revisa tu email para confirmar tu cuenta");
+        setSuccess("Revisa tu email para confirmar tu cuenta");
         return;
       }
 
@@ -90,7 +92,10 @@ export default function LoginPage() {
           />
 
           {error && (
-            <p className="pt-2 text-xs text-red-400">{error}</p>
+            <p className="pt-2 text-xs text-red-400" role="alert">{error}</p>
+          )}
+          {success && (
+            <p className="pt-2 text-xs text-green-400" role="status">{success}</p>
           )}
 
           <button

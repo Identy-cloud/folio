@@ -150,6 +150,10 @@ export default function DashboardPage() {
             Crear presentación
           </button>
         </div>
+      ) : filtered.length === 0 ? (
+        <p className="py-12 text-center text-sm text-neutral-500">
+          No se encontraron presentaciones para &ldquo;{search}&rdquo;
+        </p>
       ) : (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
           {filtered.map((p) => (

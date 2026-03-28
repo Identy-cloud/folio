@@ -15,10 +15,12 @@ interface Guide {
 export const SnapGuides = memo(function SnapGuides() {
   const slide = useEditorStore((s) => s.getActiveSlide());
   const selectedIds = useEditorStore((s) => s.selectedElementIds);
+  const editingMode = useEditorStore((s) => s.editingMode);
 
   if (!slide || selectedIds.length !== 1) return null;
 
-  const selected = slide.elements.find((el) => el.id === selectedIds[0]);
+  const elements = editingMode === "mobile" && slide.mobileElements ? slide.mobileElements : slide.elements;
+  const selected = elements.find((el) => el.id === selectedIds[0]);
   if (!selected) return null;
 
   const guides: Guide[] = [];
@@ -32,7 +34,7 @@ export const SnapGuides = memo(function SnapGuides() {
     guides.push({ type: "h", pos: SLIDE_HEIGHT / 2 });
   }
 
-  for (const el of slide.elements) {
+  for (const el of elements) {
     if (el.id === selected.id) continue;
     const ecx = el.x + el.w / 2;
     const ecy = el.y + el.h / 2;

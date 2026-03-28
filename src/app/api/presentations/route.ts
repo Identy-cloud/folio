@@ -2,7 +2,7 @@ import { db } from "@/db";
 import { presentations, slides } from "@/db/schema";
 import { getAuthenticatedUser } from "@/lib/auth";
 import { checkRateLimit, rateLimitResponse } from "@/lib/rate-limit";
-import { eq, desc, asc, and } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { z } from "zod";
 import { generateTemplate } from "@/lib/templates/generator";
