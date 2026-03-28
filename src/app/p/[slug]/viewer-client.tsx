@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import DOMPurify from "dompurify";
+import { CornersOut } from "@phosphor-icons/react";
 import type { SlideElement, TextElement, ShapeElement } from "@/types/elements";
 
 const SLIDE_W = 1920;
@@ -132,9 +133,9 @@ function DesktopViewer({
           {mode === "desktop" && (
             <button
               onClick={(e) => { e.stopPropagation(); document.documentElement.requestFullscreen?.(); }}
-              className="text-xs text-white/40 hover:text-white/80"
+              className="text-white/40 hover:text-white/80"
             >
-              ⛶
+              <CornersOut size={16} weight="duotone" />
             </button>
           )}
         </div>

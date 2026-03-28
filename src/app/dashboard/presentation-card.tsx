@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { es } from "date-fns/locale";
+import { DotsThreeVertical } from "@phosphor-icons/react";
 
 const THEME_COLORS: Record<string, string> = {
   "editorial-blue": "bg-[#1a1aff]",
@@ -88,16 +89,8 @@ export function PresentationCard({
             onClick={() => setMenuOpen(!menuOpen)}
             className="ml-2 rounded p-1.5 text-neutral-400 hover:bg-neutral-100 hover:text-neutral-700"
           >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="currentColor"
-            >
-              <circle cx="8" cy="3" r="1.5" />
-              <circle cx="8" cy="8" r="1.5" />
-              <circle cx="8" cy="13" r="1.5" />
-            </svg>
+            <DotsThreeVertical size={18} weight="duotone" />
+
           </button>
 
           {menuOpen && (

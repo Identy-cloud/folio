@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { Plus } from "@phosphor-icons/react";
 import { PresentationCard } from "./presentation-card";
 import { SkeletonGrid } from "./skeleton-grid";
 import { TemplateModal } from "./template-modal";
@@ -95,7 +96,7 @@ export default function DashboardPage() {
           onClick={() => setModalOpen(true)}
           className="bg-neutral-900 px-6 py-2.5 text-sm font-medium tracking-widest text-white uppercase hover:bg-neutral-700 transition-colors"
         >
-          + Nueva presentación
+          <Plus size={14} className="inline" /> Nueva presentación
         </button>
       </div>
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { Plus } from "@phosphor-icons/react";
 import {
   DndContext,
   closestCenter,
@@ -61,7 +62,7 @@ export function SlidePanel() {
           onClick={addSlide}
           className="text-xs text-neutral-500 hover:text-neutral-900"
         >
-          + Añadir
+          <Plus size={12} className="inline" /> Añadir
         </button>
       </div>
       <div

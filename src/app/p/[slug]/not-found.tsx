@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowRight } from "@phosphor-icons/react";
 
 export default function ViewerNotFound() {
   return (
@@ -16,7 +17,7 @@ export default function ViewerNotFound() {
         href="/login"
         className="mt-8 bg-white px-8 py-3 text-xs font-semibold tracking-[0.25em] text-black uppercase hover:bg-neutral-200 transition-colors"
       >
-        Crear mi propia presentación →
+        Crear mi propia presentación <ArrowRight size={14} className="inline ml-1" />
       </Link>
     </div>
   );

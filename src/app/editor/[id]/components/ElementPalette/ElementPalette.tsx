@@ -3,6 +3,7 @@
 import { useEditorStore } from "@/store/editorStore";
 import { nanoid } from "nanoid";
 import { ALL_FONTS } from "@/lib/templates/themes";
+import { TextT, Rectangle, Circle, Triangle } from "@phosphor-icons/react";
 import type { TextElement, ShapeElement } from "@/types/elements";
 
 export function ElementPalette() {
@@ -55,29 +56,17 @@ export function ElementPalette() {
         </span>
       </div>
       <div className="flex-1 overflow-y-auto p-3 space-y-2">
-        <button
-          onClick={addText}
-          className="w-full rounded border border-neutral-200 px-3 py-2 text-left text-xs hover:bg-neutral-50"
-        >
-          T Texto
+        <button onClick={addText} className="flex w-full items-center gap-2 rounded border border-neutral-200 px-3 py-2 text-xs hover:bg-neutral-50">
+          <TextT size={16} weight="duotone" /> Texto
         </button>
-        <button
-          onClick={() => addShape("rect")}
-          className="w-full rounded border border-neutral-200 px-3 py-2 text-left text-xs hover:bg-neutral-50"
-        >
-          ▬ Rectángulo
+        <button onClick={() => addShape("rect")} className="flex w-full items-center gap-2 rounded border border-neutral-200 px-3 py-2 text-xs hover:bg-neutral-50">
+          <Rectangle size={16} weight="duotone" /> Rectángulo
         </button>
-        <button
-          onClick={() => addShape("circle")}
-          className="w-full rounded border border-neutral-200 px-3 py-2 text-left text-xs hover:bg-neutral-50"
-        >
-          ● Círculo
+        <button onClick={() => addShape("circle")} className="flex w-full items-center gap-2 rounded border border-neutral-200 px-3 py-2 text-xs hover:bg-neutral-50">
+          <Circle size={16} weight="duotone" /> Círculo
         </button>
-        <button
-          onClick={() => addShape("triangle")}
-          className="w-full rounded border border-neutral-200 px-3 py-2 text-left text-xs hover:bg-neutral-50"
-        >
-          ▲ Triángulo
+        <button onClick={() => addShape("triangle")} className="flex w-full items-center gap-2 rounded border border-neutral-200 px-3 py-2 text-xs hover:bg-neutral-50">
+          <Triangle size={16} weight="duotone" /> Triángulo
         </button>
       </div>
 

@@ -3,6 +3,7 @@
 import { memo } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { X } from "@phosphor-icons/react";
 import type { Slide } from "@/types/elements";
 
 interface Props {
@@ -72,9 +73,9 @@ export const SortableSlideThumb = memo(function SortableSlideThumb({
             e.stopPropagation();
             onDelete();
           }}
-          className="absolute right-1 top-1 hidden rounded bg-red-500 px-1 text-[9px] text-white group-hover:block"
+          className="absolute right-1 top-1 hidden rounded bg-red-500 p-0.5 text-white group-hover:block"
         >
-          ×
+          <X size={10} />
         </button>
       )}
     </div>

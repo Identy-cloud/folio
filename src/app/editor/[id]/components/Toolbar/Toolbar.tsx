@@ -1,15 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import { ArrowCounterClockwise, ArrowClockwise, Cursor, TextT, Shapes, FilePdf } from "@phosphor-icons/react";
 import { useEditorStore } from "@/store/editorStore";
 import type { ActiveTool } from "@/store/editorStore";
 import { exportToPdf } from "@/lib/export-pdf";
 import Link from "next/link";
 
-const TOOLS: { id: ActiveTool; label: string }[] = [
-  { id: "select", label: "Seleccionar" },
-  { id: "text", label: "Texto" },
-  { id: "shape", label: "Forma" },
+const TOOLS: { id: ActiveTool; label: string; icon: React.ReactNode }[] = [
+  { id: "select", label: "Seleccionar", icon: <Cursor size={14} weight="duotone" /> },
+  { id: "text", label: "Texto", icon: <TextT size={14} weight="duotone" /> },
+  { id: "shape", label: "Forma", icon: <Shapes size={14} weight="duotone" /> },
 ];
 
 interface ToolbarProps {
@@ -70,8 +71,8 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
         </Link>
         <div className="h-5 w-px bg-neutral-200" />
         <div className="flex gap-1">
-          <button onClick={undo} className="rounded px-2 py-1 text-xs text-neutral-600 hover:bg-neutral-100" title="Deshacer (Ctrl+Z)">↩</button>
-          <button onClick={redo} className="rounded px-2 py-1 text-xs text-neutral-600 hover:bg-neutral-100" title="Rehacer (Ctrl+Y)">↪</button>
+          <button onClick={undo} className="rounded p-1.5 text-neutral-600 hover:bg-neutral-100" title="Deshacer (Ctrl+Z)"><ArrowCounterClockwise size={16} weight="duotone" /></button>
+          <button onClick={redo} className="rounded p-1.5 text-neutral-600 hover:bg-neutral-100" title="Rehacer (Ctrl+Y)"><ArrowClockwise size={16} weight="duotone" /></button>
         </div>
         <div className="h-5 w-px bg-neutral-200" />
         <div className="flex gap-1">
@@ -79,13 +80,14 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
             <button
               key={tool.id}
               onClick={() => setActiveTool(tool.id)}
-              className={`rounded px-3 py-1 text-xs transition-colors ${
+              className={`flex items-center rounded px-3 py-1 text-xs transition-colors ${
                 activeTool === tool.id
                   ? "bg-neutral-900 text-white"
                   : "text-neutral-600 hover:bg-neutral-100"
               }`}
             >
-              {tool.label}
+              {tool.icon}
+              <span className="ml-1">{tool.label}</span>
             </button>
           ))}
         </div>
@@ -93,9 +95,10 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
         <button
           onClick={handleExport}
           disabled={exporting}
-          className="rounded px-3 py-1 text-xs text-neutral-600 hover:bg-neutral-100 disabled:opacity-50"
+          className="flex items-center gap-1 rounded px-3 py-1 text-xs text-neutral-600 hover:bg-neutral-100 disabled:opacity-50"
         >
-          {exporting ? exportProgress : "Exportar PDF"}
+          <FilePdf size={14} weight="duotone" />
+          {exporting ? exportProgress : "PDF"}
         </button>
       </div>
       <div className="flex items-center gap-4">

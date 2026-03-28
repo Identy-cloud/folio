@@ -2,6 +2,7 @@
 
 import { useRef, useState, memo, useMemo } from "react";
 import DOMPurify from "dompurify";
+import { Camera } from "@phosphor-icons/react";
 import { useEditorStore } from "@/store/editorStore";
 import type { SlideElement, TextElement, ShapeElement } from "@/types/elements";
 
@@ -120,8 +121,8 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
               onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = "1"; }}
               onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = "0"; }}
             >
-              <span style={{ color: "white", fontSize: 14, letterSpacing: "0.1em" }}>
-                📷 REPLACE IMAGE
+              <span style={{ color: "white", fontSize: 14, letterSpacing: "0.1em", display: "flex", alignItems: "center", gap: 6 }}>
+                <Camera size={18} weight="duotone" /> REPLACE
               </span>
             </div>
           )}

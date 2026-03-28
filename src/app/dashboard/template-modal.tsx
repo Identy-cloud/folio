@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { THEMES } from "@/lib/templates/themes";
 import { toast } from "sonner";
+import { X, Plus } from "@phosphor-icons/react";
 
 interface Props {
   open: boolean;
@@ -77,9 +78,9 @@ export function TemplateModal({ open, onClose }: Props) {
           <button
             onClick={onClose}
             disabled={creating !== null}
-            className="text-neutral-400 hover:text-neutral-900 text-xl leading-none disabled:opacity-30"
+            className="text-neutral-400 hover:text-neutral-900 disabled:opacity-30"
           >
-            ×
+            <X size={20} />
           </button>
         </div>
 
@@ -136,8 +137,8 @@ export function TemplateModal({ open, onClose }: Props) {
             disabled={creating !== null}
             className="flex aspect-video items-center justify-center border-2 border-dashed border-neutral-300 text-neutral-400 transition-colors hover:border-neutral-500 hover:text-neutral-600 disabled:opacity-50"
           >
-            <div className="text-center">
-              <span className="block text-3xl leading-none">+</span>
+            <div className="flex flex-col items-center">
+              <Plus size={28} />
               <span className="mt-2 block text-xs uppercase tracking-wider">
                 En blanco
               </span>
