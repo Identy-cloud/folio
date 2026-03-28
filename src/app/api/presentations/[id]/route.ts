@@ -6,6 +6,29 @@ import { z } from "zod";
 import { THEMES } from "@/lib/templates/themes";
 import type { NextRequest } from "next/server";
 
+export async function GET(
+  _request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const user = await getAuthenticatedUser();
+  if (!user) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { id } = await params;
+  const [pres] = await db
+    .select()
+    .from(presentations)
+    .where(and(eq(presentations.id, id), eq(presentations.userId, user.id)))
+    .limit(1);
+
+  if (!pres) {
+    return Response.json({ error: "Not found" }, { status: 404 });
+  }
+
+  return Response.json(pres);
+}
+
 const patchSchema = z.object({
   title: z.string().max(255).optional(),
   isPublic: z.boolean().optional(),

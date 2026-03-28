@@ -6,6 +6,7 @@ import { useEditorStore } from "@/store/editorStore";
 import type { ActiveTool } from "@/store/editorStore";
 import { exportToPdf } from "@/lib/export-pdf";
 import Link from "next/link";
+import { ShareButton } from "./ShareButton";
 
 const TOOLS: { id: ActiveTool; label: string; icon: React.ReactNode }[] = [
   { id: "select", label: "Seleccionar", icon: <Cursor size={14} weight="duotone" /> },
@@ -102,6 +103,7 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
         </button>
       </div>
       <div className="flex items-center gap-2 md:gap-4">
+        <ShareButton />
         {peerCount > 0 && (
           <span className="hidden md:inline text-xs text-neutral-500">
             {peerCount} colaborador{peerCount > 1 ? "es" : ""}

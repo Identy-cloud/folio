@@ -36,7 +36,7 @@ export default function EditorPage({
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-neutral-100">
+      <div className="flex h-screen items-center justify-center bg-[#111111]">
         <p className="text-sm text-neutral-500">Cargando editor...</p>
       </div>
     );
@@ -44,7 +44,7 @@ export default function EditorPage({
 
   if (error) {
     return (
-      <div className="flex h-screen items-center justify-center bg-neutral-100">
+      <div className="flex h-screen items-center justify-center bg-[#111111]">
         <p className="text-sm text-red-500">{error}</p>
       </div>
     );
