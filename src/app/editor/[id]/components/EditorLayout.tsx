@@ -32,7 +32,7 @@ export function EditorLayout() {
   const [mobilePanel, setMobilePanel] = useState<"slides" | "insert" | null>(null);
 
   return (
-    <div className="flex h-screen flex-col bg-neutral-100">
+    <div className="flex h-screen flex-col bg-[#111111]">
       <OfflineBanner />
       <div data-panel="toolbar">
         <Toolbar connected={connected} peerCount={peers.length} />
@@ -78,9 +78,9 @@ export function EditorLayout() {
             className="absolute inset-0 bg-black/40"
             onClick={() => setMobilePanel(null)}
           />
-          <div className="absolute bottom-0 left-0 right-0 max-h-[70vh] overflow-y-auto rounded-t-xl bg-white shadow-2xl">
-            <div className="sticky top-0 flex items-center justify-between border-b border-neutral-200 bg-white px-4 py-3 rounded-t-xl">
-              <span className="text-xs font-medium uppercase tracking-wider text-neutral-500">
+          <div className="absolute bottom-0 left-0 right-0 max-h-[70vh] overflow-y-auto rounded-t-xl bg-[#1e1e1e] shadow-2xl">
+            <div className="sticky top-0 flex items-center justify-between border-b border-neutral-700 bg-[#1e1e1e] px-4 py-3 rounded-t-xl">
+              <span className="text-xs font-medium uppercase tracking-wider text-neutral-400">
                 {mobilePanel === "slides" ? "Slides" : "Insertar"}
               </span>
               <button
@@ -119,8 +119,8 @@ function MobileSlidePanel({ onClose }: { onClose: () => void }) {
             onClick={() => { setActiveSlide(i); onClose(); }}
             className={`relative overflow-hidden rounded border-2 transition-colors ${
               i === activeSlideIndex
-                ? "border-neutral-900"
-                : "border-neutral-200"
+                ? "border-blue-500"
+                : "border-neutral-700"
             }`}
           >
             <SlidePreview slide={slide} className="w-full" />
@@ -132,7 +132,7 @@ function MobileSlidePanel({ onClose }: { onClose: () => void }) {
       </div>
       <button
         onClick={() => { addSlide(); onClose(); }}
-        className="w-full rounded border border-dashed border-neutral-300 py-2 text-xs text-neutral-500"
+        className="w-full rounded border border-dashed border-neutral-600 py-2 text-xs text-neutral-400"
       >
         + Añadir slide
       </button>
@@ -176,16 +176,16 @@ function MobileInsertPanel({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="grid grid-cols-2 gap-2 p-4">
-      <button onClick={addText} className="flex items-center gap-2 rounded border border-neutral-200 px-4 py-3 text-sm hover:bg-neutral-50">
+      <button onClick={addText} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800">
         <TextT size={18} weight="duotone" /> Texto
       </button>
-      <button onClick={() => addShape("rect")} className="flex items-center gap-2 rounded border border-neutral-200 px-4 py-3 text-sm hover:bg-neutral-50">
+      <button onClick={() => addShape("rect")} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800">
         <Rectangle size={18} weight="duotone" /> Rectángulo
       </button>
-      <button onClick={() => addShape("circle")} className="flex items-center gap-2 rounded border border-neutral-200 px-4 py-3 text-sm hover:bg-neutral-50">
+      <button onClick={() => addShape("circle")} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800">
         <Circle size={18} weight="duotone" /> Círculo
       </button>
-      <button onClick={() => addShape("triangle")} className="flex items-center gap-2 rounded border border-neutral-200 px-4 py-3 text-sm hover:bg-neutral-50">
+      <button onClick={() => addShape("triangle")} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800">
         <Triangle size={18} weight="duotone" /> Triángulo
       </button>
     </div>

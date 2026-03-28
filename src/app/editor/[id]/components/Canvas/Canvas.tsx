@@ -100,7 +100,7 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
   return (
     <div
       ref={wrapperRef}
-      className="relative flex h-full w-full items-center justify-center overflow-hidden p-2 md:p-6"
+      className="relative flex h-full w-full items-center justify-center overflow-hidden"
     >
       <div
         data-slide-canvas
@@ -109,9 +109,9 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
           height: SLIDE_HEIGHT,
           transform: `scale(${scale})`,
           transformOrigin: "center center",
-          position: "relative",
+          position: "absolute",
           backgroundColor: slide.backgroundColor,
-          boxShadow: "0 2px 20px rgba(0,0,0,0.1)",
+          boxShadow: "0 4px 30px rgba(0,0,0,0.3)",
         }}
         onPointerDown={handleCanvasClick}
         onPointerEnter={handlePointerEnter}

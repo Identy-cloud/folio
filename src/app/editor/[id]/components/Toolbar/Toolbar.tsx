@@ -57,24 +57,24 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
   };
   const statusColor: Record<string, string> = {
     saved: "text-green-600", saving: "text-amber-600",
-    error: "text-red-600", unsaved: "text-neutral-400",
+    error: "text-red-600", unsaved: "text-neutral-500",
   };
 
   return (
-    <div className="flex h-12 items-center justify-between border-b border-neutral-200 bg-white px-2 md:px-4">
+    <div className="flex h-12 items-center justify-between border-b border-neutral-800 bg-[#161616] px-2 md:px-4">
       <div className="flex items-center gap-2 md:gap-4">
         <Link
           href="/dashboard"
-          className="font-display text-lg tracking-tight text-neutral-900 hover:text-neutral-600"
+          className="font-display text-lg tracking-tight text-neutral-200 hover:text-white"
         >
           FOLIO
         </Link>
-        <div className="h-5 w-px bg-neutral-200" />
+        <div className="h-5 w-px bg-neutral-700" />
         <div className="flex gap-1">
-          <button onClick={undo} className="rounded p-1.5 text-neutral-600 hover:bg-neutral-100" title="Deshacer (Ctrl+Z)"><ArrowCounterClockwise size={16} weight="duotone" /></button>
-          <button onClick={redo} className="rounded p-1.5 text-neutral-600 hover:bg-neutral-100" title="Rehacer (Ctrl+Y)"><ArrowClockwise size={16} weight="duotone" /></button>
+          <button onClick={undo} className="rounded p-1.5 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200" title="Deshacer (Ctrl+Z)"><ArrowCounterClockwise size={16} weight="duotone" /></button>
+          <button onClick={redo} className="rounded p-1.5 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200" title="Rehacer (Ctrl+Y)"><ArrowClockwise size={16} weight="duotone" /></button>
         </div>
-        <div className="hidden md:block h-5 w-px bg-neutral-200" />
+        <div className="hidden md:block h-5 w-px bg-neutral-700" />
         <div className="hidden md:flex gap-1">
           {TOOLS.map((tool) => (
             <button
@@ -82,8 +82,8 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
               onClick={() => setActiveTool(tool.id)}
               className={`flex items-center rounded px-3 py-1 text-xs transition-colors ${
                 activeTool === tool.id
-                  ? "bg-neutral-900 text-white"
-                  : "text-neutral-600 hover:bg-neutral-100"
+                  ? "bg-white text-[#161616]"
+                  : "text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200"
               }`}
             >
               {tool.icon}
@@ -91,11 +91,11 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
             </button>
           ))}
         </div>
-        <div className="hidden md:block h-5 w-px bg-neutral-200" />
+        <div className="hidden md:block h-5 w-px bg-neutral-700" />
         <button
           onClick={handleExport}
           disabled={exporting}
-          className="hidden md:flex items-center gap-1 rounded px-3 py-1 text-xs text-neutral-600 hover:bg-neutral-100 disabled:opacity-50"
+          className="hidden md:flex items-center gap-1 rounded px-3 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 disabled:opacity-50"
         >
           <FilePdf size={14} weight="duotone" />
           {exporting ? exportProgress : "PDF"}
@@ -103,14 +103,14 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
       </div>
       <div className="flex items-center gap-2 md:gap-4">
         {peerCount > 0 && (
-          <span className="hidden md:inline text-xs text-neutral-400">
+          <span className="hidden md:inline text-xs text-neutral-500">
             {peerCount} colaborador{peerCount > 1 ? "es" : ""}
           </span>
         )}
         {connected !== undefined && (
           <span
             className={`inline-block h-2 w-2 rounded-full ${
-              connected ? "bg-green-500" : "bg-neutral-300"
+              connected ? "bg-green-500" : "bg-neutral-600"
             }`}
             title={connected ? "Conectado" : "Desconectado"}
           />

@@ -49,33 +49,33 @@ export function ElementPalette() {
   }
 
   return (
-    <div className="flex w-56 flex-col border-l border-neutral-200 bg-white">
-      <div className="border-b border-neutral-200 px-3 py-2">
-        <span className="text-xs font-medium text-neutral-500 uppercase tracking-wider">
+    <div className="flex w-56 flex-col border-l border-neutral-800 bg-[#161616]">
+      <div className="border-b border-neutral-800 px-3 py-2">
+        <span className="text-xs font-medium text-neutral-400 uppercase tracking-wider">
           Insertar
         </span>
       </div>
       <div className="flex-1 overflow-y-auto p-3 space-y-2">
-        <button onClick={addText} className="flex w-full items-center gap-2 rounded border border-neutral-200 px-3 py-2 text-xs hover:bg-neutral-50">
+        <button onClick={addText} className="flex w-full items-center gap-2 rounded border border-neutral-700 px-3 py-2 text-xs text-neutral-300 hover:bg-neutral-800">
           <TextT size={16} weight="duotone" /> Texto
         </button>
-        <button onClick={() => addShape("rect")} className="flex w-full items-center gap-2 rounded border border-neutral-200 px-3 py-2 text-xs hover:bg-neutral-50">
+        <button onClick={() => addShape("rect")} className="flex w-full items-center gap-2 rounded border border-neutral-700 px-3 py-2 text-xs text-neutral-300 hover:bg-neutral-800">
           <Rectangle size={16} weight="duotone" /> Rectángulo
         </button>
-        <button onClick={() => addShape("circle")} className="flex w-full items-center gap-2 rounded border border-neutral-200 px-3 py-2 text-xs hover:bg-neutral-50">
+        <button onClick={() => addShape("circle")} className="flex w-full items-center gap-2 rounded border border-neutral-700 px-3 py-2 text-xs text-neutral-300 hover:bg-neutral-800">
           <Circle size={16} weight="duotone" /> Círculo
         </button>
-        <button onClick={() => addShape("triangle")} className="flex w-full items-center gap-2 rounded border border-neutral-200 px-3 py-2 text-xs hover:bg-neutral-50">
+        <button onClick={() => addShape("triangle")} className="flex w-full items-center gap-2 rounded border border-neutral-700 px-3 py-2 text-xs text-neutral-300 hover:bg-neutral-800">
           <Triangle size={16} weight="duotone" /> Triángulo
         </button>
       </div>
 
       {selectedElement && (
-        <div className="border-t border-neutral-200 p-3 space-y-3">
-          <span className="text-xs font-medium text-neutral-500 uppercase tracking-wider">
+        <div className="border-t border-neutral-800 p-3 space-y-3">
+          <span className="text-xs font-medium text-neutral-400 uppercase tracking-wider">
             Propiedades
           </span>
-          <div className="grid grid-cols-2 gap-2 text-xs text-neutral-600">
+          <div className="grid grid-cols-2 gap-2 text-xs text-neutral-500">
             <span>X: {Math.round(selectedElement.x)}</span>
             <span>Y: {Math.round(selectedElement.y)}</span>
             <span>W: {Math.round(selectedElement.w)}</span>
@@ -86,7 +86,7 @@ export function ElementPalette() {
 
           {selectedElement.type === "text" && (
             <div className="space-y-2">
-              <span className="text-xs font-medium text-neutral-500 uppercase tracking-wider">
+              <span className="text-xs font-medium text-neutral-400 uppercase tracking-wider">
                 Fuente
               </span>
               <div className="space-y-1">
@@ -99,8 +99,8 @@ export function ElementPalette() {
                     }}
                     className={`block w-full rounded px-2 py-1.5 text-left text-sm transition-colors ${
                       selectedElement.fontFamily === f.value
-                        ? "bg-neutral-900 text-white"
-                        : "hover:bg-neutral-100 text-neutral-700"
+                        ? "bg-white text-[#161616]"
+                        : "hover:bg-neutral-800 text-neutral-300"
                     }`}
                     style={{ fontFamily: f.value }}
                   >

@@ -53,14 +53,14 @@ export function SlidePanel() {
   }
 
   return (
-    <div className="flex w-56 flex-col border-r border-neutral-200 bg-white">
-      <div className="flex items-center justify-between border-b border-neutral-200 px-3 py-2">
-        <span className="text-xs font-medium text-neutral-500 uppercase tracking-wider">
+    <div className="flex w-56 flex-col border-r border-neutral-800 bg-[#161616]">
+      <div className="flex items-center justify-between border-b border-neutral-800 px-3 py-2">
+        <span className="text-xs font-medium text-neutral-400 uppercase tracking-wider">
           Slides ({slides.length})
         </span>
         <button
           onClick={addSlide}
-          className="text-xs text-neutral-500 hover:text-neutral-900"
+          className="text-xs text-neutral-500 hover:text-neutral-200"
         >
           <Plus size={12} className="inline" /> Añadir
         </button>
@@ -102,7 +102,7 @@ export function SlidePanel() {
 
       {contextMenu && (
         <div
-          className="fixed z-50 w-44 rounded border border-neutral-200 bg-white py-1 shadow-lg"
+          className="fixed z-50 w-44 rounded border border-neutral-700 bg-[#242424] py-1 shadow-lg"
           style={{ left: contextMenu.x, top: contextMenu.y }}
         >
           <CtxItem
@@ -154,8 +154,8 @@ function CtxItem({
   return (
     <button
       onClick={onClick}
-      className={`block w-full px-4 py-2 text-left text-xs hover:bg-neutral-50 ${
-        destructive ? "text-red-600" : "text-neutral-700"
+      className={`block w-full px-4 py-2 text-left text-xs hover:bg-neutral-800 ${
+        destructive ? "text-red-500" : "text-neutral-300"
       }`}
     >
       {label}
