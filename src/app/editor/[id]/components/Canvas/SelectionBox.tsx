@@ -129,46 +129,65 @@ export const SelectionBox = memo(function SelectionBox({ element, scale }: Props
             position: "absolute",
             left: h.x,
             top: h.y,
-            width: 8,
-            height: 8,
+            width: 44,
+            height: 44,
             transform: "translate(-50%, -50%)",
-            backgroundColor: "white",
-            border: "2px solid #3b82f6",
             cursor: h.cursor,
             pointerEvents: "auto",
             zIndex: 10000,
+            touchAction: "none",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
           onPointerDown={(e) => onHandleDown(e, h.pos)}
           onPointerMove={onHandleMove}
           onPointerUp={onHandleUp}
-        />
+        >
+          <div style={{
+            width: 8,
+            height: 8,
+            backgroundColor: "white",
+            border: "2px solid #3b82f6",
+            borderRadius: h.pos.length === 1 ? 0 : 0,
+          }} />
+        </div>
       ))}
       <div
         style={{
           position: "absolute",
           left: "50%",
-          top: -24,
-          width: 10,
-          height: 10,
+          top: -30,
+          width: 44,
+          height: 44,
           transform: "translateX(-50%)",
-          borderRadius: "50%",
-          backgroundColor: "white",
-          border: "2px solid #3b82f6",
           cursor: "grab",
           pointerEvents: "auto",
           zIndex: 10000,
+          touchAction: "none",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
         onPointerDown={(e) => onHandleDown(e, "rotate")}
         onPointerMove={onHandleMove}
         onPointerUp={onHandleUp}
-      />
+      >
+        <div style={{
+          width: 10,
+          height: 10,
+          borderRadius: "50%",
+          backgroundColor: "white",
+          border: "2px solid #3b82f6",
+        }} />
+      </div>
       <div
         style={{
           position: "absolute",
           left: "50%",
-          top: -24,
+          top: -30,
           width: 1,
-          height: 24,
+          height: 30,
           backgroundColor: "#3b82f6",
           transform: "translateX(-50%)",
           pointerEvents: "none",

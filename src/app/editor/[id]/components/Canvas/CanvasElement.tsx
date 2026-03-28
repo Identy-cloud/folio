@@ -81,6 +81,7 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
         transform: `rotate(${element.rotation}deg)`,
         opacity: element.opacity,
         cursor: element.locked ? "default" : "move",
+        touchAction: "none",
         outline: isSelected ? "2px solid #3b82f6" : "none",
         outlineOffset: 1,
         zIndex: element.zIndex,

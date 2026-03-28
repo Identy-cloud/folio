@@ -107,7 +107,7 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
   return (
     <div
       ref={wrapperRef}
-      className="relative h-full w-full overflow-hidden"
+      className="relative h-full w-full overflow-hidden touch-none"
     >
       <div
         data-slide-canvas
