@@ -8,6 +8,8 @@ import { PositionFields } from "./PositionFields";
 import { TextProperties } from "./TextProperties";
 import { ShapeProperties } from "./ShapeProperties";
 import { LayerControls } from "./LayerControls";
+import { AlignControls } from "./AlignControls";
+import { LockToggle } from "./LockToggle";
 import { DeleteButton } from "./DeleteButton";
 import { ColorPicker } from "@/components/editor/ColorPicker";
 import type { TextElement, ShapeElement, ArrowElement, DividerElement } from "@/types/elements";
@@ -59,7 +61,9 @@ export function ElementPalette() {
           <PositionFields element={selectedElement} />
           {selectedElement.type === "text" && <TextProperties element={selectedElement} />}
           {selectedElement.type === "shape" && <ShapeProperties element={selectedElement} />}
+          <AlignControls elementId={selectedElement.id} />
           <LayerControls elementId={selectedElement.id} />
+          <LockToggle element={selectedElement} />
           <DeleteButton elementId={selectedElement.id} />
         </div>
       ) : activeSlide && (

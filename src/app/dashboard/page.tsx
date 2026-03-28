@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Plus } from "@phosphor-icons/react";
+import { Plus, MagnifyingGlass } from "@phosphor-icons/react";
 import { PresentationCard } from "./presentation-card";
 import type { SlideElement } from "@/types/elements";
 import { SkeletonGrid } from "./skeleton-grid";
 import { TemplateModal } from "./template-modal";
+import { THEMES } from "@/lib/templates/themes";
 
 interface Presentation {
   id: string;
@@ -27,6 +28,7 @@ export default function DashboardPage() {
   const [presentations, setPresentations] = useState<Presentation[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     const load = async () => {
@@ -90,20 +92,50 @@ export default function DashboardPage() {
     refreshPresentations();
   }
 
+  async function handleChangeTheme(id: string) {
+    const themeKeys = Object.keys(THEMES);
+    const current = presentations.find((p) => p.id === id)?.theme ?? "";
+    const choice = prompt(`Tema actual: ${current}\nOpciones: ${themeKeys.join(", ")}\n\nNuevo tema:`);
+    if (!choice || !themeKeys.includes(choice)) return;
+    const res = await fetch(`/api/presentations/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ theme: choice }),
+    });
+    if (res.ok) toast.success("Tema cambiado");
+    else toast.error("Error al cambiar tema");
+    refreshPresentations();
+  }
+
   if (loading) return <SkeletonGrid />;
+
+  const filtered = search
+    ? presentations.filter((p) => p.title.toLowerCase().includes(search.toLowerCase()))
+    : presentations;
 
   return (
     <div>
-      <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mb-6 flex flex-col gap-3 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="font-display text-2xl tracking-tight sm:text-4xl">
           MIS PRESENTACIONES
         </h2>
-        <button
-          onClick={() => setModalOpen(true)}
-          className="w-full bg-neutral-200 px-6 py-2.5 text-sm font-medium tracking-widest text-[#161616] uppercase hover:bg-neutral-300 transition-colors sm:w-auto"
-        >
-          <Plus size={14} className="inline" /> Nueva
-        </button>
+        <div className="flex gap-2">
+          <div className="relative flex-1 sm:w-48 sm:flex-initial">
+            <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500" />
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Buscar..."
+              className="w-full rounded border border-neutral-700 bg-[#1e1e1e] py-2 pl-8 pr-3 text-xs text-neutral-200 outline-none placeholder:text-neutral-600 focus:border-neutral-500"
+            />
+          </div>
+          <button
+            onClick={() => setModalOpen(true)}
+            className="shrink-0 bg-neutral-200 px-5 py-2 text-xs font-medium tracking-widest text-[#161616] uppercase hover:bg-neutral-300 transition-colors"
+          >
+            <Plus size={14} className="inline" /> Nueva
+          </button>
+        </div>
       </div>
 
       {presentations.length === 0 ? (
@@ -123,7 +155,7 @@ export default function DashboardPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
-          {presentations.map((p) => (
+          {filtered.map((p) => (
             <PresentationCard
               key={p.id}
               presentation={p}
@@ -131,6 +163,7 @@ export default function DashboardPage() {
               onRename={() => handleRename(p.id)}
               onDelete={() => handleDelete(p.id)}
               onTogglePublic={() => handleTogglePublic(p.id, p.isPublic)}
+              onChangeTheme={() => handleChangeTheme(p.id)}
             />
           ))}
         </div>

@@ -27,6 +27,7 @@ interface Props {
   onRename: () => void;
   onDelete: () => void;
   onTogglePublic: () => void;
+  onChangeTheme: () => void;
 }
 
 export function PresentationCard({
@@ -35,6 +36,7 @@ export function PresentationCard({
   onRename,
   onDelete,
   onTogglePublic,
+  onChangeTheme,
 }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -90,6 +92,7 @@ export function PresentationCard({
             <div className="absolute right-0 bottom-full mb-1 z-50 w-44 border border-neutral-700 bg-[#242424] py-1 shadow-lg rounded">
               <MenuItem label="Renombrar" onClick={() => { setMenuOpen(false); onRename(); }} />
               <MenuItem label="Duplicar" onClick={() => { setMenuOpen(false); onDuplicate(); }} />
+              <MenuItem label="Cambiar tema" onClick={() => { setMenuOpen(false); onChangeTheme(); }} />
               <MenuItem
                 label={presentation.isPublic ? "Hacer privado" : "Hacer público"}
                 onClick={() => { setMenuOpen(false); onTogglePublic(); }}
