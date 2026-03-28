@@ -117,7 +117,7 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
           width: canvasW,
           height: canvasH,
           position: "absolute",
-          top: narrow ? "40%" : "50%",
+          top: narrow ? 12 + (canvasH * scale) / 2 : "50%",
           left: "50%",
           transform: `translate(-50%, -50%) scale(${scale})`,
           transformOrigin: "center center",
