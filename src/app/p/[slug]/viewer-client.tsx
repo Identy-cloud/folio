@@ -2,16 +2,19 @@
 
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import DOMPurify from "dompurify";
-import type { SlideElement, TextElement, ShapeElement } from "@/types/elements";
+import type { SlideElement, TextElement, ShapeElement, SlideTransition } from "@/types/elements";
 
 const SLIDE_W = 1920;
 const SLIDE_H = 1080;
+const TRANSITION_MS = 400;
 
 interface Slide {
   id: string;
   order: number;
+  transition: SlideTransition;
   backgroundColor: string;
   elements: SlideElement[];
+  mobileElements?: SlideElement[] | null;
 }
 
 interface Props {
@@ -52,13 +55,18 @@ export function ViewerClient({ title, slides }: Props) {
   // When current changes, start transition
   useEffect(() => {
     if (current === displayed) return;
+    const t = slides[current]?.transition ?? "fade";
+    if (t === "none") {
+      setDisplayed(current);
+      return;
+    }
     setTransitioning(true);
     const timer = setTimeout(() => {
       setDisplayed(current);
       setTransitioning(false);
-    }, 350);
+    }, TRANSITION_MS);
     return () => clearTimeout(timer);
-  }, [current, displayed]);
+  }, [current, displayed, slides]);
 
   const goNext = useCallback(() => {
     if (transitioning || current >= total - 1) return;
@@ -106,6 +114,41 @@ export function ViewerClient({ title, slides }: Props) {
 
   const outgoing = slides[displayed];
   const incoming = slides[current];
+  const transType = incoming?.transition ?? "fade";
+  const dir = current > displayed ? 1 : -1;
+
+  function getTransitionStyles(role: "in" | "out"): React.CSSProperties {
+    const dur = `${TRANSITION_MS}ms`;
+    const ease = "cubic-bezier(0.22, 1, 0.36, 1)";
+    if (transType === "fade") {
+      return {
+        transition: `opacity ${dur} ${ease}`,
+        opacity: role === "in" ? 1 : 0,
+      };
+    }
+    if (transType === "slide-left") {
+      return {
+        transition: `transform ${dur} ${ease}, opacity ${dur} ${ease}`,
+        transform: `scale(${scale}) translateX(${role === "in" ? "0%" : `${-dir * 30}%`})`,
+        opacity: role === "in" ? 1 : 0,
+      };
+    }
+    if (transType === "slide-up") {
+      return {
+        transition: `transform ${dur} ${ease}, opacity ${dur} ${ease}`,
+        transform: `scale(${scale}) translateY(${role === "in" ? "0%" : `${30}%`})`,
+        opacity: role === "in" ? 1 : 0,
+      };
+    }
+    if (transType === "zoom") {
+      return {
+        transition: `transform ${dur} ${ease}, opacity ${dur} ${ease}`,
+        transform: `scale(${role === "in" ? scale : scale * 0.85})`,
+        opacity: role === "in" ? 1 : 0,
+      };
+    }
+    return { opacity: 1 };
+  }
 
   return (
     <div
@@ -115,22 +158,20 @@ export function ViewerClient({ title, slides }: Props) {
       onTouchEnd={handleTouchEnd}
       onClick={handleClick}
     >
-      {/* Outgoing slide — fades out */}
+      {/* Outgoing slide */}
       {transitioning && outgoing && (
         <SlideLayer
           slide={outgoing}
           scale={scale}
-          className="transition-opacity duration-300 ease-out opacity-0"
+          transitionStyle={getTransitionStyles("out")}
         />
       )}
 
-      {/* Current slide — fades in */}
+      {/* Current slide */}
       <SlideLayer
         slide={incoming ?? outgoing}
         scale={scale}
-        className={transitioning
-          ? "transition-opacity duration-300 ease-out opacity-100"
-          : "opacity-100"
+        transitionStyle={transitioning ? getTransitionStyles("in") : undefined
         }
       />
 
@@ -181,15 +222,14 @@ export function ViewerClient({ title, slides }: Props) {
 function SlideLayer({
   slide,
   scale,
-  className,
+  transitionStyle,
 }: {
   slide: Slide;
   scale: number;
-  className?: string;
+  transitionStyle?: React.CSSProperties;
 }) {
   return (
     <div
-      className={className}
       style={{
         width: SLIDE_W,
         height: SLIDE_H,
@@ -197,6 +237,7 @@ function SlideLayer({
         transformOrigin: "center center",
         position: "absolute",
         backgroundColor: slide.backgroundColor,
+        ...transitionStyle,
       }}
     >
       {slide.elements

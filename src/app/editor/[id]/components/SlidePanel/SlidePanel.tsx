@@ -16,6 +16,7 @@ import {
 } from "@dnd-kit/sortable";
 import { useEditorStore } from "@/store/editorStore";
 import { SortableSlideThumb } from "./SortableSlideThumb";
+import { TransitionPicker } from "./TransitionPicker";
 
 export function SlidePanel() {
   const slides = useEditorStore((s) => s.slides);
@@ -27,6 +28,7 @@ export function SlidePanel() {
   const moveSlideToStart = useEditorStore((s) => s.moveSlideToStart);
   const moveSlideToEnd = useEditorStore((s) => s.moveSlideToEnd);
   const reorderSlides = useEditorStore((s) => s.reorderSlides);
+  const updateSlideTransition = useEditorStore((s) => s.updateSlideTransition);
   const parentRef = useRef<HTMLDivElement>(null);
 
   const [contextMenu, setContextMenu] = useState<{
@@ -126,6 +128,12 @@ export function SlidePanel() {
               setContextMenu(null);
             }}
           />
+          <div className="border-t border-neutral-700">
+            <TransitionPicker
+              current={slides.find((s) => s.id === contextMenu.slideId)?.transition ?? "fade"}
+              onChange={(t) => updateSlideTransition(contextMenu.slideId, t)}
+            />
+          </div>
           {slides.length > 1 && (
             <CtxItem
               label="Eliminar slide"

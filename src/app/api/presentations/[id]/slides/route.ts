@@ -8,9 +8,11 @@ import type { NextRequest } from "next/server";
 const slideSchema = z.object({
   id: z.string().min(1),
   order: z.number().int().min(0),
+  transition: z.enum(["fade", "slide-left", "slide-up", "zoom", "none"]).default("fade"),
   backgroundColor: z.string().max(50),
   backgroundImage: z.string().url().nullable(),
   elements: z.array(z.record(z.string(), z.unknown())),
+  mobileElements: z.array(z.record(z.string(), z.unknown())).nullable().default(null),
 });
 
 const putSlidesSchema = z.array(slideSchema).max(200);
@@ -72,9 +74,11 @@ export async function PUT(
         id: s.id,
         presentationId: id,
         order: s.order,
+        transition: s.transition,
         backgroundColor: s.backgroundColor,
         backgroundImage: s.backgroundImage,
         elements: s.elements,
+        mobileElements: s.mobileElements,
       }))
     );
   }

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { nanoid } from "nanoid";
-import type { Slide, SlideElement } from "@/types/elements";
+import type { Slide, SlideElement, SlideTransition } from "@/types/elements";
 
 export type ActiveTool = "select" | "text" | "image" | "shape" | "arrow";
 export type SaveStatus = "saved" | "saving" | "error" | "unsaved";
@@ -30,6 +30,8 @@ interface EditorState {
   duplicateSlide: (id: string) => void;
   moveSlideToStart: (id: string) => void;
   moveSlideToEnd: (id: string) => void;
+
+  updateSlideTransition: (slideId: string, transition: SlideTransition) => void;
 
   selectElement: (id: string, multi?: boolean) => void;
   clearSelection: () => void;
@@ -87,6 +89,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       id: nanoid(),
       presentationId,
       order: slides.length,
+      transition: "fade",
       backgroundColor: "#ffffff",
       backgroundImage: null,
       elements: [],
@@ -227,6 +230,15 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     if (!el) return;
     const dup = { ...el, id: nanoid(), x: el.x + 20, y: el.y + 20 };
     get().addElement(dup as SlideElement);
+  },
+
+  updateSlideTransition: (slideId, transition) => {
+    const { slides } = get();
+    const updated = slides.map((s) =>
+      s.id === slideId ? { ...s, transition } : s
+    );
+    set({ slides: updated, dirty: true, saveStatus: "unsaved" });
+    get().pushHistory();
   },
 
   selectElement: (id, multi) =>

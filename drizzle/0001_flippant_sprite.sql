@@ -1,0 +1,1 @@
+ALTER TABLE "slides" ADD COLUMN "transition" text DEFAULT 'fade' NOT NULL;

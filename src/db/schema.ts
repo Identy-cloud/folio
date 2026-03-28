@@ -44,6 +44,7 @@ export const slides = pgTable("slides", {
   order: integer("order").notNull(),
   backgroundColor: text("background_color").default("#ffffff").notNull(),
   backgroundImage: text("background_image"),
+  transition: text("transition").default("fade").notNull(),
   elements: jsonb("elements").default([]).notNull(),
   mobileElements: jsonb("mobile_elements"),
   createdAt: timestamp("created_at", { withTimezone: true })

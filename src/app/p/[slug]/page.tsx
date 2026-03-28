@@ -4,15 +4,17 @@ import { eq, asc } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { ViewerWrapper } from "./viewer-wrapper";
-import type { SlideElement } from "@/types/elements";
+import type { SlideElement, SlideTransition } from "@/types/elements";
 
 interface SlideRow {
   id: string;
   presentationId: string;
   order: number;
+  transition: SlideTransition;
   backgroundColor: string;
   backgroundImage: string | null;
   elements: SlideElement[];
+  mobileElements: SlideElement[] | null;
 }
 
 async function getPresentation(slug: string) {
@@ -36,9 +38,11 @@ async function getPresentation(slug: string) {
       id: s.id,
       presentationId: s.presentationId,
       order: s.order,
+      transition: (s.transition as SlideTransition) ?? "fade",
       backgroundColor: s.backgroundColor,
       backgroundImage: s.backgroundImage,
       elements: s.elements as SlideElement[],
+      mobileElements: s.mobileElements as SlideElement[] | null,
     })),
   };
 }

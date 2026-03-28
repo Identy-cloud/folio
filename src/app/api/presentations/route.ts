@@ -95,6 +95,7 @@ export async function POST(request: Request) {
         templateSlides.map((s) => ({
           presentationId: presentation.id,
           order: s.order,
+          transition: s.transition,
           backgroundColor: s.backgroundColor,
           backgroundImage: s.backgroundImage,
           elements: s.elements,

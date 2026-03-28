@@ -62,7 +62,7 @@ function pageNum(t: Theme, num: string): TextElement {
 
 function coverSlide(t: Theme, pid: string, tk: string): Omit<Slide, "id"> {
   return {
-    presentationId: pid, order: 0,
+    presentationId: pid, order: 0, transition: "zoom",
     backgroundColor: t.background, backgroundImage: null, mobileElements: null,
     elements: [
       txt(t, {
@@ -97,7 +97,7 @@ function coverSlide(t: Theme, pid: string, tk: string): Omit<Slide, "id"> {
 
 function aboutSlide(t: Theme, pid: string, tk: string): Omit<Slide, "id"> {
   return {
-    presentationId: pid, order: 1,
+    presentationId: pid, order: 1, transition: "fade",
     backgroundColor: t.background, backgroundImage: null, mobileElements: null,
     elements: [
       txt(t, {
@@ -142,7 +142,7 @@ function teamSlide(t: Theme, pid: string, tk: string): Omit<Slide, "id"> {
   const names = ["Alex Morgan", "Sam Rivera", "Jordan Chen"];
   const photos = [IMG.portrait1, IMG.portrait2, IMG.portrait3];
   return {
-    presentationId: pid, order: 2,
+    presentationId: pid, order: 2, transition: "slide-left",
     backgroundColor: t.background, backgroundImage: null, mobileElements: null,
     elements: [
       txt(t, {
@@ -182,7 +182,7 @@ function teamSlide(t: Theme, pid: string, tk: string): Omit<Slide, "id"> {
 
 function conceptSlide(t: Theme, pid: string, tk: string): Omit<Slide, "id"> {
   return {
-    presentationId: pid, order: 3,
+    presentationId: pid, order: 3, transition: "fade",
     backgroundColor: t.background, backgroundImage: null, mobileElements: null,
     elements: [
       txt(t, { x: 100, y: 100, w: 140, h: 25, content: "04 / CONCEPT", fontSize: 11, letterSpacing: 0.3, opacity: 0.4, zIndex: 2 }),
@@ -215,7 +215,7 @@ function timelineSlide(t: Theme, pid: string, tk: string): Omit<Slide, "id"> {
     { num: "05", title: "LAUNCH", desc: "Final delivery, deployment, and post-launch optimization." },
   ];
   return {
-    presentationId: pid, order: 4,
+    presentationId: pid, order: 4, transition: "slide-up",
     backgroundColor: t.background, backgroundImage: null, mobileElements: null,
     elements: [
       txt(t, {
@@ -245,7 +245,7 @@ function timelineSlide(t: Theme, pid: string, tk: string): Omit<Slide, "id"> {
 
 function ctaSlide(t: Theme, pid: string, tk: string): Omit<Slide, "id"> {
   return {
-    presentationId: pid, order: 5,
+    presentationId: pid, order: 5, transition: "zoom",
     backgroundColor: t.background, backgroundImage: null, mobileElements: null,
     elements: [
       img(IMG.abstract2, 0, 0, 340, 520, tk, 1),

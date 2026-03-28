@@ -56,10 +56,13 @@ export type SlideElement =
   | ShapeElement
   | ArrowElement;
 
+export type SlideTransition = "fade" | "slide-left" | "slide-up" | "zoom" | "none";
+
 export interface Slide {
   id: string;
   presentationId: string;
   order: number;
+  transition: SlideTransition;
   backgroundColor: string;
   backgroundImage: string | null;
   elements: SlideElement[];
