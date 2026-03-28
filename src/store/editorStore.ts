@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { nanoid } from "nanoid";
 import type { Slide, SlideElement, SlideTransition } from "@/types/elements";
 import { generateMobileElements } from "@/lib/mobile-layout";
+import { THEMES, type Theme } from "@/lib/templates/themes";
 
 export type ActiveTool = "select" | "text" | "image" | "shape" | "arrow";
 export type SaveStatus = "saved" | "saving" | "error" | "unsaved";
@@ -9,6 +10,7 @@ export type EditingMode = "desktop" | "mobile";
 
 interface EditorState {
   presentationId: string;
+  theme: string;
   slides: Slide[];
   activeSlideIndex: number;
   selectedElementIds: string[];
@@ -20,7 +22,8 @@ interface EditorState {
   history: Slide[][];
   historyIndex: number;
 
-  init: (presentationId: string, slides: Slide[]) => void;
+  init: (presentationId: string, slides: Slide[], theme?: string) => void;
+  getTheme: () => Theme;
   setActiveSlide: (index: number) => void;
   addSlide: () => void;
   deleteSlide: (id: string) => void;
@@ -73,6 +76,7 @@ function cloneSlides(slides: Slide[]): Slide[] {
 
 export const useEditorStore = create<EditorState>((set, get) => ({
   presentationId: "",
+  theme: "editorial-blue",
   slides: [],
   activeSlideIndex: 0,
   selectedElementIds: [],
@@ -85,12 +89,13 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   dirty: false,
   busyElementIds: new Set<string>(),
 
-  init: (presentationId, slides) => {
+  init: (presentationId, slides, theme) => {
     const sorted = [...slides]
       .sort((a, b) => a.order - b.order)
       .map((s) => ({ ...s, transition: s.transition ?? "fade" }));
     set({
       presentationId,
+      theme: theme ?? "editorial-blue",
       slides: sorted,
       editingMode: "desktop",
       activeSlideIndex: 0,
@@ -441,6 +446,10 @@ export const useEditorStore = create<EditorState>((set, get) => ({
 
   setSaveStatus: (s) => set({ saveStatus: s }),
   markClean: () => set({ dirty: false }),
+
+  getTheme: () => {
+    return THEMES[get().theme] ?? THEMES["editorial-blue"];
+  },
 
   getActiveSlide: () => {
     const { slides, activeSlideIndex } = get();

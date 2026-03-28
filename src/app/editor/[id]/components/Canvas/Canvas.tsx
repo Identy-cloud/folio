@@ -3,6 +3,7 @@
 import { useRef, useState, useEffect, useCallback } from "react";
 import { nanoid } from "nanoid";
 import { useEditorStore } from "@/store/editorStore";
+import { textDefaults } from "@/lib/templates/element-defaults";
 import { CanvasElement } from "./CanvasElement";
 import { SelectionBox } from "./SelectionBox";
 import { SnapGuides } from "./SnapGuides";
@@ -38,6 +39,7 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
   const clearSelection = useEditorStore((s) => s.clearSelection);
   const activeTool = useEditorStore((s) => s.activeTool);
   const addElement = useEditorStore((s) => s.addElement);
+  const theme = useEditorStore((s) => s.getTheme());
   const editingMode = useEditorStore((s) => s.editingMode);
 
   const isMobileMode = editingMode === "mobile";
@@ -82,15 +84,8 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
         opacity: 1,
         zIndex: (slide?.elements.length ?? 0) + 1,
         locked: false,
-        content: "Escribe aquí",
-        fontFamily: "var(--font-dm-sans)",
-        fontSize: 32,
-        fontWeight: 400,
-        lineHeight: 1.4,
-        letterSpacing: 0,
-        color: "#0a0a0a",
-        textAlign: "left",
-        verticalAlign: "top",
+        content: "",
+        ...textDefaults(theme),
       });
     }
   }

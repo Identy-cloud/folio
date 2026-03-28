@@ -19,6 +19,7 @@ import {
 } from "@phosphor-icons/react";
 import { SlidePreview } from "@/components/SlidePreview";
 import type { TextElement, ShapeElement, ImageElement, ArrowElement, DividerElement } from "@/types/elements";
+import { textDefaults, shapeDefaults } from "@/lib/templates/element-defaults";
 import { PositionFields } from "./ElementPalette/PositionFields";
 import { TextProperties } from "./ElementPalette/TextProperties";
 import { ShapeProperties } from "./ElementPalette/ShapeProperties";
@@ -189,6 +190,7 @@ function MobileInsertPanel({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
   const addElement = useEditorStore((s) => s.addElement);
   const activeSlide = useEditorStore((s) => s.getActiveSlide());
+  const theme = useEditorStore((s) => s.getTheme());
   const { trigger: triggerUpload, uploading } = useImageUpload();
 
   function addText() {
@@ -198,10 +200,7 @@ function MobileInsertPanel({ onClose }: { onClose: () => void }) {
       rotation: 0, opacity: 1,
       zIndex: (activeSlide?.elements.length ?? 0) + 1,
       locked: false, content: t.editor.writeHere,
-      fontFamily: "var(--font-dm-sans)",
-      fontSize: 32, fontWeight: 400, lineHeight: 1.4,
-      letterSpacing: 0, color: "#0a0a0a",
-      textAlign: "left", verticalAlign: "top",
+      ...textDefaults(theme),
     };
     addElement(el);
     onClose();
@@ -214,8 +213,7 @@ function MobileInsertPanel({ onClose }: { onClose: () => void }) {
       rotation: 0, opacity: 1,
       zIndex: (activeSlide?.elements.length ?? 0) + 1,
       locked: false, shape,
-      fill: "#1a1aff", stroke: "transparent",
-      strokeWidth: 0, borderRadius: 0,
+      ...shapeDefaults(theme),
     };
     addElement(el);
     onClose();

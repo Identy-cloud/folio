@@ -16,12 +16,14 @@ import { LockToggle } from "./LockToggle";
 import { DeleteButton } from "./DeleteButton";
 import { ColorPicker } from "@/components/editor/ColorPicker";
 import type { TextElement, ShapeElement, ArrowElement, DividerElement, ImageElement, SlideElement } from "@/types/elements";
+import { textDefaults, shapeDefaults, arrowDefaults, dividerDefaults } from "@/lib/templates/element-defaults";
 import { useTranslation } from "@/lib/i18n/context";
 
 export function ElementPalette() {
   const { t } = useTranslation();
   const addElement = useEditorStore((s) => s.addElement);
   const activeSlide = useEditorStore((s) => s.getActiveSlide());
+  const theme = useEditorStore((s) => s.getTheme());
   const selectedIds = useEditorStore((s) => s.selectedElementIds);
   const editingMode = useEditorStore((s) => s.editingMode);
   const updateSlideBackground = useEditorStore((s) => s.updateSlideBackground);
@@ -43,19 +45,19 @@ export function ElementPalette() {
         <span className="text-xs font-medium text-neutral-400 uppercase tracking-wider">{t.editor.insert}</span>
       </div>
       <div className="p-3 space-y-1.5">
-        <button onClick={() => add({ id: nanoid(), type: "text", x: 100, y: 100, w: 400, h: 80, rotation: 0, opacity: 1, zIndex: zBase, locked: false, content: t.editor.writeHere, fontFamily: "var(--font-dm-sans)", fontSize: 32, fontWeight: 400, lineHeight: 1.4, letterSpacing: 0, color: "#0a0a0a", textAlign: "left", verticalAlign: "top" } satisfies TextElement)} className={btn}>
+        <button onClick={() => add({ id: nanoid(), type: "text", x: 100, y: 100, w: 400, h: 80, rotation: 0, opacity: 1, zIndex: zBase, locked: false, content: t.editor.writeHere, ...textDefaults(theme) } satisfies TextElement)} className={btn}>
           <TextT size={16} weight="duotone" /> {t.editor.tools.text}
         </button>
-        <button onClick={() => add({ id: nanoid(), type: "shape", x: 200, y: 200, w: 200, h: 200, rotation: 0, opacity: 1, zIndex: zBase, locked: false, shape: "rect", fill: "#1a1aff", stroke: "transparent", strokeWidth: 0, borderRadius: 0 } satisfies ShapeElement)} className={btn}>
+        <button onClick={() => add({ id: nanoid(), type: "shape", x: 200, y: 200, w: 200, h: 200, rotation: 0, opacity: 1, zIndex: zBase, locked: false, shape: "rect", ...shapeDefaults(theme) } satisfies ShapeElement)} className={btn}>
           <Rectangle size={16} weight="duotone" /> {t.editor.rectangle}
         </button>
-        <button onClick={() => add({ id: nanoid(), type: "shape", x: 200, y: 200, w: 200, h: 200, rotation: 0, opacity: 1, zIndex: zBase, locked: false, shape: "circle", fill: "#1a1aff", stroke: "transparent", strokeWidth: 0, borderRadius: 0 } satisfies ShapeElement)} className={btn}>
+        <button onClick={() => add({ id: nanoid(), type: "shape", x: 200, y: 200, w: 200, h: 200, rotation: 0, opacity: 1, zIndex: zBase, locked: false, shape: "circle", ...shapeDefaults(theme) } satisfies ShapeElement)} className={btn}>
           <Circle size={16} weight="duotone" /> {t.editor.circle}
         </button>
-        <button onClick={() => add({ id: nanoid(), type: "arrow", x: 200, y: 400, w: 300, h: 60, rotation: 0, opacity: 1, zIndex: zBase, locked: false, direction: "right", color: "#0a0a0a", strokeWidth: 3 } satisfies ArrowElement)} className={btn}>
+        <button onClick={() => add({ id: nanoid(), type: "arrow", x: 200, y: 400, w: 300, h: 60, rotation: 0, opacity: 1, zIndex: zBase, locked: false, direction: "right", ...arrowDefaults(theme) } satisfies ArrowElement)} className={btn}>
           <ArrowRight size={16} weight="duotone" /> {t.editor.arrow}
         </button>
-        <button onClick={() => add({ id: nanoid(), type: "divider", x: 100, y: 500, w: 600, h: 10, rotation: 0, opacity: 1, zIndex: zBase, locked: false, color: "#a3a3a3", strokeWidth: 2 } satisfies DividerElement)} className={btn}>
+        <button onClick={() => add({ id: nanoid(), type: "divider", x: 100, y: 500, w: 600, h: 10, rotation: 0, opacity: 1, zIndex: zBase, locked: false, ...dividerDefaults(theme) } satisfies DividerElement)} className={btn}>
           <Minus size={16} weight="duotone" /> {t.editor.line}
         </button>
         <button onClick={triggerUpload} disabled={uploading} className={`${btn} disabled:opacity-50`}>
