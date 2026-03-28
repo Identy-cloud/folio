@@ -4,6 +4,7 @@ import { SlidePanel } from "./SlidePanel/SlidePanel";
 import { Canvas } from "./Canvas/Canvas";
 import { Toolbar } from "./Toolbar/Toolbar";
 import { ElementPalette } from "./ElementPalette/ElementPalette";
+import { Onboarding } from "@/components/editor/Onboarding";
 import { useKeyboard } from "../hooks/useKeyboard";
 import { useAutoSave } from "../hooks/useAutoSave";
 import { useCollaboration } from "../hooks/useCollaboration";
@@ -19,9 +20,13 @@ export function EditorLayout() {
 
   return (
     <div className="flex h-screen flex-col bg-neutral-100">
-      <Toolbar connected={connected} peerCount={peers.length} />
+      <div data-panel="toolbar">
+        <Toolbar connected={connected} peerCount={peers.length} />
+      </div>
       <div className="flex flex-1 overflow-hidden">
-        <SlidePanel />
+        <div data-panel="slides">
+          <SlidePanel />
+        </div>
         <div className="flex-1 flex items-center justify-center overflow-hidden">
           <Canvas
             peers={peers}
@@ -29,8 +34,11 @@ export function EditorLayout() {
             onCursorLeave={clearCursor}
           />
         </div>
-        <ElementPalette />
+        <div data-panel="palette">
+          <ElementPalette />
+        </div>
       </div>
+      <Onboarding />
     </div>
   );
 }
