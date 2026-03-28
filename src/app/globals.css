@@ -31,3 +31,28 @@ body {
   background: var(--background);
   color: var(--foreground);
 }
+
+/* Viewer slide transitions */
+@keyframes slide-in-right {
+  from { opacity: 0; transform: scale(var(--tw-scale, 1)) translateX(3%); }
+  to   { opacity: 1; transform: scale(var(--tw-scale, 1)) translateX(0); }
+}
+@keyframes slide-in-left {
+  from { opacity: 0; transform: scale(var(--tw-scale, 1)) translateX(-3%); }
+  to   { opacity: 1; transform: scale(var(--tw-scale, 1)) translateX(0); }
+}
+@keyframes fade-out {
+  0%   { opacity: 1; }
+  70%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.animate-slide-in-left {
+  animation: slide-in-left 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.animate-fade-out {
+  animation: fade-out 3s ease both;
+}
