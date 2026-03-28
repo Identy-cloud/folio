@@ -45,9 +45,10 @@ export function TextProperties({ element }: Props) {
         value={element.fontFamily}
         onChange={(e) => update({ fontFamily: e.target.value })}
         className="w-full rounded border border-neutral-700 bg-[#161616] px-2 py-1.5 text-xs text-neutral-200 outline-none"
+        style={{ fontFamily: element.fontFamily }}
       >
         {ALL_FONTS.map((f) => (
-          <option key={f.value} value={f.value}>{f.label}</option>
+          <option key={f.value} value={f.value} style={{ fontFamily: f.value }}>{f.label}</option>
         ))}
       </select>
 

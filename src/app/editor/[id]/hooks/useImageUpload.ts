@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { nanoid } from "nanoid";
 import { useEditorStore } from "@/store/editorStore";
 import { toast } from "sonner";
@@ -11,6 +11,15 @@ export function useImageUpload() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const addElement = useEditorStore((s) => s.addElement);
   const activeSlide = useEditorStore((s) => s.getActiveSlide());
+
+  useEffect(() => {
+    return () => {
+      if (inputRef.current?.parentNode) {
+        inputRef.current.parentNode.removeChild(inputRef.current);
+        inputRef.current = null;
+      }
+    };
+  }, []);
 
   function trigger() {
     if (!inputRef.current) {
@@ -66,6 +75,7 @@ export function useImageUpload() {
         src: publicUrl,
         objectFit: "cover",
         filter: "",
+        isPlaceholder: false,
       };
 
       addElement(el);

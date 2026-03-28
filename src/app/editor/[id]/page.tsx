@@ -20,16 +20,18 @@ export default function EditorPage({
   useEffect(() => {
     async function load() {
       try {
-        const [slidesRes, presRes] = await Promise.all([
+        const [slidesResult, presResult] = await Promise.allSettled([
           fetch(`/api/presentations/${id}/slides`),
           fetch(`/api/presentations/${id}`),
         ]);
-        if (!slidesRes.ok) {
+        if (slidesResult.status === "rejected" || !slidesResult.value.ok) {
           setError(t.editor.loadError);
           return;
         }
-        const slides = await slidesRes.json();
-        const pres = presRes.ok ? await presRes.json() : null;
+        const slides = await slidesResult.value.json();
+        const pres = presResult.status === "fulfilled" && presResult.value.ok
+          ? await presResult.value.json()
+          : null;
         init(id, slides, pres?.theme);
       } catch {
         setError(t.common.connectionError);

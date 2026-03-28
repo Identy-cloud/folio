@@ -32,7 +32,9 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
   const wrapperRef = useRef<HTMLDivElement>(null);
   const boundsRef = useRef<DOMRect | null>(null);
   const [scale, setScale] = useState(0.5);
-  const [narrow, setNarrow] = useState(false);
+  const [narrow, setNarrow] = useState(() =>
+    typeof window !== "undefined" ? window.innerWidth < 768 : false
+  );
 
   const slide = useEditorStore((s) => s.getActiveSlide());
   const activeSlideIndex = useEditorStore((s) => s.activeSlideIndex);

@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { useEditorStore } from "@/store/editorStore";
 import { toast } from "sonner";
 import { useTranslation } from "@/lib/i18n/context";
@@ -12,6 +12,15 @@ export function useImageReplace(elementId: string) {
   const pushHistory = useEditorStore((s) => s.pushHistory);
   const setElementBusy = useEditorStore((s) => s.setElementBusy);
   const clearElementBusy = useEditorStore((s) => s.clearElementBusy);
+
+  useEffect(() => {
+    return () => {
+      if (inputRef.current?.parentNode) {
+        inputRef.current.parentNode.removeChild(inputRef.current);
+        inputRef.current = null;
+      }
+    };
+  }, []);
 
   const trigger = useCallback(() => {
     if (busyRef.current) return;

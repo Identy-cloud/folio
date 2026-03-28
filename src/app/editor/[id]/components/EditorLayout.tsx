@@ -106,14 +106,15 @@ export function EditorLayout() {
             className="absolute inset-0 bg-black/40"
             onClick={() => setMobilePanel(null)}
           />
-          <div className="absolute bottom-0 left-0 right-0 max-h-[70vh] overflow-y-auto rounded-t-xl bg-[#1e1e1e] shadow-2xl">
+          <div role="dialog" aria-modal="true" className="absolute bottom-0 left-0 right-0 max-h-[70vh] overflow-y-auto rounded-t-xl bg-[#1e1e1e] shadow-2xl">
             <div className="sticky top-0 flex items-center justify-between border-b border-neutral-700 bg-[#1e1e1e] px-4 py-3 rounded-t-xl">
               <span className="text-xs font-medium uppercase tracking-wider text-neutral-400">
                 {mobilePanel === "slides" ? t.editor.slides : mobilePanel === "properties" ? t.editor.properties : t.editor.insert}
               </span>
               <button
                 onClick={() => setMobilePanel(null)}
-                className="p-1 text-neutral-400"
+                autoFocus
+                className="p-2 text-neutral-300 hover:text-white"
                 aria-label={t.common.close}
               >
                 <X size={18} />
@@ -169,7 +170,8 @@ function MobileSlidePanel({ onClose }: { onClose: () => void }) {
             {slides.length > 1 && (
               <button
                 onClick={() => deleteSlide(slide.id)}
-                className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500/80 text-[10px] text-white"
+                aria-label={t.editor.deleteSlide}
+                className="absolute -right-1 -top-1 flex h-7 w-7 items-center justify-center rounded-full bg-red-500/80 text-xs text-white active:bg-red-600"
               >
                 ×
               </button>

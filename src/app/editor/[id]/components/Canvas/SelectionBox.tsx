@@ -35,16 +35,18 @@ export const SelectionBox = memo(function SelectionBox({ element, scale }: Props
     origW: number;
     origH: number;
     origRot: number;
-    centerX: number;
-    centerY: number;
+    screenCx: number;
+    screenCy: number;
   } | null>(null);
 
   function onHandleDown(e: React.PointerEvent, handle: HandlePos) {
     e.stopPropagation();
     e.currentTarget.setPointerCapture(e.pointerId);
 
-    const centerX = element.x + element.w / 2;
-    const centerY = element.y + element.h / 2;
+    const canvas = (e.currentTarget as HTMLElement).closest("[data-slide-canvas]");
+    const rect = canvas?.getBoundingClientRect() ?? { left: 0, top: 0 };
+    const screenCx = rect.left + (element.x + element.w / 2) * scale;
+    const screenCy = rect.top + (element.y + element.h / 2) * scale;
 
     dragRef.current = {
       handle,
@@ -55,8 +57,8 @@ export const SelectionBox = memo(function SelectionBox({ element, scale }: Props
       origW: element.w,
       origH: element.h,
       origRot: element.rotation,
-      centerX,
-      centerY,
+      screenCx,
+      screenCy,
     };
   }
 
@@ -67,14 +69,8 @@ export const SelectionBox = memo(function SelectionBox({ element, scale }: Props
     const dy = (e.clientY - d.startY) / scale;
 
     if (d.handle === "rotate") {
-      const cx = d.centerX;
-      const cy = d.centerY;
-      const angle =
-        Math.atan2(e.clientY / scale - cy, e.clientX / scale - cx) *
-        (180 / Math.PI);
-      const startAngle =
-        Math.atan2(d.startY / scale - cy, d.startX / scale - cx) *
-        (180 / Math.PI);
+      const angle = Math.atan2(e.clientY - d.screenCy, e.clientX - d.screenCx) * (180 / Math.PI);
+      const startAngle = Math.atan2(d.startY - d.screenCy, d.startX - d.screenCx) * (180 / Math.PI);
       updateElement(element.id, {
         rotation: d.origRot + (angle - startAngle),
       });

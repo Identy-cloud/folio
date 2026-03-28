@@ -44,6 +44,7 @@ export function ArrowProperties({ element }: Props) {
             <button
               key={d.value}
               onClick={() => update({ direction: d.value })}
+              aria-label={d.value}
               className={`flex h-7 w-7 items-center justify-center rounded transition-colors ${
                 element.direction === d.value
                   ? "bg-white text-[#161616]"

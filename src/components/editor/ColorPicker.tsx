@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 
 const PRESETS = [
   "#ffffff", "#e5e5e5", "#a3a3a3", "#737373",
@@ -18,18 +19,30 @@ interface Props {
 export function ColorPicker({ value, onChange, label }: Props) {
   const [open, setOpen] = useState(false);
   const [hex, setHex] = useState(value);
-  const ref = useRef<HTMLDivElement>(null);
+  const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => setHex(value), [value]);
 
+  const updatePos = useCallback(() => {
+    if (!triggerRef.current) return;
+    const rect = triggerRef.current.getBoundingClientRect();
+    setPos({ top: rect.bottom + 4, left: rect.left });
+  }, []);
+
   useEffect(() => {
     if (!open) return;
+    updatePos();
     function close(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      const target = e.target as Node;
+      if (triggerRef.current?.contains(target)) return;
+      if (dropdownRef.current?.contains(target)) return;
+      setOpen(false);
     }
     document.addEventListener("mousedown", close);
     return () => document.removeEventListener("mousedown", close);
-  }, [open]);
+  }, [open, updatePos]);
 
   function commitHex() {
     const clean = hex.startsWith("#") ? hex : `#${hex}`;
@@ -39,13 +52,14 @@ export function ColorPicker({ value, onChange, label }: Props) {
   }
 
   return (
-    <div ref={ref} className="relative">
+    <div>
       {label && (
         <span className="mb-1 block text-[10px] text-neutral-500 uppercase tracking-wider">
           {label}
         </span>
       )}
       <button
+        ref={triggerRef}
         onClick={() => setOpen(!open)}
         className="flex h-7 w-full items-center gap-2 rounded border border-neutral-700 px-2 hover:border-neutral-600"
       >
@@ -56,8 +70,12 @@ export function ColorPicker({ value, onChange, label }: Props) {
         <span className="text-[11px] text-neutral-400">{value}</span>
       </button>
 
-      {open && (
-        <div className="absolute left-0 top-full z-50 mt-1 w-48 rounded border border-neutral-700 bg-[#1e1e1e] p-2 shadow-xl">
+      {open && pos && createPortal(
+        <div
+          ref={dropdownRef}
+          style={{ position: "fixed", top: pos.top, left: pos.left, zIndex: 9999 }}
+          className="w-48 rounded border border-neutral-700 bg-[#1e1e1e] p-2 shadow-xl"
+        >
           <div className="grid grid-cols-8 gap-1 rounded bg-[#2a2a2a] p-1">
             {PRESETS.map((c) => (
               <button
@@ -81,7 +99,8 @@ export function ColorPicker({ value, onChange, label }: Props) {
               placeholder="#000000"
             />
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
