@@ -21,15 +21,14 @@ interface Props {
 
 export function ViewerClient({ title, slides }: Props) {
   const [current, setCurrent] = useState(0);
-  const [direction, setDirection] = useState<"next" | "prev">("next");
-  const [animating, setAnimating] = useState(false);
+  const [displayed, setDisplayed] = useState(0);
+  const [transitioning, setTransitioning] = useState(false);
   const [scale, setScale] = useState(1);
   const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const touchRef = useRef<{ x: number; y: number } | null>(null);
   const total = slides.length;
 
-  // Detect mobile
   useEffect(() => {
     function check() { setIsMobile(window.innerWidth < 768); }
     check();
@@ -37,7 +36,6 @@ export function ViewerClient({ title, slides }: Props) {
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  // Scale
   const updateScale = useCallback(() => {
     if (!containerRef.current) return;
     const vw = containerRef.current.clientWidth;
@@ -51,22 +49,27 @@ export function ViewerClient({ title, slides }: Props) {
     return () => window.removeEventListener("resize", updateScale);
   }, [updateScale]);
 
-  // Navigation
+  // When current changes, start transition
+  useEffect(() => {
+    if (current === displayed) return;
+    setTransitioning(true);
+    const timer = setTimeout(() => {
+      setDisplayed(current);
+      setTransitioning(false);
+    }, 350);
+    return () => clearTimeout(timer);
+  }, [current, displayed]);
+
   const goNext = useCallback(() => {
-    if (animating || current >= total - 1) return;
-    setDirection("next");
-    setAnimating(true);
+    if (transitioning || current >= total - 1) return;
     setCurrent((c) => c + 1);
-  }, [animating, current, total]);
+  }, [transitioning, current, total]);
 
   const goPrev = useCallback(() => {
-    if (animating || current <= 0) return;
-    setDirection("prev");
-    setAnimating(true);
+    if (transitioning || current <= 0) return;
     setCurrent((c) => c - 1);
-  }, [animating, current]);
+  }, [transitioning, current]);
 
-  // Keyboard
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key === "ArrowRight" || e.key === " ") { e.preventDefault(); goNext(); }
@@ -78,7 +81,6 @@ export function ViewerClient({ title, slides }: Props) {
     return () => window.removeEventListener("keydown", onKey);
   }, [goNext, goPrev]);
 
-  // Touch swipe
   function handleTouchStart(e: React.TouchEvent) {
     touchRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
   }
@@ -88,14 +90,12 @@ export function ViewerClient({ title, slides }: Props) {
     const dx = e.changedTouches[0].clientX - touchRef.current.x;
     const dy = e.changedTouches[0].clientY - touchRef.current.y;
     touchRef.current = null;
-    // Only handle horizontal swipes (ignore vertical scrolls)
     if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
       if (dx < 0) goNext();
       else goPrev();
     }
   }
 
-  // Click zones (desktop)
   function handleClick(e: React.MouseEvent) {
     if (!containerRef.current || isMobile) return;
     const rect = containerRef.current.getBoundingClientRect();
@@ -104,8 +104,8 @@ export function ViewerClient({ title, slides }: Props) {
     else if (x < rect.width * 0.35) goPrev();
   }
 
-  const slide = slides[current];
-  if (!slide) return null;
+  const outgoing = slides[displayed];
+  const incoming = slides[current];
 
   return (
     <div
@@ -115,31 +115,27 @@ export function ViewerClient({ title, slides }: Props) {
       onTouchEnd={handleTouchEnd}
       onClick={handleClick}
     >
-      {/* Slide with transition */}
-      <div
-        key={slide.id}
-        className={animating ? (direction === "next" ? "animate-slide-in-right" : "animate-slide-in-left") : ""}
-        onAnimationEnd={() => setAnimating(false)}
-        style={{
-          width: SLIDE_W,
-          height: SLIDE_H,
-          transform: `scale(${scale})`,
-          transformOrigin: "center center",
-          position: "absolute",
-          backgroundColor: slide.backgroundColor,
-          flexShrink: 0,
-        }}
-      >
-        {slide.elements
-          .slice()
-          .sort((a, b) => a.zIndex - b.zIndex)
-          .map((el) => (
-            <ViewerElement key={el.id} element={el} />
-          ))}
-      </div>
+      {/* Outgoing slide — fades out */}
+      {transitioning && outgoing && (
+        <SlideLayer
+          slide={outgoing}
+          scale={scale}
+          className="transition-opacity duration-300 ease-out opacity-0"
+        />
+      )}
+
+      {/* Current slide — fades in */}
+      <SlideLayer
+        slide={incoming ?? outgoing}
+        scale={scale}
+        className={transitioning
+          ? "transition-opacity duration-300 ease-out opacity-100"
+          : "opacity-100"
+        }
+      />
 
       {/* Bottom bar */}
-      <div className="absolute bottom-0 left-0 right-0 flex items-center justify-between px-4 py-3 sm:px-6 sm:py-4">
+      <div className="absolute bottom-0 left-0 right-0 z-10 flex items-center justify-between px-4 py-3 sm:px-6 sm:py-4">
         <span className="max-w-[40%] truncate text-[10px] text-white/40 sm:text-xs">
           {title}
         </span>
@@ -170,14 +166,45 @@ export function ViewerClient({ title, slides }: Props) {
         </div>
       </div>
 
-      {/* Touch hint on mobile - shown briefly */}
-      {isMobile && current === 0 && !animating && (
-        <div className="absolute inset-x-0 bottom-16 flex justify-center pointer-events-none animate-fade-out">
+      {/* Swipe hint */}
+      {isMobile && current === 0 && !transitioning && (
+        <div className="absolute inset-x-0 bottom-16 z-10 flex justify-center pointer-events-none animate-fade-out">
           <span className="rounded-full bg-white/10 px-4 py-1.5 text-[10px] text-white/50">
             Desliza para navegar ←→
           </span>
         </div>
       )}
+    </div>
+  );
+}
+
+function SlideLayer({
+  slide,
+  scale,
+  className,
+}: {
+  slide: Slide;
+  scale: number;
+  className?: string;
+}) {
+  return (
+    <div
+      className={className}
+      style={{
+        width: SLIDE_W,
+        height: SLIDE_H,
+        transform: `scale(${scale})`,
+        transformOrigin: "center center",
+        position: "absolute",
+        backgroundColor: slide.backgroundColor,
+      }}
+    >
+      {slide.elements
+        .slice()
+        .sort((a, b) => a.zIndex - b.zIndex)
+        .map((el) => (
+          <ViewerElement key={el.id} element={el} />
+        ))}
     </div>
   );
 }
