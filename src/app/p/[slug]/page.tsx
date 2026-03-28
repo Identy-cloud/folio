@@ -52,13 +52,13 @@ export async function generateMetadata({
   const data = await getPresentation(slug);
   if (!data) return { title: "No encontrado" };
 
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "";
+
   return {
     title: data.presentation.title,
     openGraph: {
       title: data.presentation.title,
-      images: data.presentation.thumbnailUrl
-        ? [data.presentation.thumbnailUrl]
-        : [],
+      images: [`${appUrl}/api/og/${slug}`],
       type: "website",
     },
   };
