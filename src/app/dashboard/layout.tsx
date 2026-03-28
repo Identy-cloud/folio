@@ -23,7 +23,7 @@ export default async function DashboardLayout({
     .toUpperCase();
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#0a0a0a] text-white">
+    <div className="flex min-h-screen flex-col bg-[#161616] text-neutral-200">
       <header className="flex h-16 items-center justify-between border-b border-neutral-800 px-6">
         <h1 className="font-display text-2xl tracking-tight">
           FOLIO
@@ -41,7 +41,7 @@ export default async function DashboardLayout({
               className="rounded-full"
             />
           ) : (
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-xs font-medium text-[#0a0a0a]">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-300 text-xs font-medium text-[#161616]">
               {initials}
             </div>
           )}

@@ -55,7 +55,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#0a0a0a] px-4">
+    <div className="flex min-h-screen items-center justify-center bg-[#161616] px-4">
       <div className="w-full max-w-sm space-y-10">
         <div className="text-center">
           <h1 className="font-display text-8xl tracking-tight text-white leading-none">
@@ -108,7 +108,7 @@ export default function LoginPage() {
             <div className="w-full border-t border-neutral-800" />
           </div>
           <div className="relative flex justify-center">
-            <span className="bg-[#0a0a0a] px-4 text-[10px] text-neutral-600 uppercase tracking-[0.3em]">
+            <span className="bg-[#161616] px-4 text-[10px] text-neutral-600 uppercase tracking-[0.3em]">
               o
             </span>
           </div>

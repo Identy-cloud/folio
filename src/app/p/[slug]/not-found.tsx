@@ -3,7 +3,7 @@ import { ArrowRight } from "@phosphor-icons/react";
 
 export default function ViewerNotFound() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-[#0a0a0a] px-6 text-center">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-[#161616] px-6 text-center">
       <p className="text-[10px] tracking-[0.5em] text-neutral-600 uppercase">
         404
       </p>

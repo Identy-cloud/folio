@@ -94,7 +94,7 @@ export default function DashboardPage() {
         </h2>
         <button
           onClick={() => setModalOpen(true)}
-          className="bg-white px-6 py-2.5 text-sm font-medium tracking-widest text-[#0a0a0a] uppercase hover:bg-neutral-200 transition-colors"
+          className="bg-neutral-200 px-6 py-2.5 text-sm font-medium tracking-widest text-[#161616] uppercase hover:bg-neutral-300 transition-colors"
         >
           <Plus size={14} className="inline" /> Nueva presentación
         </button>
@@ -110,7 +110,7 @@ export default function DashboardPage() {
           </p>
           <button
             onClick={() => setModalOpen(true)}
-            className="mt-6 bg-white px-8 py-3 text-sm font-medium tracking-widest text-[#0a0a0a] uppercase hover:bg-neutral-200 transition-colors"
+            className="mt-6 bg-white px-8 py-3 text-sm font-medium tracking-widest text-[#0a0a0a] uppercase hover:bg-neutral-300 transition-colors"
           >
             Crear presentación
           </button>

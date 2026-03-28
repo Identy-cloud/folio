@@ -65,10 +65,10 @@ export function TemplateModal({ open, onClose }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-      <div className="w-full max-w-4xl rounded-sm bg-[#111111] p-8 shadow-2xl">
+      <div className="w-full max-w-4xl rounded-sm bg-[#1e1e1e] p-8 shadow-2xl">
         <div className="mb-6 flex items-center justify-between">
           <div>
-            <h2 className="font-display text-3xl tracking-tight text-white">
+            <h2 className="font-display text-3xl tracking-tight text-neutral-200">
               NUEVA PRESENTACIÓN
             </h2>
             <p className="mt-1 text-sm text-neutral-400">
@@ -78,7 +78,7 @@ export function TemplateModal({ open, onClose }: Props) {
           <button
             onClick={onClose}
             disabled={creating !== null}
-            className="text-neutral-500 hover:text-white disabled:opacity-30"
+            className="text-neutral-500 hover:text-neutral-200 disabled:opacity-30"
           >
             <X size={20} />
           </button>

@@ -53,7 +53,7 @@ export function PresentationCard({
   const bg = THEME_COLORS[presentation.theme] ?? "bg-neutral-800";
 
   return (
-    <div className="group relative flex flex-col border border-neutral-800 bg-[#111111] transition-shadow hover:shadow-lg">
+    <div className="group relative flex flex-col border border-neutral-800 bg-[#1e1e1e] transition-shadow hover:shadow-lg">
       <Link href={`/editor/${presentation.id}`} className="block">
         {presentation.thumbnailUrl ? (
           <img
@@ -65,7 +65,7 @@ export function PresentationCard({
           <div
             className={`flex aspect-video items-center justify-center ${bg}`}
           >
-            <span className="font-display text-2xl tracking-tight text-white/60">
+            <span className="font-display text-2xl tracking-tight text-neutral-200/60">
               {presentation.title}
             </span>
           </div>
@@ -74,7 +74,7 @@ export function PresentationCard({
 
       <div className="flex items-center justify-between px-4 py-3">
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-medium text-white">{presentation.title}</p>
+          <p className="truncate text-sm font-medium text-neutral-200">{presentation.title}</p>
           <p className="text-xs text-neutral-500">
             {formatDistanceToNow(new Date(presentation.updatedAt), {
               addSuffix: true,
@@ -87,14 +87,14 @@ export function PresentationCard({
         <div ref={menuRef} className="relative">
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="ml-2 rounded p-1.5 text-neutral-500 hover:bg-neutral-800 hover:text-white"
+            className="ml-2 rounded p-1.5 text-neutral-500 hover:bg-neutral-800 hover:text-neutral-200"
           >
             <DotsThreeVertical size={18} weight="duotone" />
 
           </button>
 
           {menuOpen && (
-            <div className="absolute right-0 bottom-full mb-1 z-50 w-44 border border-neutral-700 bg-[#1a1a1a] py-1 shadow-lg rounded">
+            <div className="absolute right-0 bottom-full mb-1 z-50 w-44 border border-neutral-700 bg-[#242424] py-1 shadow-lg rounded">
               <MenuItem
                 label="Renombrar"
                 onClick={() => {

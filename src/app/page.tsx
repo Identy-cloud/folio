@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function LandingPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-[#0a0a0a] text-white">
+    <div className="flex min-h-screen flex-col bg-[#161616] text-white">
       <header className="flex items-center justify-between px-8 py-6">
         <span className="font-display text-2xl tracking-tight">FOLIO</span>
         <Link
