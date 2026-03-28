@@ -1,4 +1,3 @@
-import { nanoid } from "nanoid";
 import type { Slide, TextElement, ShapeElement, ImageElement } from "@/types/elements";
 import { THEMES, type Theme } from "./themes";
 
@@ -25,7 +24,7 @@ function txt(
   o: Partial<TextElement> & { x: number; y: number; w: number; h: number; content: string }
 ): TextElement {
   return {
-    id: nanoid(), type: "text", rotation: 0, opacity: 1, zIndex: 1, locked: false,
+    id: crypto.randomUUID(), type: "text", rotation: 0, opacity: 1, zIndex: 1, locked: false,
     fontFamily: t.fontBody, fontSize: 24, fontWeight: 400, lineHeight: 1.5,
     letterSpacing: 0, color: t.text, textAlign: "left", verticalAlign: "top",
     ...o,
@@ -36,7 +35,7 @@ function sh(
   o: Partial<ShapeElement> & { x: number; y: number; w: number; h: number }
 ): ShapeElement {
   return {
-    id: nanoid(), type: "shape", rotation: 0, opacity: 1, zIndex: 0, locked: false,
+    id: crypto.randomUUID(), type: "shape", rotation: 0, opacity: 1, zIndex: 0, locked: false,
     shape: "rect", fill: "#cccccc", stroke: "transparent", strokeWidth: 0, borderRadius: 0,
     ...o,
   };
@@ -46,7 +45,7 @@ function img(
   src: string, x: number, y: number, w: number, h: number, themeKey: string, z = 1
 ): ImageElement {
   return {
-    id: nanoid(), type: "image", x, y, w, h,
+    id: crypto.randomUUID(), type: "image", x, y, w, h,
     rotation: 0, opacity: 1, zIndex: z, locked: false,
     src, objectFit: "cover",
     filter: isDark(themeKey) ? "grayscale(100%)" : "",
@@ -61,9 +60,9 @@ function pageNum(t: Theme, num: string): TextElement {
   });
 }
 
-function coverSlide(t: Theme, pid: string, tk: string): Slide {
+function coverSlide(t: Theme, pid: string, tk: string): Omit<Slide, "id"> {
   return {
-    id: nanoid(), presentationId: pid, order: 0,
+    presentationId: pid, order: 0,
     backgroundColor: t.background, backgroundImage: null, mobileElements: null,
     elements: [
       txt(t, {
@@ -96,9 +95,9 @@ function coverSlide(t: Theme, pid: string, tk: string): Slide {
   };
 }
 
-function aboutSlide(t: Theme, pid: string, tk: string): Slide {
+function aboutSlide(t: Theme, pid: string, tk: string): Omit<Slide, "id"> {
   return {
-    id: nanoid(), presentationId: pid, order: 1,
+    presentationId: pid, order: 1,
     backgroundColor: t.background, backgroundImage: null, mobileElements: null,
     elements: [
       txt(t, {
@@ -138,12 +137,12 @@ function aboutSlide(t: Theme, pid: string, tk: string): Slide {
   };
 }
 
-function teamSlide(t: Theme, pid: string, tk: string): Slide {
+function teamSlide(t: Theme, pid: string, tk: string): Omit<Slide, "id"> {
   const roles = ["Creative Director", "Senior Designer", "Digital Strategist"];
   const names = ["Alex Morgan", "Sam Rivera", "Jordan Chen"];
   const photos = [IMG.portrait1, IMG.portrait2, IMG.portrait3];
   return {
-    id: nanoid(), presentationId: pid, order: 2,
+    presentationId: pid, order: 2,
     backgroundColor: t.background, backgroundImage: null, mobileElements: null,
     elements: [
       txt(t, {
@@ -181,9 +180,9 @@ function teamSlide(t: Theme, pid: string, tk: string): Slide {
   };
 }
 
-function conceptSlide(t: Theme, pid: string, tk: string): Slide {
+function conceptSlide(t: Theme, pid: string, tk: string): Omit<Slide, "id"> {
   return {
-    id: nanoid(), presentationId: pid, order: 3,
+    presentationId: pid, order: 3,
     backgroundColor: t.background, backgroundImage: null, mobileElements: null,
     elements: [
       txt(t, { x: 100, y: 100, w: 140, h: 25, content: "04 / CONCEPT", fontSize: 11, letterSpacing: 0.3, opacity: 0.4, zIndex: 2 }),
@@ -207,7 +206,7 @@ function conceptSlide(t: Theme, pid: string, tk: string): Slide {
   };
 }
 
-function timelineSlide(t: Theme, pid: string, tk: string): Slide {
+function timelineSlide(t: Theme, pid: string, tk: string): Omit<Slide, "id"> {
   const stages = [
     { num: "01", title: "RESEARCH", desc: "Market analysis, competitor audit, and user research to define the strategic foundation." },
     { num: "02", title: "CONCEPT", desc: "Creative exploration, moodboards, and initial design directions for review." },
@@ -216,7 +215,7 @@ function timelineSlide(t: Theme, pid: string, tk: string): Slide {
     { num: "05", title: "LAUNCH", desc: "Final delivery, deployment, and post-launch optimization." },
   ];
   return {
-    id: nanoid(), presentationId: pid, order: 4,
+    presentationId: pid, order: 4,
     backgroundColor: t.background, backgroundImage: null, mobileElements: null,
     elements: [
       txt(t, {
@@ -244,9 +243,9 @@ function timelineSlide(t: Theme, pid: string, tk: string): Slide {
   };
 }
 
-function ctaSlide(t: Theme, pid: string, tk: string): Slide {
+function ctaSlide(t: Theme, pid: string, tk: string): Omit<Slide, "id"> {
   return {
-    id: nanoid(), presentationId: pid, order: 5,
+    presentationId: pid, order: 5,
     backgroundColor: t.background, backgroundImage: null, mobileElements: null,
     elements: [
       img(IMG.abstract2, 0, 0, 340, 520, tk, 1),
@@ -274,7 +273,7 @@ function ctaSlide(t: Theme, pid: string, tk: string): Slide {
   };
 }
 
-export function generateTemplate(themeKey: string, presentationId: string): Slide[] {
+export function generateTemplate(themeKey: string, presentationId: string): Omit<Slide, "id">[] {
   const t = THEMES[themeKey];
   if (!t) return [];
 

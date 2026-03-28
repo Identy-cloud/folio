@@ -63,7 +63,6 @@ export async function POST(request: Request) {
     if (templateSlides.length > 0) {
       await db.insert(slides).values(
         templateSlides.map((s) => ({
-          id: s.id,
           presentationId: presentation.id,
           order: s.order,
           backgroundColor: s.backgroundColor,
