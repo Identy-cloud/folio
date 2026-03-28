@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { presentations, slides } from "@/db/schema";
 import { getAuthenticatedUser } from "@/lib/auth";
+import { checkRateLimit, rateLimitResponse } from "@/lib/rate-limit";
 import { eq, desc } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { z } from "zod";
@@ -33,6 +34,9 @@ export async function POST(request: Request) {
   if (!user) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const rl = checkRateLimit(`create:${user.id}`, 10, 3600_000);
+  if (!rl.allowed) return rateLimitResponse(rl);
 
   const raw = await request.json().catch(() => ({}));
   const parsed = createSchema.safeParse(raw);

@@ -1,28 +1,8 @@
 import { getAuthenticatedUser } from "@/lib/auth";
 import { generateUploadUrl } from "@/lib/r2";
+import { checkRateLimit, rateLimitResponse } from "@/lib/rate-limit";
 import { z } from "zod";
 import { nanoid } from "nanoid";
-
-const uploadLimits = new Map<string, { count: number; resetAt: number }>();
-
-const MAX_UPLOADS_PER_MINUTE = 10;
-
-function checkRateLimit(userId: string): boolean {
-  const now = Date.now();
-  const entry = uploadLimits.get(userId);
-
-  if (!entry || now > entry.resetAt) {
-    uploadLimits.set(userId, { count: 1, resetAt: now + 60_000 });
-    return true;
-  }
-
-  if (entry.count >= MAX_UPLOADS_PER_MINUTE) {
-    return false;
-  }
-
-  entry.count++;
-  return true;
-}
 
 const ALLOWED_TYPES = [
   "image/jpeg",
@@ -43,12 +23,8 @@ export async function POST(request: Request) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  if (!checkRateLimit(user.id)) {
-    return Response.json(
-      { error: "Rate limit exceeded. Max 10 uploads per minute." },
-      { status: 429 }
-    );
-  }
+  const rl = checkRateLimit(`upload:${user.id}`, 20, 3600_000);
+  if (!rl.allowed) return rateLimitResponse(rl);
 
   const raw = await request.json().catch(() => null);
   const parsed = uploadSchema.safeParse(raw);
