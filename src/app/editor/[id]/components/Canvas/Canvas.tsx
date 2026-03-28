@@ -117,7 +117,7 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
         onPointerMove={handlePointerMove}
         onPointerLeave={onCursorLeave}
       >
-        <SnapGuides scale={scale} />
+        <SnapGuides />
         {slide.elements
           .slice()
           .sort((a, b) => a.zIndex - b.zIndex)

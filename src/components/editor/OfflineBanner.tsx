@@ -3,14 +3,13 @@
 import { useState, useEffect } from "react";
 
 export function OfflineBanner() {
-  const [offline, setOffline] = useState(false);
+  const [offline, setOffline] = useState(() => typeof navigator !== "undefined" ? !navigator.onLine : false);
 
   useEffect(() => {
     function goOffline() { setOffline(true); }
     function goOnline() { setOffline(false); }
     window.addEventListener("offline", goOffline);
     window.addEventListener("online", goOnline);
-    setOffline(!navigator.onLine);
     return () => {
       window.removeEventListener("offline", goOffline);
       window.removeEventListener("online", goOnline);

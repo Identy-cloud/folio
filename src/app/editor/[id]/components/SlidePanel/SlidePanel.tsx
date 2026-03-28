@@ -13,12 +13,8 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { useVirtualizer } from "@tanstack/react-virtual";
 import { useEditorStore } from "@/store/editorStore";
 import { SortableSlideThumb } from "./SortableSlideThumb";
-
-const THUMB_HEIGHT = 136;
-const VIRTUALIZATION_THRESHOLD = 20;
 
 export function SlidePanel() {
   const slides = useEditorStore((s) => s.slides);
@@ -54,14 +50,6 @@ export function SlidePanel() {
     e.preventDefault();
     setContextMenu({ x: e.clientX, y: e.clientY, slideId });
   }
-
-  const useVirtual = slides.length > VIRTUALIZATION_THRESHOLD;
-  const virtualizer = useVirtualizer({
-    count: slides.length,
-    getScrollElement: () => parentRef.current,
-    estimateSize: () => THUMB_HEIGHT,
-    enabled: useVirtual,
-  });
 
   return (
     <div className="flex w-56 flex-col border-r border-neutral-200 bg-white">

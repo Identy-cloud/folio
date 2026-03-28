@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { PresentationCard } from "./presentation-card";
 import { SkeletonGrid } from "./skeleton-grid";
@@ -21,17 +21,19 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
 
-  const fetchPresentations = useCallback(async () => {
-    const res = await fetch("/api/presentations");
-    if (res.ok) {
-      setPresentations(await res.json());
-    }
-    setLoading(false);
+  useEffect(() => {
+    const load = async () => {
+      const res = await fetch("/api/presentations");
+      if (res.ok) setPresentations(await res.json());
+      setLoading(false);
+    };
+    load();
   }, []);
 
-  useEffect(() => {
-    fetchPresentations();
-  }, [fetchPresentations]);
+  async function refreshPresentations() {
+    const res = await fetch("/api/presentations");
+    if (res.ok) setPresentations(await res.json());
+  }
 
   async function handleDuplicate(id: string) {
     const original = presentations.find((p) => p.id === id);
@@ -45,7 +47,7 @@ export default function DashboardPage() {
         useTemplate: false,
       }),
     });
-    fetchPresentations();
+    refreshPresentations();
   }
 
   async function handleRename(id: string) {
@@ -59,7 +61,7 @@ export default function DashboardPage() {
     });
     if (res.ok) toast.success("Renombrada");
     else toast.error("Error al renombrar");
-    fetchPresentations();
+    refreshPresentations();
   }
 
   async function handleDelete(id: string) {
@@ -67,7 +69,7 @@ export default function DashboardPage() {
     const res = await fetch(`/api/presentations/${id}`, { method: "DELETE" });
     if (res.ok) toast.success("Eliminada");
     else toast.error("Error al eliminar");
-    fetchPresentations();
+    refreshPresentations();
   }
 
   async function handleTogglePublic(id: string, isPublic: boolean) {
@@ -78,7 +80,7 @@ export default function DashboardPage() {
     });
     if (res.ok) toast.success(isPublic ? "Ahora es privada" : "Ahora es pública");
     else toast.error("Error al cambiar visibilidad");
-    fetchPresentations();
+    refreshPresentations();
   }
 
   if (loading) return <SkeletonGrid />;

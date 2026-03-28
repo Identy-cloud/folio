@@ -102,7 +102,7 @@ function DesktopViewer({
       onTouchEnd={(e) => {
         if (!touchRef.current) return;
         const dx = e.changedTouches[0].clientX - touchRef.current.x;
-        if (Math.abs(dx) > 50) { dx < 0 ? goNext() : goPrev(); }
+        if (Math.abs(dx) > 50) { if (dx < 0) goNext(); else goPrev(); }
         touchRef.current = null;
       }}
       onClick={handleClick}

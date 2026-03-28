@@ -12,7 +12,7 @@ interface Guide {
   pos: number;
 }
 
-export const SnapGuides = memo(function SnapGuides({ scale }: { scale: number }) {
+export const SnapGuides = memo(function SnapGuides() {
   const slide = useEditorStore((s) => s.getActiveSlide());
   const selectedIds = useEditorStore((s) => s.selectedElementIds);
 
