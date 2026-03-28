@@ -42,7 +42,7 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
         return document.querySelector("[data-slide-canvas]") as HTMLElement;
       },
       onProgress: (current, total) => {
-        setExportProgress(`Exportando slide ${current} de ${total}...`);
+        setExportProgress(`${current}/${total}`);
       },
     });
 
@@ -61,8 +61,8 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
   };
 
   return (
-    <div className="flex h-12 items-center justify-between border-b border-neutral-200 bg-white px-4">
-      <div className="flex items-center gap-4">
+    <div className="flex h-12 items-center justify-between border-b border-neutral-200 bg-white px-2 md:px-4">
+      <div className="flex items-center gap-2 md:gap-4">
         <Link
           href="/dashboard"
           className="font-display text-lg tracking-tight text-neutral-900 hover:text-neutral-600"
@@ -74,8 +74,8 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
           <button onClick={undo} className="rounded p-1.5 text-neutral-600 hover:bg-neutral-100" title="Deshacer (Ctrl+Z)"><ArrowCounterClockwise size={16} weight="duotone" /></button>
           <button onClick={redo} className="rounded p-1.5 text-neutral-600 hover:bg-neutral-100" title="Rehacer (Ctrl+Y)"><ArrowClockwise size={16} weight="duotone" /></button>
         </div>
-        <div className="h-5 w-px bg-neutral-200" />
-        <div className="flex gap-1">
+        <div className="hidden md:block h-5 w-px bg-neutral-200" />
+        <div className="hidden md:flex gap-1">
           {TOOLS.map((tool) => (
             <button
               key={tool.id}
@@ -91,19 +91,19 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
             </button>
           ))}
         </div>
-        <div className="h-5 w-px bg-neutral-200" />
+        <div className="hidden md:block h-5 w-px bg-neutral-200" />
         <button
           onClick={handleExport}
           disabled={exporting}
-          className="flex items-center gap-1 rounded px-3 py-1 text-xs text-neutral-600 hover:bg-neutral-100 disabled:opacity-50"
+          className="hidden md:flex items-center gap-1 rounded px-3 py-1 text-xs text-neutral-600 hover:bg-neutral-100 disabled:opacity-50"
         >
           <FilePdf size={14} weight="duotone" />
           {exporting ? exportProgress : "PDF"}
         </button>
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 md:gap-4">
         {peerCount > 0 && (
-          <span className="text-xs text-neutral-400">
+          <span className="hidden md:inline text-xs text-neutral-400">
             {peerCount} colaborador{peerCount > 1 ? "es" : ""}
           </span>
         )}
