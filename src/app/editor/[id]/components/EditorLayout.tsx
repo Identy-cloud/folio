@@ -14,11 +14,19 @@ import { useCollaboration } from "../hooks/useCollaboration";
 import { useEditorStore } from "@/store/editorStore";
 import { useSessionGuard } from "@/hooks/useSessionGuard";
 import {
-  StackSimple, PlusCircle, X,
+  StackSimple, PlusCircle, SlidersHorizontal, X,
   TextT, Rectangle, Circle, Triangle, Image as ImageIcon,
 } from "@phosphor-icons/react";
 import { SlidePreview } from "@/components/SlidePreview";
-import type { TextElement, ShapeElement } from "@/types/elements";
+import type { TextElement, ShapeElement, ImageElement } from "@/types/elements";
+import { PositionFields } from "./ElementPalette/PositionFields";
+import { TextProperties } from "./ElementPalette/TextProperties";
+import { ShapeProperties } from "./ElementPalette/ShapeProperties";
+import { ImageProperties } from "./ElementPalette/ImageProperties";
+import { LayerControls } from "./ElementPalette/LayerControls";
+import { AlignControls } from "./ElementPalette/AlignControls";
+import { LockToggle } from "./ElementPalette/LockToggle";
+import { DeleteButton } from "./ElementPalette/DeleteButton";
 import { useImageUpload } from "../hooks/useImageUpload";
 import { useTranslation } from "@/lib/i18n/context";
 
@@ -32,7 +40,9 @@ export function EditorLayout() {
   useAutoSave();
   useSessionGuard();
 
-  const [mobilePanel, setMobilePanel] = useState<"slides" | "insert" | null>(null);
+  const [mobilePanel, setMobilePanel] = useState<"slides" | "insert" | "properties" | null>(null);
+  const selectedIds = useEditorStore((s) => s.selectedElementIds);
+  const hasSelection = selectedIds.length > 0;
 
   return (
     <div className="flex h-screen flex-col bg-[#111111]">
@@ -74,6 +84,15 @@ export function EditorLayout() {
         >
           <PlusCircle size={20} weight="duotone" />
         </button>
+        {hasSelection && (
+          <button
+            onClick={() => setMobilePanel(mobilePanel === "properties" ? null : "properties")}
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-blue-600 text-white shadow-lg active:scale-95 transition-transform animate-[props-in_0.2s_ease-out]"
+            aria-label={t.editor.properties}
+          >
+            <SlidersHorizontal size={20} weight="duotone" />
+          </button>
+        )}
       </div>
 
       {/* Mobile drawer */}
@@ -86,7 +105,7 @@ export function EditorLayout() {
           <div className="absolute bottom-0 left-0 right-0 max-h-[70vh] overflow-y-auto rounded-t-xl bg-[#1e1e1e] shadow-2xl">
             <div className="sticky top-0 flex items-center justify-between border-b border-neutral-700 bg-[#1e1e1e] px-4 py-3 rounded-t-xl">
               <span className="text-xs font-medium uppercase tracking-wider text-neutral-400">
-                {mobilePanel === "slides" ? t.editor.slides : t.editor.insert}
+                {mobilePanel === "slides" ? t.editor.slides : mobilePanel === "properties" ? t.editor.properties : t.editor.insert}
               </span>
               <button
                 onClick={() => setMobilePanel(null)}
@@ -96,10 +115,14 @@ export function EditorLayout() {
                 <X size={18} />
               </button>
             </div>
-            {mobilePanel === "slides" ? (
+            {mobilePanel === "slides" && (
               <MobileSlidePanel onClose={() => setMobilePanel(null)} />
-            ) : (
+            )}
+            {mobilePanel === "insert" && (
               <MobileInsertPanel onClose={() => setMobilePanel(null)} />
+            )}
+            {mobilePanel === "properties" && (
+              <MobilePropertiesPanel onClose={() => setMobilePanel(null)} />
             )}
           </div>
         </div>
@@ -213,6 +236,35 @@ function MobileInsertPanel({ onClose }: { onClose: () => void }) {
       <button onClick={() => { triggerUpload(); onClose(); }} disabled={uploading} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800 disabled:opacity-50">
         <ImageIcon size={18} weight="duotone" /> {uploading ? t.editor.uploading : t.editor.image}
       </button>
+    </div>
+  );
+}
+
+function MobilePropertiesPanel({ onClose }: { onClose: () => void }) {
+  const activeSlide = useEditorStore((s) => s.getActiveSlide());
+  const selectedIds = useEditorStore((s) => s.selectedElementIds);
+  const editingMode = useEditorStore((s) => s.editingMode);
+
+  const elements = editingMode === "mobile" && activeSlide?.mobileElements
+    ? activeSlide.mobileElements
+    : activeSlide?.elements;
+  const el = elements?.find((e) => selectedIds.includes(e.id));
+
+  if (!el) {
+    onClose();
+    return null;
+  }
+
+  return (
+    <div className="p-4 space-y-4">
+      <PositionFields element={el} />
+      {el.type === "text" && <TextProperties element={el} />}
+      {el.type === "shape" && <ShapeProperties element={el} />}
+      {el.type === "image" && <ImageProperties element={el as ImageElement} />}
+      <AlignControls elementId={el.id} />
+      <LayerControls elementId={el.id} />
+      <LockToggle element={el} />
+      <DeleteButton elementId={el.id} />
     </div>
   );
 }
