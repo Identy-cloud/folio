@@ -78,8 +78,8 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
         </Link>
         <div className="h-5 w-px bg-neutral-700" />
         <div className="flex gap-1">
-          <button onClick={undo} className="rounded p-2 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200" title={`${t.editor.undo} (Ctrl+Z)`} aria-label={t.editor.undo}><ArrowCounterClockwise size={16} weight="duotone" /></button>
-          <button onClick={redo} className="rounded p-2 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200" title={`${t.editor.redo} (Ctrl+Y)`} aria-label={t.editor.redo}><ArrowClockwise size={16} weight="duotone" /></button>
+          <button onClick={undo} className="rounded p-2 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200" title={`${t.editor.undo} (Ctrl+Z)`} aria-label={t.editor.undo}><ArrowCounterClockwise size={16} weight="regular" /></button>
+          <button onClick={redo} className="rounded p-2 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200" title={`${t.editor.redo} (Ctrl+Y)`} aria-label={t.editor.redo}><ArrowClockwise size={16} weight="regular" /></button>
         </div>
         <div className="hidden md:block h-5 w-px bg-neutral-700" />
         <div className="hidden md:flex gap-1">

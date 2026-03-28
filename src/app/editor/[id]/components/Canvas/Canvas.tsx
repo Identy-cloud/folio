@@ -46,9 +46,10 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
   const updateScale = useCallback(() => {
     if (!wrapperRef.current) return;
     const rect = wrapperRef.current.getBoundingClientRect();
-    const pad = rect.width < 768 ? 16 : 48;
-    const sx = (rect.width - pad) / canvasW;
-    const sy = (rect.height - pad) / canvasH;
+    const hPad = rect.width < 768 ? 16 : 48;
+    const vPad = rect.width < 768 ? 16 : 48;
+    const sx = (rect.width - hPad) / canvasW;
+    const sy = (rect.height - vPad) / canvasH;
     setScale(Math.min(sx, sy, 1));
   }, [canvasW, canvasH]);
 
@@ -107,15 +108,18 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
   return (
     <div
       ref={wrapperRef}
-      className="relative flex h-full w-full items-start justify-center overflow-hidden pt-6"
+      className="relative h-full w-full overflow-hidden"
     >
       <div
         data-slide-canvas
         style={{
           width: canvasW,
           height: canvasH,
-          transform: `scale(${scale})`,
-          transformOrigin: "top center",
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: `translate(-50%, -50%) scale(${scale})`,
+          transformOrigin: "center center",
           backgroundColor: slide.backgroundColor,
           boxShadow: "0 4px 30px rgba(0,0,0,0.3)",
         }}
