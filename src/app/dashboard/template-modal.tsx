@@ -64,7 +64,7 @@ export function TemplateModal({ open, onClose }: Props) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 sm:items-center">
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 sm:items-center" role="dialog" aria-modal="true" aria-label="Nueva presentación">
       <div className="max-h-[90vh] w-full overflow-y-auto rounded-t-xl bg-[#1e1e1e] p-4 shadow-2xl sm:max-w-4xl sm:rounded-sm sm:p-8">
         <div className="mb-4 flex items-center justify-between sm:mb-6">
           <div>
@@ -79,6 +79,7 @@ export function TemplateModal({ open, onClose }: Props) {
             onClick={onClose}
             disabled={creating !== null}
             className="text-neutral-500 hover:text-neutral-200 disabled:opacity-30"
+            aria-label="Cerrar"
           >
             <X size={20} />
           </button>

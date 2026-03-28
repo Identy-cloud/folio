@@ -76,8 +76,8 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
         </Link>
         <div className="h-5 w-px bg-neutral-700" />
         <div className="flex gap-1">
-          <button onClick={undo} className="rounded p-1.5 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200" title="Deshacer (Ctrl+Z)"><ArrowCounterClockwise size={16} weight="duotone" /></button>
-          <button onClick={redo} className="rounded p-1.5 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200" title="Rehacer (Ctrl+Y)"><ArrowClockwise size={16} weight="duotone" /></button>
+          <button onClick={undo} className="rounded p-2 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200" title="Deshacer (Ctrl+Z)" aria-label="Deshacer"><ArrowCounterClockwise size={16} weight="duotone" /></button>
+          <button onClick={redo} className="rounded p-2 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200" title="Rehacer (Ctrl+Y)" aria-label="Rehacer"><ArrowClockwise size={16} weight="duotone" /></button>
         </div>
         <div className="hidden md:block h-5 w-px bg-neutral-700" />
         <div className="hidden md:flex gap-1">
@@ -114,22 +114,26 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
           {exporting ? exportProgress : "PDF"}
         </button>
         <div className="hidden md:block h-5 w-px bg-neutral-700" />
-        <div className="hidden md:flex gap-0.5 rounded border border-neutral-700 p-0.5">
+        <div className="hidden md:flex gap-0.5 rounded border border-neutral-700 p-0.5" role="group" aria-label="Modo de edición">
           <button
             onClick={() => setEditingMode("desktop")}
-            className={`flex items-center gap-1 rounded px-2 py-1 text-xs transition-colors ${
+            aria-label="Modo desktop"
+            aria-pressed={editingMode === "desktop"}
+            className={`flex items-center gap-1 rounded px-2.5 py-1.5 text-xs transition-colors ${
               editingMode === "desktop" ? "bg-white text-[#161616]" : "text-neutral-500 hover:text-neutral-300"
             }`}
           >
-            <Desktop size={12} />
+            <Desktop size={14} />
           </button>
           <button
             onClick={() => setEditingMode("mobile")}
-            className={`flex items-center gap-1 rounded px-2 py-1 text-xs transition-colors ${
+            aria-label="Modo mobile"
+            aria-pressed={editingMode === "mobile"}
+            className={`flex items-center gap-1 rounded px-2.5 py-1.5 text-xs transition-colors ${
               editingMode === "mobile" ? "bg-white text-[#161616]" : "text-neutral-500 hover:text-neutral-300"
             }`}
           >
-            <DeviceMobile size={12} />
+            <DeviceMobile size={14} />
           </button>
         </div>
       </div>

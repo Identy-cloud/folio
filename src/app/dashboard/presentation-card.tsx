@@ -83,13 +83,15 @@ export function PresentationCard({
         <div ref={menuRef} className="relative">
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="ml-2 rounded p-1.5 text-neutral-500 hover:bg-neutral-800 hover:text-neutral-200"
+            className="ml-2 rounded p-2 text-neutral-500 hover:bg-neutral-800 hover:text-neutral-200"
+            aria-label="Opciones"
+            aria-expanded={menuOpen}
           >
             <DotsThreeVertical size={18} weight="duotone" />
           </button>
 
           {menuOpen && (
-            <div className="absolute right-0 bottom-full mb-1 z-50 w-44 border border-neutral-700 bg-[#242424] py-1 shadow-lg rounded">
+            <div className="absolute right-0 bottom-full mb-1 z-50 w-44 border border-neutral-700 bg-[#242424] py-1 shadow-lg rounded" role="menu">
               <MenuItem label="Renombrar" onClick={() => { setMenuOpen(false); onRename(); }} />
               <MenuItem label="Duplicar" onClick={() => { setMenuOpen(false); onDuplicate(); }} />
               <MenuItem label="Cambiar tema" onClick={() => { setMenuOpen(false); onChangeTheme(); }} />

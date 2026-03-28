@@ -9,7 +9,6 @@ const ALLOWED_TYPES = [
   "image/png",
   "image/webp",
   "image/gif",
-  "image/svg+xml",
 ];
 
 const uploadSchema = z.object({

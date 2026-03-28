@@ -244,7 +244,9 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   duplicateElement: (elementId) => {
     const slide = get().getActiveSlide();
     if (!slide) return;
-    const el = slide.elements.find((e) => e.id === elementId);
+    const { editingMode } = get();
+    const els = editingMode === "mobile" && slide.mobileElements ? slide.mobileElements : slide.elements;
+    const el = els.find((e) => e.id === elementId);
     if (!el) return;
     const dup = { ...el, id: nanoid(), x: el.x + 20, y: el.y + 20 };
     get().addElement(dup as SlideElement);
@@ -305,51 +307,53 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   },
 
   bringToFront: (elementId) => {
-    const { slides, activeSlideIndex } = get();
+    const { slides, activeSlideIndex, editingMode } = get();
     const slide = slides[activeSlideIndex];
     if (!slide) return;
-    const maxZ = Math.max(...slide.elements.map((e) => e.zIndex));
+    const key = editingMode === "mobile" ? "mobileElements" : "elements";
+    const els = (key === "mobileElements" ? slide.mobileElements : slide.elements) ?? [];
+    const maxZ = Math.max(...els.map((e) => e.zIndex), 0);
     const updated = slides.map((s, i) =>
-      i === activeSlideIndex
-        ? { ...s, elements: s.elements.map((e) => e.id === elementId ? { ...e, zIndex: maxZ + 1 } : e) }
-        : s
+      i !== activeSlideIndex ? s : { ...s, [key]: els.map((e) => e.id === elementId ? { ...e, zIndex: maxZ + 1 } : e) }
     );
     set({ slides: updated, dirty: true, saveStatus: "unsaved" });
     get().pushHistory();
   },
 
   sendToBack: (elementId) => {
-    const { slides, activeSlideIndex } = get();
+    const { slides, activeSlideIndex, editingMode } = get();
     const slide = slides[activeSlideIndex];
     if (!slide) return;
-    const minZ = Math.min(...slide.elements.map((e) => e.zIndex));
+    const key = editingMode === "mobile" ? "mobileElements" : "elements";
+    const els = (key === "mobileElements" ? slide.mobileElements : slide.elements) ?? [];
+    const minZ = Math.min(...els.map((e) => e.zIndex), 0);
     const updated = slides.map((s, i) =>
-      i === activeSlideIndex
-        ? { ...s, elements: s.elements.map((e) => e.id === elementId ? { ...e, zIndex: minZ - 1 } : e) }
-        : s
+      i !== activeSlideIndex ? s : { ...s, [key]: els.map((e) => e.id === elementId ? { ...e, zIndex: minZ - 1 } : e) }
     );
     set({ slides: updated, dirty: true, saveStatus: "unsaved" });
     get().pushHistory();
   },
 
   bringForward: (elementId) => {
-    const { slides, activeSlideIndex } = get();
-    const updated = slides.map((s, i) =>
-      i === activeSlideIndex
-        ? { ...s, elements: s.elements.map((e) => e.id === elementId ? { ...e, zIndex: e.zIndex + 1 } : e) }
-        : s
-    );
+    const { slides, activeSlideIndex, editingMode } = get();
+    const key = editingMode === "mobile" ? "mobileElements" : "elements";
+    const updated = slides.map((s, i) => {
+      if (i !== activeSlideIndex) return s;
+      const els = (key === "mobileElements" ? s.mobileElements : s.elements) ?? [];
+      return { ...s, [key]: els.map((e) => e.id === elementId ? { ...e, zIndex: e.zIndex + 1 } : e) };
+    });
     set({ slides: updated, dirty: true, saveStatus: "unsaved" });
     get().pushHistory();
   },
 
   sendBackward: (elementId) => {
-    const { slides, activeSlideIndex } = get();
-    const updated = slides.map((s, i) =>
-      i === activeSlideIndex
-        ? { ...s, elements: s.elements.map((e) => e.id === elementId ? { ...e, zIndex: Math.max(0, e.zIndex - 1) } : e) }
-        : s
-    );
+    const { slides, activeSlideIndex, editingMode } = get();
+    const key = editingMode === "mobile" ? "mobileElements" : "elements";
+    const updated = slides.map((s, i) => {
+      if (i !== activeSlideIndex) return s;
+      const els = (key === "mobileElements" ? s.mobileElements : s.elements) ?? [];
+      return { ...s, [key]: els.map((e) => e.id === elementId ? { ...e, zIndex: Math.max(0, e.zIndex - 1) } : e) };
+    });
     set({ slides: updated, dirty: true, saveStatus: "unsaved" });
     get().pushHistory();
   },
@@ -370,7 +374,9 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   copySelection: () => {
     const slide = get().getActiveSlide();
     if (!slide) return;
-    const copied = slide.elements.filter((el) =>
+    const { editingMode } = get();
+    const els = editingMode === "mobile" && slide.mobileElements ? slide.mobileElements : slide.elements;
+    const copied = els.filter((el) =>
       get().selectedElementIds.includes(el.id)
     );
     set({ clipboard: cloneSlides([{ elements: copied } as Slide])[0].elements });

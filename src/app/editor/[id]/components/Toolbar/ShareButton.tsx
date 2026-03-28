@@ -65,6 +65,8 @@ export function ShareButton() {
       <button
         onClick={() => setOpen(!open)}
         className="flex items-center gap-1 rounded px-2 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 transition-colors md:px-3"
+        aria-label="Compartir"
+        aria-expanded={open}
       >
         <ShareNetwork size={14} weight="duotone" />
         <span className="hidden md:inline">Compartir</span>
@@ -91,6 +93,9 @@ export function ShareButton() {
                 <button
                   onClick={togglePublic}
                   disabled={toggling}
+                  role="switch"
+                  aria-checked={meta.isPublic}
+                  aria-label="Presentación pública"
                   className={`relative h-6 w-11 rounded-full transition-colors ${
                     meta.isPublic ? "bg-green-600" : "bg-neutral-700"
                   }`}

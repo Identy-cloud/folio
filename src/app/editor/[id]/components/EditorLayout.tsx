@@ -61,12 +61,14 @@ export function EditorLayout() {
         <button
           onClick={() => setMobilePanel(mobilePanel === "slides" ? null : "slides")}
           className="flex h-11 w-11 items-center justify-center rounded-full bg-neutral-900 text-white shadow-lg active:scale-95 transition-transform"
+          aria-label="Slides"
         >
           <StackSimple size={20} weight="duotone" />
         </button>
         <button
           onClick={() => setMobilePanel(mobilePanel === "insert" ? null : "insert")}
           className="flex h-11 w-11 items-center justify-center rounded-full bg-neutral-900 text-white shadow-lg active:scale-95 transition-transform"
+          aria-label="Insertar elemento"
         >
           <PlusCircle size={20} weight="duotone" />
         </button>
@@ -87,6 +89,7 @@ export function EditorLayout() {
               <button
                 onClick={() => setMobilePanel(null)}
                 className="p-1 text-neutral-400"
+                aria-label="Cerrar"
               >
                 <X size={18} />
               </button>

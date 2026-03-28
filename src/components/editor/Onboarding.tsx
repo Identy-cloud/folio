@@ -43,7 +43,10 @@ export function Onboarding() {
     <div className="fixed inset-0 z-[9999]">
       <div className="absolute inset-0 bg-black/40" onClick={skip} />
       <div
-        className="absolute left-1/2 top-1/2 w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-lg bg-white p-5 shadow-2xl"
+        className="absolute left-1/2 top-1/2 w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-lg bg-[#1e1e1e] border border-neutral-700 p-5 shadow-2xl"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Tour del editor"
       >
         <div className="mb-1 flex items-center justify-between">
           <span className="text-xs font-medium text-neutral-400 uppercase tracking-wider">
@@ -51,20 +54,21 @@ export function Onboarding() {
           </span>
           <button
             onClick={skip}
-            className="text-xs text-neutral-400 hover:text-neutral-700"
+            className="text-xs text-neutral-500 hover:text-neutral-300"
+            aria-label="Saltar tour"
           >
             Saltar tour
           </button>
         </div>
-        <h3 className="font-display text-lg tracking-tight sm:text-xl">
+        <h3 className="font-display text-lg tracking-tight text-neutral-200 sm:text-xl">
           {current.title.toUpperCase()}
         </h3>
-        <p className="mt-1 text-sm text-neutral-600 leading-relaxed">
+        <p className="mt-1 text-sm text-neutral-400 leading-relaxed">
           {current.text}
         </p>
         <button
           onClick={next}
-          className="mt-4 w-full bg-neutral-900 py-2.5 text-xs font-medium tracking-widest text-white uppercase hover:bg-neutral-700"
+          className="mt-4 w-full bg-white py-2.5 text-xs font-medium tracking-widest text-[#161616] uppercase hover:bg-neutral-200"
         >
           {step >= STEPS.length - 1 ? "Empezar" : "Siguiente"}
         </button>
