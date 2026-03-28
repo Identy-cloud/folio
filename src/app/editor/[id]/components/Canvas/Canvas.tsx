@@ -30,6 +30,7 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
   const wrapperRef = useRef<HTMLDivElement>(null);
   const boundsRef = useRef<DOMRect | null>(null);
   const [scale, setScale] = useState(0.5);
+  const [narrow, setNarrow] = useState(false);
 
   const slide = useEditorStore((s) => s.getActiveSlide());
   const activeSlideIndex = useEditorStore((s) => s.activeSlideIndex);
@@ -46,11 +47,13 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
   const updateScale = useCallback(() => {
     if (!wrapperRef.current) return;
     const rect = wrapperRef.current.getBoundingClientRect();
-    const hPad = rect.width < 768 ? 16 : 48;
-    const vPad = rect.width < 768 ? 16 : 48;
+    const isNarrow = rect.width < 768;
+    const hPad = isNarrow ? 16 : 48;
+    const vPad = isNarrow ? 16 : 48;
     const sx = (rect.width - hPad) / canvasW;
     const sy = (rect.height - vPad) / canvasH;
     setScale(Math.min(sx, sy, 1));
+    setNarrow(isNarrow);
   }, [canvasW, canvasH]);
 
   useEffect(() => {
@@ -116,7 +119,7 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
           width: canvasW,
           height: canvasH,
           position: "absolute",
-          top: "50%",
+          top: narrow ? "40%" : "50%",
           left: "50%",
           transform: `translate(-50%, -50%) scale(${scale})`,
           transformOrigin: "center center",
