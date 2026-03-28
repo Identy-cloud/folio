@@ -93,17 +93,39 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
       )}
       {element.type === "shape" && <ShapeRenderer element={element} />}
       {element.type === "image" && (
-        <img
-          src={element.src}
-          alt=""
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: element.objectFit,
-            filter: element.filter,
-          }}
-          draggable={false}
-        />
+        <div style={{ width: "100%", height: "100%", position: "relative" }}>
+          <img
+            src={element.src}
+            alt=""
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: element.objectFit,
+              filter: element.filter || undefined,
+            }}
+            draggable={false}
+          />
+          {element.isPlaceholder && (
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "rgba(0,0,0,0.3)",
+                opacity: 0,
+                transition: "opacity 0.2s",
+              }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = "1"; }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = "0"; }}
+            >
+              <span style={{ color: "white", fontSize: 14, letterSpacing: "0.1em" }}>
+                📷 REPLACE IMAGE
+              </span>
+            </div>
+          )}
+        </div>
       )}
     </div>
   );

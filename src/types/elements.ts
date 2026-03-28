@@ -31,6 +31,7 @@ export interface ImageElement extends BaseElement {
   src: string;
   objectFit: "cover" | "contain" | "fill";
   filter: string;
+  isPlaceholder?: boolean;
 }
 
 export interface ShapeElement extends BaseElement {

@@ -177,7 +177,7 @@ function ViewerElement({ element }: { element: SlideElement }) {
             width: "100%",
             height: "100%",
             objectFit: element.objectFit,
-            filter: element.filter,
+            filter: element.filter || undefined,
           }}
           draggable={false}
         />
