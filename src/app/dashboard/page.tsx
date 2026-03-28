@@ -10,6 +10,7 @@ import { TemplateModal } from "./template-modal";
 import { ConfirmDialog } from "./confirm-dialog";
 import { PromptDialog } from "./prompt-dialog";
 import { ThemeDialog } from "./theme-dialog";
+import { useTranslation } from "@/lib/i18n/context";
 
 interface Presentation {
   id: string;
@@ -33,6 +34,7 @@ type Dialog =
   | null;
 
 export default function DashboardPage() {
+  const { t } = useTranslation();
   const [presentations, setPresentations] = useState<Presentation[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
@@ -71,8 +73,8 @@ export default function DashboardPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title }),
     });
-    if (res.ok) toast.success("Renombrada");
-    else toast.error("Error al renombrar");
+    if (res.ok) toast.success(t.dashboard.renamed);
+    else toast.error(t.dashboard.errorRename);
     setDialog(null);
     refreshPresentations();
   }
@@ -80,8 +82,8 @@ export default function DashboardPage() {
   async function handleDelete() {
     if (!dialog || dialog.type !== "delete") return;
     const res = await fetch(`/api/presentations/${dialog.id}`, { method: "DELETE" });
-    if (res.ok) toast.success("Eliminada");
-    else toast.error("Error al eliminar");
+    if (res.ok) toast.success(t.dashboard.deleted);
+    else toast.error(t.dashboard.errorDelete);
     setDialog(null);
     refreshPresentations();
   }
@@ -92,8 +94,8 @@ export default function DashboardPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ isPublic: !isPublic }),
     });
-    if (res.ok) toast.success(isPublic ? "Ahora es privada" : "Ahora es pública");
-    else toast.error("Error al cambiar visibilidad");
+    if (res.ok) toast.success(isPublic ? t.dashboard.nowPrivate : t.dashboard.nowPublic);
+    else toast.error(t.dashboard.errorVisibility);
     refreshPresentations();
   }
 
@@ -104,8 +106,8 @@ export default function DashboardPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ theme }),
     });
-    if (res.ok) toast.success("Tema cambiado");
-    else toast.error("Error al cambiar tema");
+    if (res.ok) toast.success(t.dashboard.themeChanged);
+    else toast.error(t.dashboard.errorTheme);
     setDialog(null);
     refreshPresentations();
   }
@@ -120,7 +122,7 @@ export default function DashboardPage() {
     <div>
       <div className="mb-6 flex flex-col gap-3 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="font-display text-2xl tracking-tight sm:text-4xl">
-          MIS PRESENTACIONES
+          {t.dashboard.title}
         </h2>
         <div className="flex gap-2">
           <div className="relative flex-1 sm:w-48 sm:flex-initial">
@@ -128,8 +130,8 @@ export default function DashboardPage() {
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Buscar..."
-              aria-label="Buscar presentaciones"
+              placeholder={t.common.search}
+              aria-label={t.dashboard.searchPlaceholder}
               className="w-full rounded border border-neutral-700 bg-[#1e1e1e] py-2 pl-8 pr-3 text-xs text-neutral-200 outline-none placeholder:text-neutral-500 focus:border-neutral-500"
             />
           </div>
@@ -137,22 +139,22 @@ export default function DashboardPage() {
             onClick={() => setModalOpen(true)}
             className="shrink-0 bg-neutral-200 px-5 py-2 text-xs font-medium tracking-widest text-[#161616] uppercase hover:bg-neutral-300 transition-colors"
           >
-            <Plus size={14} className="inline" /> Nueva
+            <Plus size={14} className="inline" /> {t.dashboard.new}
           </button>
         </div>
       </div>
 
       {presentations.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center sm:py-32">
-          <p className="font-display text-3xl tracking-tight text-neutral-700 sm:text-5xl">SIN PRESENTACIONES</p>
-          <p className="mt-3 text-sm text-neutral-400">Crea tu primera presentación para empezar</p>
+          <p className="font-display text-3xl tracking-tight text-neutral-700 sm:text-5xl">{t.dashboard.empty}</p>
+          <p className="mt-3 text-sm text-neutral-400">{t.dashboard.emptyDesc}</p>
           <button onClick={() => setModalOpen(true)} className="mt-6 bg-white px-8 py-3 text-sm font-medium tracking-widest text-[#161616] uppercase hover:bg-neutral-200 transition-colors">
-            Crear presentación
+            {t.dashboard.create}
           </button>
         </div>
       ) : filtered.length === 0 ? (
         <p className="py-12 text-center text-sm text-neutral-500">
-          No se encontraron presentaciones para &ldquo;{search}&rdquo;
+          {t.dashboard.noResults} &ldquo;{search}&rdquo;
         </p>
       ) : (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
@@ -174,18 +176,18 @@ export default function DashboardPage() {
 
       <PromptDialog
         open={dialog?.type === "rename"}
-        title="RENOMBRAR"
+        title={t.dashboard.renameTitle}
         defaultValue={dialog?.type === "rename" ? dialog.current : ""}
-        placeholder="Nuevo título"
+        placeholder={t.dashboard.renamePlaceholder}
         onSubmit={handleRename}
         onCancel={() => setDialog(null)}
       />
 
       <ConfirmDialog
         open={dialog?.type === "delete"}
-        title="ELIMINAR"
-        message="¿Estás seguro de que querés eliminar esta presentación? Esta acción no se puede deshacer."
-        confirmLabel="Eliminar"
+        title={t.dashboard.deleteTitle}
+        message={t.dashboard.deleteConfirm}
+        confirmLabel={t.dashboard.deleteAction}
         destructive
         onConfirm={handleDelete}
         onCancel={() => setDialog(null)}

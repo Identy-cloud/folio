@@ -17,8 +17,10 @@ import {
 import { useEditorStore } from "@/store/editorStore";
 import { SortableSlideThumb } from "./SortableSlideThumb";
 import { TransitionPicker } from "./TransitionPicker";
+import { useTranslation } from "@/lib/i18n/context";
 
 export function SlidePanel() {
+  const { t } = useTranslation();
   const slides = useEditorStore((s) => s.slides);
   const activeSlideIndex = useEditorStore((s) => s.activeSlideIndex);
   const setActiveSlide = useEditorStore((s) => s.setActiveSlide);
@@ -58,13 +60,13 @@ export function SlidePanel() {
     <div className="flex w-56 flex-col border-r border-neutral-800 bg-[#161616]">
       <div className="flex items-center justify-between border-b border-neutral-800 px-3 py-2">
         <span className="text-xs font-medium text-neutral-400 uppercase tracking-wider">
-          Slides ({slides.length})
+          {t.editor.slides} ({slides.length})
         </span>
         <button
           onClick={addSlide}
           className="text-xs text-neutral-500 hover:text-neutral-200"
         >
-          <Plus size={12} className="inline" /> Añadir
+          <Plus size={12} className="inline" /> {t.editor.addSlide}
         </button>
       </div>
       <div
@@ -108,21 +110,21 @@ export function SlidePanel() {
           style={{ left: contextMenu.x, top: contextMenu.y }}
         >
           <CtxItem
-            label="Duplicar slide"
+            label={t.editor.duplicateSlide}
             onClick={() => {
               duplicateSlide(contextMenu.slideId);
               setContextMenu(null);
             }}
           />
           <CtxItem
-            label="Mover al inicio"
+            label={t.editor.moveToStart}
             onClick={() => {
               moveSlideToStart(contextMenu.slideId);
               setContextMenu(null);
             }}
           />
           <CtxItem
-            label="Mover al final"
+            label={t.editor.moveToEnd}
             onClick={() => {
               moveSlideToEnd(contextMenu.slideId);
               setContextMenu(null);
@@ -131,12 +133,12 @@ export function SlidePanel() {
           <div className="border-t border-neutral-700">
             <TransitionPicker
               current={slides.find((s) => s.id === contextMenu.slideId)?.transition ?? "fade"}
-              onChange={(t) => updateSlideTransition(contextMenu.slideId, t)}
+              onChange={(tr) => updateSlideTransition(contextMenu.slideId, tr)}
             />
           </div>
           {slides.length > 1 && (
             <CtxItem
-              label="Eliminar slide"
+              label={t.editor.deleteSlide}
               destructive
               onClick={() => {
                 deleteSlide(contextMenu.slideId);

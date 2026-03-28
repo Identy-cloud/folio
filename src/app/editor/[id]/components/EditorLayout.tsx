@@ -20,8 +20,10 @@ import {
 import { SlidePreview } from "@/components/SlidePreview";
 import type { TextElement, ShapeElement } from "@/types/elements";
 import { useImageUpload } from "../hooks/useImageUpload";
+import { useTranslation } from "@/lib/i18n/context";
 
 export function EditorLayout() {
+  const { t } = useTranslation();
   const presentationId = useEditorStore((s) => s.presentationId);
   const { peers, connected, updateCursor, clearCursor } =
     useCollaboration(presentationId);
@@ -61,14 +63,14 @@ export function EditorLayout() {
         <button
           onClick={() => setMobilePanel(mobilePanel === "slides" ? null : "slides")}
           className="flex h-11 w-11 items-center justify-center rounded-full bg-neutral-900 text-white shadow-lg active:scale-95 transition-transform"
-          aria-label="Slides"
+          aria-label={t.editor.slides}
         >
           <StackSimple size={20} weight="duotone" />
         </button>
         <button
           onClick={() => setMobilePanel(mobilePanel === "insert" ? null : "insert")}
           className="flex h-11 w-11 items-center justify-center rounded-full bg-neutral-900 text-white shadow-lg active:scale-95 transition-transform"
-          aria-label="Insertar elemento"
+          aria-label={t.editor.insertElement}
         >
           <PlusCircle size={20} weight="duotone" />
         </button>
@@ -84,12 +86,12 @@ export function EditorLayout() {
           <div className="absolute bottom-0 left-0 right-0 max-h-[70vh] overflow-y-auto rounded-t-xl bg-[#1e1e1e] shadow-2xl">
             <div className="sticky top-0 flex items-center justify-between border-b border-neutral-700 bg-[#1e1e1e] px-4 py-3 rounded-t-xl">
               <span className="text-xs font-medium uppercase tracking-wider text-neutral-400">
-                {mobilePanel === "slides" ? "Slides" : "Insertar"}
+                {mobilePanel === "slides" ? t.editor.slides : t.editor.insert}
               </span>
               <button
                 onClick={() => setMobilePanel(null)}
                 className="p-1 text-neutral-400"
-                aria-label="Cerrar"
+                aria-label={t.common.close}
               >
                 <X size={18} />
               </button>
@@ -109,6 +111,7 @@ export function EditorLayout() {
 }
 
 function MobileSlidePanel({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation();
   const slides = useEditorStore((s) => s.slides);
   const activeSlideIndex = useEditorStore((s) => s.activeSlideIndex);
   const setActiveSlide = useEditorStore((s) => s.setActiveSlide);
@@ -151,13 +154,14 @@ function MobileSlidePanel({ onClose }: { onClose: () => void }) {
         onClick={() => { addSlide(); onClose(); }}
         className="w-full rounded border border-dashed border-neutral-600 py-2 text-xs text-neutral-400"
       >
-        + Añadir slide
+        {t.editor.addSlideAction}
       </button>
     </div>
   );
 }
 
 function MobileInsertPanel({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation();
   const addElement = useEditorStore((s) => s.addElement);
   const activeSlide = useEditorStore((s) => s.getActiveSlide());
   const { trigger: triggerUpload, uploading } = useImageUpload();
@@ -168,7 +172,7 @@ function MobileInsertPanel({ onClose }: { onClose: () => void }) {
       x: 100, y: 100, w: 400, h: 80,
       rotation: 0, opacity: 1,
       zIndex: (activeSlide?.elements.length ?? 0) + 1,
-      locked: false, content: "Escribe aquí",
+      locked: false, content: t.editor.writeHere,
       fontFamily: "var(--font-dm-sans)",
       fontSize: 32, fontWeight: 400, lineHeight: 1.4,
       letterSpacing: 0, color: "#0a0a0a",
@@ -195,19 +199,19 @@ function MobileInsertPanel({ onClose }: { onClose: () => void }) {
   return (
     <div className="grid grid-cols-2 gap-2 p-4">
       <button onClick={addText} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800">
-        <TextT size={18} weight="duotone" /> Texto
+        <TextT size={18} weight="duotone" /> {t.editor.tools.text}
       </button>
       <button onClick={() => addShape("rect")} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800">
-        <Rectangle size={18} weight="duotone" /> Rectángulo
+        <Rectangle size={18} weight="duotone" /> {t.editor.rectangle}
       </button>
       <button onClick={() => addShape("circle")} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800">
-        <Circle size={18} weight="duotone" /> Círculo
+        <Circle size={18} weight="duotone" /> {t.editor.circle}
       </button>
       <button onClick={() => addShape("triangle")} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800">
-        <Triangle size={18} weight="duotone" /> Triángulo
+        <Triangle size={18} weight="duotone" /> {t.editor.triangle}
       </button>
       <button onClick={() => { triggerUpload(); onClose(); }} disabled={uploading} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800 disabled:opacity-50">
-        <ImageIcon size={18} weight="duotone" /> {uploading ? "Subiendo..." : "Imagen"}
+        <ImageIcon size={18} weight="duotone" /> {uploading ? t.editor.uploading : t.editor.image}
       </button>
     </div>
   );

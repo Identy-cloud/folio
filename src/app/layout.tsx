@@ -10,6 +10,7 @@ import {
   Barlow,
 } from "next/font/google";
 import { Toaster } from "sonner";
+import { I18nProvider } from "@/lib/i18n/context";
 import "./globals.css";
 
 const bebasNeue = Bebas_Neue({
@@ -90,10 +91,12 @@ export default function RootLayout({
   return (
     <html lang="es" className={`${fontVars} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-sans">
-        <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[9999] focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:text-black">
-          Saltar al contenido
-        </a>
-        {children}
+        <I18nProvider>
+          <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[9999] focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:text-black">
+            Saltar al contenido
+          </a>
+          {children}
+        </I18nProvider>
         <Toaster
           position="bottom-center"
           richColors

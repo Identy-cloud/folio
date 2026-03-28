@@ -7,6 +7,7 @@ import { es } from "date-fns/locale";
 import { DotsThreeVertical } from "@phosphor-icons/react";
 import { SlidePreview } from "@/components/SlidePreview";
 import type { SlideElement } from "@/types/elements";
+import { useTranslation } from "@/lib/i18n/context";
 
 interface Props {
   presentation: {
@@ -38,6 +39,7 @@ export function PresentationCard({
   onTogglePublic,
   onChangeTheme,
 }: Props) {
+  const { t } = useTranslation();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -76,7 +78,7 @@ export function PresentationCard({
               addSuffix: true,
               locale: es,
             })}
-            {presentation.isPublic && " · Público"}
+            {presentation.isPublic && ` · ${t.dashboard.public}`}
           </p>
         </div>
 
@@ -84,7 +86,7 @@ export function PresentationCard({
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             className="ml-2 rounded p-2 text-neutral-500 hover:bg-neutral-800 hover:text-neutral-200"
-            aria-label="Opciones"
+            aria-label={t.dashboard.options}
             aria-expanded={menuOpen}
           >
             <DotsThreeVertical size={18} weight="duotone" />
@@ -92,14 +94,14 @@ export function PresentationCard({
 
           {menuOpen && (
             <div className="absolute right-0 bottom-full mb-1 z-50 w-44 border border-neutral-700 bg-[#242424] py-1 shadow-lg rounded" role="menu">
-              <MenuItem label="Renombrar" onClick={() => { setMenuOpen(false); onRename(); }} />
-              <MenuItem label="Duplicar" onClick={() => { setMenuOpen(false); onDuplicate(); }} />
-              <MenuItem label="Cambiar tema" onClick={() => { setMenuOpen(false); onChangeTheme(); }} />
+              <MenuItem label={t.dashboard.rename} onClick={() => { setMenuOpen(false); onRename(); }} />
+              <MenuItem label={t.dashboard.duplicate} onClick={() => { setMenuOpen(false); onDuplicate(); }} />
+              <MenuItem label={t.dashboard.changeTheme} onClick={() => { setMenuOpen(false); onChangeTheme(); }} />
               <MenuItem
-                label={presentation.isPublic ? "Hacer privado" : "Hacer público"}
+                label={presentation.isPublic ? t.dashboard.makePrivate : t.dashboard.makePublic}
                 onClick={() => { setMenuOpen(false); onTogglePublic(); }}
               />
-              <MenuItem label="Eliminar" onClick={() => { setMenuOpen(false); onDelete(); }} destructive />
+              <MenuItem label={t.common.delete} onClick={() => { setMenuOpen(false); onDelete(); }} destructive />
             </div>
           )}
         </div>

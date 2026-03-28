@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useEditorStore } from "@/store/editorStore";
 import type { SlideElement } from "@/types/elements";
+import { useTranslation } from "@/lib/i18n/context";
 
 interface Props {
   element: SlideElement;
@@ -33,6 +34,7 @@ function NumField({ label, value, onChange }: { label: string; value: number; on
 }
 
 export function PositionFields({ element }: Props) {
+  const { t } = useTranslation();
   const updateElement = useEditorStore((s) => s.updateElement);
   const pushHistory = useEditorStore((s) => s.pushHistory);
 
@@ -44,7 +46,7 @@ export function PositionFields({ element }: Props) {
   return (
     <div className="space-y-2">
       <span className="text-[10px] font-medium text-neutral-400 uppercase tracking-wider">
-        Posición y tamaño
+        {t.editor.position}
       </span>
       <div className="grid grid-cols-2 gap-2">
         <NumField label="X" value={element.x} onChange={(v) => update({ x: v })} />
@@ -53,9 +55,9 @@ export function PositionFields({ element }: Props) {
         <NumField label="H" value={element.h} onChange={(v) => update({ h: v })} />
       </div>
       <div className="grid grid-cols-2 gap-2">
-        <NumField label="Rotación" value={element.rotation} onChange={(v) => update({ rotation: v })} />
+        <NumField label={t.editor.rotation} value={element.rotation} onChange={(v) => update({ rotation: v })} />
         <label className="flex flex-col gap-0.5">
-          <span className="text-[10px] text-neutral-500">Opacidad</span>
+          <span className="text-[10px] text-neutral-500">{t.editor.opacity}</span>
           <input
             type="range"
             min={0} max={1} step={0.05}

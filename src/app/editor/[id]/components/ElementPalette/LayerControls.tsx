@@ -2,8 +2,10 @@
 
 import { useEditorStore } from "@/store/editorStore";
 import { ArrowFatUp, ArrowFatDown, ArrowFatLineUp, ArrowFatLineDown } from "@phosphor-icons/react";
+import { useTranslation } from "@/lib/i18n/context";
 
 export function LayerControls({ elementId }: { elementId: string }) {
+  const { t } = useTranslation();
   const bringToFront = useEditorStore((s) => s.bringToFront);
   const sendToBack = useEditorStore((s) => s.sendToBack);
   const bringForward = useEditorStore((s) => s.bringForward);
@@ -14,19 +16,19 @@ export function LayerControls({ elementId }: { elementId: string }) {
   return (
     <div>
       <span className="mb-1 block text-[10px] font-medium text-neutral-400 uppercase tracking-wider">
-        Capas
+        {t.editor.layers}
       </span>
       <div className="flex gap-1">
-        <button onClick={() => bringToFront(elementId)} className={btn} title="Al frente">
+        <button onClick={() => bringToFront(elementId)} className={btn} title={t.editor.toFront}>
           <ArrowFatLineUp size={14} weight="duotone" />
         </button>
-        <button onClick={() => bringForward(elementId)} className={btn} title="Adelante">
+        <button onClick={() => bringForward(elementId)} className={btn} title={t.editor.forward}>
           <ArrowFatUp size={14} weight="duotone" />
         </button>
-        <button onClick={() => sendBackward(elementId)} className={btn} title="Atrás">
+        <button onClick={() => sendBackward(elementId)} className={btn} title={t.editor.backward}>
           <ArrowFatDown size={14} weight="duotone" />
         </button>
-        <button onClick={() => sendToBack(elementId)} className={btn} title="Al fondo">
+        <button onClick={() => sendToBack(elementId)} className={btn} title={t.editor.toBack}>
           <ArrowFatLineDown size={14} weight="duotone" />
         </button>
       </div>

@@ -2,6 +2,7 @@ import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { LogoutButton } from "./logout-button";
+import { LocaleSelector } from "@/components/LocaleSelector";
 
 export default async function DashboardLayout({
   children,
@@ -45,6 +46,7 @@ export default async function DashboardLayout({
               {initials}
             </div>
           )}
+          <LocaleSelector />
           <LogoutButton />
         </div>
       </header>

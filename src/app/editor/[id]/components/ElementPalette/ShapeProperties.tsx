@@ -4,10 +4,12 @@ import { useState, useEffect } from "react";
 import { useEditorStore } from "@/store/editorStore";
 import { ColorPicker } from "@/components/editor/ColorPicker";
 import type { ShapeElement } from "@/types/elements";
+import { useTranslation } from "@/lib/i18n/context";
 
 interface Props { element: ShapeElement }
 
 export function ShapeProperties({ element }: Props) {
+  const { t } = useTranslation();
   const updateElement = useEditorStore((s) => s.updateElement);
   const pushHistory = useEditorStore((s) => s.pushHistory);
   const [strokeW, setStrokeW] = useState(String(element.strokeWidth));
@@ -23,14 +25,14 @@ export function ShapeProperties({ element }: Props) {
 
   return (
     <div className="space-y-3">
-      <span className="text-[10px] font-medium text-neutral-400 uppercase tracking-wider">Forma</span>
+      <span className="text-[10px] font-medium text-neutral-400 uppercase tracking-wider">{t.editor.shape}</span>
 
-      <ColorPicker label="Relleno" value={element.fill} onChange={(c) => update({ fill: c })} />
-      <ColorPicker label="Borde" value={element.stroke} onChange={(c) => update({ stroke: c })} />
+      <ColorPicker label={t.editor.fill} value={element.fill} onChange={(c) => update({ fill: c })} />
+      <ColorPicker label={t.editor.stroke} value={element.stroke} onChange={(c) => update({ stroke: c })} />
 
       <div className="grid grid-cols-2 gap-2">
         <label className="flex flex-col gap-0.5">
-          <span className="text-[10px] text-neutral-500">Grosor borde</span>
+          <span className="text-[10px] text-neutral-500">{t.editor.strokeWidth}</span>
           <input
             type="number"
             min={0} max={20}
@@ -43,7 +45,7 @@ export function ShapeProperties({ element }: Props) {
         </label>
         {element.shape === "rect" && (
           <label className="flex flex-col gap-0.5">
-            <span className="text-[10px] text-neutral-500">Radio borde</span>
+            <span className="text-[10px] text-neutral-500">{t.editor.borderRadius}</span>
             <input
               type="number"
               min={0}

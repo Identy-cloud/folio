@@ -6,20 +6,23 @@ import { ColorPicker } from "@/components/editor/ColorPicker";
 import { ALL_FONTS } from "@/lib/templates/themes";
 import { TextAlignLeft, TextAlignCenter, TextAlignRight } from "@phosphor-icons/react";
 import type { TextElement } from "@/types/elements";
+import { useTranslation } from "@/lib/i18n/context";
 
 const SIZES = [12, 16, 24, 32, 48, 72, 96, 120];
-const WEIGHTS = [
-  { value: 400, label: "Regular" },
-  { value: 600, label: "Semi" },
-  { value: 700, label: "Bold" },
-];
 
 interface Props { element: TextElement }
 
 export function TextProperties({ element }: Props) {
+  const { t } = useTranslation();
   const updateElement = useEditorStore((s) => s.updateElement);
   const pushHistory = useEditorStore((s) => s.pushHistory);
   const [sizeInput, setSizeInput] = useState(String(element.fontSize));
+
+  const WEIGHTS = [
+    { value: 400, label: t.editor.fontWeight.regular },
+    { value: 600, label: t.editor.fontWeight.semi },
+    { value: 700, label: t.editor.fontWeight.bold },
+  ];
 
   useEffect(() => setSizeInput(String(element.fontSize)), [element.fontSize]);
 
@@ -35,7 +38,7 @@ export function TextProperties({ element }: Props) {
 
   return (
     <div className="space-y-3">
-      <span className="text-[10px] font-medium text-neutral-400 uppercase tracking-wider">Texto</span>
+      <span className="text-[10px] font-medium text-neutral-400 uppercase tracking-wider">{t.editor.text}</span>
 
       {/* Font family */}
       <select
@@ -50,7 +53,7 @@ export function TextProperties({ element }: Props) {
 
       {/* Font size */}
       <div>
-        <span className="mb-1 block text-[10px] text-neutral-500">Tamaño</span>
+        <span className="mb-1 block text-[10px] text-neutral-500">{t.editor.fontSize}</span>
         <div className="flex gap-1">
           <input
             type="number"
@@ -115,7 +118,7 @@ export function TextProperties({ element }: Props) {
       </div>
 
       {/* Color */}
-      <ColorPicker label="Color" value={element.color} onChange={(c) => update({ color: c })} />
+      <ColorPicker label={t.editor.color} value={element.color} onChange={(c) => update({ color: c })} />
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { useEditorStore } from "@/store/editorStore";
 import { captureSlideThumb, uploadThumbnail } from "@/lib/thumbnail";
+import { useTranslation } from "@/lib/i18n/context";
 
 const MAX_RETRIES = 3;
 const BASE_DELAY = 1000;
@@ -42,6 +43,7 @@ async function captureThumbnail(presentationId: string) {
 }
 
 export function useAutoSave() {
+  const { t } = useTranslation();
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -66,7 +68,7 @@ export function useAutoSave() {
           thumbTimer = setTimeout(() => captureThumbnail(presentationId), 5000);
         } else {
           setSaveStatus("error");
-          toast.error("Error al guardar. Revisa tu conexión.");
+          toast.error(t.editor.saveToastError);
         }
       }, 3000);
     });
@@ -75,5 +77,5 @@ export function useAutoSave() {
       unsub();
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, []);
+  }, [t]);
 }

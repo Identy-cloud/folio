@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { ShareNetwork, Link as LinkIcon, Check, Globe, Lock } from "@phosphor-icons/react";
 import { useEditorStore } from "@/store/editorStore";
 import { toast } from "sonner";
+import { useTranslation } from "@/lib/i18n/context";
 
 interface PresentationMeta {
   slug: string;
@@ -11,6 +12,7 @@ interface PresentationMeta {
 }
 
 export function ShareButton() {
+  const { t } = useTranslation();
   const presentationId = useEditorStore((s) => s.presentationId);
   const [open, setOpen] = useState(false);
   const [meta, setMeta] = useState<PresentationMeta | null>(null);
@@ -46,7 +48,7 @@ export function ShareButton() {
     });
     if (res.ok) {
       setMeta({ ...meta, isPublic: !meta.isPublic });
-      toast.success(meta.isPublic ? "Ahora es privada" : "Ahora es pública");
+      toast.success(meta.isPublic ? t.dashboard.nowPrivate : t.dashboard.nowPublic);
     }
     setToggling(false);
   }
@@ -56,7 +58,7 @@ export function ShareButton() {
     const url = `${window.location.origin}/p/${meta.slug}`;
     navigator.clipboard.writeText(url);
     setCopied(true);
-    toast.success("Enlace copiado");
+    toast.success(t.editor.linkCopied);
     setTimeout(() => setCopied(false), 2000);
   }
 
@@ -65,17 +67,17 @@ export function ShareButton() {
       <button
         onClick={() => setOpen(!open)}
         className="flex items-center gap-1 rounded px-2 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 transition-colors md:px-3"
-        aria-label="Compartir"
+        aria-label={t.editor.share}
         aria-expanded={open}
       >
         <ShareNetwork size={14} weight="duotone" />
-        <span className="hidden md:inline">Compartir</span>
+        <span className="hidden md:inline">{t.editor.share}</span>
       </button>
 
       {open && (
         <div className="absolute right-0 top-full mt-2 z-50 w-72 rounded border border-neutral-700 bg-[#1e1e1e] p-4 shadow-xl sm:w-80">
           {!meta ? (
-            <p className="text-xs text-neutral-500">Cargando...</p>
+            <p className="text-xs text-neutral-500">{t.common.loading}</p>
           ) : (
             <div className="space-y-4">
               {/* Toggle */}
@@ -87,7 +89,7 @@ export function ShareButton() {
                     <Lock size={16} className="text-neutral-500" />
                   )}
                   <span className="text-sm text-neutral-200">
-                    {meta.isPublic ? "Pública" : "Privada"}
+                    {meta.isPublic ? t.editor.publicLabel : t.editor.privateLabel}
                   </span>
                 </div>
                 <button
@@ -95,7 +97,7 @@ export function ShareButton() {
                   disabled={toggling}
                   role="switch"
                   aria-checked={meta.isPublic}
-                  aria-label="Presentación pública"
+                  aria-label={t.editor.shareLabel}
                   className={`relative h-6 w-11 rounded-full transition-colors ${
                     meta.isPublic ? "bg-green-600" : "bg-neutral-700"
                   }`}
@@ -111,7 +113,7 @@ export function ShareButton() {
               {meta.isPublic ? (
                 <>
                   <p className="text-xs text-neutral-500">
-                    Cualquiera con el enlace puede ver esta presentación.
+                    {t.editor.publicDesc}
                   </p>
                   {/* URL + Copy */}
                   <div className="flex items-center gap-2">
@@ -128,7 +130,7 @@ export function ShareButton() {
                 </>
               ) : (
                 <p className="text-xs text-neutral-500">
-                  Activa el enlace público para compartir con tu cliente.
+                  {t.editor.privateDesc}
                 </p>
               )}
             </div>

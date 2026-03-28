@@ -3,9 +3,11 @@
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useTranslation } from "@/lib/i18n/context";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
@@ -35,7 +37,7 @@ export default function LoginPage() {
       }
 
       if (isSignUp) {
-        setSuccess("Revisa tu email para confirmar tu cuenta");
+        setSuccess(t.auth.checkEmail);
         return;
       }
 
@@ -64,7 +66,7 @@ export default function LoginPage() {
             FOLIO
           </h1>
           <p className="mt-1 text-[11px] tracking-[0.4em] text-neutral-500 uppercase">
-            Editorial Slides
+            {t.auth.subtitle}
           </p>
           <div className="mx-auto mt-6 h-px w-12 bg-neutral-700" />
         </div>
@@ -72,8 +74,8 @@ export default function LoginPage() {
         <form onSubmit={handleEmailAuth} className="space-y-3">
           <input
             type="email"
-            placeholder="Email"
-            aria-label="Email"
+            placeholder={t.auth.email}
+            aria-label={t.auth.email}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -82,8 +84,8 @@ export default function LoginPage() {
           />
           <input
             type="password"
-            placeholder="Contraseña"
-            aria-label="Contraseña"
+            placeholder={t.auth.password}
+            aria-label={t.auth.password}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -106,8 +108,8 @@ export default function LoginPage() {
             {loading
               ? "..."
               : isSignUp
-                ? "Crear cuenta"
-                : "Iniciar sesión"}
+                ? t.auth.signup
+                : t.auth.login}
           </button>
         </form>
 
@@ -117,7 +119,7 @@ export default function LoginPage() {
           </div>
           <div className="relative flex justify-center">
             <span className="bg-[#161616] px-4 text-[10px] text-neutral-600 uppercase tracking-[0.3em]">
-              o
+              {t.auth.or}
             </span>
           </div>
         </div>
@@ -126,11 +128,11 @@ export default function LoginPage() {
           onClick={handleGoogleLogin}
           className="w-full border border-neutral-700 py-3 text-xs tracking-[0.25em] text-neutral-400 uppercase hover:border-white hover:text-white transition-colors"
         >
-          Continuar con Google
+          {t.auth.google}
         </button>
 
         <p className="text-center text-[11px] text-neutral-600">
-          {isSignUp ? "¿Ya tienes cuenta?" : "¿No tienes cuenta?"}{" "}
+          {isSignUp ? t.auth.hasAccount : t.auth.noAccount}{" "}
           <button
             onClick={() => {
               setIsSignUp(!isSignUp);
@@ -138,7 +140,7 @@ export default function LoginPage() {
             }}
             className="text-neutral-300 underline underline-offset-4 hover:text-white transition-colors"
           >
-            {isSignUp ? "Inicia sesión" : "Regístrate"}
+            {isSignUp ? t.auth.loginAction : t.auth.signupAction}
           </button>
         </p>
       </div>

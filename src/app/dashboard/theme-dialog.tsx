@@ -1,6 +1,7 @@
 "use client";
 
 import { THEMES } from "@/lib/templates/themes";
+import { useTranslation } from "@/lib/i18n/context";
 
 const themeKeys = Object.keys(THEMES);
 
@@ -12,15 +13,17 @@ interface Props {
 }
 
 export function ThemeDialog({ open, currentTheme, onSelect, onCancel }: Props) {
+  const { t } = useTranslation();
+
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60" role="dialog" aria-modal="true" aria-label="Cambiar tema">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60" role="dialog" aria-modal="true" aria-label={t.dashboard.themeTitle}>
       <div className="w-full max-w-xs rounded bg-[#1e1e1e] border border-neutral-700 p-5 shadow-xl mx-4">
-        <h3 className="font-display text-lg tracking-tight text-neutral-200">CAMBIAR TEMA</h3>
+        <h3 className="font-display text-lg tracking-tight text-neutral-200">{t.dashboard.themeTitle}</h3>
         <div className="mt-3 space-y-1.5">
           {themeKeys.map((key) => {
-            const t = THEMES[key];
+            const th = THEMES[key];
             return (
               <button
                 key={key}
@@ -33,9 +36,9 @@ export function ThemeDialog({ open, currentTheme, onSelect, onCancel }: Props) {
               >
                 <span
                   className="h-4 w-4 rounded-full border border-neutral-600"
-                  style={{ backgroundColor: t.accent }}
+                  style={{ backgroundColor: th.accent }}
                 />
-                {t.label}
+                {th.label}
               </button>
             );
           })}
@@ -44,7 +47,7 @@ export function ThemeDialog({ open, currentTheme, onSelect, onCancel }: Props) {
           onClick={onCancel}
           className="mt-4 w-full rounded px-4 py-2 text-xs text-neutral-400 hover:bg-neutral-800 transition-colors"
         >
-          Cancelar
+          {t.common.cancel}
         </button>
       </div>
     </div>

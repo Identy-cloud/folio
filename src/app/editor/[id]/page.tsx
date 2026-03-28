@@ -4,6 +4,7 @@ import { useEffect, useState, use } from "react";
 import { useEditorStore } from "@/store/editorStore";
 import { EditorLayout } from "./components/EditorLayout";
 import { EditorErrorBoundary } from "./components/EditorErrorBoundary";
+import { useTranslation } from "@/lib/i18n/context";
 
 export default function EditorPage({
   params,
@@ -11,6 +12,7 @@ export default function EditorPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const init = useEditorStore((s) => s.init);
@@ -20,24 +22,24 @@ export default function EditorPage({
       try {
         const res = await fetch(`/api/presentations/${id}/slides`);
         if (!res.ok) {
-          setError("No se pudo cargar la presentación");
+          setError(t.editor.loadError);
           return;
         }
         const slides = await res.json();
         init(id, slides);
       } catch {
-        setError("Error de conexión");
+        setError(t.common.connectionError);
       } finally {
         setLoading(false);
       }
     }
     load();
-  }, [id, init]);
+  }, [id, init, t]);
 
   if (loading) {
     return (
       <div className="flex h-screen items-center justify-center bg-[#111111]">
-        <p className="text-sm text-neutral-500">Cargando editor...</p>
+        <p className="text-sm text-neutral-500">{t.editor.loadingEditor}</p>
       </div>
     );
   }

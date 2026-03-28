@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslation } from "@/lib/i18n/context";
+
 interface Props {
   open: boolean;
   title: string;
@@ -10,7 +12,9 @@ interface Props {
   onCancel: () => void;
 }
 
-export function ConfirmDialog({ open, title, message, confirmLabel = "Confirmar", destructive, onConfirm, onCancel }: Props) {
+export function ConfirmDialog({ open, title, message, confirmLabel, destructive, onConfirm, onCancel }: Props) {
+  const { t } = useTranslation();
+
   if (!open) return null;
 
   return (
@@ -23,7 +27,7 @@ export function ConfirmDialog({ open, title, message, confirmLabel = "Confirmar"
             onClick={onCancel}
             className="rounded px-4 py-2 text-xs text-neutral-400 hover:bg-neutral-800 transition-colors"
           >
-            Cancelar
+            {t.common.cancel}
           </button>
           <button
             onClick={onConfirm}
@@ -33,7 +37,7 @@ export function ConfirmDialog({ open, title, message, confirmLabel = "Confirmar"
                 : "bg-white text-[#161616] hover:bg-neutral-200"
             }`}
           >
-            {confirmLabel}
+            {confirmLabel ?? t.common.save}
           </button>
         </div>
       </div>

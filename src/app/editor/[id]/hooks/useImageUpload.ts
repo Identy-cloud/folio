@@ -3,8 +3,10 @@ import { nanoid } from "nanoid";
 import { useEditorStore } from "@/store/editorStore";
 import { toast } from "sonner";
 import type { ImageElement } from "@/types/elements";
+import { useTranslation } from "@/lib/i18n/context";
 
 export function useImageUpload() {
+  const { t } = useTranslation();
   const [uploading, setUploading] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const addElement = useEditorStore((s) => s.addElement);
@@ -37,7 +39,7 @@ export function useImageUpload() {
       });
 
       if (!res.ok) {
-        toast.error("Error al subir imagen");
+        toast.error(t.editor.uploadError);
         return;
       }
 
@@ -50,7 +52,7 @@ export function useImageUpload() {
       });
 
       if (!putRes.ok) {
-        toast.error("Error al subir archivo");
+        toast.error(t.editor.uploadFileError);
         return;
       }
 
@@ -67,9 +69,9 @@ export function useImageUpload() {
       };
 
       addElement(el);
-      toast.success("Imagen insertada");
+      toast.success(t.editor.imageInserted);
     } catch {
-      toast.error("Error de conexión");
+      toast.error(t.common.connectionError);
     } finally {
       setUploading(false);
     }

@@ -8,12 +8,7 @@ import { exportToPdf } from "@/lib/export-pdf";
 import Link from "next/link";
 import { ShareButton } from "./ShareButton";
 import { useImageUpload } from "../../hooks/useImageUpload";
-
-const TOOLS: { id: ActiveTool; label: string; icon: React.ReactNode }[] = [
-  { id: "select", label: "Seleccionar", icon: <Cursor size={14} weight="duotone" /> },
-  { id: "text", label: "Texto", icon: <TextT size={14} weight="duotone" /> },
-  { id: "shape", label: "Forma", icon: <Shapes size={14} weight="duotone" /> },
-];
+import { useTranslation } from "@/lib/i18n/context";
 
 interface ToolbarProps {
   connected?: boolean;
@@ -21,6 +16,7 @@ interface ToolbarProps {
 }
 
 export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
+  const { t } = useTranslation();
   const activeTool = useEditorStore((s) => s.activeTool);
   const setActiveTool = useEditorStore((s) => s.setActiveTool);
   const undo = useEditorStore((s) => s.undo);
@@ -34,6 +30,12 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
   const { trigger: triggerUpload, uploading } = useImageUpload();
   const [exporting, setExporting] = useState(false);
   const [exportProgress, setExportProgress] = useState("");
+
+  const TOOLS: { id: ActiveTool; label: string; icon: React.ReactNode }[] = [
+    { id: "select", label: t.editor.tools.select, icon: <Cursor size={14} weight="duotone" /> },
+    { id: "text", label: t.editor.tools.text, icon: <TextT size={14} weight="duotone" /> },
+    { id: "shape", label: t.editor.tools.shape, icon: <Shapes size={14} weight="duotone" /> },
+  ];
 
   async function handleExport() {
     setExporting(true);
@@ -57,8 +59,8 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
   }
 
   const statusText: Record<string, string> = {
-    saved: "Guardado", saving: "Guardando...",
-    error: "Error al guardar", unsaved: "Sin guardar",
+    saved: t.editor.saved, saving: t.editor.saving,
+    error: t.editor.saveError, unsaved: t.editor.unsaved,
   };
   const statusColor: Record<string, string> = {
     saved: "text-green-500", saving: "text-amber-500",
@@ -76,8 +78,8 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
         </Link>
         <div className="h-5 w-px bg-neutral-700" />
         <div className="flex gap-1">
-          <button onClick={undo} className="rounded p-2 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200" title="Deshacer (Ctrl+Z)" aria-label="Deshacer"><ArrowCounterClockwise size={16} weight="duotone" /></button>
-          <button onClick={redo} className="rounded p-2 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200" title="Rehacer (Ctrl+Y)" aria-label="Rehacer"><ArrowClockwise size={16} weight="duotone" /></button>
+          <button onClick={undo} className="rounded p-2 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200" title={`${t.editor.undo} (Ctrl+Z)`} aria-label={t.editor.undo}><ArrowCounterClockwise size={16} weight="duotone" /></button>
+          <button onClick={redo} className="rounded p-2 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200" title={`${t.editor.redo} (Ctrl+Y)`} aria-label={t.editor.redo}><ArrowClockwise size={16} weight="duotone" /></button>
         </div>
         <div className="hidden md:block h-5 w-px bg-neutral-700" />
         <div className="hidden md:flex gap-1">
@@ -103,7 +105,7 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
           className="hidden md:flex items-center gap-1 rounded px-3 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 disabled:opacity-50"
         >
           <ImageIcon size={14} weight="duotone" />
-          {uploading ? "..." : "Imagen"}
+          {uploading ? "..." : t.editor.image}
         </button>
         <button
           onClick={handleExport}
@@ -111,13 +113,13 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
           className="hidden md:flex items-center gap-1 rounded px-3 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 disabled:opacity-50"
         >
           <FilePdf size={14} weight="duotone" />
-          {exporting ? exportProgress : "PDF"}
+          {exporting ? exportProgress : t.editor.pdf}
         </button>
         <div className="hidden md:block h-5 w-px bg-neutral-700" />
-        <div className="hidden md:flex gap-0.5 rounded border border-neutral-700 p-0.5" role="group" aria-label="Modo de edición">
+        <div className="hidden md:flex gap-0.5 rounded border border-neutral-700 p-0.5" role="group" aria-label={t.editor.editMode}>
           <button
             onClick={() => setEditingMode("desktop")}
-            aria-label="Modo desktop"
+            aria-label={t.editor.modeDesktop}
             aria-pressed={editingMode === "desktop"}
             className={`flex items-center gap-1 rounded px-2.5 py-1.5 text-xs transition-colors ${
               editingMode === "desktop" ? "bg-white text-[#161616]" : "text-neutral-500 hover:text-neutral-300"
@@ -127,7 +129,7 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
           </button>
           <button
             onClick={() => setEditingMode("mobile")}
-            aria-label="Modo mobile"
+            aria-label={t.editor.modeMobile}
             aria-pressed={editingMode === "mobile"}
             className={`flex items-center gap-1 rounded px-2.5 py-1.5 text-xs transition-colors ${
               editingMode === "mobile" ? "bg-white text-[#161616]" : "text-neutral-500 hover:text-neutral-300"
@@ -141,7 +143,7 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
         <ShareButton />
         {peerCount > 0 && (
           <span className="hidden md:inline text-xs text-neutral-500">
-            {peerCount} colaborador{peerCount > 1 ? "es" : ""}
+            {peerCount} {peerCount > 1 ? t.editor.collaborators : t.editor.collaborator}
           </span>
         )}
         {connected !== undefined && (

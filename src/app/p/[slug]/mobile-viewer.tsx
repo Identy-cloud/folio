@@ -3,6 +3,7 @@
 import { useState, useRef, useMemo, useCallback, useEffect } from "react";
 import DOMPurify from "dompurify";
 import type { SlideElement, TextElement } from "@/types/elements";
+import { useTranslation } from "@/lib/i18n/context";
 
 interface Slide {
   id: string;
@@ -17,6 +18,7 @@ interface Props {
 }
 
 export function MobileViewer({ title, slides }: Props) {
+  const { t } = useTranslation();
   const [current, setCurrent] = useState(0);
   const touchRef = useRef<{ x: number; y: number } | null>(null);
   const total = slides.length;
@@ -75,7 +77,7 @@ export function MobileViewer({ title, slides }: Props) {
       {current === 0 && (
         <div className="absolute inset-x-0 bottom-16 z-10 flex justify-center pointer-events-none animate-fade-out">
           <span className="rounded-full bg-white/10 px-4 py-1.5 text-[10px] text-white/50">
-            Desliza para navegar ←→
+            {t.viewer.swipeHint}
           </span>
         </div>
       )}

@@ -1,19 +1,21 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useTranslation } from "@/lib/i18n/context";
 
 const STORAGE_KEY = "folio-onboarding-done";
 
-const STEPS = [
-  { target: "[data-slide-canvas]", title: "Canvas", text: "Haz click en cualquier elemento para seleccionarlo" },
-  { target: "[data-slide-canvas]", title: "Mover y redimensionar", text: "Arrastra para mover, usa los handles para redimensionar" },
-  { target: "[data-panel='slides']", title: "Panel de slides", text: "Gestiona y reordena tus slides aquí" },
-  { target: "[data-panel='palette']", title: "Insertar elementos", text: "Añade textos, imágenes y formas" },
-  { target: "[data-panel='toolbar']", title: "Toolbar", text: "Tu trabajo se guarda automáticamente. Cmd+Z para deshacer" },
-];
-
 export function Onboarding() {
+  const { t } = useTranslation();
   const [step, setStep] = useState(-1);
+
+  const STEPS = [
+    { target: "[data-slide-canvas]", title: t.onboarding.step1Title, text: t.onboarding.step1Text },
+    { target: "[data-slide-canvas]", title: t.onboarding.step2Title, text: t.onboarding.step2Text },
+    { target: "[data-panel='slides']", title: t.onboarding.step3Title, text: t.onboarding.step3Text },
+    { target: "[data-panel='palette']", title: t.onboarding.step4Title, text: t.onboarding.step4Text },
+    { target: "[data-panel='toolbar']", title: t.onboarding.step5Title, text: t.onboarding.step5Text },
+  ];
 
   useEffect(() => {
     if (localStorage.getItem(STORAGE_KEY) === "true") return;
@@ -46,7 +48,7 @@ export function Onboarding() {
         className="absolute left-1/2 top-1/2 w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-lg bg-[#1e1e1e] border border-neutral-700 p-5 shadow-2xl"
         role="dialog"
         aria-modal="true"
-        aria-label="Tour del editor"
+        aria-label={t.onboarding.tourLabel}
       >
         <div className="mb-1 flex items-center justify-between">
           <span className="text-xs font-medium text-neutral-400 uppercase tracking-wider">
@@ -55,9 +57,9 @@ export function Onboarding() {
           <button
             onClick={skip}
             className="text-xs text-neutral-500 hover:text-neutral-300"
-            aria-label="Saltar tour"
+            aria-label={t.onboarding.skip}
           >
-            Saltar tour
+            {t.onboarding.skip}
           </button>
         </div>
         <h3 className="font-display text-lg tracking-tight text-neutral-200 sm:text-xl">
@@ -70,7 +72,7 @@ export function Onboarding() {
           onClick={next}
           className="mt-4 w-full bg-white py-2.5 text-xs font-medium tracking-widest text-[#161616] uppercase hover:bg-neutral-200"
         >
-          {step >= STEPS.length - 1 ? "Empezar" : "Siguiente"}
+          {step >= STEPS.length - 1 ? t.onboarding.start : t.onboarding.next}
         </button>
       </div>
     </div>

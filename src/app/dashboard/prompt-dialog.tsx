@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useTranslation } from "@/lib/i18n/context";
 
 interface Props {
   open: boolean;
@@ -13,6 +14,7 @@ interface Props {
 }
 
 export function PromptDialog({ open, title, message, defaultValue = "", placeholder, onSubmit, onCancel }: Props) {
+  const { t } = useTranslation();
   const [value, setValue] = useState(defaultValue);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -49,13 +51,13 @@ export function PromptDialog({ open, title, message, defaultValue = "", placehol
             onClick={onCancel}
             className="rounded px-4 py-2 text-xs text-neutral-400 hover:bg-neutral-800 transition-colors"
           >
-            Cancelar
+            {t.common.cancel}
           </button>
           <button
             type="submit"
             className="rounded bg-white px-4 py-2 text-xs font-medium text-[#161616] hover:bg-neutral-200 transition-colors"
           >
-            Guardar
+            {t.common.save}
           </button>
         </div>
       </form>

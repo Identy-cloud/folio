@@ -2,11 +2,13 @@
 
 import { useEditorStore } from "@/store/editorStore";
 import { AlignLeft, AlignCenterHorizontalSimple, AlignRight, AlignTop, AlignCenterVerticalSimple, AlignBottom } from "@phosphor-icons/react";
+import { useTranslation } from "@/lib/i18n/context";
 
 const CANVAS_W = 1920;
 const CANVAS_H = 1080;
 
 export function AlignControls({ elementId }: { elementId: string }) {
+  const { t } = useTranslation();
   const updateElement = useEditorStore((s) => s.updateElement);
   const pushHistory = useEditorStore((s) => s.pushHistory);
   const slide = useEditorStore((s) => s.getActiveSlide());
@@ -23,7 +25,7 @@ export function AlignControls({ elementId }: { elementId: string }) {
   return (
     <div>
       <span className="mb-1 block text-[10px] font-medium text-neutral-400 uppercase tracking-wider">
-        Alinear al canvas
+        {t.editor.alignCanvas}
       </span>
       <div className="flex gap-1">
         <button onClick={() => align({ x: 0 })} className={btn} title="Izquierda">

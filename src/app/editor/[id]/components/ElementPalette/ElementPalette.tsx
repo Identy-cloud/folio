@@ -13,8 +13,10 @@ import { LockToggle } from "./LockToggle";
 import { DeleteButton } from "./DeleteButton";
 import { ColorPicker } from "@/components/editor/ColorPicker";
 import type { TextElement, ShapeElement, ArrowElement, DividerElement } from "@/types/elements";
+import { useTranslation } from "@/lib/i18n/context";
 
 export function ElementPalette() {
+  const { t } = useTranslation();
   const addElement = useEditorStore((s) => s.addElement);
   const activeSlide = useEditorStore((s) => s.getActiveSlide());
   const selectedIds = useEditorStore((s) => s.selectedElementIds);
@@ -33,26 +35,26 @@ export function ElementPalette() {
   return (
     <div className="flex w-56 flex-col border-l border-neutral-800 bg-[#161616]">
       <div className="border-b border-neutral-800 px-3 py-2">
-        <span className="text-xs font-medium text-neutral-400 uppercase tracking-wider">Insertar</span>
+        <span className="text-xs font-medium text-neutral-400 uppercase tracking-wider">{t.editor.insert}</span>
       </div>
       <div className="p-3 space-y-1.5">
-        <button onClick={() => add({ id: nanoid(), type: "text", x: 100, y: 100, w: 400, h: 80, rotation: 0, opacity: 1, zIndex: zBase, locked: false, content: "Escribe aquí", fontFamily: "var(--font-dm-sans)", fontSize: 32, fontWeight: 400, lineHeight: 1.4, letterSpacing: 0, color: "#0a0a0a", textAlign: "left", verticalAlign: "top" } satisfies TextElement)} className={btn}>
-          <TextT size={16} weight="duotone" /> Texto
+        <button onClick={() => add({ id: nanoid(), type: "text", x: 100, y: 100, w: 400, h: 80, rotation: 0, opacity: 1, zIndex: zBase, locked: false, content: t.editor.writeHere, fontFamily: "var(--font-dm-sans)", fontSize: 32, fontWeight: 400, lineHeight: 1.4, letterSpacing: 0, color: "#0a0a0a", textAlign: "left", verticalAlign: "top" } satisfies TextElement)} className={btn}>
+          <TextT size={16} weight="duotone" /> {t.editor.tools.text}
         </button>
         <button onClick={() => add({ id: nanoid(), type: "shape", x: 200, y: 200, w: 200, h: 200, rotation: 0, opacity: 1, zIndex: zBase, locked: false, shape: "rect", fill: "#1a1aff", stroke: "transparent", strokeWidth: 0, borderRadius: 0 } satisfies ShapeElement)} className={btn}>
-          <Rectangle size={16} weight="duotone" /> Rectángulo
+          <Rectangle size={16} weight="duotone" /> {t.editor.rectangle}
         </button>
         <button onClick={() => add({ id: nanoid(), type: "shape", x: 200, y: 200, w: 200, h: 200, rotation: 0, opacity: 1, zIndex: zBase, locked: false, shape: "circle", fill: "#1a1aff", stroke: "transparent", strokeWidth: 0, borderRadius: 0 } satisfies ShapeElement)} className={btn}>
-          <Circle size={16} weight="duotone" /> Círculo
+          <Circle size={16} weight="duotone" /> {t.editor.circle}
         </button>
         <button onClick={() => add({ id: nanoid(), type: "arrow", x: 200, y: 400, w: 300, h: 60, rotation: 0, opacity: 1, zIndex: zBase, locked: false, direction: "right", color: "#0a0a0a", strokeWidth: 3 } satisfies ArrowElement)} className={btn}>
-          <ArrowRight size={16} weight="duotone" /> Flecha
+          <ArrowRight size={16} weight="duotone" /> {t.editor.arrow}
         </button>
         <button onClick={() => add({ id: nanoid(), type: "divider", x: 100, y: 500, w: 600, h: 10, rotation: 0, opacity: 1, zIndex: zBase, locked: false, color: "#a3a3a3", strokeWidth: 2 } satisfies DividerElement)} className={btn}>
-          <Minus size={16} weight="duotone" /> Línea
+          <Minus size={16} weight="duotone" /> {t.editor.line}
         </button>
         <button onClick={triggerUpload} disabled={uploading} className={`${btn} disabled:opacity-50`}>
-          <ImageIcon size={16} weight="duotone" /> {uploading ? "Subiendo..." : "Imagen"}
+          <ImageIcon size={16} weight="duotone" /> {uploading ? t.editor.uploading : t.editor.image}
         </button>
       </div>
 
@@ -68,16 +70,16 @@ export function ElementPalette() {
         </div>
       ) : activeSlide && (
         <div className="border-t border-neutral-800 p-3 space-y-3">
-          <span className="text-[10px] font-medium text-neutral-400 uppercase tracking-wider">Fondo del slide</span>
+          <span className="text-[10px] font-medium text-neutral-400 uppercase tracking-wider">{t.editor.slideBg}</span>
           <ColorPicker value={activeSlide.backgroundColor} onChange={updateSlideBackground} />
           {activeSlide.backgroundImage ? (
             <div className="space-y-1">
               <img src={activeSlide.backgroundImage} alt="" className="w-full rounded border border-neutral-700 aspect-video object-cover" />
-              <button onClick={() => updateSlideBackgroundImage(null)} className="w-full text-[10px] text-red-400 hover:text-red-300">Quitar imagen</button>
+              <button onClick={() => updateSlideBackgroundImage(null)} className="w-full text-[10px] text-red-400 hover:text-red-300">{t.editor.removeBgImage}</button>
             </div>
           ) : (
             <button onClick={triggerBgUpload} disabled={bgUploading} className="w-full rounded border border-dashed border-neutral-700 py-2 text-[10px] text-neutral-500 hover:border-neutral-500 disabled:opacity-50">
-              {bgUploading ? "Subiendo..." : "Agregar imagen de fondo"}
+              {bgUploading ? t.editor.uploading : t.editor.addBgImage}
             </button>
           )}
         </div>

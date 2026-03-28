@@ -3,8 +3,10 @@
 import { Lock, LockOpen } from "@phosphor-icons/react";
 import { useEditorStore } from "@/store/editorStore";
 import type { SlideElement } from "@/types/elements";
+import { useTranslation } from "@/lib/i18n/context";
 
 export function LockToggle({ element }: { element: SlideElement }) {
+  const { t } = useTranslation();
   const updateElement = useEditorStore((s) => s.updateElement);
   const pushHistory = useEditorStore((s) => s.pushHistory);
 
@@ -23,7 +25,7 @@ export function LockToggle({ element }: { element: SlideElement }) {
       }`}
     >
       {element.locked ? <Lock size={14} weight="duotone" /> : <LockOpen size={14} weight="duotone" />}
-      {element.locked ? "Desbloquear" : "Bloquear"}
+      {element.locked ? t.editor.unlock : t.editor.lock}
     </button>
   );
 }
