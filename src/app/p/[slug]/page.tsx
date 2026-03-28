@@ -58,12 +58,22 @@ export async function generateMetadata({
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "";
 
+  const description = `${data.presentation.title} — Presentación editorial creada con Folio`;
+
   return {
     title: data.presentation.title,
+    description,
     openGraph: {
       title: data.presentation.title,
+      description,
       images: [`${appUrl}/api/og/${slug}`],
       type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: data.presentation.title,
+      description,
+      images: [`${appUrl}/api/og/${slug}`],
     },
   };
 }

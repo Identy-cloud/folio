@@ -48,7 +48,7 @@ export default async function DashboardLayout({
           <LogoutButton />
         </div>
       </header>
-      <main className="flex-1 p-4 sm:p-6">{children}</main>
+      <main id="main-content" className="flex-1 p-4 sm:p-6">{children}</main>
     </div>
   );
 }

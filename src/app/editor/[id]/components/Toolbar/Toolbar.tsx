@@ -61,7 +61,7 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
     error: "Error al guardar", unsaved: "Sin guardar",
   };
   const statusColor: Record<string, string> = {
-    saved: "text-green-600", saving: "text-amber-600",
+    saved: "text-green-500", saving: "text-amber-500",
     error: "text-red-600", unsaved: "text-neutral-500",
   };
 
@@ -152,7 +152,7 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
             title={connected ? "Conectado" : "Desconectado"}
           />
         )}
-        <span className={`text-xs ${statusColor[saveStatus]}`}>
+        <span className={`text-xs ${statusColor[saveStatus]}`} aria-live="polite">
           {statusText[saveStatus]}
         </span>
       </div>

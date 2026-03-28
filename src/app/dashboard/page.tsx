@@ -7,7 +7,9 @@ import { PresentationCard } from "./presentation-card";
 import type { SlideElement } from "@/types/elements";
 import { SkeletonGrid } from "./skeleton-grid";
 import { TemplateModal } from "./template-modal";
-import { THEMES } from "@/lib/templates/themes";
+import { ConfirmDialog } from "./confirm-dialog";
+import { PromptDialog } from "./prompt-dialog";
+import { ThemeDialog } from "./theme-dialog";
 
 interface Presentation {
   id: string;
@@ -24,11 +26,18 @@ interface Presentation {
   } | null;
 }
 
+type Dialog =
+  | { type: "rename"; id: string; current: string }
+  | { type: "delete"; id: string }
+  | { type: "theme"; id: string; current: string }
+  | null;
+
 export default function DashboardPage() {
   const [presentations, setPresentations] = useState<Presentation[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const [dialog, setDialog] = useState<Dialog>(null);
 
   useEffect(() => {
     const load = async () => {
@@ -50,34 +59,30 @@ export default function DashboardPage() {
     await fetch("/api/presentations", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        title: `${original.title} (copia)`,
-        theme: original.theme,
-        useTemplate: false,
-      }),
+      body: JSON.stringify({ title: `${original.title} (copia)`, theme: original.theme, useTemplate: false }),
     });
     refreshPresentations();
   }
 
-  async function handleRename(id: string) {
-    const current = presentations.find((p) => p.id === id);
-    const title = prompt("Nuevo título:", current?.title);
-    if (!title) return;
-    const res = await fetch(`/api/presentations/${id}`, {
+  async function handleRename(title: string) {
+    if (!dialog || dialog.type !== "rename") return;
+    const res = await fetch(`/api/presentations/${dialog.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title }),
     });
     if (res.ok) toast.success("Renombrada");
     else toast.error("Error al renombrar");
+    setDialog(null);
     refreshPresentations();
   }
 
-  async function handleDelete(id: string) {
-    if (!confirm("¿Eliminar esta presentación?")) return;
-    const res = await fetch(`/api/presentations/${id}`, { method: "DELETE" });
+  async function handleDelete() {
+    if (!dialog || dialog.type !== "delete") return;
+    const res = await fetch(`/api/presentations/${dialog.id}`, { method: "DELETE" });
     if (res.ok) toast.success("Eliminada");
     else toast.error("Error al eliminar");
+    setDialog(null);
     refreshPresentations();
   }
 
@@ -92,18 +97,16 @@ export default function DashboardPage() {
     refreshPresentations();
   }
 
-  async function handleChangeTheme(id: string) {
-    const themeKeys = Object.keys(THEMES);
-    const current = presentations.find((p) => p.id === id)?.theme ?? "";
-    const choice = prompt(`Tema actual: ${current}\nOpciones: ${themeKeys.join(", ")}\n\nNuevo tema:`);
-    if (!choice || !themeKeys.includes(choice)) return;
-    const res = await fetch(`/api/presentations/${id}`, {
+  async function handleChangeTheme(theme: string) {
+    if (!dialog || dialog.type !== "theme") return;
+    const res = await fetch(`/api/presentations/${dialog.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ theme: choice }),
+      body: JSON.stringify({ theme }),
     });
     if (res.ok) toast.success("Tema cambiado");
     else toast.error("Error al cambiar tema");
+    setDialog(null);
     refreshPresentations();
   }
 
@@ -127,7 +130,7 @@ export default function DashboardPage() {
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Buscar..."
               aria-label="Buscar presentaciones"
-              className="w-full rounded border border-neutral-700 bg-[#1e1e1e] py-2 pl-8 pr-3 text-xs text-neutral-200 outline-none placeholder:text-neutral-600 focus:border-neutral-500"
+              className="w-full rounded border border-neutral-700 bg-[#1e1e1e] py-2 pl-8 pr-3 text-xs text-neutral-200 outline-none placeholder:text-neutral-500 focus:border-neutral-500"
             />
           </div>
           <button
@@ -141,16 +144,9 @@ export default function DashboardPage() {
 
       {presentations.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center sm:py-32">
-          <p className="font-display text-3xl tracking-tight text-neutral-700 sm:text-5xl">
-            SIN PRESENTACIONES
-          </p>
-          <p className="mt-3 text-sm text-neutral-500">
-            Crea tu primera presentación para empezar
-          </p>
-          <button
-            onClick={() => setModalOpen(true)}
-            className="mt-6 bg-white px-8 py-3 text-sm font-medium tracking-widest text-[#0a0a0a] uppercase hover:bg-neutral-300 transition-colors"
-          >
+          <p className="font-display text-3xl tracking-tight text-neutral-700 sm:text-5xl">SIN PRESENTACIONES</p>
+          <p className="mt-3 text-sm text-neutral-400">Crea tu primera presentación para empezar</p>
+          <button onClick={() => setModalOpen(true)} className="mt-6 bg-white px-8 py-3 text-sm font-medium tracking-widest text-[#161616] uppercase hover:bg-neutral-200 transition-colors">
             Crear presentación
           </button>
         </div>
@@ -161,18 +157,41 @@ export default function DashboardPage() {
               key={p.id}
               presentation={p}
               onDuplicate={() => handleDuplicate(p.id)}
-              onRename={() => handleRename(p.id)}
-              onDelete={() => handleDelete(p.id)}
+              onRename={() => setDialog({ type: "rename", id: p.id, current: p.title })}
+              onDelete={() => setDialog({ type: "delete", id: p.id })}
               onTogglePublic={() => handleTogglePublic(p.id, p.isPublic)}
-              onChangeTheme={() => handleChangeTheme(p.id)}
+              onChangeTheme={() => setDialog({ type: "theme", id: p.id, current: p.theme })}
             />
           ))}
         </div>
       )}
 
-      <TemplateModal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
+      <TemplateModal open={modalOpen} onClose={() => setModalOpen(false)} />
+
+      <PromptDialog
+        open={dialog?.type === "rename"}
+        title="RENOMBRAR"
+        defaultValue={dialog?.type === "rename" ? dialog.current : ""}
+        placeholder="Nuevo título"
+        onSubmit={handleRename}
+        onCancel={() => setDialog(null)}
+      />
+
+      <ConfirmDialog
+        open={dialog?.type === "delete"}
+        title="ELIMINAR"
+        message="¿Estás seguro de que querés eliminar esta presentación? Esta acción no se puede deshacer."
+        confirmLabel="Eliminar"
+        destructive
+        onConfirm={handleDelete}
+        onCancel={() => setDialog(null)}
+      />
+
+      <ThemeDialog
+        open={dialog?.type === "theme"}
+        currentTheme={dialog?.type === "theme" ? dialog.current : ""}
+        onSelect={handleChangeTheme}
+        onCancel={() => setDialog(null)}
       />
     </div>
   );

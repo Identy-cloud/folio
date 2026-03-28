@@ -90,6 +90,9 @@ export default function RootLayout({
   return (
     <html lang="es" className={`${fontVars} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-sans">
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[9999] focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:text-black">
+          Saltar al contenido
+        </a>
         {children}
         <Toaster
           position="bottom-center"

@@ -50,7 +50,7 @@ export const SortableSlideThumb = memo(function SortableSlideThumb({
       className={`group relative cursor-pointer rounded border-2 transition-colors ${
         isActive
           ? "border-blue-500"
-          : "border-transparent hover:border-neutral-300"
+          : "border-transparent hover:border-neutral-600"
       }`}
     >
       <SlidePreview slide={slide} className="w-full rounded-sm" />

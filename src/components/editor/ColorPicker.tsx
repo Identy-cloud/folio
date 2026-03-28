@@ -58,13 +58,14 @@ export function ColorPicker({ value, onChange, label }: Props) {
 
       {open && (
         <div className="absolute left-0 top-full z-50 mt-1 w-48 rounded border border-neutral-700 bg-[#1e1e1e] p-2 shadow-xl">
-          <div className="grid grid-cols-8 gap-1">
+          <div className="grid grid-cols-8 gap-1 rounded bg-[#2a2a2a] p-1">
             {PRESETS.map((c) => (
               <button
                 key={c}
                 onClick={() => { onChange(c); setHex(c); }}
+                aria-label={c}
                 className={`h-5 w-5 rounded-sm border transition-transform hover:scale-110 ${
-                  value === c ? "border-white" : "border-neutral-700"
+                  value === c ? "border-white ring-1 ring-white" : "border-neutral-500"
                 }`}
                 style={{ backgroundColor: c }}
               />
