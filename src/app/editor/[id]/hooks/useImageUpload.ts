@@ -43,11 +43,16 @@ export function useImageUpload() {
 
       const { signedUrl, publicUrl } = await res.json();
 
-      await fetch(signedUrl, {
+      const putRes = await fetch(signedUrl, {
         method: "PUT",
         headers: { "Content-Type": file.type },
         body: file,
       });
+
+      if (!putRes.ok) {
+        toast.error("Error al subir archivo");
+        return;
+      }
 
       const el: ImageElement = {
         id: nanoid(),

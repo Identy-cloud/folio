@@ -81,10 +81,13 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   dirty: false,
 
   init: (presentationId, slides) => {
-    const sorted = [...slides].sort((a, b) => a.order - b.order);
+    const sorted = [...slides]
+      .sort((a, b) => a.order - b.order)
+      .map((s) => ({ ...s, transition: s.transition ?? "fade" }));
     set({
       presentationId,
       slides: sorted,
+      editingMode: "desktop",
       activeSlideIndex: 0,
       selectedElementIds: [],
       history: [cloneSlides(sorted)],
@@ -186,12 +189,13 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   },
 
   addElement: (element) => {
-    const { slides, activeSlideIndex } = get();
-    const updated = slides.map((s, i) =>
-      i === activeSlideIndex
-        ? { ...s, elements: [...s.elements, element] }
-        : s
-    );
+    const { slides, activeSlideIndex, editingMode } = get();
+    const key = editingMode === "mobile" ? "mobileElements" : "elements";
+    const updated = slides.map((s, i) => {
+      if (i !== activeSlideIndex) return s;
+      const arr = (key === "mobileElements" ? s.mobileElements : s.elements) ?? [];
+      return { ...s, [key]: [...arr, element] };
+    });
     set({
       slides: updated,
       selectedElementIds: [element.id],
@@ -203,29 +207,29 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   },
 
   updateElement: (elementId, updates) => {
-    const { slides, activeSlideIndex } = get();
-    const updated = slides.map((s, i) =>
-      i === activeSlideIndex
-        ? {
-            ...s,
-            elements: s.elements.map((el) =>
-              el.id === elementId
-                ? ({ ...el, ...updates } as SlideElement)
-                : el
-            ),
-          }
-        : s
-    );
+    const { slides, activeSlideIndex, editingMode } = get();
+    const key = editingMode === "mobile" ? "mobileElements" : "elements";
+    const updated = slides.map((s, i) => {
+      if (i !== activeSlideIndex) return s;
+      const arr = (key === "mobileElements" ? s.mobileElements : s.elements) ?? [];
+      return {
+        ...s,
+        [key]: arr.map((el) =>
+          el.id === elementId ? ({ ...el, ...updates } as SlideElement) : el
+        ),
+      };
+    });
     set({ slides: updated, dirty: true, saveStatus: "unsaved" });
   },
 
   deleteElement: (elementId) => {
-    const { slides, activeSlideIndex } = get();
-    const updated = slides.map((s, i) =>
-      i === activeSlideIndex
-        ? { ...s, elements: s.elements.filter((el) => el.id !== elementId) }
-        : s
-    );
+    const { slides, activeSlideIndex, editingMode } = get();
+    const key = editingMode === "mobile" ? "mobileElements" : "elements";
+    const updated = slides.map((s, i) => {
+      if (i !== activeSlideIndex) return s;
+      const arr = (key === "mobileElements" ? s.mobileElements : s.elements) ?? [];
+      return { ...s, [key]: arr.filter((el) => el.id !== elementId) };
+    });
     set({
       slides: updated,
       selectedElementIds: get().selectedElementIds.filter(

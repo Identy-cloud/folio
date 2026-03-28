@@ -107,8 +107,8 @@ function useBgImageUpload() {
         });
         if (!res.ok) return;
         const { signedUrl, publicUrl } = await res.json();
-        await fetch(signedUrl, { method: "PUT", headers: { "Content-Type": file.type }, body: file });
-        updateSlideBackgroundImage(publicUrl);
+        const putRes = await fetch(signedUrl, { method: "PUT", headers: { "Content-Type": file.type }, body: file });
+        if (putRes.ok) updateSlideBackgroundImage(publicUrl);
       };
       input.click();
     },

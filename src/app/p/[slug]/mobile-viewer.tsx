@@ -116,6 +116,14 @@ function MobileSlideContent({ elements, bg }: { elements: SlideElement[]; bg: st
 function MobileElement({ element }: { element: SlideElement }) {
   if (element.type === "shape" || element.type === "arrow") return null;
 
+  if (element.type === "divider") {
+    return (
+      <div className="py-2">
+        <div style={{ height: element.strokeWidth, backgroundColor: element.color, opacity: element.opacity }} />
+      </div>
+    );
+  }
+
   if (element.type === "image") {
     return (
       <img

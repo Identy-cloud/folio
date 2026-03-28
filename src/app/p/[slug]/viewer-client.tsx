@@ -14,6 +14,7 @@ interface Slide {
   order: number;
   transition: SlideTransition;
   backgroundColor: string;
+  backgroundImage: string | null;
   elements: SlideElement[];
   mobileElements?: SlideElement[] | null;
 }
@@ -232,6 +233,9 @@ function SlideLayer({
         transformOrigin: "center center",
         position: "absolute",
         backgroundColor: slide.backgroundColor,
+        backgroundImage: slide.backgroundImage ? `url(${slide.backgroundImage})` : undefined,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
         ...transitionStyle,
       }}
     >
