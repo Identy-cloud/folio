@@ -43,6 +43,9 @@ body {
   animation: fade-out 3s ease both;
 }
 
+/* Busy spinner */
+@keyframes busy-spin { to { transform: rotate(360deg) } }
+
 /* Mobile properties button entrance */
 @keyframes props-in {
   from { transform: scale(0); opacity: 0; }

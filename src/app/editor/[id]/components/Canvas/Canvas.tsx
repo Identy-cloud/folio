@@ -4,6 +4,7 @@ import { useRef, useState, useEffect, useCallback } from "react";
 import { nanoid } from "nanoid";
 import { useEditorStore } from "@/store/editorStore";
 import { textDefaults } from "@/lib/templates/element-defaults";
+import { THEMES } from "@/lib/templates/themes";
 import { CanvasElement } from "./CanvasElement";
 import { SelectionBox } from "./SelectionBox";
 import { SnapGuides } from "./SnapGuides";
@@ -39,7 +40,7 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
   const clearSelection = useEditorStore((s) => s.clearSelection);
   const activeTool = useEditorStore((s) => s.activeTool);
   const addElement = useEditorStore((s) => s.addElement);
-  const theme = useEditorStore((s) => s.getTheme());
+  const theme = useEditorStore((s) => THEMES[s.theme] ?? THEMES["editorial-blue"]);
   const editingMode = useEditorStore((s) => s.editingMode);
 
   const isMobileMode = editingMode === "mobile";

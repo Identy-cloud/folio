@@ -1,10 +1,9 @@
 "use client";
 
-import { useRef, useState, memo, useMemo, useCallback } from "react";
+import { useRef, useState, memo, useMemo } from "react";
 import DOMPurify from "dompurify";
 import { Camera } from "@phosphor-icons/react";
 import { useEditorStore } from "@/store/editorStore";
-import { useImageReplace } from "../../hooks/useImageReplace";
 import type { SlideElement, TextElement, ShapeElement, ArrowElement, DividerElement } from "@/types/elements";
 
 interface Props {
@@ -19,7 +18,6 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
   const pushHistory = useEditorStore((s) => s.pushHistory);
   const isBusy = useEditorStore((s) => s.busyElementIds.has(element.id));
   const [editing, setEditing] = useState(false);
-  const { trigger: triggerImageReplace } = useImageReplace(element.id);
 
   const dragRef = useRef<{
     startX: number;
@@ -61,7 +59,9 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
   function onDoubleClick() {
     if (isBusy) return;
     if (element.type === "text") setEditing(true);
-    if (element.type === "image") triggerImageReplace();
+    if (element.type === "image") {
+      window.dispatchEvent(new CustomEvent("folio:replace-image", { detail: element.id }));
+    }
   }
 
   function handleBlur(e: React.FocusEvent<HTMLDivElement>) {
@@ -128,7 +128,7 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
               }}
               onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = "1"; }}
               onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = "0"; }}
-              onClick={(e) => { e.stopPropagation(); triggerImageReplace(); }}
+              onClick={(e) => { e.stopPropagation(); window.dispatchEvent(new CustomEvent("folio:replace-image", { detail: element.id })); }}
             >
               <span style={{ color: "white", fontSize: 14, letterSpacing: "0.1em", display: "flex", alignItems: "center", gap: 6 }}>
                 <Camera size={18} weight="duotone" /> REPLACE
@@ -167,7 +167,6 @@ function BusyOverlay() {
           animation: "busy-spin 0.6s linear infinite",
         }}
       />
-      <style>{`@keyframes busy-spin { to { transform: rotate(360deg) } }`}</style>
     </div>
   );
 }

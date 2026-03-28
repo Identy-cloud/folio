@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import { useEditorStore } from "@/store/editorStore";
 import { toast } from "sonner";
 import { useTranslation } from "@/lib/i18n/context";
@@ -7,12 +7,14 @@ export function useImageReplace(elementId: string) {
   const { t } = useTranslation();
   const [uploading, setUploading] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const busyRef = useRef(false);
   const updateElement = useEditorStore((s) => s.updateElement);
   const pushHistory = useEditorStore((s) => s.pushHistory);
   const setElementBusy = useEditorStore((s) => s.setElementBusy);
   const clearElementBusy = useEditorStore((s) => s.clearElementBusy);
 
-  function trigger() {
+  const trigger = useCallback(() => {
+    if (busyRef.current) return;
     if (!inputRef.current) {
       const input = document.createElement("input");
       input.type = "file";
@@ -24,12 +26,14 @@ export function useImageReplace(elementId: string) {
     }
     inputRef.current.value = "";
     inputRef.current.click();
-  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [elementId]);
 
   async function handleFile() {
     const file = inputRef.current?.files?.[0];
-    if (!file) return;
+    if (!file || busyRef.current) return;
 
+    busyRef.current = true;
     setUploading(true);
     setElementBusy(elementId);
     try {
@@ -63,6 +67,7 @@ export function useImageReplace(elementId: string) {
     } catch {
       toast.error(t.common.connectionError);
     } finally {
+      busyRef.current = false;
       setUploading(false);
       clearElementBusy(elementId);
     }

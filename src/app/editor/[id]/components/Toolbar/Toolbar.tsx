@@ -64,7 +64,7 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
   };
   const statusColor: Record<string, string> = {
     saved: "text-green-500", saving: "text-amber-500",
-    error: "text-red-600", unsaved: "text-neutral-500",
+    error: "text-red-400", unsaved: "text-neutral-500",
   };
 
   return (
@@ -151,7 +151,7 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
             className={`inline-block h-2 w-2 rounded-full ${
               connected ? "bg-green-500" : "bg-neutral-600"
             }`}
-            title={connected ? "Conectado" : "Desconectado"}
+            aria-label={connected ? "Connected" : "Disconnected"}
           />
         )}
         <span className={`text-xs ${statusColor[saveStatus]}`} aria-live="polite">

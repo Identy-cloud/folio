@@ -20,6 +20,7 @@ import {
 import { SlidePreview } from "@/components/SlidePreview";
 import type { TextElement, ShapeElement, ImageElement, ArrowElement, DividerElement } from "@/types/elements";
 import { textDefaults, shapeDefaults } from "@/lib/templates/element-defaults";
+import { THEMES } from "@/lib/templates/themes";
 import { PositionFields } from "./ElementPalette/PositionFields";
 import { TextProperties } from "./ElementPalette/TextProperties";
 import { ShapeProperties } from "./ElementPalette/ShapeProperties";
@@ -190,7 +191,7 @@ function MobileInsertPanel({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
   const addElement = useEditorStore((s) => s.addElement);
   const activeSlide = useEditorStore((s) => s.getActiveSlide());
-  const theme = useEditorStore((s) => s.getTheme());
+  const theme = useEditorStore((s) => THEMES[s.theme] ?? THEMES["editorial-blue"]);
   const { trigger: triggerUpload, uploading } = useImageUpload();
 
   function addText() {

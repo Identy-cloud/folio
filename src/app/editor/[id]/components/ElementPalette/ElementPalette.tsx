@@ -17,13 +17,14 @@ import { DeleteButton } from "./DeleteButton";
 import { ColorPicker } from "@/components/editor/ColorPicker";
 import type { TextElement, ShapeElement, ArrowElement, DividerElement, ImageElement, SlideElement } from "@/types/elements";
 import { textDefaults, shapeDefaults, arrowDefaults, dividerDefaults } from "@/lib/templates/element-defaults";
+import { THEMES } from "@/lib/templates/themes";
 import { useTranslation } from "@/lib/i18n/context";
 
 export function ElementPalette() {
   const { t } = useTranslation();
   const addElement = useEditorStore((s) => s.addElement);
   const activeSlide = useEditorStore((s) => s.getActiveSlide());
-  const theme = useEditorStore((s) => s.getTheme());
+  const theme = useEditorStore((s) => THEMES[s.theme] ?? THEMES["editorial-blue"]);
   const selectedIds = useEditorStore((s) => s.selectedElementIds);
   const editingMode = useEditorStore((s) => s.editingMode);
   const updateSlideBackground = useEditorStore((s) => s.updateSlideBackground);
@@ -100,12 +101,11 @@ export function ElementPalette() {
 
 function useBgImageUpload() {
   const updateSlideBackgroundImage = useEditorStore((s) => s.updateSlideBackgroundImage);
-  const { trigger, uploading } = useImageUpload();
+  const { uploading } = useImageUpload();
 
   return {
     uploading,
     trigger: () => {
-      // Override: intercept the upload to set as background instead of element
       const input = document.createElement("input");
       input.type = "file";
       input.accept = "image/jpeg,image/png,image/webp";

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { Image as ImageIcon } from "@phosphor-icons/react";
 import { useEditorStore } from "@/store/editorStore";
 import { useImageReplace } from "../../hooks/useImageReplace";
@@ -15,6 +16,14 @@ export function ImageProperties({ element }: Props) {
   const updateElement = useEditorStore((s) => s.updateElement);
   const pushHistory = useEditorStore((s) => s.pushHistory);
   const { trigger, uploading } = useImageReplace(element.id);
+
+  useEffect(() => {
+    function onReplace(e: Event) {
+      if ((e as CustomEvent).detail === element.id) trigger();
+    }
+    window.addEventListener("folio:replace-image", onReplace);
+    return () => window.removeEventListener("folio:replace-image", onReplace);
+  }, [element.id, trigger]);
 
   function setObjectFit(value: "cover" | "contain" | "fill") {
     updateElement(element.id, { objectFit: value });

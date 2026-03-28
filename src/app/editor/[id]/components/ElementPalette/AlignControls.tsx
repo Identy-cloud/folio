@@ -28,23 +28,23 @@ export function AlignControls({ elementId }: { elementId: string }) {
         {t.editor.alignCanvas}
       </span>
       <div className="flex gap-1">
-        <button onClick={() => align({ x: 0 })} className={btn} title="Izquierda">
+        <button onClick={() => align({ x: 0 })} className={btn} aria-label="Align left">
           <AlignLeft size={14} weight="duotone" />
         </button>
-        <button onClick={() => align({ x: (CANVAS_W - el.w) / 2 })} className={btn} title="Centro H">
+        <button onClick={() => align({ x: (CANVAS_W - el.w) / 2 })} className={btn} aria-label="Align center horizontal">
           <AlignCenterHorizontalSimple size={14} weight="duotone" />
         </button>
-        <button onClick={() => align({ x: CANVAS_W - el.w })} className={btn} title="Derecha">
+        <button onClick={() => align({ x: CANVAS_W - el.w })} className={btn} aria-label="Align right">
           <AlignRight size={14} weight="duotone" />
         </button>
         <div className="w-px bg-neutral-700" />
-        <button onClick={() => align({ y: 0 })} className={btn} title="Arriba">
+        <button onClick={() => align({ y: 0 })} className={btn} aria-label="Align top">
           <AlignTop size={14} weight="duotone" />
         </button>
-        <button onClick={() => align({ y: (CANVAS_H - el.h) / 2 })} className={btn} title="Centro V">
+        <button onClick={() => align({ y: (CANVAS_H - el.h) / 2 })} className={btn} aria-label="Align center vertical">
           <AlignCenterVerticalSimple size={14} weight="duotone" />
         </button>
-        <button onClick={() => align({ y: CANVAS_H - el.h })} className={btn} title="Abajo">
+        <button onClick={() => align({ y: CANVAS_H - el.h })} className={btn} aria-label="Align bottom">
           <AlignBottom size={14} weight="duotone" />
         </button>
       </div>

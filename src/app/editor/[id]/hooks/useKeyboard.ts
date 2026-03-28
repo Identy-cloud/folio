@@ -68,12 +68,14 @@ export function useKeyboard() {
       const ARROW_KEYS = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
       if (ARROW_KEYS.includes(e.key) && state.selectedElementIds.length > 0) {
         if (inInput) return;
+        const movable = state.selectedElementIds.filter((id) => !state.busyElementIds.has(id));
+        if (movable.length === 0) return;
         e.preventDefault();
         const step = e.shiftKey ? 10 : 1;
         const slide = state.getActiveSlide();
         if (!slide) return;
         const els = state.editingMode === "mobile" && slide.mobileElements ? slide.mobileElements : slide.elements;
-        state.selectedElementIds.forEach((id) => {
+        movable.forEach((id) => {
           const el = els.find((el) => el.id === id);
           if (!el) return;
           const updates: Record<string, number> = {};
