@@ -107,7 +107,7 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
   return (
     <div
       ref={wrapperRef}
-      className="relative flex h-full w-full items-center justify-center overflow-hidden"
+      className="relative flex h-full w-full items-start justify-center overflow-hidden pt-6"
     >
       <div
         data-slide-canvas
@@ -115,8 +115,7 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
           width: canvasW,
           height: canvasH,
           transform: `scale(${scale})`,
-          transformOrigin: "center center",
-          position: "absolute",
+          transformOrigin: "top center",
           backgroundColor: slide.backgroundColor,
           boxShadow: "0 4px 30px rgba(0,0,0,0.3)",
         }}

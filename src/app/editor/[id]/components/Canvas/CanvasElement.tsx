@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef, useState, memo, useMemo } from "react";
+import { useRef, useState, memo, useMemo, useCallback } from "react";
 import DOMPurify from "dompurify";
 import { Camera } from "@phosphor-icons/react";
 import { useEditorStore } from "@/store/editorStore";
+import { useImageReplace } from "../../hooks/useImageReplace";
 import type { SlideElement, TextElement, ShapeElement, ArrowElement, DividerElement } from "@/types/elements";
 
 interface Props {
@@ -17,6 +18,7 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
   const updateElement = useEditorStore((s) => s.updateElement);
   const pushHistory = useEditorStore((s) => s.pushHistory);
   const [editing, setEditing] = useState(false);
+  const { trigger: triggerImageReplace } = useImageReplace(element.id);
 
   const dragRef = useRef<{
     startX: number;
@@ -57,6 +59,7 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
 
   function onDoubleClick() {
     if (element.type === "text") setEditing(true);
+    if (element.type === "image") triggerImageReplace();
   }
 
   function handleBlur(e: React.FocusEvent<HTMLDivElement>) {
@@ -119,9 +122,11 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
                 backgroundColor: "rgba(0,0,0,0.3)",
                 opacity: 0,
                 transition: "opacity 0.2s",
+                cursor: "pointer",
               }}
               onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = "1"; }}
               onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = "0"; }}
+              onClick={(e) => { e.stopPropagation(); triggerImageReplace(); }}
             >
               <span style={{ color: "white", fontSize: 14, letterSpacing: "0.1em", display: "flex", alignItems: "center", gap: 6 }}>
                 <Camera size={18} weight="duotone" /> REPLACE

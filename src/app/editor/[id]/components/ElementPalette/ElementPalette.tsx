@@ -7,12 +7,13 @@ import { useImageUpload } from "../../hooks/useImageUpload";
 import { PositionFields } from "./PositionFields";
 import { TextProperties } from "./TextProperties";
 import { ShapeProperties } from "./ShapeProperties";
+import { ImageProperties } from "./ImageProperties";
 import { LayerControls } from "./LayerControls";
 import { AlignControls } from "./AlignControls";
 import { LockToggle } from "./LockToggle";
 import { DeleteButton } from "./DeleteButton";
 import { ColorPicker } from "@/components/editor/ColorPicker";
-import type { TextElement, ShapeElement, ArrowElement, DividerElement } from "@/types/elements";
+import type { TextElement, ShapeElement, ArrowElement, DividerElement, ImageElement } from "@/types/elements";
 import { useTranslation } from "@/lib/i18n/context";
 
 export function ElementPalette() {
@@ -20,13 +21,15 @@ export function ElementPalette() {
   const addElement = useEditorStore((s) => s.addElement);
   const activeSlide = useEditorStore((s) => s.getActiveSlide());
   const selectedIds = useEditorStore((s) => s.selectedElementIds);
+  const editingMode = useEditorStore((s) => s.editingMode);
   const updateSlideBackground = useEditorStore((s) => s.updateSlideBackground);
   const updateSlideBackgroundImage = useEditorStore((s) => s.updateSlideBackgroundImage);
   const { trigger: triggerUpload, uploading } = useImageUpload();
   const { trigger: triggerBgUpload, uploading: bgUploading } = useBgImageUpload();
 
-  const selectedElement = activeSlide?.elements.find((el) => selectedIds.includes(el.id));
-  const zBase = (activeSlide?.elements.length ?? 0) + 1;
+  const elements = editingMode === "mobile" && activeSlide?.mobileElements ? activeSlide.mobileElements : activeSlide?.elements;
+  const selectedElement = elements?.find((el) => selectedIds.includes(el.id));
+  const zBase = (elements?.length ?? 0) + 1;
 
   function add(el: Parameters<typeof addElement>[0]) { addElement(el); }
 
@@ -63,6 +66,7 @@ export function ElementPalette() {
           <PositionFields element={selectedElement} />
           {selectedElement.type === "text" && <TextProperties element={selectedElement} />}
           {selectedElement.type === "shape" && <ShapeProperties element={selectedElement} />}
+          {selectedElement.type === "image" && <ImageProperties element={selectedElement as ImageElement} />}
           <AlignControls elementId={selectedElement.id} />
           <LayerControls elementId={selectedElement.id} />
           <LockToggle element={selectedElement} />

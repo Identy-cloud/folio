@@ -3,31 +3,44 @@ import { useEditorStore } from "@/store/editorStore";
 
 export function useKeyboard() {
   useEffect(() => {
+    function isInputFocused(e: KeyboardEvent): boolean {
+      const tag = (e.target as HTMLElement).tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return true;
+      if ((e.target as HTMLElement).isContentEditable) return true;
+      return false;
+    }
+
     function handler(e: KeyboardEvent) {
       const meta = e.metaKey || e.ctrlKey;
       const state = useEditorStore.getState();
+      const inInput = isInputFocused(e);
 
       if (e.key === "z" && meta && !e.shiftKey) {
+        if (inInput) return;
         e.preventDefault();
         state.undo();
         return;
       }
       if ((e.key === "y" && meta) || (e.key === "z" && meta && e.shiftKey)) {
+        if (inInput) return;
         e.preventDefault();
         state.redo();
         return;
       }
       if (e.key === "c" && meta) {
+        if (inInput) return;
         e.preventDefault();
         state.copySelection();
         return;
       }
       if (e.key === "v" && meta) {
+        if (inInput) return;
         e.preventDefault();
         state.pasteClipboard();
         return;
       }
       if (e.key === "d" && meta) {
+        if (inInput) return;
         e.preventDefault();
         if (state.selectedElementIds.length > 0) {
           state.selectedElementIds.forEach((id) => state.duplicateElement(id));
@@ -43,9 +56,7 @@ export function useKeyboard() {
         return;
       }
       if (e.key === "Delete" || e.key === "Backspace") {
-        const tag = (e.target as HTMLElement).tagName;
-        if (tag === "INPUT" || tag === "TEXTAREA") return;
-        if ((e.target as HTMLElement).isContentEditable) return;
+        if (inInput) return;
         e.preventDefault();
         [...state.selectedElementIds].forEach((id) => state.deleteElement(id));
         return;
@@ -53,6 +64,7 @@ export function useKeyboard() {
 
       const ARROW_KEYS = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
       if (ARROW_KEYS.includes(e.key) && state.selectedElementIds.length > 0) {
+        if (inInput) return;
         e.preventDefault();
         const step = e.shiftKey ? 10 : 1;
         const slide = state.getActiveSlide();

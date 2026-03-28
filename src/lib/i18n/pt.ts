@@ -147,6 +147,11 @@ export const pt = {
     collaborator: "colaborador",
     collaborators: "colaboradores",
     writeHere: "Escreve aqui",
+    changeImage: "Trocar imagem",
+    imageReplaced: "Imagem substituída",
+    fitCover: "Recortar",
+    fitContain: "Conter",
+    fitFill: "Esticar",
   },
   onboarding: {
     skip: "Saltar tour",
