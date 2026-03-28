@@ -148,6 +148,7 @@ export const de = {
     collaborators: "Mitarbeiter",
     writeHere: "Hier schreiben",
     properties: "Eigenschaften",
+    direction: "Richtung",
     changeImage: "Bild ändern",
     imageReplaced: "Bild ersetzt",
     fitCover: "Zuschneiden",

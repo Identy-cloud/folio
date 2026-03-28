@@ -148,6 +148,7 @@ export const pt = {
     collaborators: "colaboradores",
     writeHere: "Escreve aqui",
     properties: "Propriedades",
+    direction: "Direção",
     changeImage: "Trocar imagem",
     imageReplaced: "Imagem substituída",
     fitCover: "Recortar",

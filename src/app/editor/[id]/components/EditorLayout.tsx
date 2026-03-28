@@ -18,11 +18,13 @@ import {
   TextT, Rectangle, Circle, Triangle, Image as ImageIcon,
 } from "@phosphor-icons/react";
 import { SlidePreview } from "@/components/SlidePreview";
-import type { TextElement, ShapeElement, ImageElement } from "@/types/elements";
+import type { TextElement, ShapeElement, ImageElement, ArrowElement, DividerElement } from "@/types/elements";
 import { PositionFields } from "./ElementPalette/PositionFields";
 import { TextProperties } from "./ElementPalette/TextProperties";
 import { ShapeProperties } from "./ElementPalette/ShapeProperties";
 import { ImageProperties } from "./ElementPalette/ImageProperties";
+import { ArrowProperties } from "./ElementPalette/ArrowProperties";
+import { DividerProperties } from "./ElementPalette/DividerProperties";
 import { LayerControls } from "./ElementPalette/LayerControls";
 import { AlignControls } from "./ElementPalette/AlignControls";
 import { LockToggle } from "./ElementPalette/LockToggle";
@@ -261,6 +263,8 @@ function MobilePropertiesPanel({ onClose }: { onClose: () => void }) {
       {el.type === "text" && <TextProperties element={el} />}
       {el.type === "shape" && <ShapeProperties element={el} />}
       {el.type === "image" && <ImageProperties element={el as ImageElement} />}
+      {el.type === "arrow" && <ArrowProperties element={el as ArrowElement} />}
+      {el.type === "divider" && <DividerProperties element={el as DividerElement} />}
       <AlignControls elementId={el.id} />
       <LayerControls elementId={el.id} />
       <LockToggle element={el} />

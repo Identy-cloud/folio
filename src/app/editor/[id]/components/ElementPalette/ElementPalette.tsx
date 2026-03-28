@@ -8,12 +8,14 @@ import { PositionFields } from "./PositionFields";
 import { TextProperties } from "./TextProperties";
 import { ShapeProperties } from "./ShapeProperties";
 import { ImageProperties } from "./ImageProperties";
+import { ArrowProperties } from "./ArrowProperties";
+import { DividerProperties } from "./DividerProperties";
 import { LayerControls } from "./LayerControls";
 import { AlignControls } from "./AlignControls";
 import { LockToggle } from "./LockToggle";
 import { DeleteButton } from "./DeleteButton";
 import { ColorPicker } from "@/components/editor/ColorPicker";
-import type { TextElement, ShapeElement, ArrowElement, DividerElement, ImageElement } from "@/types/elements";
+import type { TextElement, ShapeElement, ArrowElement, DividerElement, ImageElement, SlideElement } from "@/types/elements";
 import { useTranslation } from "@/lib/i18n/context";
 
 export function ElementPalette() {
@@ -67,6 +69,8 @@ export function ElementPalette() {
           {selectedElement.type === "text" && <TextProperties element={selectedElement} />}
           {selectedElement.type === "shape" && <ShapeProperties element={selectedElement} />}
           {selectedElement.type === "image" && <ImageProperties element={selectedElement as ImageElement} />}
+          {selectedElement.type === "arrow" && <ArrowProperties element={selectedElement as ArrowElement} />}
+          {selectedElement.type === "divider" && <DividerProperties element={selectedElement as DividerElement} />}
           <AlignControls elementId={selectedElement.id} />
           <LayerControls elementId={selectedElement.id} />
           <LockToggle element={selectedElement} />
