@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { THEMES } from "@/lib/templates/themes";
+import { THEMES, ALL_FONTS } from "@/lib/templates/themes";
 import { toast } from "sonner";
 import { X, Plus } from "@phosphor-icons/react";
 
@@ -65,20 +65,20 @@ export function TemplateModal({ open, onClose }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-      <div className="w-full max-w-4xl rounded-sm bg-white p-8 shadow-2xl">
+      <div className="w-full max-w-4xl rounded-sm bg-[#111111] p-8 shadow-2xl">
         <div className="mb-6 flex items-center justify-between">
           <div>
-            <h2 className="font-display text-3xl tracking-tight">
+            <h2 className="font-display text-3xl tracking-tight text-white">
               NUEVA PRESENTACIÓN
             </h2>
-            <p className="mt-1 text-sm text-neutral-500">
+            <p className="mt-1 text-sm text-neutral-400">
               Elige un tema o empieza en blanco
             </p>
           </div>
           <button
             onClick={onClose}
             disabled={creating !== null}
-            className="text-neutral-400 hover:text-neutral-900 disabled:opacity-30"
+            className="text-neutral-500 hover:text-white disabled:opacity-30"
           >
             <X size={20} />
           </button>
@@ -92,7 +92,7 @@ export function TemplateModal({ open, onClose }: Props) {
                 key={key}
                 onClick={() => handleSelect(key)}
                 disabled={creating !== null}
-                className="group relative overflow-hidden border border-neutral-200 text-left transition-shadow hover:shadow-lg disabled:opacity-50"
+                className="group relative overflow-hidden border border-neutral-700 text-left transition-shadow hover:shadow-lg disabled:opacity-50"
               >
                 <div
                   className="flex aspect-video items-end p-4"
@@ -119,13 +119,14 @@ export function TemplateModal({ open, onClose }: Props) {
                   />
                 </div>
                 <div className="px-4 py-2">
-                  <p className="text-xs text-neutral-500">
-                    {t.fontDisplay} + {t.fontBody}
+                  <p className="text-xs text-neutral-400">
+                    {ALL_FONTS.find((f) => f.value === t.fontDisplay)?.label ?? t.fontDisplay} +{" "}
+                    {ALL_FONTS.find((f) => f.value === t.fontBody)?.label ?? t.fontBody}
                   </p>
                 </div>
                 {creating === key && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-white/80">
-                    <span className="text-xs text-neutral-500">Creando...</span>
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/70">
+                    <span className="text-xs text-neutral-400">Creando...</span>
                   </div>
                 )}
               </button>
@@ -135,17 +136,22 @@ export function TemplateModal({ open, onClose }: Props) {
           <button
             onClick={handleBlank}
             disabled={creating !== null}
-            className="flex aspect-video items-center justify-center border-2 border-dashed border-neutral-300 text-neutral-400 transition-colors hover:border-neutral-500 hover:text-neutral-600 disabled:opacity-50"
+            className="relative overflow-hidden border-2 border-dashed border-neutral-700 text-neutral-500 transition-colors hover:border-neutral-500 hover:text-neutral-300 disabled:opacity-50"
           >
-            <div className="flex flex-col items-center">
-              <Plus size={28} />
-              <span className="mt-2 block text-xs uppercase tracking-wider">
-                En blanco
-              </span>
+            <div className="flex aspect-video items-center justify-center">
+              <div className="flex flex-col items-center">
+                <Plus size={28} />
+                <span className="mt-2 block text-xs uppercase tracking-wider">
+                  En blanco
+                </span>
+              </div>
+            </div>
+            <div className="px-4 py-2">
+              <p className="text-xs text-neutral-400">Sin template</p>
             </div>
             {creating === "blank" && (
-              <div className="absolute inset-0 flex items-center justify-center bg-white/80">
-                <span className="text-xs text-neutral-500">Creando...</span>
+              <div className="absolute inset-0 flex items-center justify-center bg-black/70">
+                <span className="text-xs text-neutral-400">Creando...</span>
               </div>
             )}
           </button>

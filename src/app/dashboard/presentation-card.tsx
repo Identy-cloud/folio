@@ -53,7 +53,7 @@ export function PresentationCard({
   const bg = THEME_COLORS[presentation.theme] ?? "bg-neutral-800";
 
   return (
-    <div className="group relative flex flex-col border border-neutral-200 bg-white transition-shadow hover:shadow-lg">
+    <div className="group relative flex flex-col border border-neutral-800 bg-[#111111] transition-shadow hover:shadow-lg">
       <Link href={`/editor/${presentation.id}`} className="block">
         {presentation.thumbnailUrl ? (
           <img
@@ -74,8 +74,8 @@ export function PresentationCard({
 
       <div className="flex items-center justify-between px-4 py-3">
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-medium">{presentation.title}</p>
-          <p className="text-xs text-neutral-400">
+          <p className="truncate text-sm font-medium text-white">{presentation.title}</p>
+          <p className="text-xs text-neutral-500">
             {formatDistanceToNow(new Date(presentation.updatedAt), {
               addSuffix: true,
               locale: es,
@@ -87,14 +87,14 @@ export function PresentationCard({
         <div ref={menuRef} className="relative">
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="ml-2 rounded p-1.5 text-neutral-400 hover:bg-neutral-100 hover:text-neutral-700"
+            className="ml-2 rounded p-1.5 text-neutral-500 hover:bg-neutral-800 hover:text-white"
           >
             <DotsThreeVertical size={18} weight="duotone" />
 
           </button>
 
           {menuOpen && (
-            <div className="absolute right-0 bottom-full mb-1 z-50 w-44 border border-neutral-200 bg-white py-1 shadow-lg rounded">
+            <div className="absolute right-0 bottom-full mb-1 z-50 w-44 border border-neutral-700 bg-[#1a1a1a] py-1 shadow-lg rounded">
               <MenuItem
                 label="Renombrar"
                 onClick={() => {
@@ -146,8 +146,8 @@ function MenuItem({
   return (
     <button
       onClick={onClick}
-      className={`block w-full px-4 py-2 text-left text-sm hover:bg-neutral-50 ${
-        destructive ? "text-red-600" : "text-neutral-700"
+      className={`block w-full px-4 py-2 text-left text-sm hover:bg-neutral-800 ${
+        destructive ? "text-red-500" : "text-neutral-300"
       }`}
     >
       {label}

@@ -23,13 +23,13 @@ export default async function DashboardLayout({
     .toUpperCase();
 
   return (
-    <div className="flex min-h-screen flex-col bg-neutral-50">
-      <header className="flex h-16 items-center justify-between border-b border-neutral-200 bg-white px-6">
+    <div className="flex min-h-screen flex-col bg-[#0a0a0a] text-white">
+      <header className="flex h-16 items-center justify-between border-b border-neutral-800 px-6">
         <h1 className="font-display text-2xl tracking-tight">
           FOLIO
         </h1>
         <div className="flex items-center gap-4">
-          <span className="text-sm text-neutral-600">
+          <span className="text-sm text-neutral-400">
             {user.user_metadata?.full_name ?? user.email}
           </span>
           {user.user_metadata?.avatar_url ? (
@@ -41,7 +41,7 @@ export default async function DashboardLayout({
               className="rounded-full"
             />
           ) : (
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-900 text-xs font-medium text-white">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-xs font-medium text-[#0a0a0a]">
               {initials}
             </div>
           )}

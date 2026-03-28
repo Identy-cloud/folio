@@ -94,7 +94,7 @@ export default function DashboardPage() {
         </h2>
         <button
           onClick={() => setModalOpen(true)}
-          className="bg-neutral-900 px-6 py-2.5 text-sm font-medium tracking-widest text-white uppercase hover:bg-neutral-700 transition-colors"
+          className="bg-white px-6 py-2.5 text-sm font-medium tracking-widest text-[#0a0a0a] uppercase hover:bg-neutral-200 transition-colors"
         >
           <Plus size={14} className="inline" /> Nueva presentación
         </button>
@@ -102,15 +102,15 @@ export default function DashboardPage() {
 
       {presentations.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-32 text-center">
-          <p className="font-display text-5xl tracking-tight text-neutral-300">
+          <p className="font-display text-5xl tracking-tight text-neutral-700">
             SIN PRESENTACIONES
           </p>
-          <p className="mt-3 text-sm text-neutral-400">
+          <p className="mt-3 text-sm text-neutral-500">
             Crea tu primera presentación para empezar
           </p>
           <button
             onClick={() => setModalOpen(true)}
-            className="mt-6 bg-neutral-900 px-8 py-3 text-sm font-medium tracking-widest text-white uppercase hover:bg-neutral-700 transition-colors"
+            className="mt-6 bg-white px-8 py-3 text-sm font-medium tracking-widest text-[#0a0a0a] uppercase hover:bg-neutral-200 transition-colors"
           >
             Crear presentación
           </button>
