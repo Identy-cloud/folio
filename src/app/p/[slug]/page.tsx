@@ -3,7 +3,7 @@ import { presentations, slides } from "@/db/schema";
 import { eq, asc } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { ViewerClient } from "./viewer-client";
+import { ViewerWrapper } from "./viewer-wrapper";
 import type { SlideElement } from "@/types/elements";
 
 interface SlideRow {
@@ -74,7 +74,7 @@ export default async function ViewerPage({
   if (!data) notFound();
 
   return (
-    <ViewerClient
+    <ViewerWrapper
       title={data.presentation.title}
       slides={data.slides as SlideRow[]}
     />
