@@ -29,7 +29,12 @@ export function useKeyboard() {
       }
       if (e.key === "d" && meta) {
         e.preventDefault();
-        state.selectedElementIds.forEach((id) => state.duplicateElement(id));
+        if (state.selectedElementIds.length > 0) {
+          state.selectedElementIds.forEach((id) => state.duplicateElement(id));
+        } else {
+          const slide = state.getActiveSlide();
+          if (slide) state.duplicateSlide(slide.id);
+        }
         return;
       }
       if (e.key === "Escape") {

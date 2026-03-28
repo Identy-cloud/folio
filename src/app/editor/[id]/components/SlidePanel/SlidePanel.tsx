@@ -1,9 +1,21 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useEditorStore } from "@/store/editorStore";
-import { SlideThumb } from "./SlideThumb";
+import { SortableSlideThumb } from "./SortableSlideThumb";
 
 const THUMB_HEIGHT = 136;
 const VIRTUALIZATION_THRESHOLD = 20;
@@ -14,10 +26,36 @@ export function SlidePanel() {
   const setActiveSlide = useEditorStore((s) => s.setActiveSlide);
   const addSlide = useEditorStore((s) => s.addSlide);
   const deleteSlide = useEditorStore((s) => s.deleteSlide);
+  const duplicateSlide = useEditorStore((s) => s.duplicateSlide);
+  const moveSlideToStart = useEditorStore((s) => s.moveSlideToStart);
+  const moveSlideToEnd = useEditorStore((s) => s.moveSlideToEnd);
+  const reorderSlides = useEditorStore((s) => s.reorderSlides);
   const parentRef = useRef<HTMLDivElement>(null);
 
-  const useVirtual = slides.length > VIRTUALIZATION_THRESHOLD;
+  const [contextMenu, setContextMenu] = useState<{
+    x: number;
+    y: number;
+    slideId: string;
+  } | null>(null);
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
+  );
+
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    const from = slides.findIndex((s) => s.id === active.id);
+    const to = slides.findIndex((s) => s.id === over.id);
+    if (from >= 0 && to >= 0) reorderSlides(from, to);
+  }
+
+  function handleContextMenu(e: React.MouseEvent, slideId: string) {
+    e.preventDefault();
+    setContextMenu({ x: e.clientX, y: e.clientY, slideId });
+  }
+
+  const useVirtual = slides.length > VIRTUALIZATION_THRESHOLD;
   const virtualizer = useVirtualizer({
     count: slides.length,
     getScrollElement: () => parentRef.current,
@@ -38,60 +76,100 @@ export function SlidePanel() {
           + Añadir
         </button>
       </div>
-      <div ref={parentRef} className="flex-1 overflow-y-auto p-2">
-        {useVirtual ? (
-          <div
-            style={{
-              height: virtualizer.getTotalSize(),
-              position: "relative",
-            }}
+      <div
+        ref={parentRef}
+        className="flex-1 overflow-y-auto p-2"
+        onClick={() => setContextMenu(null)}
+      >
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext
+            items={slides.map((s) => s.id)}
+            strategy={verticalListSortingStrategy}
           >
-            {virtualizer.getVirtualItems().map((vItem) => {
-              const slide = slides[vItem.index];
-              return (
-                <div
+            <div className="space-y-2">
+              {slides.map((slide, i) => (
+                <SortableSlideThumb
                   key={slide.id}
-                  style={{
-                    position: "absolute",
-                    top: vItem.start,
-                    left: 0,
-                    right: 0,
-                    height: vItem.size,
-                    padding: "4px 0",
-                  }}
-                >
-                  <SlideThumb
-                    slide={slide}
-                    index={vItem.index}
-                    isActive={vItem.index === activeSlideIndex}
-                    onClick={() => setActiveSlide(vItem.index)}
-                    onDelete={
-                      slides.length > 1
-                        ? () => deleteSlide(slide.id)
-                        : undefined
-                    }
-                  />
-                </div>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="space-y-2">
-            {slides.map((slide, i) => (
-              <SlideThumb
-                key={slide.id}
-                slide={slide}
-                index={i}
-                isActive={i === activeSlideIndex}
-                onClick={() => setActiveSlide(i)}
-                onDelete={
-                  slides.length > 1 ? () => deleteSlide(slide.id) : undefined
-                }
-              />
-            ))}
-          </div>
-        )}
+                  slide={slide}
+                  index={i}
+                  isActive={i === activeSlideIndex}
+                  onClick={() => setActiveSlide(i)}
+                  onContextMenu={(e) => handleContextMenu(e, slide.id)}
+                  onDelete={
+                    slides.length > 1
+                      ? () => deleteSlide(slide.id)
+                      : undefined
+                  }
+                />
+              ))}
+            </div>
+          </SortableContext>
+        </DndContext>
       </div>
+
+      {contextMenu && (
+        <div
+          className="fixed z-50 w-44 rounded border border-neutral-200 bg-white py-1 shadow-lg"
+          style={{ left: contextMenu.x, top: contextMenu.y }}
+        >
+          <CtxItem
+            label="Duplicar slide"
+            onClick={() => {
+              duplicateSlide(contextMenu.slideId);
+              setContextMenu(null);
+            }}
+          />
+          <CtxItem
+            label="Mover al inicio"
+            onClick={() => {
+              moveSlideToStart(contextMenu.slideId);
+              setContextMenu(null);
+            }}
+          />
+          <CtxItem
+            label="Mover al final"
+            onClick={() => {
+              moveSlideToEnd(contextMenu.slideId);
+              setContextMenu(null);
+            }}
+          />
+          {slides.length > 1 && (
+            <CtxItem
+              label="Eliminar slide"
+              destructive
+              onClick={() => {
+                deleteSlide(contextMenu.slideId);
+                setContextMenu(null);
+              }}
+            />
+          )}
+        </div>
+      )}
     </div>
+  );
+}
+
+function CtxItem({
+  label,
+  onClick,
+  destructive,
+}: {
+  label: string;
+  onClick: () => void;
+  destructive?: boolean;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`block w-full px-4 py-2 text-left text-xs hover:bg-neutral-50 ${
+        destructive ? "text-red-600" : "text-neutral-700"
+      }`}
+    >
+      {label}
+    </button>
   );
 }

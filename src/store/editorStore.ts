@@ -27,6 +27,9 @@ interface EditorState {
   updateElement: (elementId: string, updates: Partial<SlideElement>) => void;
   deleteElement: (elementId: string) => void;
   duplicateElement: (elementId: string) => void;
+  duplicateSlide: (id: string) => void;
+  moveSlideToStart: (id: string) => void;
+  moveSlideToEnd: (id: string) => void;
 
   selectElement: (id: string, multi?: boolean) => void;
   clearSelection: () => void;
@@ -127,6 +130,42 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       saveStatus: "unsaved",
     });
     get().pushHistory();
+  },
+
+  duplicateSlide: (id) => {
+    const { slides, presentationId } = get();
+    const source = slides.find((s) => s.id === id);
+    if (!source) return;
+    const idx = slides.indexOf(source);
+    const dup: Slide = {
+      ...JSON.parse(JSON.stringify(source)),
+      id: nanoid(),
+      presentationId,
+      order: idx + 1,
+    };
+    const updated = [...slides];
+    updated.splice(idx + 1, 0, dup);
+    set({
+      slides: updated.map((s, i) => ({ ...s, order: i })),
+      activeSlideIndex: idx + 1,
+      dirty: true,
+      saveStatus: "unsaved",
+    });
+    get().pushHistory();
+  },
+
+  moveSlideToStart: (id) => {
+    const { slides } = get();
+    const idx = slides.findIndex((s) => s.id === id);
+    if (idx <= 0) return;
+    get().reorderSlides(idx, 0);
+  },
+
+  moveSlideToEnd: (id) => {
+    const { slides } = get();
+    const idx = slides.findIndex((s) => s.id === id);
+    if (idx < 0 || idx >= slides.length - 1) return;
+    get().reorderSlides(idx, slides.length - 1);
   },
 
   addElement: (element) => {
