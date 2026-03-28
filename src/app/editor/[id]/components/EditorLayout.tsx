@@ -15,10 +15,11 @@ import { useEditorStore } from "@/store/editorStore";
 import { useSessionGuard } from "@/hooks/useSessionGuard";
 import {
   StackSimple, PlusCircle, X,
-  TextT, Rectangle, Circle, Triangle,
+  TextT, Rectangle, Circle, Triangle, Image as ImageIcon,
 } from "@phosphor-icons/react";
 import { SlidePreview } from "@/components/SlidePreview";
 import type { TextElement, ShapeElement } from "@/types/elements";
+import { useImageUpload } from "../hooks/useImageUpload";
 
 export function EditorLayout() {
   const presentationId = useEditorStore((s) => s.presentationId);
@@ -156,6 +157,7 @@ function MobileSlidePanel({ onClose }: { onClose: () => void }) {
 function MobileInsertPanel({ onClose }: { onClose: () => void }) {
   const addElement = useEditorStore((s) => s.addElement);
   const activeSlide = useEditorStore((s) => s.getActiveSlide());
+  const { trigger: triggerUpload, uploading } = useImageUpload();
 
   function addText() {
     const el: TextElement = {
@@ -200,6 +202,9 @@ function MobileInsertPanel({ onClose }: { onClose: () => void }) {
       </button>
       <button onClick={() => addShape("triangle")} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800">
         <Triangle size={18} weight="duotone" /> Triángulo
+      </button>
+      <button onClick={() => { triggerUpload(); onClose(); }} disabled={uploading} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800 disabled:opacity-50">
+        <ImageIcon size={18} weight="duotone" /> {uploading ? "Subiendo..." : "Imagen"}
       </button>
     </div>
   );

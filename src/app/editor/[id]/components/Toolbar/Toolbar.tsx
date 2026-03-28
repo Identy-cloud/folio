@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowCounterClockwise, ArrowClockwise, Cursor, TextT, Shapes, FilePdf } from "@phosphor-icons/react";
+import { ArrowCounterClockwise, ArrowClockwise, Cursor, TextT, Shapes, FilePdf, Image as ImageIcon } from "@phosphor-icons/react";
 import { useEditorStore } from "@/store/editorStore";
 import type { ActiveTool } from "@/store/editorStore";
 import { exportToPdf } from "@/lib/export-pdf";
 import Link from "next/link";
 import { ShareButton } from "./ShareButton";
+import { useImageUpload } from "../../hooks/useImageUpload";
 
 const TOOLS: { id: ActiveTool; label: string; icon: React.ReactNode }[] = [
   { id: "select", label: "Seleccionar", icon: <Cursor size={14} weight="duotone" /> },
@@ -28,6 +29,7 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
   const slides = useEditorStore((s) => s.slides);
   const setActiveSlide = useEditorStore((s) => s.setActiveSlide);
 
+  const { trigger: triggerUpload, uploading } = useImageUpload();
   const [exporting, setExporting] = useState(false);
   const [exportProgress, setExportProgress] = useState("");
 
@@ -93,6 +95,14 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
           ))}
         </div>
         <div className="hidden md:block h-5 w-px bg-neutral-700" />
+        <button
+          onClick={triggerUpload}
+          disabled={uploading}
+          className="hidden md:flex items-center gap-1 rounded px-3 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 disabled:opacity-50"
+        >
+          <ImageIcon size={14} weight="duotone" />
+          {uploading ? "..." : "Imagen"}
+        </button>
         <button
           onClick={handleExport}
           disabled={exporting}

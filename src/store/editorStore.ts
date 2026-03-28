@@ -31,6 +31,7 @@ interface EditorState {
   moveSlideToStart: (id: string) => void;
   moveSlideToEnd: (id: string) => void;
 
+  updateSlideBackground: (color: string) => void;
   updateSlideTransition: (slideId: string, transition: SlideTransition) => void;
 
   selectElement: (id: string, multi?: boolean) => void;
@@ -230,6 +231,15 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     if (!el) return;
     const dup = { ...el, id: nanoid(), x: el.x + 20, y: el.y + 20 };
     get().addElement(dup as SlideElement);
+  },
+
+  updateSlideBackground: (color) => {
+    const { slides, activeSlideIndex } = get();
+    const updated = slides.map((s, i) =>
+      i === activeSlideIndex ? { ...s, backgroundColor: color } : s
+    );
+    set({ slides: updated, dirty: true, saveStatus: "unsaved" });
+    get().pushHistory();
   },
 
   updateSlideTransition: (slideId, transition) => {
