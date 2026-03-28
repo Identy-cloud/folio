@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import DOMPurify from "dompurify";
 import type { SlideElement, TextElement, ShapeElement, SlideTransition } from "@/types/elements";
+import { MobileViewer } from "./mobile-viewer";
 
 const SLIDE_W = 1920;
 const SLIDE_H = 1080;
@@ -105,11 +106,15 @@ export function ViewerClient({ title, slides }: Props) {
   }
 
   function handleClick(e: React.MouseEvent) {
-    if (!containerRef.current || isMobile) return;
+    if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     if (x > rect.width * 0.65) goNext();
     else if (x < rect.width * 0.35) goPrev();
+  }
+
+  if (isMobile) {
+    return <MobileViewer title={title} slides={slides} />;
   }
 
   const outgoing = slides[displayed];
@@ -190,31 +195,21 @@ export function ViewerClient({ title, slides }: Props) {
               style={{ width: `${((current + 1) / total) * 100}%` }}
             />
           </div>
-          {!isMobile && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                document.documentElement.requestFullscreen?.();
-              }}
-              className="text-white/40 hover:text-white/80 transition-colors"
-              title="Pantalla completa (F)"
-            >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                <path d="M2 2h4V0H0v6h2V2zm12 0h-4V0h6v6h-2V2zM2 14h4v2H0v-6h2v4zm12 0h-4v2h6v-6h-2v4z" />
-              </svg>
-            </button>
-          )}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              document.documentElement.requestFullscreen?.();
+            }}
+            className="text-white/40 hover:text-white/80 transition-colors"
+            title="Pantalla completa (F)"
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M2 2h4V0H0v6h2V2zm12 0h-4V0h6v6h-2V2zM2 14h4v2H0v-6h2v4zm12 0h-4v2h6v-6h-2v4z" />
+            </svg>
+          </button>
         </div>
       </div>
 
-      {/* Swipe hint */}
-      {isMobile && current === 0 && !transitioning && (
-        <div className="absolute inset-x-0 bottom-16 z-10 flex justify-center pointer-events-none animate-fade-out">
-          <span className="rounded-full bg-white/10 px-4 py-1.5 text-[10px] text-white/50">
-            Desliza para navegar ←→
-          </span>
-        </div>
-      )}
     </div>
   );
 }
