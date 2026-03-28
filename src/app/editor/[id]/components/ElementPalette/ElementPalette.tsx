@@ -2,10 +2,13 @@
 
 import { useEditorStore } from "@/store/editorStore";
 import { nanoid } from "nanoid";
+import { ALL_FONTS } from "@/lib/templates/themes";
 import type { TextElement, ShapeElement } from "@/types/elements";
 
 export function ElementPalette() {
   const addElement = useEditorStore((s) => s.addElement);
+  const updateElement = useEditorStore((s) => s.updateElement);
+  const pushHistory = useEditorStore((s) => s.pushHistory);
   const activeSlide = useEditorStore((s) => s.getActiveSlide());
   const selectedIds = useEditorStore((s) => s.selectedElementIds);
 
@@ -17,23 +20,15 @@ export function ElementPalette() {
     const el: TextElement = {
       id: nanoid(),
       type: "text",
-      x: 100,
-      y: 100,
-      w: 400,
-      h: 80,
-      rotation: 0,
-      opacity: 1,
+      x: 100, y: 100, w: 400, h: 80,
+      rotation: 0, opacity: 1,
       zIndex: (activeSlide?.elements.length ?? 0) + 1,
       locked: false,
       content: "Escribe aquí",
-      fontFamily: "DM Sans",
-      fontSize: 32,
-      fontWeight: 400,
-      lineHeight: 1.4,
-      letterSpacing: 0,
-      color: "#0a0a0a",
-      textAlign: "left",
-      verticalAlign: "top",
+      fontFamily: "var(--font-dm-sans)",
+      fontSize: 32, fontWeight: 400, lineHeight: 1.4,
+      letterSpacing: 0, color: "#0a0a0a",
+      textAlign: "left", verticalAlign: "top",
     };
     addElement(el);
   }
@@ -42,19 +37,12 @@ export function ElementPalette() {
     const el: ShapeElement = {
       id: nanoid(),
       type: "shape",
-      x: 200,
-      y: 200,
-      w: 200,
-      h: 200,
-      rotation: 0,
-      opacity: 1,
+      x: 200, y: 200, w: 200, h: 200,
+      rotation: 0, opacity: 1,
       zIndex: (activeSlide?.elements.length ?? 0) + 1,
-      locked: false,
-      shape,
-      fill: "#1a1aff",
-      stroke: "transparent",
-      strokeWidth: 0,
-      borderRadius: shape === "rect" ? 0 : 0,
+      locked: false, shape,
+      fill: "#1a1aff", stroke: "transparent",
+      strokeWidth: 0, borderRadius: 0,
     };
     addElement(el);
   }
@@ -94,7 +82,7 @@ export function ElementPalette() {
       </div>
 
       {selectedElement && (
-        <div className="border-t border-neutral-200 p-3 space-y-2">
+        <div className="border-t border-neutral-200 p-3 space-y-3">
           <span className="text-xs font-medium text-neutral-500 uppercase tracking-wider">
             Propiedades
           </span>
@@ -106,6 +94,33 @@ export function ElementPalette() {
             <span>Rot: {Math.round(selectedElement.rotation)}°</span>
             <span>Z: {selectedElement.zIndex}</span>
           </div>
+
+          {selectedElement.type === "text" && (
+            <div className="space-y-2">
+              <span className="text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                Fuente
+              </span>
+              <div className="space-y-1">
+                {ALL_FONTS.map((f) => (
+                  <button
+                    key={f.value}
+                    onClick={() => {
+                      updateElement(selectedElement.id, { fontFamily: f.value });
+                      pushHistory();
+                    }}
+                    className={`block w-full rounded px-2 py-1.5 text-left text-sm transition-colors ${
+                      selectedElement.fontFamily === f.value
+                        ? "bg-neutral-900 text-white"
+                        : "hover:bg-neutral-100 text-neutral-700"
+                    }`}
+                    style={{ fontFamily: f.value }}
+                  >
+                    {f.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

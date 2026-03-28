@@ -71,7 +71,7 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
         zIndex: (slide?.elements.length ?? 0) + 1,
         locked: false,
         content: "Escribe aquí",
-        fontFamily: "DM Sans",
+        fontFamily: "var(--font-dm-sans)",
         fontSize: 32,
         fontWeight: 400,
         lineHeight: 1.4,

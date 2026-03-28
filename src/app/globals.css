@@ -3,6 +3,21 @@
 :root {
   --background: #ffffff;
   --foreground: #0a0a0a;
+
+  --font-display-editorial-blue: var(--font-bebas-neue);
+  --font-body-editorial-blue: var(--font-dm-sans);
+
+  --font-display-monochrome: var(--font-playfair-display);
+  --font-body-monochrome: var(--font-dm-sans);
+
+  --font-display-dark-editorial: var(--font-barlow-condensed);
+  --font-body-dark-editorial: var(--font-dm-mono);
+
+  --font-display-warm-magazine: var(--font-cormorant-garamond);
+  --font-body-warm-magazine: var(--font-lato);
+
+  --font-display-swiss-minimal: var(--font-barlow-condensed);
+  --font-body-swiss-minimal: var(--font-barlow);
 }
 
 @theme inline {
