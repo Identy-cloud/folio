@@ -24,12 +24,12 @@ export default async function DashboardLayout({
 
   return (
     <div className="flex min-h-screen flex-col bg-[#161616] text-neutral-200">
-      <header className="flex h-16 items-center justify-between border-b border-neutral-800 px-6">
-        <h1 className="font-display text-2xl tracking-tight">
+      <header className="flex h-14 items-center justify-between border-b border-neutral-800 px-4 sm:h-16 sm:px-6">
+        <h1 className="font-display text-xl tracking-tight sm:text-2xl">
           FOLIO
         </h1>
-        <div className="flex items-center gap-4">
-          <span className="text-sm text-neutral-400">
+        <div className="flex items-center gap-2 sm:gap-4">
+          <span className="hidden text-sm text-neutral-400 sm:block">
             {user.user_metadata?.full_name ?? user.email}
           </span>
           {user.user_metadata?.avatar_url ? (
@@ -48,7 +48,7 @@ export default async function DashboardLayout({
           <LogoutButton />
         </div>
       </header>
-      <main className="flex-1 p-6">{children}</main>
+      <main className="flex-1 p-4 sm:p-6">{children}</main>
     </div>
   );
 }

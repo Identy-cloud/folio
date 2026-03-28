@@ -94,21 +94,21 @@ export default function DashboardPage() {
 
   return (
     <div>
-      <div className="mb-8 flex items-center justify-between">
-        <h2 className="font-display text-4xl tracking-tight">
+      <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
+        <h2 className="font-display text-2xl tracking-tight sm:text-4xl">
           MIS PRESENTACIONES
         </h2>
         <button
           onClick={() => setModalOpen(true)}
-          className="bg-neutral-200 px-6 py-2.5 text-sm font-medium tracking-widest text-[#161616] uppercase hover:bg-neutral-300 transition-colors"
+          className="w-full bg-neutral-200 px-6 py-2.5 text-sm font-medium tracking-widest text-[#161616] uppercase hover:bg-neutral-300 transition-colors sm:w-auto"
         >
-          <Plus size={14} className="inline" /> Nueva presentación
+          <Plus size={14} className="inline" /> Nueva
         </button>
       </div>
 
       {presentations.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-32 text-center">
-          <p className="font-display text-5xl tracking-tight text-neutral-700">
+        <div className="flex flex-col items-center justify-center py-20 text-center sm:py-32">
+          <p className="font-display text-3xl tracking-tight text-neutral-700 sm:text-5xl">
             SIN PRESENTACIONES
           </p>
           <p className="mt-3 text-sm text-neutral-500">
@@ -122,7 +122,7 @@ export default function DashboardPage() {
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
           {presentations.map((p) => (
             <PresentationCard
               key={p.id}

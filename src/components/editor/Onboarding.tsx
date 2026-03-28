@@ -39,19 +39,11 @@ export function Onboarding() {
     setStep(-1);
   }
 
-  const positions: Record<number, string> = {
-    0: "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
-    1: "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/3",
-    2: "top-1/2 left-60",
-    3: "top-1/2 right-60",
-    4: "top-16 left-1/2 -translate-x-1/2",
-  };
-
   return (
     <div className="fixed inset-0 z-[9999]">
       <div className="absolute inset-0 bg-black/40" onClick={skip} />
       <div
-        className={`absolute ${positions[step]} w-80 rounded-lg bg-white p-5 shadow-2xl`}
+        className="absolute left-1/2 top-1/2 w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-lg bg-white p-5 shadow-2xl"
       >
         <div className="mb-1 flex items-center justify-between">
           <span className="text-xs font-medium text-neutral-400 uppercase tracking-wider">
@@ -64,7 +56,7 @@ export function Onboarding() {
             Saltar tour
           </button>
         </div>
-        <h3 className="font-display text-xl tracking-tight">
+        <h3 className="font-display text-lg tracking-tight sm:text-xl">
           {current.title.toUpperCase()}
         </h3>
         <p className="mt-1 text-sm text-neutral-600 leading-relaxed">
@@ -72,7 +64,7 @@ export function Onboarding() {
         </p>
         <button
           onClick={next}
-          className="mt-4 w-full bg-neutral-900 py-2 text-xs font-medium tracking-widest text-white uppercase hover:bg-neutral-700"
+          className="mt-4 w-full bg-neutral-900 py-2.5 text-xs font-medium tracking-widest text-white uppercase hover:bg-neutral-700"
         >
           {step >= STEPS.length - 1 ? "Empezar" : "Siguiente"}
         </button>

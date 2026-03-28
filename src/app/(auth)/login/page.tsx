@@ -58,7 +58,7 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-[#161616] px-4">
       <div className="w-full max-w-sm space-y-10">
         <div className="text-center">
-          <h1 className="font-display text-8xl tracking-tight text-white leading-none">
+          <h1 className="font-display text-6xl tracking-tight text-white leading-none sm:text-8xl">
             FOLIO
           </h1>
           <p className="mt-1 text-[11px] tracking-[0.4em] text-neutral-500 uppercase">
@@ -74,7 +74,7 @@ export default function LoginPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full border-b border-neutral-700 bg-transparent px-1 py-3 text-sm text-white placeholder-neutral-600 outline-none focus:border-white transition-colors"
+            className="w-full border-b border-neutral-700 bg-transparent px-2 py-3 text-sm text-white placeholder-neutral-600 outline-none focus:border-white transition-colors"
           />
           <input
             type="password"
@@ -83,7 +83,7 @@ export default function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
             required
             minLength={6}
-            className="w-full border-b border-neutral-700 bg-transparent px-1 py-3 text-sm text-white placeholder-neutral-600 outline-none focus:border-white transition-colors"
+            className="w-full border-b border-neutral-700 bg-transparent px-2 py-3 text-sm text-white placeholder-neutral-600 outline-none focus:border-white transition-colors"
           />
 
           {error && (

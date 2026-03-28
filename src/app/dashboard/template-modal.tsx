@@ -64,14 +64,14 @@ export function TemplateModal({ open, onClose }: Props) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-      <div className="w-full max-w-4xl rounded-sm bg-[#1e1e1e] p-8 shadow-2xl">
-        <div className="mb-6 flex items-center justify-between">
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 sm:items-center">
+      <div className="max-h-[90vh] w-full overflow-y-auto rounded-t-xl bg-[#1e1e1e] p-4 shadow-2xl sm:max-w-4xl sm:rounded-sm sm:p-8">
+        <div className="mb-4 flex items-center justify-between sm:mb-6">
           <div>
-            <h2 className="font-display text-3xl tracking-tight text-neutral-200">
+            <h2 className="font-display text-2xl tracking-tight text-neutral-200 sm:text-3xl">
               NUEVA PRESENTACIÓN
             </h2>
-            <p className="mt-1 text-sm text-neutral-400">
+            <p className="mt-1 text-xs text-neutral-400 sm:text-sm">
               Elige un tema o empieza en blanco
             </p>
           </div>
@@ -84,7 +84,7 @@ export function TemplateModal({ open, onClose }: Props) {
           </button>
         </div>
 
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
           {themeKeys.map((key) => {
             const t = THEMES[key];
             return (

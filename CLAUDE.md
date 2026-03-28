@@ -6,6 +6,17 @@
 Plataforma web de presentaciones con estética editorial de agencia.
 Editor desktop, viewer mobile adaptativo, colaboración realtime, share links públicos.
 
+## Mobile First — OBLIGATORIO
+- TODO componente y pantalla DEBE funcionar en mobile (375px) antes de pensar en desktop
+- Escribir clases Tailwind mobile-first: clases base para mobile, `md:` para tablet, `lg:` para desktop
+- Breakpoints: mobile (<768px), tablet (768-1023px), desktop (≥1024px)
+- Touch targets mínimo 44px
+- No usar anchos fijos (`w-56`, `w-64`) sin responsive — usar `w-full` base + ancho fijo en `md:`
+- Grids: 1 columna en mobile, 2 en `sm:`, 3+ en `lg:`
+- Sidebars/paneles: ocultos en mobile, drawer/bottom-sheet para acceder
+- Textos: escalar font-size con breakpoints si es necesario
+- Testear siempre en 375px de ancho mínimo
+
 ## Stack — NO cambiar sin preguntar
 - Framework: Next.js 15, App Router
 - Lenguaje: TypeScript estricto (sin any, sin @ts-ignore)
