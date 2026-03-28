@@ -17,6 +17,7 @@ import {
   StackSimple, PlusCircle, X,
   TextT, Rectangle, Circle, Triangle,
 } from "@phosphor-icons/react";
+import { SlidePreview } from "@/components/SlidePreview";
 import type { TextElement, ShapeElement } from "@/types/elements";
 
 export function EditorLayout() {
@@ -116,14 +117,16 @@ function MobileSlidePanel({ onClose }: { onClose: () => void }) {
           <button
             key={slide.id}
             onClick={() => { setActiveSlide(i); onClose(); }}
-            className={`aspect-video rounded border-2 text-xs font-medium transition-colors ${
+            className={`relative overflow-hidden rounded border-2 transition-colors ${
               i === activeSlideIndex
-                ? "border-neutral-900 bg-neutral-100"
-                : "border-neutral-200 bg-neutral-50"
+                ? "border-neutral-900"
+                : "border-neutral-200"
             }`}
-            style={{ backgroundColor: slide.backgroundColor || undefined }}
           >
-            <span className="text-neutral-500">{i + 1}</span>
+            <SlidePreview slide={slide} className="w-full" />
+            <span className="absolute bottom-1 left-1 rounded bg-black/40 px-1 text-[9px] text-white">
+              {i + 1}
+            </span>
           </button>
         ))}
       </div>

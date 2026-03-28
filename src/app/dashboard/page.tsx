@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Plus } from "@phosphor-icons/react";
 import { PresentationCard } from "./presentation-card";
+import type { SlideElement } from "@/types/elements";
 import { SkeletonGrid } from "./skeleton-grid";
 import { TemplateModal } from "./template-modal";
 
@@ -15,6 +16,11 @@ interface Presentation {
   isPublic: boolean;
   thumbnailUrl: string | null;
   updatedAt: string;
+  coverSlide?: {
+    backgroundColor: string;
+    backgroundImage: string | null;
+    elements: SlideElement[];
+  } | null;
 }
 
 export default function DashboardPage() {

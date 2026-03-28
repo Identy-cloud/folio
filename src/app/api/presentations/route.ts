@@ -2,7 +2,7 @@ import { db } from "@/db";
 import { presentations, slides } from "@/db/schema";
 import { getAuthenticatedUser } from "@/lib/auth";
 import { checkRateLimit, rateLimitResponse } from "@/lib/rate-limit";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, asc, and } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { z } from "zod";
 import { generateTemplate } from "@/lib/templates/generator";
@@ -20,11 +20,41 @@ export async function GET() {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const result = await db
+  const rows = await db
     .select()
     .from(presentations)
     .where(eq(presentations.userId, user.id))
     .orderBy(desc(presentations.updatedAt));
+
+  // Fetch first slide for each presentation (for thumbnail preview)
+  const ids = rows.map((r) => r.id);
+  const firstSlides = ids.length > 0
+    ? await db
+        .select()
+        .from(slides)
+        .where(eq(slides.order, 0))
+        .then((all) => {
+          const map = new Map<string, typeof all[number]>();
+          for (const s of all) {
+            if (ids.includes(s.presentationId)) map.set(s.presentationId, s);
+          }
+          return map;
+        })
+    : new Map();
+
+  const result = rows.map((p) => {
+    const firstSlide = firstSlides.get(p.id);
+    return {
+      ...p,
+      coverSlide: firstSlide
+        ? {
+            backgroundColor: firstSlide.backgroundColor,
+            backgroundImage: firstSlide.backgroundImage,
+            elements: firstSlide.elements,
+          }
+        : null,
+    };
+  });
 
   return Response.json(result);
 }

@@ -5,6 +5,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { X } from "@phosphor-icons/react";
 import type { Slide } from "@/types/elements";
+import { SlidePreview } from "@/components/SlidePreview";
 
 interface Props {
   slide: Slide;
@@ -52,19 +53,8 @@ export const SortableSlideThumb = memo(function SortableSlideThumb({
           : "border-transparent hover:border-neutral-300"
       }`}
     >
-      <div
-        className="aspect-video w-full rounded-sm"
-        style={{ backgroundColor: slide.backgroundColor }}
-      >
-        <div className="flex h-full items-center justify-center">
-          <span className="text-[8px] text-neutral-400">
-            {slide.elements.length > 0
-              ? `${slide.elements.length} elementos`
-              : "Vacío"}
-          </span>
-        </div>
-      </div>
-      <span className="absolute bottom-1 left-1 text-[9px] text-neutral-400">
+      <SlidePreview slide={slide} className="w-full rounded-sm" />
+      <span className="absolute bottom-1 left-1 rounded bg-black/40 px-1 text-[9px] text-white">
         {index + 1}
       </span>
       {onDelete && (
