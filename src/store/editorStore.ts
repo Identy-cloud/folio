@@ -57,6 +57,10 @@ interface EditorState {
   redo: () => void;
   pushHistory: () => void;
 
+  busyElementIds: Set<string>;
+  setElementBusy: (id: string) => void;
+  clearElementBusy: (id: string) => void;
+
   setSaveStatus: (s: SaveStatus) => void;
   getActiveSlide: () => Slide | undefined;
   dirty: boolean;
@@ -79,6 +83,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   history: [],
   historyIndex: -1,
   dirty: false,
+  busyElementIds: new Set<string>(),
 
   init: (presentationId, slides) => {
     const sorted = [...slides]
@@ -421,6 +426,17 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     const next = [...trimmed, cloneSlides(slides)];
     if (next.length > 50) next.shift();
     set({ history: next, historyIndex: next.length - 1 });
+  },
+
+  setElementBusy: (id) => {
+    const next = new Set(get().busyElementIds);
+    next.add(id);
+    set({ busyElementIds: next });
+  },
+  clearElementBusy: (id) => {
+    const next = new Set(get().busyElementIds);
+    next.delete(id);
+    set({ busyElementIds: next });
   },
 
   setSaveStatus: (s) => set({ saveStatus: s }),

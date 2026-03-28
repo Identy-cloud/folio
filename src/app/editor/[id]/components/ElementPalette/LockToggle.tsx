@@ -9,6 +9,7 @@ export function LockToggle({ element }: { element: SlideElement }) {
   const { t } = useTranslation();
   const updateElement = useEditorStore((s) => s.updateElement);
   const pushHistory = useEditorStore((s) => s.pushHistory);
+  const isBusy = useEditorStore((s) => s.busyElementIds.has(element.id));
 
   function toggle() {
     updateElement(element.id, { locked: !element.locked });
@@ -18,7 +19,8 @@ export function LockToggle({ element }: { element: SlideElement }) {
   return (
     <button
       onClick={toggle}
-      className={`flex w-full items-center justify-center gap-2 rounded border px-3 py-2 text-xs transition-colors ${
+      disabled={isBusy}
+      className={`flex w-full items-center justify-center gap-2 rounded border px-3 py-2 text-xs transition-colors disabled:opacity-40 disabled:pointer-events-none ${
         element.locked
           ? "border-amber-900/50 bg-amber-950/30 text-amber-400 hover:bg-amber-950/50"
           : "border-neutral-700 text-neutral-400 hover:bg-neutral-800"

@@ -57,8 +57,11 @@ export function useKeyboard() {
       }
       if (e.key === "Delete" || e.key === "Backspace") {
         if (inInput) return;
+        const busy = state.busyElementIds;
+        const deletable = state.selectedElementIds.filter((id) => !busy.has(id));
+        if (deletable.length === 0) return;
         e.preventDefault();
-        [...state.selectedElementIds].forEach((id) => state.deleteElement(id));
+        deletable.forEach((id) => state.deleteElement(id));
         return;
       }
 

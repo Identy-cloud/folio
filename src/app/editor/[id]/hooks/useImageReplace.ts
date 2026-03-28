@@ -9,6 +9,8 @@ export function useImageReplace(elementId: string) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const updateElement = useEditorStore((s) => s.updateElement);
   const pushHistory = useEditorStore((s) => s.pushHistory);
+  const setElementBusy = useEditorStore((s) => s.setElementBusy);
+  const clearElementBusy = useEditorStore((s) => s.clearElementBusy);
 
   function trigger() {
     if (!inputRef.current) {
@@ -29,6 +31,7 @@ export function useImageReplace(elementId: string) {
     if (!file) return;
 
     setUploading(true);
+    setElementBusy(elementId);
     try {
       const res = await fetch("/api/upload", {
         method: "POST",
@@ -61,6 +64,7 @@ export function useImageReplace(elementId: string) {
       toast.error(t.common.connectionError);
     } finally {
       setUploading(false);
+      clearElementBusy(elementId);
     }
   }
 

@@ -17,6 +17,7 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
   const selectElement = useEditorStore((s) => s.selectElement);
   const updateElement = useEditorStore((s) => s.updateElement);
   const pushHistory = useEditorStore((s) => s.pushHistory);
+  const isBusy = useEditorStore((s) => s.busyElementIds.has(element.id));
   const [editing, setEditing] = useState(false);
   const { trigger: triggerImageReplace } = useImageReplace(element.id);
 
@@ -28,7 +29,7 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
   } | null>(null);
 
   function onPointerDown(e: React.PointerEvent) {
-    if (element.locked) return;
+    if (element.locked || isBusy) return;
     e.stopPropagation();
     e.currentTarget.setPointerCapture(e.pointerId);
     selectElement(element.id, e.shiftKey);
@@ -58,6 +59,7 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
   }
 
   function onDoubleClick() {
+    if (isBusy) return;
     if (element.type === "text") setEditing(true);
     if (element.type === "image") triggerImageReplace();
   }
@@ -135,9 +137,40 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
           )}
         </div>
       )}
+      {isBusy && <BusyOverlay />}
     </div>
   );
 });
+
+function BusyOverlay() {
+  return (
+    <div
+      style={{
+        position: "absolute",
+        inset: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "rgba(0,0,0,0.45)",
+        backdropFilter: "blur(2px)",
+        zIndex: 9999,
+        pointerEvents: "all",
+      }}
+    >
+      <div
+        style={{
+          width: 20,
+          height: 20,
+          border: "2px solid rgba(255,255,255,0.2)",
+          borderTopColor: "#fff",
+          borderRadius: "50%",
+          animation: "busy-spin 0.6s linear infinite",
+        }}
+      />
+      <style>{`@keyframes busy-spin { to { transform: rotate(360deg) } }`}</style>
+    </div>
+  );
+}
 
 function TextRenderer({
   element,
