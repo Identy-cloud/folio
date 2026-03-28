@@ -109,25 +109,38 @@ function MobileSlidePanel({ onClose }: { onClose: () => void }) {
   const activeSlideIndex = useEditorStore((s) => s.activeSlideIndex);
   const setActiveSlide = useEditorStore((s) => s.setActiveSlide);
   const addSlide = useEditorStore((s) => s.addSlide);
+  const deleteSlide = useEditorStore((s) => s.deleteSlide);
 
   return (
     <div className="p-4 space-y-3">
       <div className="grid grid-cols-3 gap-2">
         {slides.map((slide, i) => (
-          <button
+          <div
             key={slide.id}
-            onClick={() => { setActiveSlide(i); onClose(); }}
             className={`relative overflow-hidden rounded border-2 transition-colors ${
               i === activeSlideIndex
                 ? "border-blue-500"
                 : "border-neutral-700"
             }`}
           >
-            <SlidePreview slide={slide} className="w-full" />
+            <button
+              onClick={() => { setActiveSlide(i); onClose(); }}
+              className="w-full"
+            >
+              <SlidePreview slide={slide} className="w-full" />
+            </button>
             <span className="absolute bottom-1 left-1 rounded bg-black/40 px-1 text-[9px] text-white">
               {i + 1}
             </span>
-          </button>
+            {slides.length > 1 && (
+              <button
+                onClick={() => deleteSlide(slide.id)}
+                className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500/80 text-[10px] text-white"
+              >
+                ×
+              </button>
+            )}
+          </div>
         ))}
       </div>
       <button

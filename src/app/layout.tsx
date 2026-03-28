@@ -91,7 +91,19 @@ export default function RootLayout({
     <html lang="es" className={`${fontVars} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-sans">
         {children}
-        <Toaster position="bottom-right" richColors />
+        <Toaster
+          position="bottom-center"
+          richColors
+          theme="dark"
+          toastOptions={{
+            style: {
+              background: "#1e1e1e",
+              border: "1px solid #333",
+              color: "#e5e5e5",
+              fontSize: "13px",
+            },
+          }}
+        />
       </body>
     </html>
   );
