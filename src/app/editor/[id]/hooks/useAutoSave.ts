@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { useEditorStore } from "@/store/editorStore";
+import { captureSlideThumb, uploadThumbnail } from "@/lib/thumbnail";
 
 const MAX_RETRIES = 3;
 const BASE_DELAY = 1000;
@@ -27,6 +28,19 @@ async function saveWithRetry(presentationId: string, slides: unknown[]) {
   return false;
 }
 
+let thumbTimer: ReturnType<typeof setTimeout> | null = null;
+
+async function captureThumbnail(presentationId: string) {
+  try {
+    const slideEl = document.querySelector("[data-slide-canvas]") as HTMLElement;
+    if (!slideEl) return;
+    const blob = await captureSlideThumb(slideEl);
+    await uploadThumbnail(presentationId, blob);
+  } catch {
+    /* thumbnail capture is best-effort */
+  }
+}
+
 export function useAutoSave() {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -47,6 +61,9 @@ export function useAutoSave() {
         if (ok) {
           setSaveStatus("saved");
           markClean();
+
+          if (thumbTimer) clearTimeout(thumbTimer);
+          thumbTimer = setTimeout(() => captureThumbnail(presentationId), 5000);
         } else {
           setSaveStatus("error");
           toast.error("Error al guardar. Revisa tu conexión.");

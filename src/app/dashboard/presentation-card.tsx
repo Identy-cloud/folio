@@ -54,13 +54,21 @@ export function PresentationCard({
   return (
     <div className="group relative flex flex-col border border-neutral-200 bg-white transition-shadow hover:shadow-lg">
       <Link href={`/editor/${presentation.id}`} className="block">
-        <div
-          className={`flex aspect-video items-center justify-center ${bg}`}
-        >
-          <span className="font-display text-2xl tracking-tight text-white/60">
-            {presentation.title}
-          </span>
-        </div>
+        {presentation.thumbnailUrl ? (
+          <img
+            src={presentation.thumbnailUrl}
+            alt={presentation.title}
+            className="aspect-video w-full object-cover"
+          />
+        ) : (
+          <div
+            className={`flex aspect-video items-center justify-center ${bg}`}
+          >
+            <span className="font-display text-2xl tracking-tight text-white/60">
+              {presentation.title}
+            </span>
+          </div>
+        )}
       </Link>
 
       <div className="flex items-center justify-between px-4 py-3">

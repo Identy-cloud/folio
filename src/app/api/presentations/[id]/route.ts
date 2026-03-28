@@ -10,6 +10,7 @@ const patchSchema = z.object({
   title: z.string().max(255).optional(),
   isPublic: z.boolean().optional(),
   theme: z.enum(Object.keys(THEMES) as [string, ...string[]]).optional(),
+  thumbnailUrl: z.string().url().optional(),
 });
 
 export async function PATCH(
@@ -32,6 +33,7 @@ export async function PATCH(
   if (parsed.data.title !== undefined) updates.title = parsed.data.title;
   if (parsed.data.isPublic !== undefined) updates.isPublic = parsed.data.isPublic;
   if (parsed.data.theme !== undefined) updates.theme = parsed.data.theme;
+  if (parsed.data.thumbnailUrl !== undefined) updates.thumbnailUrl = parsed.data.thumbnailUrl;
 
   const [updated] = await db
     .update(presentations)

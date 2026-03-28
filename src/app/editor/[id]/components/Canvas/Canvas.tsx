@@ -102,6 +102,7 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
       className="relative flex h-full w-full items-center justify-center overflow-hidden"
     >
       <div
+        data-slide-canvas
         style={{
           width: SLIDE_WIDTH,
           height: SLIDE_HEIGHT,
