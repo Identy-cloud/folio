@@ -37,7 +37,9 @@ export default function LoginPage() {
         return;
       }
 
-      router.push("/dashboard");
+      const redirect = localStorage.getItem("folio-redirect") ?? "/dashboard";
+      localStorage.removeItem("folio-redirect");
+      router.push(redirect);
       router.refresh();
     } finally {
       setLoading(false);
