@@ -78,4 +78,5 @@ export interface Slide {
   backgroundImage: string | null;
   elements: SlideElement[];
   mobileElements: SlideElement[] | null;
+  notes: string;
 }

@@ -30,6 +30,7 @@ export const presentations = pgTable("presentations", {
   slug: text("slug").unique().notNull(),
   theme: text("theme").default("editorial-blue").notNull(),
   isPublic: boolean("is_public").default(false).notNull(),
+  password: text("password"),
   thumbnailUrl: text("thumbnail_url"),
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
@@ -50,6 +51,7 @@ export const slides = pgTable("slides", {
   transition: text("transition").default("fade").notNull(),
   elements: jsonb("elements").default([]).notNull(),
   mobileElements: jsonb("mobile_elements"),
+  notes: text("notes").default("").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
     .notNull(),
@@ -64,6 +66,35 @@ export const collaborators = pgTable("collaborators", {
     .references(() => users.id, { onDelete: "cascade" })
     .notNull(),
   role: text("role").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+export const presentationViews = pgTable("presentation_views", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  presentationId: uuid("presentation_id")
+    .references(() => presentations.id, { onDelete: "cascade" })
+    .notNull(),
+  slideIndex: integer("slide_index"),
+  duration: integer("duration"),
+  viewerIp: text("viewer_ip"),
+  userAgent: text("user_agent"),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+export const comments = pgTable("comments", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  presentationId: uuid("presentation_id")
+    .references(() => presentations.id, { onDelete: "cascade" })
+    .notNull(),
+  slideIndex: integer("slide_index").notNull(),
+  authorName: text("author_name").notNull(),
+  authorEmail: text("author_email"),
+  content: text("content").notNull(),
+  resolved: boolean("resolved").default(false).notNull(),
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
     .notNull(),

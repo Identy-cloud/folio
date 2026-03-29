@@ -30,8 +30,10 @@ interface Props {
   title: string;
   slides: Slide[];
   showWatermark?: boolean;
+  presentationId?: string;
+  hasPassword?: boolean;
 }
 
-export function ViewerWrapper({ title, slides, showWatermark }: Props) {
-  return <ViewerClient title={title} slides={slides} showWatermark={showWatermark} />;
+export function ViewerWrapper({ title, slides, showWatermark, presentationId, hasPassword }: Props) {
+  return <ViewerClient title={title} slides={slides} showWatermark={showWatermark} presentationId={presentationId} hasPassword={hasPassword} />;
 }

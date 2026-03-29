@@ -73,6 +73,7 @@ const slideSchema = z.object({
   backgroundImage: z.string().url().nullable().or(z.literal("")),
   elements: z.array(elementSchema).max(500),
   mobileElements: z.array(elementSchema).max(500).nullable().default(null),
+  notes: z.string().max(10000).default(""),
 });
 
 const putSlidesSchema = z.array(slideSchema).max(200);
@@ -140,6 +141,7 @@ export async function PUT(
           backgroundImage: s.backgroundImage || null,
           elements: s.elements,
           mobileElements: s.mobileElements,
+          notes: s.notes,
         }))
       );
     }

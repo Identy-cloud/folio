@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { Plus } from "@phosphor-icons/react";
+import { NotesEditor } from "./NotesEditor";
 import {
   DndContext,
   closestCenter,
@@ -155,6 +156,7 @@ export function SlidePanel() {
           )}
         </div>
       )}
+      <NotesEditor />
     </div>
   );
 }

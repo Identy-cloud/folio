@@ -6,6 +6,7 @@ import type { SlideElement, TextElement, SlideTransition } from "@/types/element
 import { getElementAnimationStyle } from "@/lib/element-animation";
 import { ShapeRenderer, ArrowRenderer, DividerRenderer } from "@/components/elements";
 import { MobileViewer } from "./mobile-viewer";
+import { CommentsPanel } from "./comments-panel";
 
 const SLIDE_W = 1920;
 const SLIDE_H = 1080;
@@ -25,13 +26,30 @@ interface Props {
   title: string;
   slides: Slide[];
   showWatermark?: boolean;
+  presentationId?: string;
+  hasPassword?: boolean;
 }
 
-export function ViewerClient({ title, slides, showWatermark }: Props) {
+export function ViewerClient({ title, slides, showWatermark, presentationId, hasPassword }: Props) {
+  const [unlocked, setUnlocked] = useState(!hasPassword);
+  const [pwInput, setPwInput] = useState("");
+  const [pwError, setPwError] = useState(false);
+
   const [current, setCurrent] = useState(0);
   const [displayed, setDisplayed] = useState(0);
   const [transitioning, setTransitioning] = useState(false);
   const [phase, setPhase] = useState<"idle" | "enter" | "active">("idle");
+
+  // Track analytics
+  useEffect(() => {
+    if (presentationId) {
+      fetch("/api/analytics", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ presentationId, slideIndex: current }),
+      }).catch(() => {});
+    }
+  }, [presentationId, current]);
   const [scale, setScale] = useState(1);
   const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -137,6 +155,43 @@ export function ViewerClient({ title, slides, showWatermark }: Props) {
     if (x > rect.width * 0.65 && current < total - 1) setHoverZone("right");
     else if (x < rect.width * 0.35 && current > 0) setHoverZone("left");
     else setHoverZone(null);
+  }
+
+  if (!unlocked) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-black px-4">
+        <form
+          onSubmit={async (e) => {
+            e.preventDefault();
+            if (!presentationId) return;
+            const res = await fetch(`/api/presentations/${presentationId}/verify-password`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ password: pwInput }),
+            });
+            const data = await res.json();
+            if (data.valid) setUnlocked(true);
+            else setPwError(true);
+          }}
+          className="w-full max-w-xs space-y-4 text-center"
+        >
+          <h1 className="font-display text-3xl tracking-tight text-white">FOLIO</h1>
+          <p className="text-xs text-neutral-500">This presentation is password protected</p>
+          <input
+            type="password"
+            value={pwInput}
+            onChange={(e) => { setPwInput(e.target.value); setPwError(false); }}
+            placeholder="Enter password"
+            autoFocus
+            className="w-full border-b border-neutral-700 bg-transparent px-2 py-3 text-sm text-white placeholder-neutral-500 outline-none focus:border-white transition-colors"
+          />
+          {pwError && <p className="text-xs text-red-400">Incorrect password</p>}
+          <button type="submit" className="w-full bg-white py-3 text-xs font-semibold tracking-[0.25em] text-black uppercase hover:bg-neutral-200 transition-colors">
+            Enter
+          </button>
+        </form>
+      </div>
+    );
   }
 
   if (isMobile) {
@@ -298,6 +353,13 @@ export function ViewerClient({ title, slides, showWatermark }: Props) {
         </a>
       </div>
 
+      {presentationId && (
+        <CommentsPanel
+          presentationId={presentationId}
+          currentSlide={current}
+          totalSlides={slides.length}
+        />
+      )}
     </div>
   );
 }

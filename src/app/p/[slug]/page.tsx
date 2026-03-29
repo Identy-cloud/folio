@@ -126,6 +126,8 @@ export default async function ViewerPage({
         title={data.presentation.title}
         slides={data.slides as SlideRow[]}
         showWatermark={data.ownerPlan === "free"}
+        presentationId={data.presentation.id}
+        hasPassword={!!data.presentation.password}
       />
     </>
   );

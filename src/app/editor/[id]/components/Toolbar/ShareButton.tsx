@@ -10,6 +10,7 @@ import { useClickOutside } from "@/hooks/useClickOutside";
 interface PresentationMeta {
   slug: string;
   isPublic: boolean;
+  password: string | null;
 }
 
 export function ShareButton() {
@@ -19,13 +20,14 @@ export function ShareButton() {
   const [meta, setMeta] = useState<PresentationMeta | null>(null);
   const [toggling, setToggling] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [pw, setPw] = useState("");
   const popRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!open || !presentationId) return;
     fetch(`/api/presentations/${presentationId}`)
       .then((r) => r.json())
-      .then((d) => setMeta({ slug: d.slug, isPublic: d.isPublic }))
+      .then((d) => { setMeta({ slug: d.slug, isPublic: d.isPublic, password: d.password ?? null }); setPw(d.password ?? ""); })
       .catch(() => {});
   }, [open, presentationId]);
 
@@ -120,6 +122,44 @@ export function ShareButton() {
                       {copied ? <Check size={14} /> : <LinkIcon size={14} />}
                     </button>
                   </div>
+
+                  {/* Password */}
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={pw}
+                      onChange={(e) => setPw(e.target.value)}
+                      placeholder={t.editor.passwordPlaceholder}
+                      className="flex-1 rounded border border-neutral-700 bg-[#111111] px-2 py-1.5 text-xs text-neutral-300 outline-none placeholder:text-neutral-600 focus:border-neutral-500"
+                    />
+                    <button
+                      onClick={async () => {
+                        const password = pw.trim() || null;
+                        await fetch(`/api/presentations/${presentationId}`, {
+                          method: "PATCH",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({ password }),
+                        });
+                        setMeta({ ...meta, password });
+                        toast.success(password ? t.editor.passwordSet : t.editor.passwordRemoved);
+                      }}
+                      className="shrink-0 rounded bg-neutral-800 px-2 py-1.5 text-[10px] text-neutral-300 hover:bg-neutral-700 transition-colors"
+                    >
+                      {pw.trim() ? "Set" : "Clear"}
+                    </button>
+                  </div>
+
+                  {/* Embed */}
+                  <button
+                    onClick={() => {
+                      const code = `<iframe src="${window.location.origin}/embed/${meta.slug}" width="800" height="450" frameborder="0" allowfullscreen></iframe>`;
+                      navigator.clipboard.writeText(code);
+                      toast.success(t.editor.embedCopied);
+                    }}
+                    className="w-full rounded border border-neutral-700 py-1.5 text-[10px] text-neutral-400 hover:bg-neutral-800 transition-colors"
+                  >
+                    {t.editor.embed} — Copy iframe
+                  </button>
                 </>
               ) : (
                 <p className="text-xs text-neutral-500">

@@ -40,6 +40,7 @@ interface EditorState {
   updateSlideBackground: (color: string) => void;
   updateSlideBackgroundImage: (url: string | null) => void;
   updateSlideTransition: (slideId: string, transition: SlideTransition) => void;
+  updateSlideNotes: (notes: string) => void;
 
   setEditingMode: (mode: EditingMode) => void;
   generateMobileLayout: () => void;
@@ -129,6 +130,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       backgroundImage: null,
       elements: [],
       mobileElements: null,
+      notes: "",
     };
     set({
       slides: [...slides, newSlide],
@@ -323,6 +325,14 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     );
     set({ slides: updated, dirty: true, saveStatus: "unsaved" });
     get().pushHistory();
+  },
+
+  updateSlideNotes: (notes) => {
+    const { slides, activeSlideIndex } = get();
+    const updated = slides.map((s, i) =>
+      i === activeSlideIndex ? { ...s, notes } : s
+    );
+    set({ slides: updated, dirty: true, saveStatus: "unsaved" });
   },
 
   bringToFront: (elementId) => {
