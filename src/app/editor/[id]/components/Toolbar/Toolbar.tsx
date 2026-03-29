@@ -4,6 +4,10 @@ import { useState } from "react";
 import { ArrowCounterClockwise, ArrowClockwise, FilePdf, FileImage, Image as ImageIcon, Desktop, DeviceMobile } from "@phosphor-icons/react";
 import { toPng } from "html-to-image";
 import { Tooltip } from "@/components/ui/Tooltip";
+
+function Spinner() {
+  return <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-neutral-500 border-t-white" />;
+}
 import { useEditorStore } from "@/store/editorStore";
 
 
@@ -64,13 +68,11 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
     a.click();
   }
 
-  const statusText: Record<string, string> = {
-    saved: t.editor.saved, saving: t.editor.saving,
-    error: t.editor.saveError, unsaved: t.editor.unsaved,
-  };
-  const statusColor: Record<string, string> = {
-    saved: "text-green-500", saving: "text-amber-500",
-    error: "text-red-400", unsaved: "text-neutral-500",
+  const statusDot: Record<string, string> = {
+    saved: "bg-green-500",
+    saving: "bg-amber-500 animate-pulse",
+    error: "bg-red-500",
+    unsaved: "bg-neutral-600",
   };
 
   return (
@@ -78,7 +80,7 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
       <div className="flex items-center gap-2 md:gap-4">
         <Link
           href="/dashboard"
-          className="font-display text-lg tracking-tight text-neutral-200 hover:text-white"
+          className="font-display text-xl tracking-tight text-white sm:text-2xl"
         >
           FOLIO
         </Link>
@@ -99,7 +101,7 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
             className="hidden md:flex items-center gap-1 rounded px-3 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 disabled:opacity-50"
           >
             <ImageIcon size={14} weight="duotone" />
-            {uploading ? "..." : t.editor.image}
+            {uploading ? <Spinner /> : t.editor.image}
           </button>
         </Tooltip>
         <Tooltip content="Export PDF">
@@ -152,17 +154,13 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
             {peerCount} {peerCount > 1 ? t.editor.collaborators : t.editor.collaborator}
           </span>
         )}
-        {connected !== undefined && (
+        <Tooltip content={saveStatus === "saved" ? t.editor.saved : saveStatus === "saving" ? t.editor.saving : saveStatus === "error" ? t.editor.saveError : t.editor.unsaved}>
           <span
-            className={`inline-block h-2 w-2 rounded-full ${
-              connected ? "bg-green-500" : "bg-neutral-600"
-            }`}
-            aria-label={connected ? "Connected" : "Disconnected"}
+            className={`inline-block h-2 w-2 rounded-full ${statusDot[saveStatus]}`}
+            aria-live="polite"
+            aria-label={saveStatus}
           />
-        )}
-        <span className={`text-xs ${statusColor[saveStatus]}`} aria-live="polite">
-          {statusText[saveStatus]}
-        </span>
+        </Tooltip>
       </div>
     </div>
   );

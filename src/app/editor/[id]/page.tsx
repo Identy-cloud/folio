@@ -44,8 +44,9 @@ export default function EditorPage({
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-[#111111]">
-        <p className="text-sm text-neutral-500">{t.editor.loadingEditor}</p>
+      <div className="flex h-screen flex-col items-center justify-center bg-[#111111] gap-4">
+        <span className="font-display text-3xl tracking-tight text-white/20">FOLIO</span>
+        <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-neutral-700 border-t-neutral-400" />
       </div>
     );
   }

@@ -8,8 +8,9 @@ const ViewerClient = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="flex h-screen items-center justify-center bg-black">
-        <p className="text-xs text-neutral-500">Cargando presentación...</p>
+      <div className="flex h-screen flex-col items-center justify-center bg-black gap-4">
+        <span className="font-display text-2xl tracking-tight text-white/20">FOLIO</span>
+        <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-neutral-700 border-t-neutral-400" />
       </div>
     ),
   }

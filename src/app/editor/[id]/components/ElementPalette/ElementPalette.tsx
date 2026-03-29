@@ -21,8 +21,7 @@ import { ColorPicker } from "@/components/editor/ColorPicker";
 import type { TextElement, ShapeElement, ArrowElement, DividerElement, ImageElement, SlideElement } from "@/types/elements";
 import { textDefaults, shapeDefaults, arrowDefaults, dividerDefaults } from "@/lib/templates/element-defaults";
 import { THEMES } from "@/lib/templates/themes";
-import type { SlideTransition } from "@/types/elements";
-import { TransitionIcon, TRANSITION_LIST } from "@/components/editor/TransitionIcons";
+import { TransitionPicker } from "../SlidePanel/TransitionPicker";
 import { useTranslation } from "@/lib/i18n/context";
 
 export function ElementPalette() {
@@ -51,7 +50,7 @@ export function ElementPalette() {
       <div className="border-b border-neutral-800 px-3 py-2">
         <span className="text-xs font-medium text-neutral-400 uppercase tracking-wider">{t.editor.insert}</span>
       </div>
-      <div className="p-3 space-y-1.5">
+      <div className="shrink-0 p-3 space-y-1.5">
         <button onClick={() => add({ id: nanoid(), type: "text", x: 100, y: 100, w: 400, h: 80, rotation: 0, opacity: 1, zIndex: zBase, locked: false, content: t.editor.writeHere, ...textDefaults(theme) } satisfies TextElement)} className={btn}>
           <TextT size={16} weight="duotone" /> {t.editor.tools.text}
         </button>
@@ -102,7 +101,7 @@ export function ElementPalette() {
               </button>
             )}
           </div>
-          <SlideTransitionPicker
+          <TransitionPicker
             current={activeSlide.transition}
             onChange={(tr) => updateSlideTransition(activeSlide.id, tr)}
           />
@@ -112,38 +111,6 @@ export function ElementPalette() {
   );
 }
 
-function SlideTransitionPicker({
-  current,
-  onChange,
-}: {
-  current: SlideTransition;
-  onChange: (t: SlideTransition) => void;
-}) {
-  const { t } = useTranslation();
-  return (
-    <div className="space-y-2">
-      <span className="text-[10px] font-medium text-neutral-400 uppercase tracking-wider">
-        {t.editor.transition}
-      </span>
-      <div className="flex gap-1">
-        {TRANSITION_LIST.map((tr) => (
-          <button
-            key={tr}
-            onClick={() => onChange(tr)}
-            title={tr}
-            className={`flex h-8 flex-1 items-center justify-center rounded border transition-colors ${
-              current === tr
-                ? "border-blue-500 bg-blue-500/10 text-blue-400"
-                : "border-neutral-700 text-neutral-500 hover:border-neutral-600 hover:text-neutral-300"
-            }`}
-          >
-            <TransitionIcon type={tr} size={14} />
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 function useBgImageUpload() {
   const updateSlideBackgroundImage = useEditorStore((s) => s.updateSlideBackgroundImage);
