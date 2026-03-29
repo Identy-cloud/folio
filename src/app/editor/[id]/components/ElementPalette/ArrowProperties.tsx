@@ -57,6 +57,25 @@ export function ArrowProperties({ element }: Props) {
         </div>
       </div>
 
+      <div>
+        <span className="mb-1 block text-[10px] text-neutral-500">Style</span>
+        <div className="flex gap-1">
+          {(["solid", "dashed", "dotted"] as const).map((d) => (
+            <button
+              key={d}
+              onClick={() => update({ dashPattern: d })}
+              className={`flex-1 rounded px-2 py-1 text-[10px] transition-colors ${
+                (element.dashPattern ?? "solid") === d
+                  ? "bg-white text-[#161616]"
+                  : "text-neutral-500 hover:bg-neutral-800"
+              }`}
+            >
+              {d}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <label className="flex flex-col gap-0.5">
         <span className="text-[10px] text-neutral-500">{t.editor.strokeWidth}</span>
         <input

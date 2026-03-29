@@ -7,6 +7,18 @@ import { useImageReplace } from "../../hooks/useImageReplace";
 import { useTranslation } from "@/lib/i18n/context";
 import type { ImageElement } from "@/types/elements";
 
+const FILTERS = [
+  { value: "", label: "None" },
+  { value: "grayscale(100%)", label: "B&W" },
+  { value: "sepia(80%)", label: "Sepia" },
+  { value: "brightness(1.2)", label: "Bright" },
+  { value: "contrast(1.3)", label: "Contrast" },
+  { value: "saturate(1.5)", label: "Vivid" },
+  { value: "saturate(0.3)", label: "Muted" },
+  { value: "blur(2px)", label: "Blur" },
+  { value: "brightness(0.6) contrast(1.2)", label: "Dark" },
+];
+
 interface Props {
   element: ImageElement;
 }
@@ -65,6 +77,29 @@ export function ImageProperties({ element }: Props) {
             {f.label}
           </button>
         ))}
+      </div>
+
+      {/* Filters */}
+      <div>
+        <span className="mb-1 block text-[10px] text-neutral-500">Filter</span>
+        <div className="grid grid-cols-3 gap-1">
+          {FILTERS.map((f) => (
+            <button
+              key={f.value}
+              onClick={() => {
+                updateElement(element.id, { filter: f.value });
+                pushHistory();
+              }}
+              className={`rounded px-1.5 py-1 text-[10px] transition-colors ${
+                (element.filter || "") === f.value
+                  ? "bg-white text-[#161616]"
+                  : "text-neutral-500 hover:bg-neutral-800"
+              }`}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );

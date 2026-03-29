@@ -93,6 +93,7 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
 
   return (
     <div
+      data-element-id={element.id}
       style={{
         position: "absolute",
         left: element.x,

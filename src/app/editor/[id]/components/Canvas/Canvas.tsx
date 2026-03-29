@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect, useCallback, type WheelEvent as ReactWheelEvent } from "react";
+import { MagnifyingGlassPlus, MagnifyingGlassMinus } from "@phosphor-icons/react";
 import { nanoid } from "nanoid";
 import { useEditorStore } from "@/store/editorStore";
 import { textDefaults } from "@/lib/templates/element-defaults";
@@ -11,6 +12,7 @@ import { CanvasElement } from "./CanvasElement";
 import { SelectionBox } from "./SelectionBox";
 import { SnapGuides } from "./SnapGuides";
 import { RemoteCursors } from "./RemoteCursors";
+import { ContextMenu } from "./ContextMenu";
 
 const DESKTOP_W = 1920;
 const DESKTOP_H = 1080;
@@ -37,6 +39,9 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
   const [narrow, setNarrow] = useState(() =>
     typeof window !== "undefined" ? window.innerWidth < 768 : false
   );
+  const [zoomOverride, setZoomOverride] = useState<number | null>(null);
+  const autoScale = useRef(0.5);
+  const [ctxMenu, setCtxMenu] = useState<{ x: number; y: number; elementId: string | null } | null>(null);
 
   const slide = useEditorStore((s) => s.getActiveSlide());
   const activeSlideIndex = useEditorStore((s) => s.activeSlideIndex);
@@ -59,9 +64,11 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
     const vPad = isNarrow ? 16 : 48;
     const sx = (rect.width - hPad) / canvasW;
     const sy = (rect.height - vPad) / canvasH;
-    setScale(Math.min(sx, sy, 1));
+    const fitScale = Math.min(sx, sy, 1);
+    autoScale.current = fitScale;
+    if (zoomOverride === null) setScale(fitScale);
     setNarrow(isNarrow);
-  }, [canvasW, canvasH]);
+  }, [canvasW, canvasH, zoomOverride]);
 
   useEffect(() => {
     updateScale();
@@ -179,6 +186,49 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
     }
   }
 
+  function handleContextMenu(e: React.MouseEvent) {
+    e.preventDefault();
+    const target = e.target as HTMLElement;
+    const elNode = target.closest("[data-element-id]");
+    const elementId = elNode?.getAttribute("data-element-id") ?? null;
+    if (elementId) {
+      useEditorStore.getState().selectElement(elementId);
+    }
+    setCtxMenu({ x: e.clientX, y: e.clientY, elementId });
+  }
+
+  function handleWheel(e: React.WheelEvent) {
+    if (!e.ctrlKey && !e.metaKey) return;
+    e.preventDefault();
+    const delta = e.deltaY > 0 ? -0.05 : 0.05;
+    setScale((prev) => {
+      const next = Math.min(Math.max(prev + delta, 0.1), 2);
+      setZoomOverride(next);
+      return next;
+    });
+  }
+
+  function zoomIn() {
+    setScale((prev) => {
+      const next = Math.min(prev + 0.1, 2);
+      setZoomOverride(next);
+      return next;
+    });
+  }
+
+  function zoomOut() {
+    setScale((prev) => {
+      const next = Math.max(prev - 0.1, 0.1);
+      setZoomOverride(next);
+      return next;
+    });
+  }
+
+  function zoomFit() {
+    setZoomOverride(null);
+    setScale(autoScale.current);
+  }
+
   if (!slide) return null;
 
   return (
@@ -188,6 +238,8 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
+      onWheel={handleWheel}
+      onContextMenu={handleContextMenu}
     >
       <div
         data-slide-canvas
@@ -228,6 +280,32 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
           return <SelectionBox key={`sel-${id}`} element={el} scale={scale} />;
         })}
         <RemoteCursors peers={peers} />
+      </div>
+
+      {ctxMenu && (
+        <ContextMenu
+          x={ctxMenu.x}
+          y={ctxMenu.y}
+          elementId={ctxMenu.elementId}
+          onClose={() => setCtxMenu(null)}
+        />
+      )}
+
+      {/* Zoom controls */}
+      <div className="absolute bottom-3 right-3 z-30 hidden md:flex items-center gap-1 rounded bg-neutral-900/80 px-1 py-0.5 backdrop-blur-sm">
+        <button onClick={zoomOut} className="rounded p-1 text-neutral-400 hover:text-white transition-colors" aria-label="Zoom out">
+          <MagnifyingGlassMinus size={14} />
+        </button>
+        <button
+          onClick={zoomFit}
+          className="min-w-[3rem] px-1 text-center text-[10px] text-neutral-300 hover:text-white transition-colors"
+          aria-label="Fit to view"
+        >
+          {Math.round(scale * 100)}%
+        </button>
+        <button onClick={zoomIn} className="rounded p-1 text-neutral-400 hover:text-white transition-colors" aria-label="Zoom in">
+          <MagnifyingGlassPlus size={14} />
+        </button>
       </div>
     </div>
   );

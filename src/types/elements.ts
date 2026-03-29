@@ -54,12 +54,14 @@ export interface ArrowElement extends BaseElement {
   direction: "right" | "left" | "up" | "down";
   color: string;
   strokeWidth: number;
+  dashPattern?: "solid" | "dashed" | "dotted";
 }
 
 export interface DividerElement extends BaseElement {
   type: "divider";
   color: string;
   strokeWidth: number;
+  dashPattern?: "solid" | "dashed" | "dotted";
 }
 
 export type SlideElement =

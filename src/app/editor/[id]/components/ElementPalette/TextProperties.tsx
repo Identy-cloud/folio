@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useEditorStore } from "@/store/editorStore";
 import { ColorPicker } from "@/components/editor/ColorPicker";
 import { ALL_FONTS } from "@/lib/templates/themes";
-import { TextAlignLeft, TextAlignCenter, TextAlignRight, TextItalic, TextUnderline, TextStrikethrough } from "@phosphor-icons/react";
+import { TextAlignLeft, TextAlignCenter, TextAlignRight, TextItalic, TextUnderline, TextStrikethrough, ArrowLineUp, ArrowsVertical, ArrowLineDown } from "@phosphor-icons/react";
 import type { TextElement } from "@/types/elements";
 import { useTranslation } from "@/lib/i18n/context";
 
@@ -132,23 +132,74 @@ export function TextProperties({ element }: Props) {
         </button>
       </div>
 
-      {/* Align */}
-      <div className="flex gap-0.5">
-        {(["left", "center", "right"] as const).map((a) => (
-          <button
-            key={a}
-            onClick={() => update({ textAlign: a })}
-            className={`rounded p-1 transition-colors ${
-              element.textAlign === a
-                ? "bg-white text-[#161616]"
-                : "text-neutral-500 hover:bg-neutral-800"
-            }`}
-          >
-            {a === "left" && <TextAlignLeft size={14} />}
-            {a === "center" && <TextAlignCenter size={14} />}
-            {a === "right" && <TextAlignRight size={14} />}
-          </button>
-        ))}
+      {/* Align horizontal + vertical */}
+      <div className="flex gap-2">
+        <div className="flex gap-0.5">
+          {(["left", "center", "right"] as const).map((a) => (
+            <button
+              key={a}
+              onClick={() => update({ textAlign: a })}
+              className={`rounded p-1 transition-colors ${
+                element.textAlign === a
+                  ? "bg-white text-[#161616]"
+                  : "text-neutral-500 hover:bg-neutral-800"
+              }`}
+            >
+              {a === "left" && <TextAlignLeft size={14} />}
+              {a === "center" && <TextAlignCenter size={14} />}
+              {a === "right" && <TextAlignRight size={14} />}
+            </button>
+          ))}
+        </div>
+        <div className="w-px bg-neutral-700" />
+        <div className="flex gap-0.5">
+          {(["top", "middle", "bottom"] as const).map((v) => (
+            <button
+              key={v}
+              onClick={() => update({ verticalAlign: v })}
+              className={`rounded p-1 transition-colors ${
+                element.verticalAlign === v
+                  ? "bg-white text-[#161616]"
+                  : "text-neutral-500 hover:bg-neutral-800"
+              }`}
+              aria-label={`Align ${v}`}
+            >
+              {v === "top" && <ArrowLineUp size={14} />}
+              {v === "middle" && <ArrowsVertical size={14} />}
+              {v === "bottom" && <ArrowLineDown size={14} />}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Line height + Letter spacing */}
+      <div className="grid grid-cols-2 gap-2">
+        <label className="flex flex-col gap-0.5">
+          <span className="text-[10px] text-neutral-500">Line height</span>
+          <input
+            type="range"
+            min={0.8}
+            max={3}
+            step={0.1}
+            value={element.lineHeight}
+            onChange={(e) => update({ lineHeight: parseFloat(e.target.value) })}
+            className="w-full accent-white"
+          />
+          <span className="text-[9px] text-neutral-600 text-center">{element.lineHeight.toFixed(1)}</span>
+        </label>
+        <label className="flex flex-col gap-0.5">
+          <span className="text-[10px] text-neutral-500">Spacing</span>
+          <input
+            type="range"
+            min={-0.1}
+            max={0.3}
+            step={0.01}
+            value={element.letterSpacing}
+            onChange={(e) => update({ letterSpacing: parseFloat(e.target.value) })}
+            className="w-full accent-white"
+          />
+          <span className="text-[9px] text-neutral-600 text-center">{element.letterSpacing.toFixed(2)}em</span>
+        </label>
       </div>
 
       {/* Color */}
