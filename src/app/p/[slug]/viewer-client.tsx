@@ -131,6 +131,11 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
       if (e.key === "End") { e.preventDefault(); setCurrent(total - 1); }
       if (e.key === "f" || e.key === "F") document.documentElement.requestFullscreen?.();
       if (e.key === "Escape") document.exitFullscreen?.();
+      // Type digits to jump to slide number
+      if (e.key >= "1" && e.key <= "9") {
+        const n = parseInt(e.key) - 1;
+        if (n < total) setCurrent(n);
+      }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -364,6 +369,10 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
               <div className="text-center">
                 <kbd className="rounded bg-white/20 px-2 py-1 text-xs font-mono">Space</kbd>
                 <p className="mt-1 text-[10px] text-white/50">Next</p>
+              </div>
+              <div className="text-center">
+                <kbd className="rounded bg-white/20 px-2 py-1 text-xs font-mono">1-9</kbd>
+                <p className="mt-1 text-[10px] text-white/50">Jump</p>
               </div>
             </div>
           </div>

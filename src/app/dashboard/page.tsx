@@ -247,11 +247,17 @@ export default function DashboardPage() {
 
       {presentations.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center sm:py-32">
+          <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-neutral-800">
+            <Plus size={32} className="text-neutral-600" />
+          </div>
           <p className="font-display text-3xl tracking-tight text-neutral-700 sm:text-5xl">{t.dashboard.empty}</p>
-          <p className="mt-3 text-sm text-neutral-400">{t.dashboard.emptyDesc}</p>
-          <button onClick={() => setModalOpen(true)} className="mt-6 bg-white px-8 py-3 text-sm font-medium tracking-widest text-[#161616] uppercase hover:bg-neutral-200 transition-colors">
+          <p className="mt-3 max-w-sm text-sm leading-relaxed text-neutral-400">{t.dashboard.emptyDesc}</p>
+          <button onClick={() => setModalOpen(true)} className="mt-8 bg-white px-8 py-3 text-sm font-medium tracking-widest text-[#161616] uppercase hover:bg-neutral-200 transition-colors">
             {t.dashboard.create}
           </button>
+          <p className="mt-4 text-[10px] text-neutral-600">
+            Choose from 5 templates × 5 themes
+          </p>
         </div>
       ) : filtered.length === 0 ? (
         <p className="py-12 text-center text-sm text-neutral-500">

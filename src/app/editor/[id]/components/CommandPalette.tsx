@@ -54,6 +54,29 @@ export function CommandPalette({ open, onClose }: Props) {
     { id: "hexagon", label: "Hexagon", category: "Shape", action: () => addElement({ id: nanoid(), type: "shape", x: 200, y: 200, w: 200, h: 200, rotation: 0, opacity: 1, zIndex: zBase, locked: false, shape: "hexagon", ...shapeDefaults(theme) } satisfies ShapeElement) },
     { id: "pentagon", label: "Pentagon", category: "Shape", action: () => addElement({ id: nanoid(), type: "shape", x: 200, y: 200, w: 200, h: 200, rotation: 0, opacity: 1, zIndex: zBase, locked: false, shape: "pentagon", ...shapeDefaults(theme) } satisfies ShapeElement) },
     { id: "triangle", label: "Triangle", category: "Shape", action: () => addElement({ id: nanoid(), type: "shape", x: 200, y: 200, w: 200, h: 200, rotation: 0, opacity: 1, zIndex: zBase, locked: false, shape: "triangle", ...shapeDefaults(theme) } satisfies ShapeElement) },
+    { id: "export-notes", label: "Export speaker notes", category: "Export", action: () => {
+      const { slides } = useEditorStore.getState();
+      const text = slides.map((s, i) => `--- Slide ${i + 1} ---\n${s.notes || "(no notes)"}`).join("\n\n");
+      const blob = new Blob([text], { type: "text/plain" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "speaker-notes.txt";
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }},
+    { id: "export-outline", label: "Export text outline", category: "Export", action: () => {
+      const { slides } = useEditorStore.getState();
+      const text = slides.map((s, i) => {
+        const texts = s.elements.filter((e) => e.type === "text").map((e) => (e as { content: string }).content.replace(/<[^>]*>/g, "")).join("\n");
+        return `--- Slide ${i + 1} ---\n${texts || "(no text)"}`;
+      }).join("\n\n");
+      const blob = new Blob([text], { type: "text/plain" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "presentation-outline.txt";
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }},
   ];
 
   const filtered = query

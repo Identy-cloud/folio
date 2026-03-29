@@ -77,22 +77,28 @@ export const SelectionBox = memo(function SelectionBox({ element, scale }: Props
       return;
     }
 
+    const snap = useEditorStore.getState().snapToGrid;
+    const GRID = 40;
+    const snapVal = (v: number) => snap ? Math.round(v / GRID) * GRID : v;
+
     const updates: Partial<SlideElement> = {};
     const h = d.handle;
 
     if (h.includes("e")) {
-      updates.w = Math.max(20, d.origW + dx);
+      updates.w = Math.max(20, snapVal(d.origW + dx));
     }
     if (h.includes("w")) {
-      updates.w = Math.max(20, d.origW - dx);
-      updates.x = d.origX + dx;
+      const newW = Math.max(20, snapVal(d.origW - dx));
+      updates.w = newW;
+      updates.x = d.origX + (d.origW - newW);
     }
     if (h.includes("s")) {
-      updates.h = Math.max(20, d.origH + dy);
+      updates.h = Math.max(20, snapVal(d.origH + dy));
     }
     if (h.includes("n")) {
-      updates.h = Math.max(20, d.origH - dy);
-      updates.y = d.origY + dy;
+      const newH = Math.max(20, snapVal(d.origH - dy));
+      updates.h = newH;
+      updates.y = d.origY + (d.origH - newH);
     }
 
     updateElement(element.id, updates);
