@@ -62,6 +62,14 @@ export function useKeyboard() {
         }
         return;
       }
+      // Ctrl+Enter = add new slide
+      if (e.key === "Enter" && meta) {
+        if (inInput) return;
+        e.preventDefault();
+        state.addSlide();
+        return;
+      }
+
       if (e.key === "g" && meta && !e.shiftKey) {
         if (inInput) return;
         e.preventDefault();

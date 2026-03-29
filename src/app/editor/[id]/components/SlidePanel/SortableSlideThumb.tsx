@@ -57,6 +57,9 @@ export const SortableSlideThumb = memo(function SortableSlideThumb({
       <span className="absolute bottom-1 left-1 rounded bg-black/40 px-1 text-[9px] text-white">
         {index + 1}
       </span>
+      {slide.notes && slide.notes.trim().length > 0 && (
+        <span className="absolute bottom-1 right-1 h-1.5 w-1.5 rounded-full bg-amber-500" title="Has notes" />
+      )}
       {onDelete && (
         <button
           onClick={(e) => {

@@ -96,6 +96,31 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
     a.click();
   }
 
+  async function handleExportAllPng() {
+    setExporting(true);
+    const { toPng } = await import("html-to-image");
+    const currentIndex = useEditorStore.getState().activeSlideIndex;
+    const safeName = (title || "presentation").replace(/[^a-zA-Z0-9-_ ]/g, "").trim();
+
+    for (let i = 0; i < slides.length; i++) {
+      setExportProgress(`${i + 1}/${slides.length}`);
+      setActiveSlide(i);
+      await new Promise((r) => setTimeout(r, 200));
+      const el = document.querySelector("[data-slide-canvas]") as HTMLElement;
+      if (!el) continue;
+      const dataUrl = await toPng(el, { width: 1920, height: 1080, pixelRatio: 1, cacheBust: true });
+      const a = document.createElement("a");
+      a.href = dataUrl;
+      a.download = `${safeName}-${i + 1}.png`;
+      a.click();
+      await new Promise((r) => setTimeout(r, 100));
+    }
+
+    setActiveSlide(currentIndex);
+    setExporting(false);
+    setExportProgress("");
+  }
+
   const statusDot: Record<string, string> = {
     saved: "bg-green-500",
     saving: "bg-amber-500 animate-pulse",
@@ -188,13 +213,24 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
             {exporting ? exportProgress : t.editor.pdf}
           </button>
         </Tooltip>
-        <Tooltip content="Export PNG">
+        <Tooltip content="Export current slide as PNG">
           <button
             onClick={handleExportPng}
-            className="hidden md:flex items-center gap-1 rounded px-3 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200"
+            disabled={exporting}
+            className="hidden md:flex items-center gap-1 rounded px-3 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 disabled:opacity-50"
           >
             <FileImage size={14} weight="duotone" />
             PNG
+          </button>
+        </Tooltip>
+        <Tooltip content="Export all slides as PNGs">
+          <button
+            onClick={handleExportAllPng}
+            disabled={exporting}
+            className="hidden md:flex items-center gap-1 rounded px-3 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 disabled:opacity-50"
+          >
+            <FileImage size={14} weight="duotone" />
+            {exporting && exportProgress ? exportProgress : "All PNG"}
           </button>
         </Tooltip>
         <div className="hidden md:block h-5 w-px bg-neutral-700" />
