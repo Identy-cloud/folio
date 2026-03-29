@@ -22,6 +22,8 @@ import { HistoryPanel } from "./HistoryPanel";
 import { LayerPanel } from "./LayerPanel";
 import { SlideNotes } from "./SlideNotes";
 import { FindReplace } from "./FindReplace";
+import { SlideSorter } from "./SlideSorter";
+import { ThemeCustomizer } from "./ThemeCustomizer";
 import { ClockCounterClockwise, Stack, NotePencil } from "@phosphor-icons/react";
 import { MobileSlidePanel } from "./Mobile/MobileSlidePanel";
 import { MobileInsertPanel } from "./Mobile/MobileInsertPanel";
@@ -41,6 +43,8 @@ export function EditorLayout() {
   const [mobilePanel, setMobilePanel] = useState<"slides" | "insert" | "properties" | null>(null);
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
   const [findOpen, setFindOpen] = useState(false);
+  const [sorterOpen, setSorterOpen] = useState(false);
+  const [themeCustomizerOpen, setThemeCustomizerOpen] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
   const [layersOpen, setLayersOpen] = useState(false);
   const [notesOpen, setNotesOpen] = useState(false);
@@ -58,6 +62,10 @@ export function EditorLayout() {
       if (e.key === "h" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         setFindOpen((v) => !v);
+      }
+      if (e.key === "F2") {
+        e.preventDefault();
+        setSorterOpen((v) => !v);
       }
       if (e.key === "F5") {
         e.preventDefault();
@@ -81,6 +89,8 @@ export function EditorLayout() {
           layersOpen={layersOpen}
           onToggleNotes={() => setNotesOpen((v) => !v)}
           notesOpen={notesOpen}
+          onToggleSorter={() => setSorterOpen((v) => !v)}
+          onToggleThemeCustomizer={() => setThemeCustomizerOpen((v) => !v)}
         />
       </div>
       <div className="flex flex-1 overflow-hidden">
@@ -177,6 +187,8 @@ export function EditorLayout() {
       </BottomSheet>
 
       <FindReplace open={findOpen} onClose={() => setFindOpen(false)} />
+      <SlideSorter open={sorterOpen} onClose={() => setSorterOpen(false)} />
+      <ThemeCustomizer open={themeCustomizerOpen} onClose={() => setThemeCustomizerOpen(false)} />
       <Onboarding />
       <ShortcutsPanel open={shortcutsOpen} onClose={() => setShortcutsOpen(false)} />
     </div>

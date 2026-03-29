@@ -22,6 +22,8 @@ interface Props {
 export function PresenterClient({ title, slides, slug }: Props) {
   const [current, setCurrent] = useState(0);
   const total = slides.length;
+  const [laser, setLaser] = useState<{ x: number; y: number } | null>(null);
+  const laserTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Timer
   const [elapsed, setElapsed] = useState(0);
@@ -71,11 +73,25 @@ export function PresenterClient({ title, slides, slug }: Props) {
             {current + 1} / {total}
           </span>
         </div>
-        <div className="flex flex-1 items-center justify-center p-4">
+        <div
+          className="relative flex flex-1 items-center justify-center p-4 cursor-crosshair"
+          onClick={(e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            setLaser({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+            if (laserTimer.current) clearTimeout(laserTimer.current);
+            laserTimer.current = setTimeout(() => setLaser(null), 2000);
+          }}
+        >
           {currentSlide && (
             <SlidePreview
               slide={currentSlide}
               className="w-full max-w-4xl border border-neutral-800"
+            />
+          )}
+          {laser && (
+            <div
+              className="pointer-events-none absolute h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-red-500 shadow-[0_0_12px_4px_rgba(239,68,68,0.5)]"
+              style={{ left: laser.x, top: laser.y, transition: "opacity 0.3s", opacity: 1 }}
             />
           )}
         </div>

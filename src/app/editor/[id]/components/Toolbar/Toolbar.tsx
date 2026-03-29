@@ -10,7 +10,7 @@ function Spinner() {
 }
 import { useEditorStore } from "@/store/editorStore";
 import Link from "next/link";
-import { GearSix } from "@phosphor-icons/react";
+import { GearSix, SquaresFour, Palette } from "@phosphor-icons/react";
 import { ShareButton } from "./ShareButton";
 import { PresentationSettings } from "./PresentationSettings";
 import { useImageUpload } from "../../hooks/useImageUpload";
@@ -26,9 +26,11 @@ interface ToolbarProps {
   layersOpen?: boolean;
   onToggleNotes?: () => void;
   notesOpen?: boolean;
+  onToggleSorter?: () => void;
+  onToggleThemeCustomizer?: () => void;
 }
 
-export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen, onToggleLayers, layersOpen, onToggleNotes, notesOpen }: ToolbarProps) {
+export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen, onToggleLayers, layersOpen, onToggleNotes, notesOpen, onToggleSorter, onToggleThemeCustomizer }: ToolbarProps) {
   const { t } = useTranslation();
   const undo = useEditorStore((s) => s.undo);
   const redo = useEditorStore((s) => s.redo);
@@ -160,6 +162,20 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
             <GearSix size={14} />
           </button>
         </Tooltip>
+        {onToggleSorter && (
+          <Tooltip content="Slide sorter (F2)">
+            <button onClick={onToggleSorter} className="hidden sm:flex rounded p-1.5 text-neutral-500 hover:bg-neutral-800 hover:text-neutral-300 transition-colors">
+              <SquaresFour size={14} />
+            </button>
+          </Tooltip>
+        )}
+        {onToggleThemeCustomizer && (
+          <Tooltip content="Theme colors">
+            <button onClick={onToggleThemeCustomizer} className="hidden sm:flex rounded p-1.5 text-neutral-500 hover:bg-neutral-800 hover:text-neutral-300 transition-colors">
+              <Palette size={14} />
+            </button>
+          </Tooltip>
+        )}
         <div className="h-5 w-px bg-neutral-700" />
         <div className="flex gap-1">
           <Tooltip content={t.editor.undo} shortcut="Ctrl+Z">
