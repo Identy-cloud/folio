@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowCounterClockwise, ArrowClockwise, Cursor, TextT, Shapes, FilePdf, FileImage, Image as ImageIcon, Desktop, DeviceMobile } from "@phosphor-icons/react";
+import { ArrowCounterClockwise, ArrowClockwise, FilePdf, FileImage, Image as ImageIcon, Desktop, DeviceMobile } from "@phosphor-icons/react";
 import { toPng } from "html-to-image";
 import { Tooltip } from "@/components/ui/Tooltip";
 import { useEditorStore } from "@/store/editorStore";
-import type { ActiveTool } from "@/store/editorStore";
+
+
 import { exportToPdf } from "@/lib/export-pdf";
 import Link from "next/link";
 import { ShareButton } from "./ShareButton";
@@ -19,8 +20,6 @@ interface ToolbarProps {
 
 export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
   const { t } = useTranslation();
-  const activeTool = useEditorStore((s) => s.activeTool);
-  const setActiveTool = useEditorStore((s) => s.setActiveTool);
   const undo = useEditorStore((s) => s.undo);
   const redo = useEditorStore((s) => s.redo);
   const saveStatus = useEditorStore((s) => s.saveStatus);
@@ -32,12 +31,6 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
   const { trigger: triggerUpload, uploading } = useImageUpload();
   const [exporting, setExporting] = useState(false);
   const [exportProgress, setExportProgress] = useState("");
-
-  const TOOLS: { id: ActiveTool; label: string; icon: React.ReactNode }[] = [
-    { id: "select", label: t.editor.tools.select, icon: <Cursor size={14} weight="duotone" /> },
-    { id: "text", label: t.editor.tools.text, icon: <TextT size={14} weight="duotone" /> },
-    { id: "shape", label: t.editor.tools.shape, icon: <Shapes size={14} weight="duotone" /> },
-  ];
 
   async function handleExport() {
     setExporting(true);
@@ -97,23 +90,6 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
           <Tooltip content={t.editor.redo} shortcut="Ctrl+Y">
             <button onClick={redo} className="rounded p-2 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200" aria-label={t.editor.redo}><ArrowClockwise size={16} weight="regular" /></button>
           </Tooltip>
-        </div>
-        <div className="hidden md:block h-5 w-px bg-neutral-700" />
-        <div className="hidden md:flex gap-1">
-          {TOOLS.map((tool) => (
-            <button
-              key={tool.id}
-              onClick={() => setActiveTool(tool.id)}
-              className={`flex items-center rounded px-3 py-1 text-xs transition-colors ${
-                activeTool === tool.id
-                  ? "bg-white text-[#161616]"
-                  : "text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200"
-              }`}
-            >
-              {tool.icon}
-              <span className="ml-1">{tool.label}</span>
-            </button>
-          ))}
         </div>
         <div className="hidden md:block h-5 w-px bg-neutral-700" />
         <Tooltip content={t.editor.image}>
