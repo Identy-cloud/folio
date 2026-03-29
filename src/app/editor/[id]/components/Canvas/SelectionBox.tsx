@@ -118,6 +118,16 @@ export const SelectionBox = memo(function SelectionBox({ element, scale }: Props
         zIndex: 9999,
       }}
     >
+      {/* Dimension label */}
+      {dragRef.current && (
+        <div
+          className="pointer-events-none absolute -top-6 left-1/2 -translate-x-1/2 rounded bg-blue-600 px-1.5 py-0.5 text-[9px] text-white whitespace-nowrap"
+          style={{ transform: `translate(-50%, 0) scale(${1 / scale})`, transformOrigin: "bottom center" }}
+        >
+          {Math.round(element.w)} × {Math.round(element.h)}
+          {element.rotation !== 0 && ` · ${Math.round(element.rotation)}°`}
+        </div>
+      )}
       {HANDLES.filter((h) => {
         const screenW = element.w * scale;
         const screenH = element.h * scale;

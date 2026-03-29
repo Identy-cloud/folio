@@ -25,6 +25,7 @@ import { FindReplace } from "./FindReplace";
 import { SlideSorter } from "./SlideSorter";
 import { ThemeCustomizer } from "./ThemeCustomizer";
 import { EditorComments } from "./EditorComments";
+import { CommandPalette } from "./CommandPalette";
 import { ClockCounterClockwise, Stack, NotePencil } from "@phosphor-icons/react";
 import { MobileSlidePanel } from "./Mobile/MobileSlidePanel";
 import { MobileInsertPanel } from "./Mobile/MobileInsertPanel";
@@ -47,6 +48,7 @@ export function EditorLayout() {
   const [sorterOpen, setSorterOpen] = useState(false);
   const [themeCustomizerOpen, setThemeCustomizerOpen] = useState(false);
   const [commentsOpen, setCommentsOpen] = useState(false);
+  const [commandOpen, setCommandOpen] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
   const [layersOpen, setLayersOpen] = useState(false);
   const [notesOpen, setNotesOpen] = useState(false);
@@ -60,6 +62,10 @@ export function EditorLayout() {
       if (e.key === "?" || (e.key === "/" && e.shiftKey)) {
         e.preventDefault();
         setShortcutsOpen((v) => !v);
+      }
+      if (e.key === "/" && !e.shiftKey && !e.metaKey && !e.ctrlKey) {
+        e.preventDefault();
+        setCommandOpen(true);
       }
       if (e.key === "h" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
@@ -193,6 +199,7 @@ export function EditorLayout() {
       <SlideSorter open={sorterOpen} onClose={() => setSorterOpen(false)} />
       <ThemeCustomizer open={themeCustomizerOpen} onClose={() => setThemeCustomizerOpen(false)} />
       <EditorComments open={commentsOpen} onClose={() => setCommentsOpen(false)} />
+      <CommandPalette open={commandOpen} onClose={() => setCommandOpen(false)} />
       <Onboarding />
       <ShortcutsPanel open={shortcutsOpen} onClose={() => setShortcutsOpen(false)} />
     </div>
