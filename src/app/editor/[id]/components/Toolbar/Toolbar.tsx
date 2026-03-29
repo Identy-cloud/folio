@@ -10,7 +10,9 @@ function Spinner() {
 }
 import { useEditorStore } from "@/store/editorStore";
 import Link from "next/link";
+import { GearSix } from "@phosphor-icons/react";
 import { ShareButton } from "./ShareButton";
+import { PresentationSettings } from "./PresentationSettings";
 import { useImageUpload } from "../../hooks/useImageUpload";
 import { useTranslation } from "@/lib/i18n/context";
 import { usePlanLimits } from "@/hooks/usePlanLimits";
@@ -37,6 +39,7 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
   const editingMode = useEditorStore((s) => s.editingMode);
   const setEditingMode = useEditorStore((s) => s.setEditingMode);
   const { trigger: triggerUpload, uploading } = useImageUpload();
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [title, setTitle] = useState("");
   const titleRef = useRef<HTMLInputElement>(null);
   const presentationId = useEditorStore((s) => s.presentationId);
@@ -147,6 +150,14 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
           className="hidden sm:block w-28 md:w-40 truncate bg-transparent text-xs text-neutral-400 outline-none hover:text-neutral-200 focus:text-white"
           placeholder="Untitled"
         />
+        <Tooltip content="Settings">
+          <button
+            onClick={() => setSettingsOpen(true)}
+            className="hidden sm:flex rounded p-1.5 text-neutral-500 hover:bg-neutral-800 hover:text-neutral-300 transition-colors"
+          >
+            <GearSix size={14} />
+          </button>
+        </Tooltip>
         <div className="h-5 w-px bg-neutral-700" />
         <div className="flex gap-1">
           <Tooltip content={t.editor.undo} shortcut="Ctrl+Z">
@@ -282,6 +293,7 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
           />
         </Tooltip>
       </div>
+      <PresentationSettings open={settingsOpen} onClose={() => setSettingsOpen(false)} />
     </div>
   );
 }
