@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Plus, MagnifyingGlass, SortAscending, Funnel } from "@phosphor-icons/react";
+import { Plus, MagnifyingGlass, SortAscending, Funnel, SquaresFour, List } from "@phosphor-icons/react";
 import { PresentationCard } from "./presentation-card";
 import type { SlideElement } from "@/types/elements";
 import { SkeletonGrid } from "./skeleton-grid";
@@ -45,6 +45,7 @@ export default function DashboardPage() {
   const [sortBy, setSortBy] = useState<"recent" | "name" | "oldest" | "starred">("recent");
   const [filterBy, setFilterBy] = useState<"all" | "public" | "private">("all");
   const [starred, setStarred] = useState<Set<string>>(new Set());
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [dialog, setDialog] = useState<Dialog>(null);
 
   useEffect(() => {
@@ -221,6 +222,20 @@ export default function DashboardPage() {
               <option value="private">Private</option>
             </select>
           </div>
+          <div className="flex rounded border border-neutral-700 p-0.5">
+            <button
+              onClick={() => setViewMode("grid")}
+              className={`rounded p-1.5 transition-colors ${viewMode === "grid" ? "bg-neutral-700 text-white" : "text-neutral-500 hover:text-neutral-300"}`}
+            >
+              <SquaresFour size={14} />
+            </button>
+            <button
+              onClick={() => setViewMode("list")}
+              className={`rounded p-1.5 transition-colors ${viewMode === "list" ? "bg-neutral-700 text-white" : "text-neutral-500 hover:text-neutral-300"}`}
+            >
+              <List size={14} />
+            </button>
+          </div>
           <button
             onClick={() => setModalOpen(true)}
             className="shrink-0 bg-neutral-200 px-5 py-2 text-xs font-medium tracking-widest text-[#161616] uppercase hover:bg-neutral-300 transition-colors"
@@ -243,7 +258,10 @@ export default function DashboardPage() {
           {t.dashboard.noResults} &ldquo;{search}&rdquo;
         </p>
       ) : (
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
+        <div className={viewMode === "grid"
+          ? "grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4"
+          : "flex flex-col gap-2"
+        }>
           {filtered.map((p) => (
             <PresentationCard
               key={p.id}

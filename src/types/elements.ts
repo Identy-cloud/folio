@@ -22,6 +22,7 @@ export interface BaseElement {
   locked: boolean;
   shadow?: ElementShadow;
   groupId?: string;
+  linkUrl?: string;
   animation?: ElementAnimation;
   animationDelay?: number;
   animationDuration?: number;

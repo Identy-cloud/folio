@@ -91,6 +91,18 @@ export function PositionFields({ element }: Props) {
           />
         </label>
       </div>
+      {/* Link URL */}
+      <label className="flex flex-col gap-0.5">
+        <span className="text-[10px] text-neutral-500">Link URL</span>
+        <input
+          type="url"
+          value={element.linkUrl ?? ""}
+          onChange={(e) => updateElement(element.id, { linkUrl: e.target.value || undefined })}
+          onBlur={pushHistory}
+          placeholder="https://..."
+          className="w-full rounded border border-neutral-700 bg-[#161616] px-2 py-1 text-xs text-neutral-200 outline-none placeholder:text-neutral-700 focus:border-neutral-500"
+        />
+      </label>
     </div>
   );
 }

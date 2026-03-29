@@ -34,6 +34,8 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
   const [unlocked, setUnlocked] = useState(!hasPassword);
   const [pwInput, setPwInput] = useState("");
   const [pwError, setPwError] = useState(false);
+  const [autoplay, setAutoplay] = useState(false);
+  const autoplayRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const [current, setCurrent] = useState(0);
   const [displayed, setDisplayed] = useState(0);
@@ -141,6 +143,14 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
       else goPrev();
     }
   }
+
+  useEffect(() => {
+    if (!autoplay) { if (autoplayRef.current) clearInterval(autoplayRef.current); return; }
+    autoplayRef.current = setInterval(() => {
+      setCurrent((c) => (c >= total - 1 ? 0 : c + 1));
+    }, 5000);
+    return () => { if (autoplayRef.current) clearInterval(autoplayRef.current); };
+  }, [autoplay, total]);
 
   const [hoverZone, setHoverZone] = useState<"left" | "right" | null>(null);
 
@@ -378,6 +388,13 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
               </div>
             )}
             <button
+              onClick={(e) => { e.stopPropagation(); setAutoplay((v) => !v); }}
+              className={`text-xs transition-colors ${autoplay ? "text-blue-400" : "text-white/40 hover:text-white/80"}`}
+              aria-label="Autoplay"
+            >
+              {autoplay ? "⏸" : "▶"}
+            </button>
+            <button
               onClick={(e) => {
                 e.stopPropagation();
                 document.documentElement.requestFullscreen?.();
@@ -524,6 +541,16 @@ function ViewerElement({ element, delay, animate }: { element: SlideElement; del
         />
       )}
       </div>
+      {element.linkUrl && (
+        <a
+          href={element.linkUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="absolute inset-0 z-10"
+          onClick={(e) => e.stopPropagation()}
+          aria-label={`Link to ${element.linkUrl}`}
+        />
+      )}
     </div>
   );
 }
