@@ -1,6 +1,7 @@
 "use client";
 
 import type { SlideTransition } from "@/types/elements";
+import { TransitionIcon, TRANSITION_LIST } from "@/components/editor/TransitionIcons";
 import { useTranslation } from "@/lib/i18n/context";
 
 interface Props {
@@ -11,13 +12,13 @@ interface Props {
 export function TransitionPicker({ current, onChange }: Props) {
   const { t } = useTranslation();
 
-  const TRANSITIONS: { id: SlideTransition; label: string; icon: string }[] = [
-    { id: "none", label: t.editor.noTransition, icon: "—" },
-    { id: "fade", label: t.editor.fade, icon: "◐" },
-    { id: "slide-left", label: t.editor.slideLeft, icon: "→" },
-    { id: "slide-up", label: t.editor.slideUp, icon: "↑" },
-    { id: "zoom", label: t.editor.zoom, icon: "⊕" },
-  ];
+  const LABELS: Record<SlideTransition, string> = {
+    none: t.editor.noTransition,
+    fade: t.editor.fade,
+    "slide-left": t.editor.slideLeft,
+    "slide-up": t.editor.slideUp,
+    zoom: t.editor.zoom,
+  };
 
   return (
     <div className="px-4 py-2">
@@ -25,18 +26,18 @@ export function TransitionPicker({ current, onChange }: Props) {
         {t.editor.transition}
       </span>
       <div className="flex gap-1">
-        {TRANSITIONS.map((tr) => (
+        {TRANSITION_LIST.map((tr) => (
           <button
-            key={tr.id}
-            onClick={() => onChange(tr.id)}
-            title={tr.label}
+            key={tr}
+            onClick={() => onChange(tr)}
+            title={LABELS[tr]}
             className={`flex h-7 w-7 items-center justify-center rounded text-xs transition-colors ${
-              current === tr.id
+              current === tr
                 ? "bg-white text-[#161616]"
                 : "text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200"
             }`}
           >
-            {tr.icon}
+            <TransitionIcon type={tr} size={14} />
           </button>
         ))}
       </div>

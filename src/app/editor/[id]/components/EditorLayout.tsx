@@ -32,6 +32,7 @@ import { AlignControls } from "./ElementPalette/AlignControls";
 import { LockToggle } from "./ElementPalette/LockToggle";
 import { DeleteButton } from "./ElementPalette/DeleteButton";
 import { useImageUpload } from "../hooks/useImageUpload";
+import { TransitionIcon, TRANSITION_LIST } from "@/components/editor/TransitionIcons";
 import { useTranslation } from "@/lib/i18n/context";
 
 export function EditorLayout() {
@@ -138,10 +139,7 @@ export function EditorLayout() {
   );
 }
 
-const MOBILE_TR_ICONS: Record<string, string> = {
-  none: "—", fade: "◐", "slide-left": "→", "slide-up": "↑", zoom: "⊕",
-};
-const MOBILE_TR_ORDER: SlideTransition[] = ["none", "fade", "slide-left", "slide-up", "zoom"];
+// Transition icons centralized in TransitionIcons.tsx
 
 function MobileSlidePanel({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
@@ -185,7 +183,7 @@ function MobileSlidePanel({ onClose }: { onClose: () => void }) {
             <div className="flex items-center justify-center py-1.5">
               {expandedTr === i ? (
                 <div className="flex gap-1 rounded-full bg-neutral-800 px-2 py-1">
-                  {MOBILE_TR_ORDER.map((tr) => (
+                  {TRANSITION_LIST.map((tr) => (
                     <button
                       key={tr}
                       onClick={() => { updateSlideTransition(slides[i + 1].id, tr); setExpandedTr(null); }}
@@ -195,16 +193,16 @@ function MobileSlidePanel({ onClose }: { onClose: () => void }) {
                           : "text-neutral-400 active:bg-neutral-700"
                       }`}
                     >
-                      {MOBILE_TR_ICONS[tr]}
+                      <TransitionIcon type={tr} size={14} />
                     </button>
                   ))}
                 </div>
               ) : (
                 <button
                   onClick={() => setExpandedTr(i)}
-                  className="flex h-7 items-center gap-1.5 rounded-full bg-neutral-800/50 px-3 text-[10px] text-neutral-500 active:bg-neutral-700"
+                  className="flex h-7 items-center gap-1.5 rounded-full bg-neutral-800/50 px-3 text-neutral-500 active:bg-neutral-700"
                 >
-                  <span>{MOBILE_TR_ICONS[slides[i + 1].transition] ?? "◐"}</span>
+                  <TransitionIcon type={slides[i + 1].transition} size={12} />
                   <span className="text-[9px] uppercase tracking-wider">{slides[i + 1].transition}</span>
                 </button>
               )}

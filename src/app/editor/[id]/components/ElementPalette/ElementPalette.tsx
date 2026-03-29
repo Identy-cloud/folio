@@ -19,6 +19,7 @@ import type { TextElement, ShapeElement, ArrowElement, DividerElement, ImageElem
 import { textDefaults, shapeDefaults, arrowDefaults, dividerDefaults } from "@/lib/templates/element-defaults";
 import { THEMES } from "@/lib/templates/themes";
 import type { SlideTransition } from "@/types/elements";
+import { TransitionIcon, TRANSITION_LIST } from "@/components/editor/TransitionIcons";
 import { useTranslation } from "@/lib/i18n/context";
 
 export function ElementPalette() {
@@ -107,14 +108,6 @@ export function ElementPalette() {
   );
 }
 
-const TRANSITIONS: { id: SlideTransition; label: string; icon: string }[] = [
-  { id: "none", label: "None", icon: "—" },
-  { id: "fade", label: "Fade", icon: "◐" },
-  { id: "slide-left", label: "Slide", icon: "→" },
-  { id: "slide-up", label: "Slide Up", icon: "↑" },
-  { id: "zoom", label: "Zoom", icon: "⊕" },
-];
-
 function SlideTransitionPicker({
   current,
   onChange,
@@ -129,18 +122,18 @@ function SlideTransitionPicker({
         {t.editor.transition}
       </span>
       <div className="flex gap-1">
-        {TRANSITIONS.map((tr) => (
+        {TRANSITION_LIST.map((tr) => (
           <button
-            key={tr.id}
-            onClick={() => onChange(tr.id)}
-            title={tr.label}
-            className={`flex h-8 flex-1 items-center justify-center rounded border text-xs transition-colors ${
-              current === tr.id
+            key={tr}
+            onClick={() => onChange(tr)}
+            title={tr}
+            className={`flex h-8 flex-1 items-center justify-center rounded border transition-colors ${
+              current === tr
                 ? "border-blue-500 bg-blue-500/10 text-blue-400"
                 : "border-neutral-700 text-neutral-500 hover:border-neutral-600 hover:text-neutral-300"
             }`}
           >
-            {tr.icon}
+            <TransitionIcon type={tr} size={14} />
           </button>
         ))}
       </div>
