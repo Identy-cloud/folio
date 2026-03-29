@@ -42,9 +42,26 @@ export default function DashboardPage() {
   const [fetchError, setFetchError] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [sortBy, setSortBy] = useState<"recent" | "name" | "oldest">("recent");
+  const [sortBy, setSortBy] = useState<"recent" | "name" | "oldest" | "starred">("recent");
   const [filterBy, setFilterBy] = useState<"all" | "public" | "private">("all");
+  const [starred, setStarred] = useState<Set<string>>(new Set());
   const [dialog, setDialog] = useState<Dialog>(null);
+
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem("folio-starred") ?? "[]");
+      setStarred(new Set(saved));
+    } catch { /* ignore */ }
+  }, []);
+
+  function toggleStar(id: string) {
+    setStarred((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      localStorage.setItem("folio-starred", JSON.stringify([...next]));
+      return next;
+    });
+  }
 
   useEffect(() => {
     const load = async () => {
@@ -152,6 +169,11 @@ export default function DashboardPage() {
       return true;
     })
     .sort((a, b) => {
+      if (sortBy === "starred") {
+        const aS = starred.has(a.id) ? 0 : 1;
+        const bS = starred.has(b.id) ? 0 : 1;
+        if (aS !== bS) return aS - bS;
+      }
       if (sortBy === "name") return a.title.localeCompare(b.title);
       if (sortBy === "oldest") return new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime();
       return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
@@ -184,6 +206,7 @@ export default function DashboardPage() {
               <option value="recent">Recent</option>
               <option value="oldest">Oldest</option>
               <option value="name">A — Z</option>
+              <option value="starred">Starred</option>
             </select>
           </div>
           <div className="flex items-center gap-1">
@@ -231,6 +254,8 @@ export default function DashboardPage() {
               onTogglePublic={() => handleTogglePublic(p.id, p.isPublic)}
               onChangeTheme={() => setDialog({ type: "theme", id: p.id, current: p.theme })}
               onAnalytics={() => setDialog({ type: "analytics", id: p.id, title: p.title })}
+              isStarred={starred.has(p.id)}
+              onToggleStar={() => toggleStar(p.id)}
             />
           ))}
         </div>

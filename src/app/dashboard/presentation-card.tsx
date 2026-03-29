@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState, useRef } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { es } from "date-fns/locale";
-import { DotsThreeVertical } from "@phosphor-icons/react";
+import { DotsThreeVertical, Star } from "@phosphor-icons/react";
 import { SlidePreview } from "@/components/SlidePreview";
 import type { SlideElement } from "@/types/elements";
 import { useTranslation } from "@/lib/i18n/context";
@@ -31,6 +31,8 @@ interface Props {
   onTogglePublic: () => void;
   onChangeTheme: () => void;
   onAnalytics: () => void;
+  isStarred?: boolean;
+  onToggleStar?: () => void;
 }
 
 export function PresentationCard({
@@ -41,6 +43,8 @@ export function PresentationCard({
   onTogglePublic,
   onChangeTheme,
   onAnalytics,
+  isStarred,
+  onToggleStar,
 }: Props) {
   const { t } = useTranslation();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -77,6 +81,15 @@ export function PresentationCard({
           </p>
         </div>
 
+        {onToggleStar && (
+          <button
+            onClick={onToggleStar}
+            className="ml-1 rounded p-1.5 text-neutral-600 hover:text-amber-400 transition-colors"
+            aria-label={isStarred ? "Unstar" : "Star"}
+          >
+            <Star size={16} weight={isStarred ? "fill" : "regular"} className={isStarred ? "text-amber-400" : ""} />
+          </button>
+        )}
         <div ref={menuRef} className="relative">
           <button
             onClick={() => setMenuOpen(!menuOpen)}

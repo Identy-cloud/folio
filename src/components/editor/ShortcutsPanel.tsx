@@ -54,6 +54,7 @@ const GROUPS = [
       { keys: "Drag on empty area", label: "Rubber band select" },
       { keys: `${mod} + ↑ / ↓`, label: "Reorder slide up / down" },
       { keys: `${mod} + Enter`, label: "Add new slide" },
+      { keys: `${mod} + H`, label: "Find & Replace" },
     ],
   },
   {

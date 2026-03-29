@@ -4,6 +4,21 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { useClickOutside } from "@/hooks/useClickOutside";
 
+const RECENT_KEY = "folio-recent-colors";
+const MAX_RECENT = 8;
+
+function getRecentColors(): string[] {
+  try { return JSON.parse(localStorage.getItem(RECENT_KEY) ?? "[]"); }
+  catch { return []; }
+}
+
+function addRecentColor(color: string) {
+  if (color.startsWith("linear-gradient") || color.startsWith("radial-gradient")) return;
+  const recent = getRecentColors().filter((c) => c !== color);
+  recent.unshift(color);
+  localStorage.setItem(RECENT_KEY, JSON.stringify(recent.slice(0, MAX_RECENT)));
+}
+
 const PRESETS = [
   "#ffffff", "#e5e5e5", "#a3a3a3", "#737373",
   "#404040", "#171717", "#0a0a0a", "#000000",
@@ -56,10 +71,19 @@ export function ColorPicker({ value, onChange, label }: Props) {
     if (open) updatePos();
   }, [open, updatePos]);
 
+  const [recentColors, setRecentColors] = useState<string[]>([]);
+  useEffect(() => { if (open) setRecentColors(getRecentColors()); }, [open]);
+
+  function applyColor(c: string) {
+    onChange(c);
+    setHex(c);
+    addRecentColor(c);
+  }
+
   function commitHex() {
     const clean = hex.startsWith("#") ? hex : `#${hex}`;
     if (/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(clean)) {
-      onChange(clean);
+      applyColor(clean);
     }
   }
 
@@ -88,11 +112,28 @@ export function ColorPicker({ value, onChange, label }: Props) {
           style={{ position: "fixed", top: pos.top, left: pos.left, zIndex: 9999 }}
           className="w-48 rounded border border-neutral-700 bg-[#1e1e1e] p-2 shadow-xl"
         >
+          {recentColors.length > 0 && (
+            <div className="mb-1.5">
+              <span className="text-[9px] text-neutral-600 uppercase tracking-wider">Recent</span>
+              <div className="mt-0.5 flex gap-1">
+                {recentColors.map((c) => (
+                  <button
+                    key={c}
+                    onClick={() => applyColor(c)}
+                    className={`h-5 w-5 rounded-sm border transition-transform hover:scale-110 ${
+                      value === c ? "border-white ring-1 ring-white" : "border-neutral-600"
+                    }`}
+                    style={{ backgroundColor: c }}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
           <div className="grid grid-cols-8 gap-1 rounded bg-[#2a2a2a] p-1">
             {PRESETS.map((c) => (
               <button
                 key={c}
-                onClick={() => { onChange(c); setHex(c); }}
+                onClick={() => applyColor(c)}
                 aria-label={c}
                 className={`h-6 w-6 rounded-sm border transition-transform hover:scale-110 ${
                   value === c ? "border-white ring-1 ring-white" : "border-neutral-500"
@@ -105,7 +146,7 @@ export function ColorPicker({ value, onChange, label }: Props) {
             {GRADIENTS.map((g) => (
               <button
                 key={g}
-                onClick={() => { onChange(g); setHex(g); }}
+                onClick={() => { onChange(g); setHex(g); addRecentColor(g); }}
                 aria-label="Gradient"
                 className={`h-6 w-6 rounded-sm border transition-transform hover:scale-110 ${
                   value === g ? "border-white ring-1 ring-white" : "border-neutral-500"

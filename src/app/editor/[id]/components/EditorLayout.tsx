@@ -21,6 +21,7 @@ import { ShortcutsPanel } from "@/components/editor/ShortcutsPanel";
 import { HistoryPanel } from "./HistoryPanel";
 import { LayerPanel } from "./LayerPanel";
 import { SlideNotes } from "./SlideNotes";
+import { FindReplace } from "./FindReplace";
 import { ClockCounterClockwise, Stack, NotePencil } from "@phosphor-icons/react";
 import { MobileSlidePanel } from "./Mobile/MobileSlidePanel";
 import { MobileInsertPanel } from "./Mobile/MobileInsertPanel";
@@ -39,6 +40,7 @@ export function EditorLayout() {
 
   const [mobilePanel, setMobilePanel] = useState<"slides" | "insert" | "properties" | null>(null);
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
+  const [findOpen, setFindOpen] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
   const [layersOpen, setLayersOpen] = useState(false);
   const [notesOpen, setNotesOpen] = useState(false);
@@ -52,6 +54,10 @@ export function EditorLayout() {
       if (e.key === "?" || (e.key === "/" && e.shiftKey)) {
         e.preventDefault();
         setShortcutsOpen((v) => !v);
+      }
+      if (e.key === "h" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setFindOpen((v) => !v);
       }
     }
     window.addEventListener("keydown", onKey);
@@ -166,6 +172,7 @@ export function EditorLayout() {
         )}
       </BottomSheet>
 
+      <FindReplace open={findOpen} onClose={() => setFindOpen(false)} />
       <Onboarding />
       <ShortcutsPanel open={shortcutsOpen} onClose={() => setShortcutsOpen(false)} />
     </div>
