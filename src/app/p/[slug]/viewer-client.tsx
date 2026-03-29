@@ -46,6 +46,19 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
 
   const [current, setCurrent] = useState(0);
   const [displayed, setDisplayed] = useState(0);
+  const [controlsVisible, setControlsVisible] = useState(true);
+  const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  function resetHideTimer() {
+    setControlsVisible(true);
+    if (hideTimer.current) clearTimeout(hideTimer.current);
+    hideTimer.current = setTimeout(() => setControlsVisible(false), 3000);
+  }
+
+  useEffect(() => {
+    resetHideTimer();
+    return () => { if (hideTimer.current) clearTimeout(hideTimer.current); };
+  }, [current]);
   const [transitioning, setTransitioning] = useState(false);
   const [phase, setPhase] = useState<"idle" | "enter" | "active">("idle");
 
@@ -332,7 +345,7 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
       onClick={handleClick}
-      onMouseMove={handleMouseMove}
+      onMouseMove={(e) => { handleMouseMove(e); resetHideTimer(); }}
       onMouseLeave={() => setHoverZone(null)}
       style={{ cursor: hoverZone ? "pointer" : "default" }}
     >
@@ -400,7 +413,7 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
       )}
 
       {/* Bottom bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-10 bg-gradient-to-t from-black/80 to-transparent pt-8">
+      <div className={`fixed bottom-0 left-0 right-0 z-10 bg-gradient-to-t from-black/80 to-transparent pt-8 transition-opacity duration-500 ${controlsVisible ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
         <div className="flex items-center justify-between px-4 pb-2 sm:px-6">
           <span className="max-w-[40%] truncate text-[10px] text-white/40 sm:text-xs">
             {title}

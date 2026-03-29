@@ -67,6 +67,25 @@ export function useKeyboard() {
         }
         return;
       }
+      // Ctrl+Shift+M = center element on canvas
+      if (e.key === "m" && meta && e.shiftKey) {
+        if (inInput) return;
+        e.preventDefault();
+        const slide = state.getActiveSlide();
+        if (!slide) return;
+        const isMobile = state.editingMode === "mobile";
+        const cw = isMobile ? 430 : 1920;
+        const ch = isMobile ? 932 : 1080;
+        const els = isMobile && slide.mobileElements ? slide.mobileElements : slide.elements;
+        state.selectedElementIds.forEach((id) => {
+          const el = els.find((e) => e.id === id);
+          if (!el) return;
+          state.updateElement(id, { x: (cw - el.w) / 2, y: (ch - el.h) / 2 });
+        });
+        state.pushHistory();
+        return;
+      }
+
       // Ctrl+] bring forward, Ctrl+[ send backward, Ctrl+Shift+] front, Ctrl+Shift+[ back
       if (e.key === "]" && meta) {
         if (inInput) return;

@@ -48,6 +48,19 @@ export function CommandPalette({ open, onClose }: Props) {
     { id: "slide", label: "New slide", category: "Slide", action: () => addSlide() },
     { id: "select-all", label: "Select all elements", category: "Edit", action: () => { const s = useEditorStore.getState().getActiveSlide(); if (s) useEditorStore.setState({ selectedElementIds: s.elements.map((e) => e.id) }); } },
     { id: "deselect", label: "Deselect all", category: "Edit", action: () => useEditorStore.setState({ selectedElementIds: [] }) },
+    { id: "center", label: "Center element on canvas", category: "Edit", action: () => {
+      const s = useEditorStore.getState();
+      const slide = s.getActiveSlide();
+      if (!slide) return;
+      const cw = s.editingMode === "mobile" ? 430 : 1920;
+      const ch = s.editingMode === "mobile" ? 932 : 1080;
+      const els = s.editingMode === "mobile" && slide.mobileElements ? slide.mobileElements : slide.elements;
+      s.selectedElementIds.forEach((id) => {
+        const el = els.find((e) => e.id === id);
+        if (el) s.updateElement(id, { x: (cw - el.w) / 2, y: (ch - el.h) / 2 });
+      });
+      s.pushHistory();
+    }},
     { id: "undo", label: "Undo", category: "Edit", action: () => useEditorStore.getState().undo() },
     { id: "redo", label: "Redo", category: "Edit", action: () => useEditorStore.getState().redo() },
     { id: "preview", label: "Preview presentation", category: "View", action: () => window.open(`/preview/${useEditorStore.getState().presentationId}`, "_blank") },
