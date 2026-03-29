@@ -137,7 +137,7 @@ export async function PUT(
           order: s.order,
           transition: s.transition,
           backgroundColor: s.backgroundColor,
-          backgroundImage: s.backgroundImage,
+          backgroundImage: s.backgroundImage || null,
           elements: s.elements,
           mobileElements: s.mobileElements,
         }))

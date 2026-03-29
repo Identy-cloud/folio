@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { toast } from "sonner";
 import { useEditorStore } from "@/store/editorStore";
 import { nanoid } from "nanoid";
 import { TextT, Rectangle, Circle, Triangle, Image as ImageIcon, ArrowRight, Minus } from "@phosphor-icons/react";
@@ -145,7 +147,7 @@ function SlideTransitionPicker({
 
 function useBgImageUpload() {
   const updateSlideBackgroundImage = useEditorStore((s) => s.updateSlideBackgroundImage);
-  const { uploading } = useImageUpload();
+  const [uploading, setUploading] = useState(false);
 
   return {
     uploading,
@@ -156,15 +158,24 @@ function useBgImageUpload() {
       input.onchange = async () => {
         const file = input.files?.[0];
         if (!file) return;
-        const res = await fetch("/api/upload", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ contentType: file.type, filename: file.name }),
-        });
-        if (!res.ok) return;
-        const { signedUrl, publicUrl } = await res.json();
-        const putRes = await fetch(signedUrl, { method: "PUT", headers: { "Content-Type": file.type }, body: file });
-        if (putRes.ok) updateSlideBackgroundImage(publicUrl);
+        setUploading(true);
+        try {
+          const res = await fetch("/api/upload", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ contentType: file.type, filename: file.name, fileSize: file.size }),
+          });
+          if (!res.ok) { toast.error("Upload error"); return; }
+          const { signedUrl, publicUrl } = await res.json();
+          const putRes = await fetch(signedUrl, { method: "PUT", headers: { "Content-Type": file.type }, body: file });
+          if (putRes.ok) updateSlideBackgroundImage(publicUrl);
+          else toast.error("Upload failed");
+        } catch {
+          toast.error("Connection error");
+        } finally {
+          setUploading(false);
+          input.remove();
+        }
       };
       input.click();
     },

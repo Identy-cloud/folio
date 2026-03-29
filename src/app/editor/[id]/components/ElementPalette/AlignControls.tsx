@@ -4,15 +4,24 @@ import { useEditorStore } from "@/store/editorStore";
 import { AlignLeft, AlignCenterHorizontalSimple, AlignRight, AlignTop, AlignCenterVerticalSimple, AlignBottom } from "@phosphor-icons/react";
 import { useTranslation } from "@/lib/i18n/context";
 
-const CANVAS_W = 1920;
-const CANVAS_H = 1080;
+const DESKTOP_W = 1920;
+const DESKTOP_H = 1080;
+const MOBILE_W = 430;
+const MOBILE_H = 932;
 
 export function AlignControls({ elementId }: { elementId: string }) {
   const { t } = useTranslation();
   const updateElement = useEditorStore((s) => s.updateElement);
   const pushHistory = useEditorStore((s) => s.pushHistory);
   const slide = useEditorStore((s) => s.getActiveSlide());
-  const el = slide?.elements.find((e) => e.id === elementId);
+  const editingMode = useEditorStore((s) => s.editingMode);
+
+  const isMobile = editingMode === "mobile";
+  const CANVAS_W = isMobile ? MOBILE_W : DESKTOP_W;
+  const CANVAS_H = isMobile ? MOBILE_H : DESKTOP_H;
+
+  const elements = isMobile && slide?.mobileElements ? slide.mobileElements : slide?.elements;
+  const el = elements?.find((e) => e.id === elementId);
   if (!el) return null;
 
   function align(pos: Partial<{ x: number; y: number }>) {

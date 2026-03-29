@@ -435,6 +435,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   },
 
   pushHistory: () => {
+    if (historyTimer) { clearTimeout(historyTimer); historyTimer = null; }
     const { slides, historyIndex, history } = get();
     const trimmed = history.slice(0, historyIndex + 1);
     const next = [...trimmed, cloneSlides(slides)];
