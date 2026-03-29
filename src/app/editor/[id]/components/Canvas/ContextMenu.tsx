@@ -32,6 +32,8 @@ export function ContextMenu({ x, y, elementId, onClose }: Props) {
   return (
     <div
       ref={ref}
+      role="menu"
+      aria-label="Context menu"
       className="fixed z-[100] min-w-[160px] rounded border border-neutral-700 bg-[#1e1e1e] py-1 shadow-xl"
       style={{ left: x, top: y }}
     >

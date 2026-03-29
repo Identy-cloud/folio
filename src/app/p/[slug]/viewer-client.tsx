@@ -116,8 +116,10 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.key === "ArrowRight" || e.key === " ") { e.preventDefault(); goNext(); }
-      if (e.key === "ArrowLeft") { e.preventDefault(); goPrev(); }
+      if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") { e.preventDefault(); goNext(); }
+      if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); goPrev(); }
+      if (e.key === "Home") { e.preventDefault(); setCurrent(0); }
+      if (e.key === "End") { e.preventDefault(); setCurrent(total - 1); }
       if (e.key === "f" || e.key === "F") document.documentElement.requestFullscreen?.();
       if (e.key === "Escape") document.exitFullscreen?.();
     }
@@ -354,12 +356,27 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
             <span className="text-[10px] text-white/60 sm:text-xs">
               {current + 1} / {total}
             </span>
-            <div className="h-1 w-16 overflow-hidden rounded-full bg-white/20 sm:w-32">
-              <div
-                className="h-full bg-white/60 transition-all duration-500 ease-out"
-                style={{ width: `${((current + 1) / total) * 100}%` }}
-              />
-            </div>
+            {total <= 20 ? (
+              <div className="flex gap-1">
+                {Array.from({ length: total }, (_, i) => (
+                  <button
+                    key={i}
+                    onClick={(e) => { e.stopPropagation(); setCurrent(i); }}
+                    className={`h-1.5 rounded-full transition-all ${
+                      i === current ? "w-4 bg-white/80" : i < current ? "w-1.5 bg-white/40" : "w-1.5 bg-white/20"
+                    }`}
+                    aria-label={`Slide ${i + 1}`}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="h-1 w-16 overflow-hidden rounded-full bg-white/20 sm:w-32">
+                <div
+                  className="h-full bg-white/60 transition-all duration-500 ease-out"
+                  style={{ width: `${((current + 1) / total) * 100}%` }}
+                />
+              </div>
+            )}
             <button
               onClick={(e) => {
                 e.stopPropagation();
