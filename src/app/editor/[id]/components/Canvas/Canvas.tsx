@@ -298,7 +298,7 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
           left: "50%",
           transform: `translate(-50%, -50%) scale(${scale})`,
           transformOrigin: "center center",
-          backgroundColor: slide.backgroundColor,
+          background: slide.backgroundColor,
           boxShadow: "0 4px 30px rgba(0,0,0,0.3)",
         }}
         onPointerDown={handleCanvasClick}

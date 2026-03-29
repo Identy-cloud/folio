@@ -420,7 +420,7 @@ function SlideLayer({
         transform: `scale(${scale})`,
         transformOrigin: "center center",
         position: "absolute",
-        backgroundColor: slide.backgroundColor,
+        background: slide.backgroundColor,
         backgroundImage: slide.backgroundImage?.startsWith("https://") ? `url("${slide.backgroundImage}")` : undefined,
         backgroundSize: "cover",
         backgroundPosition: "center",

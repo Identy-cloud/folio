@@ -16,10 +16,11 @@ const GROUPS = [
     shortcuts: [
       { keys: `${mod} + Z`, label: "Undo" },
       { keys: `${mod} + Shift + Z`, label: "Redo" },
-      { keys: `${mod} + C`, label: "Copy" },
-      { keys: `${mod} + V`, label: "Paste" },
+      { keys: `${mod} + C`, label: "Copy element" },
+      { keys: `${mod} + V`, label: "Paste element" },
       { keys: `${mod} + D`, label: "Duplicate" },
-      { keys: "Escape", label: "Deselect" },
+      { keys: `${mod} + A`, label: "Select all" },
+      { keys: "Escape", label: "Deselect / close panel" },
       { keys: "?", label: "Shortcuts" },
     ],
   },
@@ -29,6 +30,26 @@ const GROUPS = [
       { keys: "Delete / ⌫", label: "Delete element" },
       { keys: "← → ↑ ↓", label: "Move 1px" },
       { keys: "Shift + arrows", label: "Move 10px" },
+      { keys: "Alt + arrows", label: "Resize element" },
+      { keys: "Shift + click", label: "Multi-select" },
+      { keys: "Double-click canvas", label: "Add text" },
+    ],
+  },
+  {
+    title: "Groups & Style",
+    shortcuts: [
+      { keys: `${mod} + G`, label: "Group elements" },
+      { keys: `${mod} + Shift + G`, label: "Ungroup" },
+      { keys: `${mod} + Alt + C`, label: "Copy style" },
+      { keys: `${mod} + Alt + V`, label: "Paste style" },
+    ],
+  },
+  {
+    title: "Canvas",
+    shortcuts: [
+      { keys: `${mod} + scroll`, label: "Zoom in / out" },
+      { keys: "Right-click", label: "Context menu" },
+      { keys: "Drag on empty area", label: "Rubber band select" },
     ],
   },
   {

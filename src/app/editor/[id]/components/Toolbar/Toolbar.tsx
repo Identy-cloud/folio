@@ -67,7 +67,7 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
 
     const { exportToPdf } = await import("@/lib/export-pdf");
     await exportToPdf({
-      title: "Presentation",
+      title: title || "Presentation",
       slideCount: slides.length,
       getSlideElement: (index) => {
         setActiveSlide(index);
@@ -91,7 +91,8 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
     const dataUrl = await toPng(el, { width: 1920, height: 1080, pixelRatio: 1, cacheBust: true });
     const a = document.createElement("a");
     a.href = dataUrl;
-    a.download = `slide-${useEditorStore.getState().activeSlideIndex + 1}.png`;
+    const safeName = (title || "slide").replace(/[^a-zA-Z0-9-_ ]/g, "").trim();
+    a.download = `${safeName}-${useEditorStore.getState().activeSlideIndex + 1}.png`;
     a.click();
   }
 

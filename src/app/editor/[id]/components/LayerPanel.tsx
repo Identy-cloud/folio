@@ -1,7 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { useEditorStore } from "@/store/editorStore";
-import { Stack, Eye, EyeSlash, LockSimple, LockSimpleOpen, TextT, Image as ImageIcon, Rectangle, ArrowRight, Minus } from "@phosphor-icons/react";
+import { Stack, Eye, EyeSlash, LockSimple, LockSimpleOpen, TextT, Image as ImageIcon, Rectangle, ArrowRight, Minus, MagnifyingGlass } from "@phosphor-icons/react";
 
 const TYPE_ICONS: Record<string, typeof TextT> = {
   text: TextT,
@@ -22,12 +23,19 @@ export function LayerPanel({ onClose }: { onClose: () => void }) {
   const updateElement = useEditorStore((s) => s.updateElement);
   const pushHistory = useEditorStore((s) => s.pushHistory);
   const editingMode = useEditorStore((s) => s.editingMode);
+  const [search, setSearch] = useState("");
 
   const elements = editingMode === "mobile" && slide?.mobileElements
     ? slide.mobileElements
     : slide?.elements ?? [];
 
-  const sorted = [...elements].sort((a, b) => b.zIndex - a.zIndex);
+  const sorted = [...elements]
+    .sort((a, b) => b.zIndex - a.zIndex)
+    .filter((el) => {
+      if (!search) return true;
+      const label = getLabel(el).toLowerCase();
+      return label.includes(search.toLowerCase()) || el.type.includes(search.toLowerCase());
+    });
 
   function getLabel(el: typeof elements[0]) {
     if (el.type === "text") {
@@ -47,6 +55,17 @@ export function LayerPanel({ onClose }: { onClose: () => void }) {
         </div>
         <button onClick={onClose} className="text-xs text-neutral-500 hover:text-neutral-300">Close</button>
       </div>
+      {elements.length > 3 && (
+        <div className="relative px-2 pt-2">
+          <MagnifyingGlass size={12} className="absolute left-4 top-1/2 mt-1 -translate-y-1/2 text-neutral-600" />
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search layers..."
+            className="w-full rounded border border-neutral-800 bg-[#111] py-1.5 pl-7 pr-2 text-[10px] text-neutral-400 outline-none placeholder:text-neutral-700 focus:border-neutral-600"
+          />
+        </div>
+      )}
       <div className="flex-1 overflow-y-auto p-1">
         {sorted.length === 0 && (
           <p className="py-4 text-center text-xs text-neutral-600">No elements</p>

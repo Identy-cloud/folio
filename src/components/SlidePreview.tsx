@@ -39,7 +39,7 @@ export const SlidePreview = memo(function SlidePreview({ slide, className }: Pro
         style={{
           position: "absolute",
           inset: 0,
-          backgroundColor: slide.backgroundColor || "#ffffff",
+          background: slide.backgroundColor || "#ffffff",
           backgroundImage: slide.backgroundImage?.startsWith("https://") ? `url("${slide.backgroundImage}")` : undefined,
           backgroundSize: "cover",
         }}
