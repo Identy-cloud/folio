@@ -91,6 +91,31 @@ export function PositionFields({ element }: Props) {
           />
         </label>
       </div>
+      {/* Border */}
+      <div className="flex gap-2">
+        <label className="flex flex-col gap-0.5 flex-1">
+          <span className="text-[10px] text-neutral-500">Border</span>
+          <input
+            type="number"
+            min={0}
+            max={20}
+            value={element.borderWidth ?? 0}
+            onChange={(e) => update({ borderWidth: parseInt(e.target.value) || 0 })}
+            className="w-full rounded border border-neutral-700 bg-[#161616] px-2 py-1 text-xs text-neutral-200 outline-none focus:border-neutral-500"
+          />
+        </label>
+        {(element.borderWidth ?? 0) > 0 && (
+          <label className="flex flex-col gap-0.5 flex-1">
+            <span className="text-[10px] text-neutral-500">Color</span>
+            <input
+              type="color"
+              value={element.borderColor ?? "#000000"}
+              onChange={(e) => update({ borderColor: e.target.value })}
+              className="h-7 w-full rounded border border-neutral-700 bg-[#161616] cursor-pointer"
+            />
+          </label>
+        )}
+      </div>
       {/* Link URL */}
       <label className="flex flex-col gap-0.5">
         <span className="text-[10px] text-neutral-500">Link URL</span>

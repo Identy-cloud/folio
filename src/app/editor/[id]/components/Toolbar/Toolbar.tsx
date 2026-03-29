@@ -32,6 +32,8 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
   const { t } = useTranslation();
   const undo = useEditorStore((s) => s.undo);
   const redo = useEditorStore((s) => s.redo);
+  const canUndo = useEditorStore((s) => s.historyIndex > 0);
+  const canRedo = useEditorStore((s) => s.historyIndex < s.history.length - 1);
   const saveStatus = useEditorStore((s) => s.saveStatus);
   const slides = useEditorStore((s) => s.slides);
   const setActiveSlide = useEditorStore((s) => s.setActiveSlide);
@@ -161,10 +163,10 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
         <div className="h-5 w-px bg-neutral-700" />
         <div className="flex gap-1">
           <Tooltip content={t.editor.undo} shortcut="Ctrl+Z">
-            <button onClick={undo} className="rounded p-2 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200" aria-label={t.editor.undo}><ArrowCounterClockwise size={16} weight="regular" /></button>
+            <button onClick={undo} disabled={!canUndo} className="rounded p-2 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 disabled:opacity-30 disabled:pointer-events-none" aria-label={t.editor.undo}><ArrowCounterClockwise size={16} weight="regular" /></button>
           </Tooltip>
           <Tooltip content={t.editor.redo} shortcut="Ctrl+Y">
-            <button onClick={redo} className="rounded p-2 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200" aria-label={t.editor.redo}><ArrowClockwise size={16} weight="regular" /></button>
+            <button onClick={redo} disabled={!canRedo} className="rounded p-2 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 disabled:opacity-30 disabled:pointer-events-none" aria-label={t.editor.redo}><ArrowClockwise size={16} weight="regular" /></button>
           </Tooltip>
           {onToggleHistory && (
             <Tooltip content="History">

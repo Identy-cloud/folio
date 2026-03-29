@@ -23,6 +23,8 @@ export interface BaseElement {
   shadow?: ElementShadow;
   groupId?: string;
   linkUrl?: string;
+  borderWidth?: number;
+  borderColor?: string;
   animation?: ElementAnimation;
   animationDelay?: number;
   animationDuration?: number;

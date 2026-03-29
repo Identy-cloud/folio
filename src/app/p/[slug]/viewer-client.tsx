@@ -508,6 +508,7 @@ function ViewerElement({ element, delay, animate }: { element: SlideElement; del
         boxShadow: element.shadow
           ? `${element.shadow.offsetX}px ${element.shadow.offsetY}px ${element.shadow.blur}px ${element.shadow.color}`
           : undefined,
+        border: (element.borderWidth ?? 0) > 0 ? `${element.borderWidth}px solid ${element.borderColor ?? "#000"}` : undefined,
         ...animStyle,
       }}
     >

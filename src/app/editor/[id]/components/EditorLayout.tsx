@@ -59,6 +59,10 @@ export function EditorLayout() {
         e.preventDefault();
         setFindOpen((v) => !v);
       }
+      if (e.key === "F5") {
+        e.preventDefault();
+        window.open(`/preview/${presentationId}`, "_blank");
+      }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
