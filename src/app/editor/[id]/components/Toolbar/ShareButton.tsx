@@ -143,7 +143,7 @@ export function ShareButton() {
                   )}
 
                   {/* Password */}
-                  <div className="flex items-center gap-2">
+                  <div className="relative flex items-center gap-2">
                     <input
                       type="text"
                       value={pw}
@@ -151,6 +151,9 @@ export function ShareButton() {
                       placeholder={t.editor.passwordPlaceholder}
                       className="flex-1 rounded border border-neutral-700 bg-[#111111] px-2 py-1.5 text-xs text-neutral-300 outline-none placeholder:text-neutral-600 focus:border-neutral-500"
                     />
+                    {pw.trim().length > 0 && pw.trim().length < 6 && (
+                      <span className="absolute -bottom-4 left-0 text-[9px] text-amber-500">Weak password</span>
+                    )}
                     <button
                       onClick={async () => {
                         const password = pw.trim() || null;

@@ -36,6 +36,13 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
   const [pwError, setPwError] = useState(false);
   const [autoplay, setAutoplay] = useState(false);
   const autoplayRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const [showHelp, setShowHelp] = useState(true);
+
+  useEffect(() => {
+    if (!showHelp) return;
+    const t = setTimeout(() => setShowHelp(false), 4000);
+    return () => clearTimeout(t);
+  }, [showHelp]);
 
   const [current, setCurrent] = useState(0);
   const [displayed, setDisplayed] = useState(0);
@@ -342,6 +349,27 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
       />
 
       {/* Free tier watermark */}
+      {showHelp && (
+        <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center">
+          <div className="rounded-lg bg-black/70 px-6 py-4 backdrop-blur-sm text-center animate-[fade-in_0.3s_ease-out]">
+            <div className="flex justify-center gap-4 text-white/80">
+              <div className="text-center">
+                <kbd className="rounded bg-white/20 px-2 py-1 text-xs font-mono">← →</kbd>
+                <p className="mt-1 text-[10px] text-white/50">Navigate</p>
+              </div>
+              <div className="text-center">
+                <kbd className="rounded bg-white/20 px-2 py-1 text-xs font-mono">F</kbd>
+                <p className="mt-1 text-[10px] text-white/50">Fullscreen</p>
+              </div>
+              <div className="text-center">
+                <kbd className="rounded bg-white/20 px-2 py-1 text-xs font-mono">Space</kbd>
+                <p className="mt-1 text-[10px] text-white/50">Next</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {showWatermark && (
         <div className="pointer-events-none absolute top-4 right-4 z-10">
           <span className="rounded bg-black/40 px-2.5 py-1 text-[10px] font-medium tracking-[0.2em] text-white/50 uppercase backdrop-blur-sm">

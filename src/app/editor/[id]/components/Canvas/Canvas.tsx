@@ -410,6 +410,19 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
         />
       )}
 
+      {/* Slide info */}
+      <div className="absolute bottom-3 left-3 z-30 hidden md:flex items-center gap-2 text-[10px] text-neutral-600">
+        <span>Slide {activeSlideIndex + 1}/{useEditorStore.getState().slides.length}</span>
+        <span>·</span>
+        <span>{(isMobileMode && slide.mobileElements ? slide.mobileElements : slide.elements).length} elements</span>
+        {selectedIds.length > 0 && (
+          <>
+            <span>·</span>
+            <span className="text-blue-400">{selectedIds.length} selected</span>
+          </>
+        )}
+      </div>
+
       {/* Zoom + Grid controls */}
       <div className="absolute bottom-3 right-3 z-30 hidden md:flex items-center gap-1 rounded bg-neutral-900/80 px-1 py-0.5 backdrop-blur-sm">
         <button
