@@ -16,8 +16,10 @@ export function TransitionPicker({ current, onChange }: Props) {
     none: t.editor.noTransition,
     fade: t.editor.fade,
     "slide-left": t.editor.slideLeft,
+    "slide-right": "Slide Right",
     "slide-up": t.editor.slideUp,
     zoom: t.editor.zoom,
+    blur: "Blur",
   };
 
   return (

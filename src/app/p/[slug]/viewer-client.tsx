@@ -250,6 +250,20 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
         opacity: 0,
       };
     }
+    if (transType === "slide-right") {
+      if (role === "in") {
+        return {
+          transition: isEntering ? "none" : `transform ${dur} ${ease}, opacity ${dur} ${ease}`,
+          transform: `scale(${scale}) translateX(${isEntering ? `${-dir * 30}%` : "0%"})`,
+          opacity: isEntering ? 0 : 1,
+        };
+      }
+      return {
+        transition: `transform ${dur} ${ease}, opacity ${dur} ${ease}`,
+        transform: `scale(${scale}) translateX(${dir * 30}%)`,
+        opacity: 0,
+      };
+    }
     if (transType === "zoom") {
       if (role === "in") {
         return {
@@ -262,6 +276,20 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
         transition: `transform ${dur} ${ease}, opacity ${dur} ${ease}`,
         transform: `scale(${scale * 1.15})`,
         opacity: 0,
+      };
+    }
+    if (transType === "blur") {
+      if (role === "in") {
+        return {
+          transition: isEntering ? "none" : `opacity ${dur} ${ease}, filter ${dur} ${ease}`,
+          opacity: isEntering ? 0 : 1,
+          filter: isEntering ? "blur(20px)" : "blur(0px)",
+        };
+      }
+      return {
+        transition: `opacity ${dur} ${ease}, filter ${dur} ${ease}`,
+        opacity: 0,
+        filter: "blur(20px)",
       };
     }
     return { opacity: 1 };

@@ -11,6 +11,17 @@ const PRESETS = [
   "#eab308", "#f97316", "#ef4444", "#ec4899",
 ];
 
+const GRADIENTS = [
+  "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+  "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+  "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
+  "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)",
+  "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
+  "linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)",
+  "linear-gradient(180deg, #0a0a0a 0%, #1a1aff 100%)",
+  "linear-gradient(135deg, #ff3b00 0%, #eab308 100%)",
+];
+
 interface Props {
   value: string;
   onChange: (color: string) => void;
@@ -87,6 +98,19 @@ export function ColorPicker({ value, onChange, label }: Props) {
                   value === c ? "border-white ring-1 ring-white" : "border-neutral-500"
                 }`}
                 style={{ backgroundColor: c }}
+              />
+            ))}
+          </div>
+          <div className="mt-1.5 grid grid-cols-8 gap-1 rounded bg-[#2a2a2a] p-1">
+            {GRADIENTS.map((g) => (
+              <button
+                key={g}
+                onClick={() => { onChange(g); setHex(g); }}
+                aria-label="Gradient"
+                className={`h-6 w-6 rounded-sm border transition-transform hover:scale-110 ${
+                  value === g ? "border-white ring-1 ring-white" : "border-neutral-500"
+                }`}
+                style={{ background: g }}
               />
             ))}
           </div>

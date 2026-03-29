@@ -1,6 +1,13 @@
 import { memo } from "react";
 import type { ShapeElement } from "@/types/elements";
 
+function fillStyle(fill: string): React.CSSProperties {
+  if (fill.startsWith("linear-gradient") || fill.startsWith("radial-gradient")) {
+    return { background: fill };
+  }
+  return { backgroundColor: fill };
+}
+
 const SVG_SHAPES: Record<string, string> = {
   triangle: "50,0 100,100 0,100",
   diamond: "50,0 100,50 50,100 0,50",
@@ -17,7 +24,7 @@ export const ShapeRenderer = memo(function ShapeRenderer({ element }: { element:
           width: "100%",
           height: "100%",
           borderRadius: "50%",
-          backgroundColor: element.fill,
+          ...fillStyle(element.fill),
           border: element.strokeWidth > 0 ? `${element.strokeWidth}px solid ${element.stroke}` : "none",
         }}
       />
@@ -30,7 +37,7 @@ export const ShapeRenderer = memo(function ShapeRenderer({ element }: { element:
         style={{
           width: "100%",
           height: "100%",
-          backgroundColor: element.fill,
+          ...fillStyle(element.fill),
           borderRadius: element.borderRadius,
           border: element.strokeWidth > 0 ? `${element.strokeWidth}px solid ${element.stroke}` : "none",
         }}

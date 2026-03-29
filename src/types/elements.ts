@@ -85,7 +85,7 @@ export type SlideElement =
   | ArrowElement
   | DividerElement;
 
-export type SlideTransition = "fade" | "slide-left" | "slide-up" | "zoom" | "none";
+export type SlideTransition = "fade" | "slide-left" | "slide-up" | "slide-right" | "zoom" | "blur" | "none";
 
 export interface Slide {
   id: string;

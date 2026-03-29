@@ -27,6 +27,18 @@ export function useKeyboard() {
         state.redo();
         return;
       }
+      if (e.key === "c" && meta && e.altKey) {
+        if (inInput) return;
+        e.preventDefault();
+        state.copyStyle();
+        return;
+      }
+      if (e.key === "v" && meta && e.altKey) {
+        if (inInput) return;
+        e.preventDefault();
+        state.pasteStyle();
+        return;
+      }
       if (e.key === "c" && meta) {
         if (inInput) return;
         e.preventDefault();

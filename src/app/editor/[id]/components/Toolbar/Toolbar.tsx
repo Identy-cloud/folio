@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ArrowCounterClockwise, ArrowClockwise, FilePdf, FileImage, Image as ImageIcon, Desktop, DeviceMobile, Play, ClockCounterClockwise, Stack, NotePencil } from "@phosphor-icons/react";
 import { FolioLogo } from "@/components/FolioLogo";
 import { Tooltip } from "@/components/ui/Tooltip";
@@ -37,6 +37,26 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
   const editingMode = useEditorStore((s) => s.editingMode);
   const setEditingMode = useEditorStore((s) => s.setEditingMode);
   const { trigger: triggerUpload, uploading } = useImageUpload();
+  const [title, setTitle] = useState("");
+  const titleRef = useRef<HTMLInputElement>(null);
+  const presentationId = useEditorStore((s) => s.presentationId);
+
+  useEffect(() => {
+    if (!presentationId) return;
+    fetch(`/api/presentations/${presentationId}`)
+      .then((r) => r.ok ? r.json() : null)
+      .then((d) => { if (d?.title) setTitle(d.title); })
+      .catch(() => {});
+  }, [presentationId]);
+
+  function saveTitle() {
+    if (!title.trim() || !presentationId) return;
+    fetch(`/api/presentations/${presentationId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title: title.trim() }),
+    }).catch(() => {});
+  }
   const { limits } = usePlanLimits();
   const [exporting, setExporting] = useState(false);
   const [exportProgress, setExportProgress] = useState("");
@@ -91,6 +111,16 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
         >
           <FolioLogo size={20} />
         </Link>
+        <div className="hidden sm:block h-5 w-px bg-neutral-700" />
+        <input
+          ref={titleRef}
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          onBlur={saveTitle}
+          onKeyDown={(e) => { if (e.key === "Enter") { saveTitle(); titleRef.current?.blur(); } }}
+          className="hidden sm:block w-28 md:w-40 truncate bg-transparent text-xs text-neutral-400 outline-none hover:text-neutral-200 focus:text-white"
+          placeholder="Untitled"
+        />
         <div className="h-5 w-px bg-neutral-700" />
         <div className="flex gap-1">
           <Tooltip content={t.editor.undo} shortcut="Ctrl+Z">

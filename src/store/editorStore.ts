@@ -58,6 +58,8 @@ interface EditorState {
 
   copySelection: () => void;
   pasteClipboard: () => void;
+  copyStyle: () => void;
+  pasteStyle: () => void;
 
   undo: () => void;
   redo: () => void;
@@ -72,6 +74,8 @@ interface EditorState {
   dirty: boolean;
   markClean: () => void;
 }
+
+let styleClipboard: Record<string, unknown> | null = null;
 
 function cloneSlides(slides: Slide[]): Slide[] {
   return JSON.parse(JSON.stringify(slides));
@@ -463,6 +467,34 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     clipboard.forEach((el) => {
       get().addElement({ ...el, id: nanoid(), x: el.x + 20, y: el.y + 20 });
     });
+  },
+
+  copyStyle: () => {
+    const { selectedElementIds } = get();
+    if (selectedElementIds.length !== 1) return;
+    const slide = get().getActiveSlide();
+    const els = get().editingMode === "mobile" && slide?.mobileElements ? slide.mobileElements : slide?.elements;
+    const el = els?.find((e) => e.id === selectedElementIds[0]);
+    if (!el) return;
+    const { id, type, x, y, w, h, rotation, zIndex, locked, groupId, animation, animationDelay, animationDuration, animationEasing, ...style } = el as unknown as Record<string, unknown>;
+    styleClipboard = style;
+  },
+
+  pasteStyle: () => {
+    if (!styleClipboard) return;
+    const { selectedElementIds } = get();
+    const slide = get().getActiveSlide();
+    const els = get().editingMode === "mobile" && slide?.mobileElements ? slide.mobileElements : slide?.elements;
+    for (const id of selectedElementIds) {
+      const el = els?.find((e) => e.id === id);
+      if (!el) continue;
+      const applicable: Record<string, unknown> = {};
+      for (const [key, val] of Object.entries(styleClipboard)) {
+        if (key in el) applicable[key] = val;
+      }
+      get().updateElement(id, applicable);
+    }
+    get().pushHistory();
   },
 
   undo: () => {
