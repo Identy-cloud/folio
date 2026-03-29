@@ -71,6 +71,26 @@ export const collaborators = pgTable("collaborators", {
     .notNull(),
 });
 
+export const subscriptions = pgTable("subscriptions", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id")
+    .references(() => users.id, { onDelete: "cascade" })
+    .unique()
+    .notNull(),
+  stripeCustomerId: text("stripe_customer_id"),
+  stripeSubscriptionId: text("stripe_subscription_id"),
+  plan: text("plan").default("free").notNull(),
+  billingPeriod: text("billing_period").default("monthly").notNull(),
+  status: text("status").default("active").notNull(),
+  currentPeriodEnd: timestamp("current_period_end", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
 export const presentationViews = pgTable("presentation_views", {
   id: uuid("id").primaryKey().defaultRandom(),
   presentationId: uuid("presentation_id")

@@ -1,10 +1,6 @@
 import { getAuthenticatedUser } from "@/lib/auth";
 import { generateUploadUrl } from "@/lib/r2";
 import { checkRateLimit, rateLimitResponse } from "@/lib/rate-limit";
-import { getPlanLimits } from "@/lib/plan-limits";
-import { db } from "@/db";
-import { users } from "@/db/schema";
-import { eq, sql } from "drizzle-orm";
 import { z } from "zod";
 import { nanoid } from "nanoid";
 
@@ -41,16 +37,6 @@ export async function POST(request: Request) {
     );
   }
 
-  // Check storage limit
-  const limits = getPlanLimits(user.plan ?? "free");
-  const fileSize = parsed.data.fileSize ?? 0;
-  if ((user.storageUsed ?? 0) + fileSize > limits.maxStorageBytes) {
-    return Response.json(
-      { error: "Storage limit reached", limit: limits.maxStorageBytes },
-      { status: 403 }
-    );
-  }
-
   const ext = parsed.data.filename.split(".").pop() ?? "bin";
   const key = `uploads/${user.id}/${nanoid()}.${ext}`;
 
@@ -58,18 +44,6 @@ export async function POST(request: Request) {
     key,
     parsed.data.contentType
   );
-
-  // Track storage usage (best-effort, column may not exist pre-migration)
-  if (fileSize > 0) {
-    try {
-      await db
-        .update(users)
-        .set({ storageUsed: sql`COALESCE(${users.storageUsed}, 0) + ${fileSize}` })
-        .where(eq(users.id, user.id));
-    } catch {
-      // Column not yet migrated — skip tracking
-    }
-  }
 
   return Response.json({ signedUrl, publicUrl });
 }

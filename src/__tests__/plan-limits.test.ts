@@ -2,30 +2,40 @@ import { describe, it, expect } from "vitest";
 import { getPlanLimits } from "@/lib/plan-limits";
 
 describe("getPlanLimits", () => {
-  it("returns free limits by default", () => {
+  it("returns free limits", () => {
     const limits = getPlanLimits("free");
-    expect(limits.maxPresentations).toBe(5);
-    expect(limits.maxStorageBytes).toBe(100 * 1024 * 1024);
+    expect(limits.maxPresentations).toBe(3);
+    expect(limits.hasWatermark).toBe(true);
     expect(limits.canExportPdf).toBe(false);
-    expect(limits.canCustomThemes).toBe(false);
+    expect(limits.canCollaborate).toBe(false);
+    expect(limits.canUseAllTemplates).toBe(false);
   });
 
-  it("returns pro limits", () => {
-    const limits = getPlanLimits("pro");
+  it("returns creator limits", () => {
+    const limits = getPlanLimits("creator");
     expect(limits.maxPresentations).toBe(Infinity);
-    expect(limits.maxStorageBytes).toBe(10 * 1024 * 1024 * 1024);
+    expect(limits.hasWatermark).toBe(false);
     expect(limits.canExportPdf).toBe(true);
-    expect(limits.canCustomThemes).toBe(true);
+    expect(limits.canUseAllTemplates).toBe(true);
   });
 
-  it("returns team limits", () => {
-    const limits = getPlanLimits("team");
-    expect(limits.maxPresentations).toBe(Infinity);
-    expect(limits.canExportPdf).toBe(true);
+  it("returns studio limits", () => {
+    const limits = getPlanLimits("studio");
+    expect(limits.canCollaborate).toBe(true);
+    expect(limits.maxCollaborators).toBe(5);
+    expect(limits.canExportPptx).toBe(true);
+    expect(limits.canUseBrandKit).toBe(true);
+  });
+
+  it("returns agency limits", () => {
+    const limits = getPlanLimits("agency");
+    expect(limits.canWhiteLabel).toBe(true);
+    expect(limits.canUseMultiWorkspace).toBe(true);
+    expect(limits.maxCollaborators).toBe(Infinity);
   });
 
   it("falls back to free for unknown plan", () => {
     const limits = getPlanLimits("unknown");
-    expect(limits.maxPresentations).toBe(5);
+    expect(limits.maxPresentations).toBe(3);
   });
 });

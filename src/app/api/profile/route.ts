@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { users, presentations } from "@/db/schema";
 import { getAuthenticatedUser } from "@/lib/auth";
+import { getUserPlan } from "@/lib/stripe";
 import { eq, count } from "drizzle-orm";
 import { z } from "zod";
 
@@ -20,7 +21,7 @@ export async function GET() {
     email: user.email,
     name: user.name,
     avatarUrl: user.avatarUrl,
-    plan: user.plan ?? "free",
+    plan: await getUserPlan(user.id),
     storageUsed: user.storageUsed ?? 0,
     createdAt: user.createdAt,
     presentationCount: stats?.total ?? 0,

@@ -1,5 +1,5 @@
 import { getAuthenticatedUser } from "@/lib/auth";
-import { stripe } from "@/lib/stripe";
+import { getStripe, getOrCreateStripeCustomer } from "@/lib/stripe";
 
 export async function POST() {
   const user = await getAuthenticatedUser();
@@ -7,18 +7,12 @@ export async function POST() {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const customers = await stripe.customers.list({ email: user.email, limit: 1 });
-  const customer = customers.data[0];
-
-  if (!customer) {
-    return Response.json({ error: "No subscription found" }, { status: 404 });
-  }
-
+  const customerId = await getOrCreateStripeCustomer(user.id, user.email);
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
-  const session = await stripe.billingPortal.sessions.create({
-    customer: customer.id,
-    return_url: `${appUrl}/dashboard/profile`,
+  const session = await getStripe().billingPortal.sessions.create({
+    customer: customerId,
+    return_url: `${appUrl}/settings/billing`,
   });
 
   return Response.json({ url: session.url });

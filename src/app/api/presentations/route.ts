@@ -8,6 +8,7 @@ import { z } from "zod";
 import { generateTemplate } from "@/lib/templates/generator";
 import { THEMES } from "@/lib/templates/themes";
 import { getPlanLimits } from "@/lib/plan-limits";
+import { getUserPlan } from "@/lib/stripe";
 
 const createSchema = z.object({
   title: z.string().max(255).optional(),
@@ -70,7 +71,8 @@ export async function POST(request: Request) {
   if (!rl.allowed) return rateLimitResponse(rl);
 
   // Check plan limits
-  const limits = getPlanLimits(user.plan ?? "free");
+  const plan = await getUserPlan(user.id);
+  const limits = getPlanLimits(plan);
   const [presCount] = await db
     .select({ total: count() })
     .from(presentations)
@@ -78,7 +80,7 @@ export async function POST(request: Request) {
 
   if ((presCount?.total ?? 0) >= limits.maxPresentations) {
     return Response.json(
-      { error: "Plan limit reached", limit: limits.maxPresentations },
+      { error: "PLAN_LIMIT", plan, limit: limits.maxPresentations },
       { status: 403 }
     );
   }

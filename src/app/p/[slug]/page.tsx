@@ -1,6 +1,7 @@
 import { db } from "@/db";
-import { presentations, slides, users } from "@/db/schema";
+import { presentations, slides } from "@/db/schema";
 import { eq, asc } from "drizzle-orm";
+import { getUserPlan } from "@/lib/stripe";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { ViewerWrapper } from "./viewer-wrapper";
@@ -32,17 +33,7 @@ async function getPresentation(slug: string) {
     .where(eq(slides.presentationId, pres.id))
     .orderBy(asc(slides.order));
 
-  let ownerPlan = "free";
-  try {
-    const [owner] = await db
-      .select({ plan: users.plan })
-      .from(users)
-      .where(eq(users.id, pres.userId))
-      .limit(1);
-    ownerPlan = owner?.plan ?? "free";
-  } catch {
-    // Column not yet migrated
-  }
+  const ownerPlan = await getUserPlan(pres.userId);
 
   return {
     presentation: pres,
