@@ -71,9 +71,9 @@ export const SelectionBox = memo(function SelectionBox({ element, scale }: Props
     if (d.handle === "rotate") {
       const angle = Math.atan2(e.clientY - d.screenCy, e.clientX - d.screenCx) * (180 / Math.PI);
       const startAngle = Math.atan2(d.startY - d.screenCy, d.startX - d.screenCx) * (180 / Math.PI);
-      updateElement(element.id, {
-        rotation: d.origRot + (angle - startAngle),
-      });
+      let newRot = d.origRot + (angle - startAngle);
+      if (e.shiftKey) newRot = Math.round(newRot / 15) * 15;
+      updateElement(element.id, { rotation: newRot });
       return;
     }
 

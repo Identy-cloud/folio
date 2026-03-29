@@ -46,6 +46,7 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
   const { trigger: triggerUpload, uploading } = useImageUpload();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [title, setTitle] = useState("");
+  const [lastSaved, setLastSaved] = useState("");
   const titleRef = useRef<HTMLInputElement>(null);
   const presentationId = useEditorStore((s) => s.presentationId);
 
@@ -53,7 +54,10 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
     if (!presentationId) return;
     fetch(`/api/presentations/${presentationId}`)
       .then((r) => r.ok ? r.json() : null)
-      .then((d) => { if (d?.title) setTitle(d.title); })
+      .then((d) => {
+        if (d?.title) setTitle(d.title);
+        if (d?.updatedAt) setLastSaved(d.updatedAt);
+      })
       .catch(() => {});
   }, [presentationId]);
 
@@ -316,11 +320,17 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
           </span>
         )}
         <Tooltip content={saveStatus === "saved" ? t.editor.saved : saveStatus === "saving" ? t.editor.saving : saveStatus === "error" ? t.editor.saveError : t.editor.unsaved}>
-          <span
-            className={`inline-block h-2 w-2 rounded-full ${statusDot[saveStatus]}`}
-            aria-live="polite"
-            aria-label={saveStatus}
-          />
+          <span className="flex items-center gap-1.5">
+            <span
+              className={`inline-block h-2 w-2 rounded-full ${statusDot[saveStatus]}`}
+              aria-live="polite"
+            />
+            {saveStatus === "saved" && lastSaved && (
+              <span className="hidden lg:inline text-[9px] text-neutral-600">
+                {new Date(lastSaved).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+              </span>
+            )}
+          </span>
         </Tooltip>
       </div>
       <PresentationSettings open={settingsOpen} onClose={() => setSettingsOpen(false)} />

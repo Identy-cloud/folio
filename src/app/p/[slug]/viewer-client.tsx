@@ -168,6 +168,10 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
       if (dx < 0) goNext();
       else goPrev();
     }
+    // Swipe up = fullscreen
+    if (dy < -80 && Math.abs(dy) > Math.abs(dx)) {
+      document.documentElement.requestFullscreen?.();
+    }
   }
 
   useEffect(() => {
