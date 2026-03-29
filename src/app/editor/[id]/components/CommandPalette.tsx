@@ -54,6 +54,19 @@ export function CommandPalette({ open, onClose }: Props) {
     { id: "hexagon", label: "Hexagon", category: "Shape", action: () => addElement({ id: nanoid(), type: "shape", x: 200, y: 200, w: 200, h: 200, rotation: 0, opacity: 1, zIndex: zBase, locked: false, shape: "hexagon", ...shapeDefaults(theme) } satisfies ShapeElement) },
     { id: "pentagon", label: "Pentagon", category: "Shape", action: () => addElement({ id: nanoid(), type: "shape", x: 200, y: 200, w: 200, h: 200, rotation: 0, opacity: 1, zIndex: zBase, locked: false, shape: "pentagon", ...shapeDefaults(theme) } satisfies ShapeElement) },
     { id: "triangle", label: "Triangle", category: "Shape", action: () => addElement({ id: nanoid(), type: "shape", x: 200, y: 200, w: 200, h: 200, rotation: 0, opacity: 1, zIndex: zBase, locked: false, shape: "triangle", ...shapeDefaults(theme) } satisfies ShapeElement) },
+    { id: "word-count", label: "Word count", category: "Info", action: () => {
+      const { slides } = useEditorStore.getState();
+      let words = 0, chars = 0, textEls = 0;
+      slides.forEach((s) => s.elements.forEach((el) => {
+        if (el.type === "text") {
+          const raw = (el as { content: string }).content.replace(/<[^>]*>/g, "");
+          words += raw.split(/\s+/).filter(Boolean).length;
+          chars += raw.length;
+          textEls++;
+        }
+      }));
+      alert(`${words} words · ${chars} characters · ${textEls} text elements · ${slides.length} slides`);
+    }},
     { id: "export-notes", label: "Export speaker notes", category: "Export", action: () => {
       const { slides } = useEditorStore.getState();
       const text = slides.map((s, i) => `--- Slide ${i + 1} ---\n${s.notes || "(no notes)"}`).join("\n\n");

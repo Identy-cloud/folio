@@ -20,6 +20,7 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
   const pushHistory = useEditorStore((s) => s.pushHistory);
   const isBusy = useEditorStore((s) => s.busyElementIds.has(element.id));
   const [editing, setEditing] = useState(false);
+  const [dragging, setDragging] = useState(false);
 
   const dragRef = useRef<{
     startX: number;
@@ -77,6 +78,7 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
       clearTimeout(longPressRef.current);
       longPressRef.current = null;
     }
+    if (!dragging && (Math.abs(dx) > 2 || Math.abs(dy) > 2)) setDragging(true);
     let newX = dragRef.current.origX + dx;
     let newY = dragRef.current.origY + dy;
     if (useEditorStore.getState().snapToGrid) {
@@ -95,6 +97,7 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
     if (dragRef.current) {
       pushHistory();
       dragRef.current = null;
+      setDragging(false);
     }
   }
 
@@ -139,6 +142,14 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
       onPointerUp={onPointerUp}
       onDoubleClick={onDoubleClick}
     >
+      {dragging && (
+        <div
+          className="pointer-events-none absolute -bottom-5 left-1/2 z-50 whitespace-nowrap rounded bg-neutral-900/90 px-1.5 py-0.5 text-[9px] text-neutral-300"
+          style={{ transform: `translate(-50%, 0) scale(${1 / scale})`, transformOrigin: "top center" }}
+        >
+          {Math.round(element.x)}, {Math.round(element.y)}
+        </div>
+      )}
       {element.type === "text" && (
         <TextRenderer
           element={element}

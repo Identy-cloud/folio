@@ -67,6 +67,20 @@ export function useKeyboard() {
         }
         return;
       }
+      // Ctrl+] bring forward, Ctrl+[ send backward, Ctrl+Shift+] front, Ctrl+Shift+[ back
+      if (e.key === "]" && meta) {
+        if (inInput) return;
+        e.preventDefault();
+        state.selectedElementIds.forEach((id) => e.shiftKey ? state.bringToFront(id) : state.bringForward(id));
+        return;
+      }
+      if (e.key === "[" && meta) {
+        if (inInput) return;
+        e.preventDefault();
+        state.selectedElementIds.forEach((id) => e.shiftKey ? state.sendToBack(id) : state.sendBackward(id));
+        return;
+      }
+
       // Tab / Shift+Tab = cycle through elements on slide
       if (e.key === "Tab" && !meta && state.selectedElementIds.length > 0) {
         if (inInput) return;

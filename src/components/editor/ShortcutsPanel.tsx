@@ -41,6 +41,8 @@ const GROUPS = [
   {
     title: "Groups & Style",
     shortcuts: [
+      { keys: `${mod} + ]`, label: "Bring forward" },
+      { keys: `${mod} + [`, label: "Send backward" },
       { keys: `${mod} + G`, label: "Group elements" },
       { keys: `${mod} + Shift + G`, label: "Ungroup" },
       { keys: `${mod} + Alt + C`, label: "Copy style" },
