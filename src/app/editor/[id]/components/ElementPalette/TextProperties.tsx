@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useEditorStore } from "@/store/editorStore";
 import { ColorPicker } from "@/components/editor/ColorPicker";
 import { ALL_FONTS } from "@/lib/templates/themes";
-import { TextAlignLeft, TextAlignCenter, TextAlignRight } from "@phosphor-icons/react";
+import { TextAlignLeft, TextAlignCenter, TextAlignRight, TextItalic, TextUnderline, TextStrikethrough } from "@phosphor-icons/react";
 import type { TextElement } from "@/types/elements";
 import { useTranslation } from "@/lib/i18n/context";
 
@@ -82,40 +82,73 @@ export function TextProperties({ element }: Props) {
         </div>
       </div>
 
-      {/* Weight + Align */}
-      <div className="flex gap-2">
-        <div className="flex gap-1">
-          {WEIGHTS.map((w) => (
-            <button
-              key={w.value}
-              onClick={() => update({ fontWeight: w.value })}
-              className={`rounded px-2 py-1 text-[10px] transition-colors ${
-                element.fontWeight === w.value
-                  ? "bg-white text-[#161616]"
-                  : "text-neutral-500 hover:bg-neutral-800"
-              }`}
-            >
-              {w.label}
-            </button>
-          ))}
-        </div>
-        <div className="ml-auto flex gap-0.5">
-          {(["left", "center", "right"] as const).map((a) => (
-            <button
-              key={a}
-              onClick={() => update({ textAlign: a })}
-              className={`rounded p-1 transition-colors ${
-                element.textAlign === a
-                  ? "bg-white text-[#161616]"
-                  : "text-neutral-500 hover:bg-neutral-800"
-              }`}
-            >
-              {a === "left" && <TextAlignLeft size={14} />}
-              {a === "center" && <TextAlignCenter size={14} />}
-              {a === "right" && <TextAlignRight size={14} />}
-            </button>
-          ))}
-        </div>
+      {/* Weight + Style */}
+      <div className="flex flex-wrap gap-1">
+        {WEIGHTS.map((w) => (
+          <button
+            key={w.value}
+            onClick={() => update({ fontWeight: w.value })}
+            className={`rounded px-2 py-1 text-[10px] transition-colors ${
+              element.fontWeight === w.value
+                ? "bg-white text-[#161616]"
+                : "text-neutral-500 hover:bg-neutral-800"
+            }`}
+          >
+            {w.label}
+          </button>
+        ))}
+        <button
+          onClick={() => update({ fontStyle: element.fontStyle === "italic" ? "normal" : "italic" })}
+          className={`rounded p-1 transition-colors ${
+            element.fontStyle === "italic"
+              ? "bg-white text-[#161616]"
+              : "text-neutral-500 hover:bg-neutral-800"
+          }`}
+          aria-label="Italic"
+        >
+          <TextItalic size={14} />
+        </button>
+        <button
+          onClick={() => update({ textDecoration: element.textDecoration === "underline" ? "none" : "underline" })}
+          className={`rounded p-1 transition-colors ${
+            element.textDecoration === "underline"
+              ? "bg-white text-[#161616]"
+              : "text-neutral-500 hover:bg-neutral-800"
+          }`}
+          aria-label="Underline"
+        >
+          <TextUnderline size={14} />
+        </button>
+        <button
+          onClick={() => update({ textDecoration: element.textDecoration === "line-through" ? "none" : "line-through" })}
+          className={`rounded p-1 transition-colors ${
+            element.textDecoration === "line-through"
+              ? "bg-white text-[#161616]"
+              : "text-neutral-500 hover:bg-neutral-800"
+          }`}
+          aria-label="Strikethrough"
+        >
+          <TextStrikethrough size={14} />
+        </button>
+      </div>
+
+      {/* Align */}
+      <div className="flex gap-0.5">
+        {(["left", "center", "right"] as const).map((a) => (
+          <button
+            key={a}
+            onClick={() => update({ textAlign: a })}
+            className={`rounded p-1 transition-colors ${
+              element.textAlign === a
+                ? "bg-white text-[#161616]"
+                : "text-neutral-500 hover:bg-neutral-800"
+            }`}
+          >
+            {a === "left" && <TextAlignLeft size={14} />}
+            {a === "center" && <TextAlignCenter size={14} />}
+            {a === "right" && <TextAlignRight size={14} />}
+          </button>
+        ))}
       </div>
 
       {/* Color */}

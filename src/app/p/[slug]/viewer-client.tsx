@@ -471,6 +471,8 @@ function ViewerText({ element }: { element: TextElement }) {
         fontFamily: element.fontFamily,
         fontSize: element.fontSize,
         fontWeight: element.fontWeight,
+        fontStyle: element.fontStyle ?? "normal",
+        textDecoration: element.textDecoration ?? "none",
         lineHeight: element.lineHeight,
         letterSpacing: `${element.letterSpacing}em`,
         color: element.color,

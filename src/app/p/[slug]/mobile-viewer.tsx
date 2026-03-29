@@ -333,6 +333,8 @@ function MobileText({ element }: { element: TextElement }) {
         fontFamily: element.fontFamily,
         fontSize: mobileFontSize,
         fontWeight: element.fontWeight,
+        fontStyle: element.fontStyle ?? "normal",
+        textDecoration: element.textDecoration ?? "none",
         lineHeight: isTitle ? 1.1 : 1.6,
         letterSpacing: `${element.letterSpacing}em`,
         color: element.color,

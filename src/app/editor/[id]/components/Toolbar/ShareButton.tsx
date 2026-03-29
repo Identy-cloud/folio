@@ -183,6 +183,25 @@ export function ShareButton() {
                   >
                     {t.editor.embed} — Copy iframe
                   </button>
+
+                  {/* Social sharing */}
+                  <div className="flex gap-1.5">
+                    {([
+                      { label: "X", href: `https://x.com/intent/tweet?url=${encodeURIComponent(`${window.location.origin}/p/${meta.slug}`)}&text=${encodeURIComponent(t.editor.share)}` },
+                      { label: "LinkedIn", href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`${window.location.origin}/p/${meta.slug}`)}` },
+                      { label: "WhatsApp", href: `https://wa.me/?text=${encodeURIComponent(`${window.location.origin}/p/${meta.slug}`)}` },
+                    ] as const).map((s) => (
+                      <a
+                        key={s.label}
+                        href={s.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 rounded border border-neutral-700 py-1.5 text-center text-[10px] text-neutral-400 hover:bg-neutral-800 transition-colors"
+                      >
+                        {s.label}
+                      </a>
+                    ))}
+                  </div>
                 </>
               ) : (
                 <p className="text-xs text-neutral-500">

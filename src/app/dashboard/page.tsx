@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Plus, MagnifyingGlass } from "@phosphor-icons/react";
+import { Plus, MagnifyingGlass, SortAscending, Funnel } from "@phosphor-icons/react";
 import { PresentationCard } from "./presentation-card";
 import type { SlideElement } from "@/types/elements";
 import { SkeletonGrid } from "./skeleton-grid";
@@ -40,6 +40,8 @@ export default function DashboardPage() {
   const [fetchError, setFetchError] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const [sortBy, setSortBy] = useState<"recent" | "name" | "oldest">("recent");
+  const [filterBy, setFilterBy] = useState<"all" | "public" | "private">("all");
   const [dialog, setDialog] = useState<Dialog>(null);
 
   useEffect(() => {
@@ -140,9 +142,18 @@ export default function DashboardPage() {
     );
   }
 
-  const filtered = search
-    ? presentations.filter((p) => p.title.toLowerCase().includes(search.toLowerCase()))
-    : presentations;
+  const filtered = presentations
+    .filter((p) => {
+      if (search && !p.title.toLowerCase().includes(search.toLowerCase())) return false;
+      if (filterBy === "public" && !p.isPublic) return false;
+      if (filterBy === "private" && p.isPublic) return false;
+      return true;
+    })
+    .sort((a, b) => {
+      if (sortBy === "name") return a.title.localeCompare(b.title);
+      if (sortBy === "oldest") return new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime();
+      return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+    });
 
   return (
     <div>
@@ -150,7 +161,7 @@ export default function DashboardPage() {
         <h2 className="font-display text-2xl tracking-tight sm:text-4xl">
           {t.dashboard.title}
         </h2>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <div className="relative flex-1 sm:w-48 sm:flex-initial">
             <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500" />
             <input
@@ -160,6 +171,30 @@ export default function DashboardPage() {
               aria-label={t.dashboard.searchPlaceholder}
               className="w-full rounded border border-neutral-700 bg-[#1e1e1e] py-2 pl-8 pr-3 text-xs text-neutral-200 outline-none placeholder:text-neutral-500 focus:border-neutral-500"
             />
+          </div>
+          <div className="flex items-center gap-1">
+            <SortAscending size={14} className="text-neutral-500" />
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as "recent" | "name" | "oldest")}
+              className="rounded border border-neutral-700 bg-[#1e1e1e] px-2 py-1.5 text-xs text-neutral-300 outline-none"
+            >
+              <option value="recent">Recent</option>
+              <option value="oldest">Oldest</option>
+              <option value="name">A — Z</option>
+            </select>
+          </div>
+          <div className="flex items-center gap-1">
+            <Funnel size={14} className="text-neutral-500" />
+            <select
+              value={filterBy}
+              onChange={(e) => setFilterBy(e.target.value as "all" | "public" | "private")}
+              className="rounded border border-neutral-700 bg-[#1e1e1e] px-2 py-1.5 text-xs text-neutral-300 outline-none"
+            >
+              <option value="all">All</option>
+              <option value="public">Public</option>
+              <option value="private">Private</option>
+            </select>
           </div>
           <button
             onClick={() => setModalOpen(true)}
