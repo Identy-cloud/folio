@@ -29,6 +29,7 @@ import { ArrowProperties } from "./ElementPalette/ArrowProperties";
 import { DividerProperties } from "./ElementPalette/DividerProperties";
 import { LayerControls } from "./ElementPalette/LayerControls";
 import { AlignControls } from "./ElementPalette/AlignControls";
+import { AnimationProperties } from "./ElementPalette/AnimationProperties";
 import { LockToggle } from "./ElementPalette/LockToggle";
 import { DeleteButton } from "./ElementPalette/DeleteButton";
 import { useImageUpload } from "../hooks/useImageUpload";
@@ -297,6 +298,7 @@ function MobilePropertiesPanel({ onClose }: { onClose: () => void }) {
       {el.type === "image" && <ImageProperties element={el as ImageElement} />}
       {el.type === "arrow" && <ArrowProperties element={el as ArrowElement} />}
       {el.type === "divider" && <DividerProperties element={el as DividerElement} />}
+      <AnimationProperties element={el} />
       <AlignControls elementId={el.id} />
       <LayerControls elementId={el.id} />
       <LockToggle element={el} />

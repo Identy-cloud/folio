@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import DOMPurify from "dompurify";
 import type { SlideElement, TextElement, ShapeElement, ArrowElement, DividerElement, SlideTransition } from "@/types/elements";
+import { getElementAnimationStyle } from "@/lib/element-animation";
 import { MobileViewer } from "./mobile-viewer";
 
 const SLIDE_W = 1920;
@@ -304,6 +305,9 @@ function SlideLayer({
 }
 
 function ViewerElement({ element, delay }: { element: SlideElement; delay: number }) {
+  const totalDelay = (element.animationDelay ?? 0) + delay;
+  const animStyle = getElementAnimationStyle(element.animation, totalDelay);
+
   return (
     <div
       style={{
@@ -313,11 +317,9 @@ function ViewerElement({ element, delay }: { element: SlideElement; delay: numbe
         width: element.w,
         height: element.h,
         transform: element.rotation ? `rotate(${element.rotation}deg)` : undefined,
-        opacity: delay > 0 ? 0 : element.opacity,
+        opacity: element.opacity,
         zIndex: element.zIndex,
-        animation: delay > 0
-          ? `el-enter 0.4s cubic-bezier(0.22,1,0.36,1) ${delay}ms forwards`
-          : undefined,
+        ...animStyle,
       }}
     >
       {element.type === "text" && <ViewerText element={element} />}

@@ -3,6 +3,7 @@
 import { useState, useRef, useMemo, useCallback, useEffect } from "react";
 import DOMPurify from "dompurify";
 import type { SlideElement, TextElement, ShapeElement, SlideTransition } from "@/types/elements";
+import { getElementAnimationStyle } from "@/lib/element-animation";
 import { useTranslation } from "@/lib/i18n/context";
 
 interface Slide {
@@ -245,9 +246,8 @@ function MobileSlideContent({ elements, bg }: { elements: SlideElement[]; bg: st
 }
 
 function MobileElement({ element, delay = 0 }: { element: SlideElement; delay?: number }) {
-  const animStyle: React.CSSProperties = delay > 0
-    ? { opacity: 0, animation: `el-enter 0.4s cubic-bezier(0.22,1,0.36,1) ${delay}ms forwards` }
-    : {};
+  const totalDelay = (element.animationDelay ?? 0) + delay;
+  const animStyle = getElementAnimationStyle(element.animation, totalDelay);
   if (element.type === "arrow") return null;
 
   if (element.type === "shape") {

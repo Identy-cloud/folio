@@ -1,5 +1,7 @@
 export type ElementType = "text" | "image" | "shape" | "arrow" | "divider";
 
+export type ElementAnimation = "none" | "fade-up" | "fade-down" | "fade-left" | "fade-right" | "zoom-in";
+
 export interface BaseElement {
   id: string;
   type: ElementType;
@@ -11,6 +13,8 @@ export interface BaseElement {
   opacity: number;
   zIndex: number;
   locked: boolean;
+  animation?: ElementAnimation;
+  animationDelay?: number;
 }
 
 export interface TextElement extends BaseElement {

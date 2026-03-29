@@ -12,6 +12,7 @@ import { ArrowProperties } from "./ArrowProperties";
 import { DividerProperties } from "./DividerProperties";
 import { LayerControls } from "./LayerControls";
 import { AlignControls } from "./AlignControls";
+import { AnimationProperties } from "./AnimationProperties";
 import { LockToggle } from "./LockToggle";
 import { DeleteButton } from "./DeleteButton";
 import { ColorPicker } from "@/components/editor/ColorPicker";
@@ -77,6 +78,7 @@ export function ElementPalette() {
           {selectedElement.type === "image" && <ImageProperties element={selectedElement as ImageElement} />}
           {selectedElement.type === "arrow" && <ArrowProperties element={selectedElement as ArrowElement} />}
           {selectedElement.type === "divider" && <DividerProperties element={selectedElement as DividerElement} />}
+          <AnimationProperties element={selectedElement} />
           <AlignControls elementId={selectedElement.id} />
           <LayerControls elementId={selectedElement.id} />
           <LockToggle element={selectedElement} />
