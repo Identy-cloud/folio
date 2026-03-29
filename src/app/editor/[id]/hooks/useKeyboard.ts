@@ -67,6 +67,23 @@ export function useKeyboard() {
         }
         return;
       }
+      // Tab / Shift+Tab = cycle through elements on slide
+      if (e.key === "Tab" && !meta && state.selectedElementIds.length > 0) {
+        if (inInput) return;
+        e.preventDefault();
+        const slide = state.getActiveSlide();
+        if (!slide) return;
+        const els = state.editingMode === "mobile" && slide.mobileElements ? slide.mobileElements : slide.elements;
+        if (els.length === 0) return;
+        const currentId = state.selectedElementIds[0];
+        const idx = els.findIndex((el) => el.id === currentId);
+        const nextIdx = e.shiftKey
+          ? (idx <= 0 ? els.length - 1 : idx - 1)
+          : (idx >= els.length - 1 ? 0 : idx + 1);
+        useEditorStore.setState({ selectedElementIds: [els[nextIdx].id] });
+        return;
+      }
+
       // Ctrl+Enter = add new slide
       if (e.key === "Enter" && meta) {
         if (inInput) return;

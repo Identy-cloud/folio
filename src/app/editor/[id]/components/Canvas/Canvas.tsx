@@ -13,6 +13,7 @@ import { SelectionBox } from "./SelectionBox";
 import { SnapGuides } from "./SnapGuides";
 import { RemoteCursors } from "./RemoteCursors";
 import { ContextMenu } from "./ContextMenu";
+import { QuickActions } from "./QuickActions";
 
 const DESKTOP_W = 1920;
 const DESKTOP_H = 1080;
@@ -352,6 +353,11 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
           if (!el) return null;
           return <SelectionBox key={`sel-${id}`} element={el} scale={scale} />;
         })}
+        {selectedIds.length === 1 && !rubberBand && (() => {
+          const els = isMobileMode && slide.mobileElements ? slide.mobileElements : slide.elements;
+          const sel = els.find((e) => e.id === selectedIds[0]);
+          return sel ? <QuickActions element={sel} scale={scale} /> : null;
+        })()}
         <RemoteCursors peers={peers} />
         {rubberBand && (
           <div
