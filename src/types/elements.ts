@@ -42,7 +42,7 @@ export interface ImageElement extends BaseElement {
 
 export interface ShapeElement extends BaseElement {
   type: "shape";
-  shape: "rect" | "circle" | "triangle";
+  shape: "rect" | "circle" | "triangle" | "diamond" | "star" | "pentagon" | "hexagon";
   fill: string;
   stroke: string;
   strokeWidth: number;

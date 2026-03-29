@@ -18,6 +18,8 @@ import {
 } from "@phosphor-icons/react";
 import { BottomSheet } from "@/components/ui/BottomSheet";
 import { ShortcutsPanel } from "@/components/editor/ShortcutsPanel";
+import { HistoryPanel } from "./HistoryPanel";
+import { ClockCounterClockwise } from "@phosphor-icons/react";
 import { MobileSlidePanel } from "./Mobile/MobileSlidePanel";
 import { MobileInsertPanel } from "./Mobile/MobileInsertPanel";
 import { MobilePropertiesPanel } from "./Mobile/MobilePropertiesPanel";
@@ -35,6 +37,7 @@ export function EditorLayout() {
 
   const [mobilePanel, setMobilePanel] = useState<"slides" | "insert" | "properties" | null>(null);
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
+  const [historyOpen, setHistoryOpen] = useState(false);
   const selectedIds = useEditorStore((s) => s.selectedElementIds);
   const hasSelection = selectedIds.length > 0;
 
@@ -54,7 +57,12 @@ export function EditorLayout() {
     <div className="flex h-screen flex-col bg-[#111111]">
       <OfflineBanner />
       <div data-panel="toolbar">
-        <Toolbar connected={connected} peerCount={peers.length} />
+        <Toolbar
+          connected={connected}
+          peerCount={peers.length}
+          onToggleHistory={() => setHistoryOpen((v) => !v)}
+          historyOpen={historyOpen}
+        />
       </div>
       <div className="flex flex-1 overflow-hidden">
         <div data-panel="slides" className="hidden h-full md:block">
@@ -70,7 +78,13 @@ export function EditorLayout() {
         </div>
 
         <div data-panel="palette" className="hidden h-full md:block">
-          <ElementPalette />
+          {historyOpen ? (
+            <div className="flex h-full w-56 flex-col border-l border-neutral-800 bg-[#161616]">
+              <HistoryPanel onClose={() => setHistoryOpen(false)} />
+            </div>
+          ) : (
+            <ElementPalette />
+          )}
         </div>
       </div>
 

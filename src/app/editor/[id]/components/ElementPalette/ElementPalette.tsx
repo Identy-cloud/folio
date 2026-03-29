@@ -4,7 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useEditorStore } from "@/store/editorStore";
 import { nanoid } from "nanoid";
-import { TextT, Rectangle, Circle, Triangle, Image as ImageIcon, ArrowRight, Minus } from "@phosphor-icons/react";
+import { TextT, Rectangle, Circle, Triangle, Image as ImageIcon, ArrowRight, Minus, Diamond, Star, Pentagon, Hexagon } from "@phosphor-icons/react";
 import { useImageUpload } from "../../hooks/useImageUpload";
 import { PositionFields } from "./PositionFields";
 import { TextProperties } from "./TextProperties";
@@ -60,6 +60,18 @@ export function ElementPalette() {
         </button>
         <button onClick={() => add({ id: nanoid(), type: "shape", x: 200, y: 200, w: 200, h: 200, rotation: 0, opacity: 1, zIndex: zBase, locked: false, shape: "circle", ...shapeDefaults(theme) } satisfies ShapeElement)} className={btn}>
           <Circle size={16} weight="duotone" /> {t.editor.circle}
+        </button>
+        <button onClick={() => add({ id: nanoid(), type: "shape", x: 200, y: 200, w: 200, h: 200, rotation: 0, opacity: 1, zIndex: zBase, locked: false, shape: "diamond", ...shapeDefaults(theme) } satisfies ShapeElement)} className={btn}>
+          <Diamond size={16} weight="duotone" /> Diamond
+        </button>
+        <button onClick={() => add({ id: nanoid(), type: "shape", x: 200, y: 200, w: 200, h: 200, rotation: 0, opacity: 1, zIndex: zBase, locked: false, shape: "star", ...shapeDefaults(theme) } satisfies ShapeElement)} className={btn}>
+          <Star size={16} weight="duotone" /> Star
+        </button>
+        <button onClick={() => add({ id: nanoid(), type: "shape", x: 200, y: 200, w: 200, h: 200, rotation: 0, opacity: 1, zIndex: zBase, locked: false, shape: "pentagon", ...shapeDefaults(theme) } satisfies ShapeElement)} className={btn}>
+          <Pentagon size={16} weight="duotone" /> Pentagon
+        </button>
+        <button onClick={() => add({ id: nanoid(), type: "shape", x: 200, y: 200, w: 200, h: 200, rotation: 0, opacity: 1, zIndex: zBase, locked: false, shape: "hexagon", ...shapeDefaults(theme) } satisfies ShapeElement)} className={btn}>
+          <Hexagon size={16} weight="duotone" /> Hexagon
         </button>
         <button onClick={() => add({ id: nanoid(), type: "arrow", x: 200, y: 400, w: 300, h: 60, rotation: 0, opacity: 1, zIndex: zBase, locked: false, direction: "right", ...arrowDefaults(theme) } satisfies ArrowElement)} className={btn}>
           <ArrowRight size={16} weight="duotone" /> {t.editor.arrow}

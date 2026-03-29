@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowCounterClockwise, ArrowClockwise, FilePdf, FileImage, Image as ImageIcon, Desktop, DeviceMobile, Play } from "@phosphor-icons/react";
+import { ArrowCounterClockwise, ArrowClockwise, FilePdf, FileImage, Image as ImageIcon, Desktop, DeviceMobile, Play, ClockCounterClockwise } from "@phosphor-icons/react";
 import { Tooltip } from "@/components/ui/Tooltip";
 
 function Spinner() {
@@ -17,9 +17,11 @@ import { usePlanLimits } from "@/hooks/usePlanLimits";
 interface ToolbarProps {
   connected?: boolean;
   peerCount?: number;
+  onToggleHistory?: () => void;
+  historyOpen?: boolean;
 }
 
-export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
+export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen }: ToolbarProps) {
   const { t } = useTranslation();
   const undo = useEditorStore((s) => s.undo);
   const redo = useEditorStore((s) => s.redo);
@@ -92,6 +94,18 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
           <Tooltip content={t.editor.redo} shortcut="Ctrl+Y">
             <button onClick={redo} className="rounded p-2 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200" aria-label={t.editor.redo}><ArrowClockwise size={16} weight="regular" /></button>
           </Tooltip>
+          {onToggleHistory && (
+            <Tooltip content="History">
+              <button
+                onClick={onToggleHistory}
+                className={`hidden md:flex rounded p-2 transition-colors ${historyOpen ? "bg-neutral-700 text-white" : "text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200"}`}
+                aria-label="History"
+                aria-pressed={historyOpen}
+              >
+                <ClockCounterClockwise size={16} weight="regular" />
+              </button>
+            </Tooltip>
+          )}
         </div>
         <div className="hidden md:block h-5 w-px bg-neutral-700" />
         <Tooltip content={t.editor.image}>
