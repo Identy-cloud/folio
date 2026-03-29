@@ -2,6 +2,7 @@
 
 import { useRef, useState, memo, useMemo } from "react";
 import DOMPurify from "dompurify";
+import { nanoid } from "nanoid";
 import { Camera } from "@phosphor-icons/react";
 import { useEditorStore } from "@/store/editorStore";
 import type { SlideElement, TextElement } from "@/types/elements";
@@ -32,6 +33,22 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
     if (element.locked || isBusy) return;
     e.stopPropagation();
     e.currentTarget.setPointerCapture(e.pointerId);
+
+    // Alt+drag = clone element and drag the clone
+    if (e.altKey) {
+      const store = useEditorStore.getState();
+      const cloneId = nanoid();
+      store.addElement({ ...element, id: cloneId } as SlideElement);
+      selectElement(cloneId);
+      dragRef.current = {
+        startX: e.clientX,
+        startY: e.clientY,
+        origX: element.x,
+        origY: element.y,
+      };
+      return;
+    }
+
     selectElement(element.id, e.shiftKey);
     dragRef.current = {
       startX: e.clientX,

@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { toast } from "sonner";
 import { useEditorStore } from "@/store/editorStore";
 
 export function useKeyboard() {
@@ -18,13 +19,17 @@ export function useKeyboard() {
       if (e.key === "z" && meta && !e.shiftKey) {
         if (inInput) return;
         e.preventDefault();
+        const before = state.historyIndex;
         state.undo();
+        if (useEditorStore.getState().historyIndex < before) toast("Undo", { duration: 1000 });
         return;
       }
       if ((e.key === "y" && meta) || (e.key === "z" && meta && e.shiftKey)) {
         if (inInput) return;
         e.preventDefault();
+        const before = state.historyIndex;
         state.redo();
+        if (useEditorStore.getState().historyIndex > before) toast("Redo", { duration: 1000 });
         return;
       }
       if (e.key === "c" && meta && e.altKey) {
