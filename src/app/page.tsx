@@ -35,7 +35,7 @@ export default function LandingPage() {
             Empezar gratis
           </Link>
           <Link
-            href="/login"
+            href="/p/xn9C3QddXu"
             className="border border-neutral-700 px-6 py-3 text-xs tracking-[0.25em] text-neutral-300 uppercase hover:border-white hover:text-white transition-colors sm:px-8"
           >
             Ver demo
@@ -43,7 +43,18 @@ export default function LandingPage() {
         </div>
       </main>
 
-      <footer className="flex items-center justify-center py-8">
+      <footer className="flex flex-col items-center gap-3 py-8">
+        <div className="flex gap-6">
+          <Link href="/terms" className="text-[10px] tracking-[0.2em] text-neutral-600 uppercase hover:text-neutral-400 transition-colors">
+            Terminos
+          </Link>
+          <Link href="/privacy" className="text-[10px] tracking-[0.2em] text-neutral-600 uppercase hover:text-neutral-400 transition-colors">
+            Privacidad
+          </Link>
+          <Link href="/pricing" className="text-[10px] tracking-[0.2em] text-neutral-600 uppercase hover:text-neutral-400 transition-colors">
+            Pricing
+          </Link>
+        </div>
         <p className="text-[10px] tracking-[0.3em] text-neutral-600 uppercase">
           Folio — Identy Cloud
         </p>

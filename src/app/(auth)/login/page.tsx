@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useState } from "react";
 import { useTranslation } from "@/lib/i18n/context";
 
@@ -48,6 +49,19 @@ export default function LoginPage() {
     } finally {
       setLoading(false);
     }
+  }
+
+  async function handlePasswordReset() {
+    if (!email) { setError("Ingresa tu email primero"); return; }
+    setError(null);
+    setLoading(true);
+    const supabase = createClient();
+    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/auth/callback`,
+    });
+    setLoading(false);
+    if (resetError) { setError(resetError.message); return; }
+    setSuccess("Revisa tu email para restablecer tu contrasena");
   }
 
   async function handleGoogleLogin() {
@@ -111,6 +125,15 @@ export default function LoginPage() {
                 ? t.auth.signup
                 : t.auth.login}
           </button>
+          {!isSignUp && (
+            <button
+              type="button"
+              onClick={handlePasswordReset}
+              className="mt-2 w-full text-[10px] text-neutral-600 hover:text-neutral-300 transition-colors"
+            >
+              He olvidado mi contrasena
+            </button>
+          )}
         </form>
 
         <div className="relative">
@@ -143,6 +166,15 @@ export default function LoginPage() {
             {isSignUp ? t.auth.loginAction : t.auth.signupAction}
           </button>
         </p>
+
+        {isSignUp && (
+          <p className="text-center text-[10px] text-neutral-600">
+            Al crear una cuenta aceptas los{" "}
+            <Link href="/terms" className="underline underline-offset-2 hover:text-neutral-300 transition-colors">Terminos de Servicio</Link>
+            {" "}y la{" "}
+            <Link href="/privacy" className="underline underline-offset-2 hover:text-neutral-300 transition-colors">Politica de Privacidad</Link>
+          </p>
+        )}
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { LogoutButton } from "./logout-button";
+import { DeleteAccountButton } from "./delete-account-button";
 import { LocaleSelector } from "@/components/LocaleSelector";
 
 export default async function DashboardLayout({
@@ -51,6 +52,9 @@ export default async function DashboardLayout({
         </div>
       </header>
       <main id="main-content" className="flex-1 p-4 sm:p-6">{children}</main>
+      <footer className="flex items-center justify-center gap-4 border-t border-neutral-800 py-3">
+        <DeleteAccountButton />
+      </footer>
     </div>
   );
 }
