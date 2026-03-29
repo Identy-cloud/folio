@@ -63,6 +63,7 @@ const GROUPS = [
       { keys: `${mod} + Enter`, label: "Add new slide" },
       { keys: `${mod} + H`, label: "Find & Replace" },
       { keys: "Space + drag", label: "Pan canvas" },
+      { keys: `${mod} + 0`, label: "Reset zoom to fit" },
       { keys: "PageUp / PageDown", label: "Previous / next slide" },
       { keys: "/", label: "Command palette" },
       { keys: "F2", label: "Slide sorter" },

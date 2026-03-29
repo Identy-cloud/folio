@@ -210,6 +210,14 @@ export function useKeyboard() {
         return;
       }
 
+      // Ctrl+0 = reset zoom
+      if (e.key === "0" && meta) {
+        if (inInput) return;
+        e.preventDefault();
+        window.dispatchEvent(new CustomEvent("folio:zoom-fit"));
+        return;
+      }
+
       // Number keys 1-9 = opacity 10%-90%, 0 = 100%
       if (!meta && !e.altKey && e.key >= "0" && e.key <= "9" && state.selectedElementIds.length > 0) {
         if (inInput) return;

@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { useClickOutside } from "@/hooks/useClickOutside";
+import { THEMES } from "@/lib/templates/themes";
 
 const RECENT_KEY = "folio-recent-colors";
 const MAX_RECENT = 8;
@@ -72,7 +73,15 @@ export function ColorPicker({ value, onChange, label }: Props) {
   }, [open, updatePos]);
 
   const [recentColors, setRecentColors] = useState<string[]>([]);
-  useEffect(() => { if (open) setRecentColors(getRecentColors()); }, [open]);
+  const [themeColors, setThemeColors] = useState<string[]>([]);
+  useEffect(() => {
+    if (!open) return;
+    setRecentColors(getRecentColors());
+    import("@/store/editorStore").then(({ useEditorStore }) => {
+      const t = THEMES[useEditorStore.getState().theme];
+      if (t) setThemeColors([t.background, t.text, t.accent, t.primary].filter((v, i, a) => a.indexOf(v) === i));
+    }).catch(() => {});
+  }, [open]);
 
   function applyColor(c: string) {
     onChange(c);
@@ -112,6 +121,24 @@ export function ColorPicker({ value, onChange, label }: Props) {
           style={{ position: "fixed", top: pos.top, left: pos.left, zIndex: 9999 }}
           className="w-48 rounded border border-neutral-700 bg-[#1e1e1e] p-2 shadow-xl"
         >
+          {themeColors.length > 0 && (
+            <div className="mb-1.5">
+              <span className="text-[9px] text-neutral-600 uppercase tracking-wider">Theme</span>
+              <div className="mt-0.5 flex gap-1">
+                {themeColors.map((c) => (
+                  <button
+                    key={c}
+                    onClick={() => applyColor(c)}
+                    className={`h-5 w-5 rounded-sm border transition-transform hover:scale-110 ${
+                      value === c ? "border-white ring-1 ring-white" : "border-neutral-600"
+                    }`}
+                    style={{ backgroundColor: c }}
+                    title={c}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
           {recentColors.length > 0 && (
             <div className="mb-1.5">
               <span className="text-[9px] text-neutral-600 uppercase tracking-wider">Recent</span>
