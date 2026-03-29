@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import DOMPurify from "dompurify";
 import type { SlideElement, TextElement, SlideTransition } from "@/types/elements";
 import { getElementAnimationStyle } from "@/lib/element-animation";
-import { ShapeRenderer, ArrowRenderer, DividerRenderer } from "@/components/elements";
+import { ShapeRenderer, ArrowRenderer, DividerRenderer, EmbedRenderer } from "@/components/elements";
 import { MobileViewer } from "./mobile-viewer";
 import { CommentsPanel } from "./comments-panel";
 
@@ -506,6 +506,7 @@ function ViewerElement({ element, delay, animate }: { element: SlideElement; del
       {element.type === "shape" && <ShapeRenderer element={element} />}
       {element.type === "arrow" && <ArrowRenderer element={element} />}
       {element.type === "divider" && <DividerRenderer element={element} />}
+      {element.type === "embed" && <EmbedRenderer element={element} />}
       {element.type === "image" && (
         <img
           src={element.src}

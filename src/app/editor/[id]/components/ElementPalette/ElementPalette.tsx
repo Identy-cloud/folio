@@ -4,7 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useEditorStore } from "@/store/editorStore";
 import { nanoid } from "nanoid";
-import { TextT, Rectangle, Circle, Triangle, Image as ImageIcon, ArrowRight, Minus, Diamond, Star, Pentagon, Hexagon } from "@phosphor-icons/react";
+import { TextT, Rectangle, Circle, Triangle, Image as ImageIcon, ArrowRight, Minus, Diamond, Star, Pentagon, Hexagon, Code } from "@phosphor-icons/react";
 import { useImageUpload } from "../../hooks/useImageUpload";
 import { PositionFields } from "./PositionFields";
 import { TextProperties } from "./TextProperties";
@@ -19,8 +19,9 @@ import { LockToggle } from "./LockToggle";
 import { DeleteButton } from "./DeleteButton";
 import { MultiSelectControls } from "./MultiSelectControls";
 import { ShadowControls } from "./ShadowControls";
+import { EmbedProperties } from "./EmbedProperties";
 import { ColorPicker } from "@/components/editor/ColorPicker";
-import type { TextElement, ShapeElement, ArrowElement, DividerElement, ImageElement, SlideElement } from "@/types/elements";
+import type { TextElement, ShapeElement, ArrowElement, DividerElement, ImageElement, EmbedElement, SlideElement } from "@/types/elements";
 import { textDefaults, shapeDefaults, arrowDefaults, dividerDefaults } from "@/lib/templates/element-defaults";
 import { THEMES } from "@/lib/templates/themes";
 import { TransitionPicker } from "../SlidePanel/TransitionPicker";
@@ -83,6 +84,16 @@ export function ElementPalette() {
         <button onClick={triggerUpload} disabled={uploading} className={`${btn} disabled:opacity-50`}>
           <ImageIcon size={16} weight="duotone" /> {uploading ? t.editor.uploading : t.editor.image}
         </button>
+        <button
+          onClick={() => {
+            const url = prompt("Paste video or embed URL (YouTube, Vimeo, Loom):");
+            if (!url) return;
+            add({ id: nanoid(), type: "embed", x: 200, y: 200, w: 640, h: 360, rotation: 0, opacity: 1, zIndex: zBase, locked: false, url } as import("@/types/elements").EmbedElement);
+          }}
+          className={btn}
+        >
+          <Code size={16} weight="duotone" /> Embed
+        </button>
       </div>
 
       {selectedIds.length > 1 ? (
@@ -109,6 +120,7 @@ export function ElementPalette() {
           {selectedElement.type === "image" && <ImageProperties element={selectedElement as ImageElement} />}
           {selectedElement.type === "arrow" && <ArrowProperties element={selectedElement as ArrowElement} />}
           {selectedElement.type === "divider" && <DividerProperties element={selectedElement as DividerElement} />}
+          {selectedElement.type === "embed" && <EmbedProperties element={selectedElement as EmbedElement} />}
           <ShadowControls element={selectedElement} />
           <AnimationProperties element={selectedElement} />
           <AlignControls elementId={selectedElement.id} />

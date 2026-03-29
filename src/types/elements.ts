@@ -1,4 +1,4 @@
-export type ElementType = "text" | "image" | "shape" | "arrow" | "divider";
+export type ElementType = "text" | "image" | "shape" | "arrow" | "divider" | "embed";
 
 export type ElementAnimation = "none" | "fade-up" | "fade-down" | "fade-left" | "fade-right" | "zoom-in" | "zoom-out" | "rotate-in" | "bounce-in";
 
@@ -79,12 +79,19 @@ export interface DividerElement extends BaseElement {
   dashPattern?: "solid" | "dashed" | "dotted";
 }
 
+export interface EmbedElement extends BaseElement {
+  type: "embed";
+  url: string;
+  aspectRatio?: number;
+}
+
 export type SlideElement =
   | TextElement
   | ImageElement
   | ShapeElement
   | ArrowElement
-  | DividerElement;
+  | DividerElement
+  | EmbedElement;
 
 export type SlideTransition = "fade" | "slide-left" | "slide-up" | "slide-right" | "zoom" | "blur" | "none";
 

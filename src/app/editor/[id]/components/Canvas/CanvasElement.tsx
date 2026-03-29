@@ -6,7 +6,7 @@ import { nanoid } from "nanoid";
 import { Camera } from "@phosphor-icons/react";
 import { useEditorStore } from "@/store/editorStore";
 import type { SlideElement, TextElement } from "@/types/elements";
-import { ShapeRenderer, ArrowRenderer, DividerRenderer } from "@/components/elements";
+import { ShapeRenderer, ArrowRenderer, DividerRenderer, EmbedRenderer } from "@/components/elements";
 
 interface Props {
   element: SlideElement;
@@ -147,6 +147,7 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
       {element.type === "shape" && <ShapeRenderer element={element} />}
       {element.type === "arrow" && <ArrowRenderer element={element} />}
       {element.type === "divider" && <DividerRenderer element={element} />}
+      {element.type === "embed" && <EmbedRenderer element={element} />}
       {element.type === "image" && (
         <div style={{ width: "100%", height: "100%", position: "relative", borderRadius: element.borderRadius ?? 0, overflow: "hidden" }}>
           <img
