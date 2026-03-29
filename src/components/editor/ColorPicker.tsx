@@ -28,7 +28,14 @@ export function ColorPicker({ value, onChange, label }: Props) {
   const updatePos = useCallback(() => {
     if (!triggerRef.current) return;
     const rect = triggerRef.current.getBoundingClientRect();
-    setPos({ top: rect.bottom + 4, left: rect.left });
+    const dropW = 192;
+    const dropH = 160;
+    let top = rect.bottom + 4;
+    let left = rect.left;
+    if (left + dropW > window.innerWidth - 8) left = window.innerWidth - dropW - 8;
+    if (left < 8) left = 8;
+    if (top + dropH > window.innerHeight - 8) top = rect.top - dropH - 4;
+    setPos({ top, left });
   }, []);
 
   useEffect(() => {

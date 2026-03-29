@@ -25,6 +25,7 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
     origX: number;
     origY: number;
   } | null>(null);
+  const longPressRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   function onPointerDown(e: React.PointerEvent) {
     if (element.locked || isBusy) return;
@@ -37,12 +38,27 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
       origX: element.x,
       origY: element.y,
     };
+
+    if (element.type === "text" || element.type === "image") {
+      longPressRef.current = setTimeout(() => {
+        longPressRef.current = null;
+        dragRef.current = null;
+        if (element.type === "text") setEditing(true);
+        if (element.type === "image") {
+          window.dispatchEvent(new CustomEvent("folio:replace-image", { detail: element.id }));
+        }
+      }, 500);
+    }
   }
 
   function onPointerMove(e: React.PointerEvent) {
     if (!dragRef.current) return;
     const dx = (e.clientX - dragRef.current.startX) / scale;
     const dy = (e.clientY - dragRef.current.startY) / scale;
+    if (longPressRef.current && (Math.abs(dx) > 4 || Math.abs(dy) > 4)) {
+      clearTimeout(longPressRef.current);
+      longPressRef.current = null;
+    }
     updateElement(element.id, {
       x: dragRef.current.origX + dx,
       y: dragRef.current.origY + dy,
@@ -50,6 +66,10 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
   }
 
   function onPointerUp() {
+    if (longPressRef.current) {
+      clearTimeout(longPressRef.current);
+      longPressRef.current = null;
+    }
     if (dragRef.current) {
       pushHistory();
       dragRef.current = null;

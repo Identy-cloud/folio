@@ -118,7 +118,14 @@ export const SelectionBox = memo(function SelectionBox({ element, scale }: Props
         zIndex: 9999,
       }}
     >
-      {HANDLES.map((h) => (
+      {HANDLES.filter((h) => {
+        const screenW = element.w * scale;
+        const screenH = element.h * scale;
+        if (screenW < 80 || screenH < 80) {
+          return h.pos.length === 2;
+        }
+        return true;
+      }).map((h) => (
         <div
           key={h.pos}
           style={{
