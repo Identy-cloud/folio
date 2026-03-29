@@ -1,7 +1,7 @@
 import { toPng } from "html-to-image";
 import { jsPDF } from "jspdf";
 
-interface ExportOptions {
+export interface ExportOptions {
   title: string;
   slideCount: number;
   getSlideElement: (index: number) => HTMLElement | null;

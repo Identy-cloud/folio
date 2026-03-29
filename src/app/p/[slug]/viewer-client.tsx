@@ -53,6 +53,7 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
   const [scale, setScale] = useState(1);
   const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const containerBoundsRef = useRef<DOMRect | null>(null);
   const touchRef = useRef<{ x: number; y: number } | null>(null);
   const total = slides.length;
 
@@ -63,18 +64,19 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  const updateScale = useCallback(() => {
+  const updateBoundsAndScale = useCallback(() => {
     if (!containerRef.current) return;
+    containerBoundsRef.current = containerRef.current.getBoundingClientRect();
     const vw = containerRef.current.clientWidth;
     const vh = containerRef.current.clientHeight;
     setScale(Math.min(vw / SLIDE_W, vh / SLIDE_H));
   }, []);
 
   useEffect(() => {
-    updateScale();
-    window.addEventListener("resize", updateScale);
-    return () => window.removeEventListener("resize", updateScale);
-  }, [updateScale]);
+    updateBoundsAndScale();
+    window.addEventListener("resize", updateBoundsAndScale);
+    return () => window.removeEventListener("resize", updateBoundsAndScale);
+  }, [updateBoundsAndScale]);
 
   // When current changes, start transition
   useEffect(() => {
@@ -105,7 +107,7 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
   const goNext = useCallback(() => {
     if (transitioning || current >= total - 1) return;
     setCurrent((c) => c + 1);
-  }, [transitioning, current, total]);
+  }, [transitioning, total, current]);
 
   const goPrev = useCallback(() => {
     if (transitioning || current <= 0) return;
@@ -141,16 +143,16 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
   const [hoverZone, setHoverZone] = useState<"left" | "right" | null>(null);
 
   function handleClick(e: React.MouseEvent) {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
+    const rect = containerBoundsRef.current;
+    if (!rect) return;
     const x = e.clientX - rect.left;
     if (x > rect.width * 0.65) goNext();
     else if (x < rect.width * 0.35) goPrev();
   }
 
   function handleMouseMove(e: React.MouseEvent) {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
+    const rect = containerBoundsRef.current;
+    if (!rect) return;
     const x = e.clientX - rect.left;
     if (x > rect.width * 0.65 && current < total - 1) setHoverZone("right");
     else if (x < rect.width * 0.35 && current > 0) setHoverZone("left");

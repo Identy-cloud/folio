@@ -3,6 +3,11 @@ import { generateUploadUrl } from "@/lib/r2";
 import { checkRateLimit, rateLimitResponse } from "@/lib/rate-limit";
 import { z } from "zod";
 import { nanoid } from "nanoid";
+import { getUserPlan } from "@/lib/stripe";
+import { getPlanLimits } from "@/lib/plan-limits";
+import { db } from "@/db";
+import { users } from "@/db/schema";
+import { eq } from "drizzle-orm";
 
 const ALLOWED_TYPES = [
   "image/jpeg",
@@ -37,6 +42,25 @@ export async function POST(request: Request) {
     );
   }
 
+  const plan = await getUserPlan(user.id);
+  const limits = getPlanLimits(plan);
+
+  const [userRow] = await db
+    .select({ storageUsed: users.storageUsed })
+    .from(users)
+    .where(eq(users.id, user.id))
+    .limit(1);
+
+  const currentStorage = userRow?.storageUsed ?? 0;
+  const fileSize = parsed.data.fileSize ?? 0;
+
+  if (currentStorage + fileSize > limits.maxStorageBytes) {
+    return Response.json(
+      { error: "STORAGE_LIMIT", plan, used: currentStorage, limit: limits.maxStorageBytes },
+      { status: 403 }
+    );
+  }
+
   const ext = parsed.data.filename.split(".").pop() ?? "bin";
   const key = `uploads/${user.id}/${nanoid()}.${ext}`;
 
@@ -44,6 +68,13 @@ export async function POST(request: Request) {
     key,
     parsed.data.contentType
   );
+
+  if (fileSize > 0) {
+    await db
+      .update(users)
+      .set({ storageUsed: currentStorage + fileSize })
+      .where(eq(users.id, user.id));
+  }
 
   return Response.json({ signedUrl, publicUrl });
 }

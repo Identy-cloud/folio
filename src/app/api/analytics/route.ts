@@ -5,6 +5,8 @@ import { checkRateLimit, rateLimitResponse } from "@/lib/rate-limit";
 import { eq, and, desc, count, sql } from "drizzle-orm";
 import { z } from "zod";
 import type { NextRequest } from "next/server";
+import { getUserPlan } from "@/lib/stripe";
+import { getPlanLimits } from "@/lib/plan-limits";
 
 const postSchema = z.object({
   presentationId: z.string().uuid(),
@@ -44,6 +46,15 @@ export async function GET(request: NextRequest) {
   const user = await getAuthenticatedUser();
   if (!user) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const plan = await getUserPlan(user.id);
+  const limits = getPlanLimits(plan);
+  if (!limits.canUseAnalytics) {
+    return Response.json(
+      { error: "PLAN_LIMIT", message: "Upgrade to access analytics", plan },
+      { status: 403 }
+    );
   }
 
   const presentationId = request.nextUrl.searchParams.get("presentationId");

@@ -12,10 +12,18 @@ export function DeleteAccountButton() {
 
   async function handleDelete() {
     setDeleting(true);
-    const res = await fetch("/api/account", { method: "DELETE" });
-    if (res.ok) {
-      router.push("/login");
-      router.refresh();
+    try {
+      const res = await fetch("/api/account", { method: "DELETE" });
+      if (res.ok) {
+        router.push("/login");
+        router.refresh();
+      } else {
+        const { toast } = await import("sonner");
+        toast.error(t.common.error ?? "Failed to delete account");
+      }
+    } catch {
+      const { toast } = await import("sonner");
+      toast.error(t.common.connectionError ?? "Connection error");
     }
     setDeleting(false);
     setConfirming(false);

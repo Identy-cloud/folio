@@ -82,7 +82,7 @@ export function ShareButton() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-2 z-50 w-72 rounded border border-neutral-700 bg-[#1e1e1e] p-4 shadow-xl sm:w-80">
+        <div className="absolute right-0 top-full mt-2 z-50 w-[calc(100vw-2rem)] max-w-72 rounded border border-neutral-700 bg-[#1e1e1e] p-4 shadow-xl sm:max-w-80">
           {!meta ? (
             <p className="text-xs text-neutral-500">{t.common.loading}</p>
           ) : (
@@ -154,13 +154,17 @@ export function ShareButton() {
                     <button
                       onClick={async () => {
                         const password = pw.trim() || null;
-                        await fetch(`/api/presentations/${presentationId}`, {
+                        const res = await fetch(`/api/presentations/${presentationId}`, {
                           method: "PATCH",
                           headers: { "Content-Type": "application/json" },
                           body: JSON.stringify({ password }),
                         });
-                        setMeta({ ...meta, password });
-                        toast.success(password ? t.editor.passwordSet : t.editor.passwordRemoved);
+                        if (res.ok) {
+                          setMeta({ ...meta, password });
+                          toast.success(password ? t.editor.passwordSet : t.editor.passwordRemoved);
+                        } else {
+                          toast.error(t.common.error ?? "Failed to save");
+                        }
                       }}
                       className="shrink-0 rounded bg-neutral-800 px-2 py-1.5 text-[10px] text-neutral-300 hover:bg-neutral-700 transition-colors"
                     >

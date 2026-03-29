@@ -82,7 +82,7 @@ export function PresenterClient({ title, slides, slug }: Props) {
       </div>
 
       {/* Sidebar: next slide + notes */}
-      <div className="flex w-80 flex-col border-l border-neutral-800 lg:w-96">
+      <div className="hidden w-80 flex-col border-l border-neutral-800 md:flex lg:w-96">
         {/* Next slide preview */}
         <div className="border-b border-neutral-800 p-3">
           <p className="mb-2 text-[10px] font-medium uppercase tracking-wider text-neutral-500">

@@ -4,6 +4,7 @@ import { getAuthenticatedUser } from "@/lib/auth";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 import { THEMES } from "@/lib/templates/themes";
+import { hash } from "bcryptjs";
 import type { NextRequest } from "next/server";
 
 export async function GET(
@@ -58,7 +59,11 @@ export async function PATCH(
   if (parsed.data.isPublic !== undefined) updates.isPublic = parsed.data.isPublic;
   if (parsed.data.theme !== undefined) updates.theme = parsed.data.theme;
   if (parsed.data.thumbnailUrl !== undefined) updates.thumbnailUrl = parsed.data.thumbnailUrl;
-  if (parsed.data.password !== undefined) updates.password = parsed.data.password;
+  if (parsed.data.password !== undefined) {
+    updates.password = parsed.data.password
+      ? await hash(parsed.data.password, 10)
+      : null;
+  }
 
   const [updated] = await db
     .update(presentations)

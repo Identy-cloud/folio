@@ -2,20 +2,17 @@
 
 import { useState } from "react";
 import { ArrowCounterClockwise, ArrowClockwise, FilePdf, FileImage, Image as ImageIcon, Desktop, DeviceMobile } from "@phosphor-icons/react";
-import { toPng } from "html-to-image";
 import { Tooltip } from "@/components/ui/Tooltip";
 
 function Spinner() {
   return <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-neutral-500 border-t-white" />;
 }
 import { useEditorStore } from "@/store/editorStore";
-
-
-import { exportToPdf } from "@/lib/export-pdf";
 import Link from "next/link";
 import { ShareButton } from "./ShareButton";
 import { useImageUpload } from "../../hooks/useImageUpload";
 import { useTranslation } from "@/lib/i18n/context";
+import { usePlanLimits } from "@/hooks/usePlanLimits";
 
 interface ToolbarProps {
   connected?: boolean;
@@ -33,6 +30,7 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
   const editingMode = useEditorStore((s) => s.editingMode);
   const setEditingMode = useEditorStore((s) => s.setEditingMode);
   const { trigger: triggerUpload, uploading } = useImageUpload();
+  const { limits } = usePlanLimits();
   const [exporting, setExporting] = useState(false);
   const [exportProgress, setExportProgress] = useState("");
 
@@ -40,6 +38,7 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
     setExporting(true);
     const currentIndex = useEditorStore.getState().activeSlideIndex;
 
+    const { exportToPdf } = await import("@/lib/export-pdf");
     await exportToPdf({
       title: "Presentation",
       slideCount: slides.length,
@@ -61,6 +60,7 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
   async function handleExportPng() {
     const el = document.querySelector("[data-slide-canvas]") as HTMLElement;
     if (!el) return;
+    const { toPng } = await import("html-to-image");
     const dataUrl = await toPng(el, { width: 1920, height: 1080, pixelRatio: 1, cacheBust: true });
     const a = document.createElement("a");
     a.href = dataUrl;
@@ -104,10 +104,10 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
             {uploading ? <Spinner /> : t.editor.image}
           </button>
         </Tooltip>
-        <Tooltip content="Export PDF">
+        <Tooltip content={limits.canExportPdf ? "Export PDF" : "Upgrade to export PDF"}>
           <button
             onClick={handleExport}
-            disabled={exporting}
+            disabled={exporting || !limits.canExportPdf}
             className="hidden md:flex items-center gap-1 rounded px-3 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 disabled:opacity-50"
           >
             <FilePdf size={14} weight="duotone" />

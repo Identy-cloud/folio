@@ -87,11 +87,16 @@ export default function DashboardPage() {
 
   async function handleDelete() {
     if (!dialog || dialog.type !== "delete") return;
-    const res = await fetch(`/api/presentations/${dialog.id}`, { method: "DELETE" });
-    if (res.ok) toast.success(t.dashboard.deleted);
-    else toast.error(t.dashboard.errorDelete);
+    const deletedId = dialog.id;
+    setPresentations((prev) => prev.filter((p) => p.id !== deletedId));
     setDialog(null);
-    refreshPresentations();
+    const res = await fetch(`/api/presentations/${deletedId}`, { method: "DELETE" });
+    if (res.ok) {
+      toast.success(t.dashboard.deleted);
+    } else {
+      toast.error(t.dashboard.errorDelete);
+      refreshPresentations();
+    }
   }
 
   async function handleTogglePublic(id: string, isPublic: boolean) {

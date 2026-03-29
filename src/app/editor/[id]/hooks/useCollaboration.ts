@@ -4,6 +4,7 @@ import { WebsocketProvider } from "y-websocket";
 import { createClient } from "@/lib/supabase/client";
 import { useEditorStore } from "@/store/editorStore";
 import type { Slide } from "@/types/elements";
+import { getPlanLimits } from "@/lib/plan-limits";
 
 interface AwarenessUser {
   name: string;
@@ -42,13 +43,19 @@ export function useCollaboration(presentationId: string) {
     let ydoc: Y.Doc | null = null;
 
     async function connect() {
-      const { data } = await supabase.auth.getSession();
-      const token = data.session?.access_token;
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token;
       if (!token) return;
 
-      const user = data.session?.user;
+      const { data: { user: verifiedUser } } = await supabase.auth.getUser();
+      const user = verifiedUser;
       const userName = user?.user_metadata?.full_name ?? user?.email ?? "Anónimo";
       const userColor = colorFromId(user?.id ?? "");
+
+      const planRes = await fetch("/api/profile");
+      const profile = planRes.ok ? await planRes.json() : null;
+      const limits = getPlanLimits(profile?.plan ?? "free");
+      if (!limits.canCollaborate) return;
 
       ydoc = new Y.Doc();
       ydocRef.current = ydoc;

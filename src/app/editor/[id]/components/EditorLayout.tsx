@@ -78,14 +78,14 @@ export function EditorLayout() {
       <div className="fixed top-14 right-2 z-40 flex gap-1 md:hidden">
         <button
           onClick={() => useEditorStore.getState().undo()}
-          className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-900/80 text-neutral-400 shadow active:scale-95 active:text-white transition-transform backdrop-blur-sm"
+          className="flex h-11 w-11 items-center justify-center rounded-full bg-neutral-900/80 text-neutral-400 shadow active:scale-95 active:text-white transition-transform backdrop-blur-sm"
           aria-label={t.editor.undo}
         >
           <ArrowCounterClockwise size={16} />
         </button>
         <button
           onClick={() => useEditorStore.getState().redo()}
-          className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-900/80 text-neutral-400 shadow active:scale-95 active:text-white transition-transform backdrop-blur-sm"
+          className="flex h-11 w-11 items-center justify-center rounded-full bg-neutral-900/80 text-neutral-400 shadow active:scale-95 active:text-white transition-transform backdrop-blur-sm"
           aria-label={t.editor.redo}
         >
           <ArrowClockwise size={16} />

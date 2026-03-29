@@ -3,6 +3,7 @@ import { presentations, slides } from "@/db/schema";
 import { getAuthenticatedUser } from "@/lib/auth";
 import { checkRateLimit, rateLimitResponse } from "@/lib/rate-limit";
 import { getPlanLimits } from "@/lib/plan-limits";
+import { getUserPlan } from "@/lib/stripe";
 import { and, eq, asc, count } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import type { NextRequest } from "next/server";
@@ -19,7 +20,8 @@ export async function POST(
   const rl = checkRateLimit(`create:${user.id}`, 10, 3600_000);
   if (!rl.allowed) return rateLimitResponse(rl);
 
-  const limits = getPlanLimits(user.plan ?? "free");
+  const plan = await getUserPlan(user.id);
+  const limits = getPlanLimits(plan);
   const [presCount] = await db
     .select({ total: count() })
     .from(presentations)

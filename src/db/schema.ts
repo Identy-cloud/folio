@@ -7,6 +7,7 @@ import {
   integer,
   bigint,
   jsonb,
+  index,
 } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
@@ -38,7 +39,9 @@ export const presentations = pgTable("presentations", {
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .defaultNow()
     .notNull(),
-});
+}, (table) => [
+  index("presentations_user_id_idx").on(table.userId),
+]);
 
 export const slides = pgTable("slides", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -55,7 +58,9 @@ export const slides = pgTable("slides", {
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
     .notNull(),
-});
+}, (table) => [
+  index("slides_presentation_id_idx").on(table.presentationId),
+]);
 
 export const collaborators = pgTable("collaborators", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -103,7 +108,9 @@ export const presentationViews = pgTable("presentation_views", {
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
     .notNull(),
-});
+}, (table) => [
+  index("presentation_views_presentation_id_idx").on(table.presentationId),
+]);
 
 export const comments = pgTable("comments", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -118,4 +125,6 @@ export const comments = pgTable("comments", {
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
     .notNull(),
-});
+}, (table) => [
+  index("comments_presentation_id_idx").on(table.presentationId),
+]);

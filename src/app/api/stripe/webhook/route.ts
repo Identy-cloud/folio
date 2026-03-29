@@ -1,6 +1,6 @@
 import { getStripe } from "@/lib/stripe";
 import { db } from "@/db";
-import { subscriptions } from "@/db/schema";
+import { subscriptions, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import type { NextRequest } from "next/server";
 
@@ -50,6 +50,11 @@ export async function POST(request: NextRequest) {
             updatedAt: new Date(),
           },
         });
+
+      await db
+        .update(users)
+        .set({ plan })
+        .where(eq(users.id, userId));
     }
   }
 
@@ -74,7 +79,8 @@ export async function POST(request: NextRequest) {
 
   if (event.type === "customer.subscription.deleted") {
     const sub = event.data.object;
-    await db
+
+    const [updated] = await db
       .update(subscriptions)
       .set({
         plan: "free",
@@ -83,7 +89,15 @@ export async function POST(request: NextRequest) {
         currentPeriodEnd: null,
         updatedAt: new Date(),
       })
-      .where(eq(subscriptions.stripeSubscriptionId, sub.id));
+      .where(eq(subscriptions.stripeSubscriptionId, sub.id))
+      .returning({ userId: subscriptions.userId });
+
+    if (updated) {
+      await db
+        .update(users)
+        .set({ plan: "free" })
+        .where(eq(users.id, updated.userId));
+    }
   }
 
   return Response.json({ received: true });

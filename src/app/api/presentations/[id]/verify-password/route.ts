@@ -3,26 +3,12 @@ import { presentations } from "@/db/schema";
 import { checkRateLimit, rateLimitResponse } from "@/lib/rate-limit";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
-import { timingSafeEqual } from "crypto";
+import { compare } from "bcryptjs";
 import type { NextRequest } from "next/server";
 
 const bodySchema = z.object({
   password: z.string().min(1).max(255),
 });
-
-function safeCompare(a: string, b: string): boolean {
-  const aBuf = Buffer.from(a, "utf-8");
-  const bBuf = Buffer.from(b, "utf-8");
-
-  if (aBuf.length !== bBuf.length) {
-    const padded = Buffer.alloc(aBuf.length);
-    bBuf.copy(padded);
-    timingSafeEqual(aBuf, padded);
-    return false;
-  }
-
-  return timingSafeEqual(aBuf, bBuf);
-}
 
 export async function POST(
   request: NextRequest,
@@ -61,7 +47,7 @@ export async function POST(
     return Response.json({ valid: true });
   }
 
-  const valid = safeCompare(pres.password, parsed.data.password);
+  const valid = await compare(parsed.data.password, pres.password);
 
   return Response.json({ valid });
 }

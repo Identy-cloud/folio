@@ -1,7 +1,8 @@
 import type { Plan } from "./stripe";
 
-interface PlanLimits {
+export interface PlanLimits {
   maxPresentations: number;
+  maxStorageBytes: number;
   maxCollaborators: number;
   hasWatermark: boolean;
   canExportPdf: boolean;
@@ -17,9 +18,12 @@ interface PlanLimits {
   canUseAdvancedAnalytics: boolean;
 }
 
+export const FREE_THEMES = ["editorial-blue"] as const;
+
 const LIMITS: Record<Plan, PlanLimits> = {
   free: {
     maxPresentations: 3,
+    maxStorageBytes: 100 * 1024 * 1024, // 100 MB
     maxCollaborators: 0,
     hasWatermark: true,
     canExportPdf: false,
@@ -36,6 +40,7 @@ const LIMITS: Record<Plan, PlanLimits> = {
   },
   creator: {
     maxPresentations: Infinity,
+    maxStorageBytes: 10 * 1024 * 1024 * 1024, // 10 GB
     maxCollaborators: 0,
     hasWatermark: false,
     canExportPdf: true,
@@ -52,6 +57,7 @@ const LIMITS: Record<Plan, PlanLimits> = {
   },
   studio: {
     maxPresentations: Infinity,
+    maxStorageBytes: 50 * 1024 * 1024 * 1024, // 50 GB
     maxCollaborators: 5,
     hasWatermark: false,
     canExportPdf: true,
@@ -68,6 +74,7 @@ const LIMITS: Record<Plan, PlanLimits> = {
   },
   agency: {
     maxPresentations: Infinity,
+    maxStorageBytes: 200 * 1024 * 1024 * 1024, // 200 GB
     maxCollaborators: Infinity,
     hasWatermark: false,
     canExportPdf: true,

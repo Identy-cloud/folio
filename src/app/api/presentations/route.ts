@@ -7,7 +7,7 @@ import { nanoid } from "nanoid";
 import { z } from "zod";
 import { generateTemplate } from "@/lib/templates/generator";
 import { THEMES } from "@/lib/templates/themes";
-import { getPlanLimits } from "@/lib/plan-limits";
+import { getPlanLimits, FREE_THEMES } from "@/lib/plan-limits";
 import { getUserPlan } from "@/lib/stripe";
 
 const createSchema = z.object({
@@ -94,6 +94,13 @@ export async function POST(request: Request) {
   const title = parsed.data.title ?? "Sin título";
   const theme = parsed.data.theme ?? "editorial-blue";
   const useTemplate = parsed.data.useTemplate !== false;
+
+  if (!limits.canUseAllTemplates && !(FREE_THEMES as readonly string[]).includes(theme)) {
+    return Response.json(
+      { error: "PLAN_LIMIT", message: "Upgrade to use this theme", plan },
+      { status: 403 }
+    );
+  }
 
   const [presentation] = await db
     .insert(presentations)

@@ -4,6 +4,7 @@ import { useEditorStore } from "@/store/editorStore";
 import { toast } from "sonner";
 import type { ImageElement } from "@/types/elements";
 import { useTranslation } from "@/lib/i18n/context";
+import { compressImage } from "@/lib/compress-image";
 
 export function useImageUpload() {
   const { t } = useTranslation();
@@ -40,14 +41,25 @@ export function useImageUpload() {
 
     setUploading(true);
     try {
+      const compressed = await compressImage(file);
+
       const res = await fetch("/api/upload", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ contentType: file.type, filename: file.name }),
+        body: JSON.stringify({
+          contentType: file.type,
+          filename: file.name,
+          fileSize: compressed.size,
+        }),
       });
 
       if (!res.ok) {
-        toast.error(t.editor.uploadError);
+        const data = await res.json().catch(() => null);
+        if (data?.error === "STORAGE_LIMIT") {
+          toast.error("Storage limit reached. Upgrade your plan.");
+        } else {
+          toast.error(t.editor.uploadError);
+        }
         return;
       }
 
@@ -55,8 +67,8 @@ export function useImageUpload() {
 
       const putRes = await fetch(signedUrl, {
         method: "PUT",
-        headers: { "Content-Type": file.type },
-        body: file,
+        headers: { "Content-Type": compressed.type || file.type },
+        body: compressed,
       });
 
       if (!putRes.ok) {
