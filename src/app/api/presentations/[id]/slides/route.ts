@@ -66,27 +66,29 @@ export async function PUT(
     return Response.json({ error: "Invalid slides data", details: parsed.error.flatten() }, { status: 400 });
   }
 
-  await db.delete(slides).where(eq(slides.presentationId, id));
+  await db.transaction(async (tx) => {
+    await tx.delete(slides).where(eq(slides.presentationId, id));
 
-  if (parsed.data.length > 0) {
-    await db.insert(slides).values(
-      parsed.data.map((s) => ({
-        id: s.id,
-        presentationId: id,
-        order: s.order,
-        transition: s.transition,
-        backgroundColor: s.backgroundColor,
-        backgroundImage: s.backgroundImage,
-        elements: s.elements,
-        mobileElements: s.mobileElements,
-      }))
-    );
-  }
+    if (parsed.data.length > 0) {
+      await tx.insert(slides).values(
+        parsed.data.map((s) => ({
+          id: s.id,
+          presentationId: id,
+          order: s.order,
+          transition: s.transition,
+          backgroundColor: s.backgroundColor,
+          backgroundImage: s.backgroundImage,
+          elements: s.elements,
+          mobileElements: s.mobileElements,
+        }))
+      );
+    }
 
-  await db
-    .update(presentations)
-    .set({ updatedAt: new Date() })
-    .where(eq(presentations.id, id));
+    await tx
+      .update(presentations)
+      .set({ updatedAt: new Date() })
+      .where(eq(presentations.id, id));
+  });
 
   return Response.json({ success: true });
 }

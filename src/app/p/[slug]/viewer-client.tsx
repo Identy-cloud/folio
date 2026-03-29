@@ -292,7 +292,7 @@ function SlideLayer({
         transformOrigin: "center center",
         position: "absolute",
         backgroundColor: slide.backgroundColor,
-        backgroundImage: slide.backgroundImage ? `url(${slide.backgroundImage})` : undefined,
+        backgroundImage: slide.backgroundImage?.startsWith("https://") ? `url("${slide.backgroundImage}")` : undefined,
         backgroundSize: "cover",
         backgroundPosition: "center",
         ...transitionStyle,
@@ -349,6 +349,7 @@ function ViewerElement({ element, delay, animate }: { element: SlideElement; del
             filter: element.filter || undefined,
           }}
           draggable={false}
+          loading="lazy"
         />
       )}
       </div>

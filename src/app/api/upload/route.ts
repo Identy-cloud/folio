@@ -11,9 +11,12 @@ const ALLOWED_TYPES = [
   "image/gif",
 ];
 
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+
 const uploadSchema = z.object({
   contentType: z.enum(ALLOWED_TYPES as [string, ...string[]]),
   filename: z.string().min(1).max(255),
+  fileSize: z.number().int().min(1).max(MAX_FILE_SIZE).optional(),
 });
 
 export async function POST(request: Request) {

@@ -27,7 +27,7 @@ export function useImageReplace(elementId: string) {
     if (!inputRef.current) {
       const input = document.createElement("input");
       input.type = "file";
-      input.accept = "image/jpeg,image/png,image/webp,image/gif,image/svg+xml";
+      input.accept = "image/jpeg,image/png,image/webp,image/gif";
       input.style.display = "none";
       input.addEventListener("change", handleFile);
       document.body.appendChild(input);

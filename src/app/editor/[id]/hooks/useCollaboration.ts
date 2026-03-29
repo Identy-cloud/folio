@@ -30,7 +30,7 @@ export function useCollaboration(presentationId: string) {
   const [connected, setConnected] = useState(false);
   const providerRef = useRef<WebsocketProvider | null>(null);
   const ydocRef = useRef<Y.Doc | null>(null);
-  const suppressRemote = useRef(false);
+  const LOCAL_ORIGIN = "local-store";
 
   const host = process.env.NEXT_PUBLIC_PARTYKIT_HOST;
 
@@ -85,8 +85,8 @@ export function useCollaboration(presentationId: string) {
 
       const ySlides = ydoc.getArray("slides");
 
-      ySlides.observeDeep(() => {
-        if (suppressRemote.current) return;
+      ySlides.observeDeep((_events, transaction) => {
+        if (transaction.origin === LOCAL_ORIGIN) return;
         const slidesData = ySlides.toJSON() as Slide[];
         if (slidesData.length > 0) {
           const store = useEditorStore.getState();
@@ -100,14 +100,12 @@ export function useCollaboration(presentationId: string) {
 
       const unsub = useEditorStore.subscribe((state, prev) => {
         if (state.slides !== prev.slides && ydoc && ySlides) {
-          suppressRemote.current = true;
           ydoc.transact(() => {
             ySlides.delete(0, ySlides.length);
             state.slides.forEach((slide) => {
               ySlides.push([slide]);
             });
-          });
-          suppressRemote.current = false;
+          }, LOCAL_ORIGIN);
         }
       });
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { nanoid } from "nanoid";
 import { SlidePanel } from "./SlidePanel/SlidePanel";
 import { Canvas } from "./Canvas/Canvas";
@@ -103,7 +103,10 @@ export function EditorLayout() {
 
       {/* Mobile drawer */}
       {mobilePanel && (
-        <div className="fixed inset-0 z-50 md:hidden">
+        <div
+          className="fixed inset-0 z-50 md:hidden"
+          onKeyDown={(e) => { if (e.key === "Escape") setMobilePanel(null); }}
+        >
           <div
             className="absolute inset-0 bg-black/40"
             onClick={() => setMobilePanel(null)}
@@ -285,10 +288,11 @@ function MobilePropertiesPanel({ onClose }: { onClose: () => void }) {
     : activeSlide?.elements;
   const el = elements?.find((e) => selectedIds.includes(e.id));
 
-  if (!el) {
-    onClose();
-    return null;
-  }
+  useEffect(() => {
+    if (!el) onClose();
+  }, [el, onClose]);
+
+  if (!el) return null;
 
   return (
     <div className="p-4 space-y-4">

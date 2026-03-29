@@ -1,6 +1,6 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useRef, useEffect, useCallback } from "react";
 import type { Slide, SlideElement, TextElement, ShapeElement, ArrowElement, DividerElement } from "@/types/elements";
 
 const W = 1920;
@@ -12,22 +12,40 @@ interface Props {
 }
 
 export const SlidePreview = memo(function SlidePreview({ slide, className }: Props) {
+  const canvasRef = useRef<HTMLDivElement>(null);
+  const parentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const parent = parentRef.current;
+    if (!canvas || !parent) return;
+    canvas.style.setProperty("--preview-scale", String(parent.clientWidth / W));
+    const obs = new ResizeObserver(([entry]) => {
+      const s = entry.contentRect.width / W;
+      canvas.style.setProperty("--preview-scale", String(s));
+    });
+    obs.observe(parent);
+    return () => obs.disconnect();
+  }, []);
+
   return (
     <div
       className={`relative overflow-hidden ${className ?? ""}`}
       style={{ aspectRatio: "16/9" }}
     >
       <div
+        ref={parentRef}
         style={{
           position: "absolute",
           inset: 0,
           backgroundColor: slide.backgroundColor || "#ffffff",
-          backgroundImage: slide.backgroundImage ? `url(${slide.backgroundImage})` : undefined,
+          backgroundImage: slide.backgroundImage?.startsWith("https://") ? `url("${slide.backgroundImage}")` : undefined,
           backgroundSize: "cover",
         }}
       >
         {/* Inner 1920x1080 canvas scaled to fill the container */}
         <div
+          ref={canvasRef}
           style={{
             width: W,
             height: H,
@@ -36,18 +54,6 @@ export const SlidePreview = memo(function SlidePreview({ slide, className }: Pro
             position: "absolute",
             top: 0,
             left: 0,
-          }}
-          ref={(el) => {
-            if (!el) return;
-            const parent = el.parentElement;
-            if (!parent) return;
-            const obs = new ResizeObserver(([entry]) => {
-              const s = entry.contentRect.width / W;
-              el.style.setProperty("--preview-scale", String(s));
-            });
-            obs.observe(parent);
-            // Initial scale
-            el.style.setProperty("--preview-scale", String(parent.clientWidth / W));
           }}
         >
           {slide.elements

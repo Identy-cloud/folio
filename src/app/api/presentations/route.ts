@@ -2,7 +2,7 @@ import { db } from "@/db";
 import { presentations, slides } from "@/db/schema";
 import { getAuthenticatedUser } from "@/lib/auth";
 import { checkRateLimit, rateLimitResponse } from "@/lib/rate-limit";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, and, inArray } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { z } from "zod";
 import { generateTemplate } from "@/lib/templates/generator";
@@ -32,11 +32,11 @@ export async function GET() {
     ? await db
         .select()
         .from(slides)
-        .where(eq(slides.order, 0))
+        .where(and(eq(slides.order, 0), inArray(slides.presentationId, ids)))
         .then((all) => {
           const map = new Map<string, typeof all[number]>();
           for (const s of all) {
-            if (ids.includes(s.presentationId)) map.set(s.presentationId, s);
+            map.set(s.presentationId, s);
           }
           return map;
         })

@@ -10,7 +10,6 @@ export function useImageUpload() {
   const [uploading, setUploading] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const addElement = useEditorStore((s) => s.addElement);
-  const activeSlide = useEditorStore((s) => s.getActiveSlide());
 
   useEffect(() => {
     return () => {
@@ -25,7 +24,7 @@ export function useImageUpload() {
     if (!inputRef.current) {
       const input = document.createElement("input");
       input.type = "file";
-      input.accept = "image/jpeg,image/png,image/webp,image/gif,image/svg+xml";
+      input.accept = "image/jpeg,image/png,image/webp,image/gif";
       input.style.display = "none";
       input.addEventListener("change", handleFile);
       document.body.appendChild(input);
@@ -65,12 +64,13 @@ export function useImageUpload() {
         return;
       }
 
+      const currentSlide = useEditorStore.getState().getActiveSlide();
       const el: ImageElement = {
         id: nanoid(),
         type: "image",
         x: 560, y: 240, w: 800, h: 600,
         rotation: 0, opacity: 1,
-        zIndex: (activeSlide?.elements.length ?? 0) + 1,
+        zIndex: (currentSlide?.elements.length ?? 0) + 1,
         locked: false,
         src: publicUrl,
         objectFit: "cover",

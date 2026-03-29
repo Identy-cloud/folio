@@ -6,6 +6,7 @@ interface ExportOptions {
   slideCount: number;
   getSlideElement: (index: number) => HTMLElement | null;
   onProgress: (current: number, total: number) => void;
+  delayMs?: number;
 }
 
 export async function exportToPdf({
@@ -13,6 +14,7 @@ export async function exportToPdf({
   slideCount,
   getSlideElement,
   onProgress,
+  delayMs = 0,
 }: ExportOptions): Promise<void> {
   const pdf = new jsPDF({ orientation: "landscape", unit: "px", format: [1920, 1080] });
 
@@ -21,6 +23,10 @@ export async function exportToPdf({
 
     const el = getSlideElement(i);
     if (!el) continue;
+
+    if (delayMs > 0) {
+      await new Promise((r) => setTimeout(r, delayMs));
+    }
 
     const dataUrl = await toPng(el, {
       width: 1920,

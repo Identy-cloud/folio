@@ -2,6 +2,7 @@ import { db } from "@/db";
 import { users, presentations } from "@/db/schema";
 import { getAuthenticatedUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { eq } from "drizzle-orm";
 
 export async function DELETE() {
@@ -16,7 +17,14 @@ export async function DELETE() {
   // Delete user from DB
   await db.delete(users).where(eq(users.id, user.id));
 
-  // Delete auth user from Supabase
+  // Delete auth user from Supabase using admin API
+  const adminClient = createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  );
+  await adminClient.auth.admin.deleteUser(user.id);
+
+  // Sign out current session
   const supabase = await createClient();
   await supabase.auth.signOut();
 

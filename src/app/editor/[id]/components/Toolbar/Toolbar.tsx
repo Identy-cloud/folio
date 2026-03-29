@@ -51,6 +51,7 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
       onProgress: (current, total) => {
         setExportProgress(`${current}/${total}`);
       },
+      delayMs: 150,
     });
 
     setActiveSlide(currentIndex);

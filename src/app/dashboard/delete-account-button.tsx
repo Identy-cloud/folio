@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "@/lib/i18n/context";
 
 export function DeleteAccountButton() {
+  const { t } = useTranslation();
   const router = useRouter();
   const [confirming, setConfirming] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -21,20 +23,20 @@ export function DeleteAccountButton() {
 
   if (confirming) {
     return (
-      <div className="flex items-center gap-2">
-        <span className="text-[10px] text-red-400">Seguro?</span>
+      <div role="alertdialog" aria-label={t.auth.deleteConfirm} className="flex items-center gap-2">
+        <span className="text-[10px] text-red-400">{t.auth.deleteConfirm}</span>
         <button
           onClick={handleDelete}
           disabled={deleting}
           className="text-[10px] text-red-400 underline underline-offset-2 hover:text-red-300 disabled:opacity-50"
         >
-          {deleting ? "..." : "Eliminar"}
+          {deleting ? "..." : t.auth.deleteAction}
         </button>
         <button
           onClick={() => setConfirming(false)}
           className="text-[10px] text-neutral-500 hover:text-neutral-300"
         >
-          No
+          {t.auth.deleteCancel}
         </button>
       </div>
     );
@@ -45,7 +47,7 @@ export function DeleteAccountButton() {
       onClick={() => setConfirming(true)}
       className="text-[10px] text-neutral-600 hover:text-red-400 transition-colors"
     >
-      Eliminar cuenta
+      {t.auth.deleteAccount}
     </button>
   );
 }

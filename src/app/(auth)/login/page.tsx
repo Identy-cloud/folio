@@ -42,8 +42,9 @@ export default function LoginPage() {
         return;
       }
 
-      const redirect = localStorage.getItem("folio-redirect") ?? "/dashboard";
+      const raw = localStorage.getItem("folio-redirect") ?? "/dashboard";
       localStorage.removeItem("folio-redirect");
+      const redirect = raw.startsWith("/") && !raw.startsWith("//") ? raw : "/dashboard";
       router.push(redirect);
       router.refresh();
     } finally {
@@ -52,7 +53,7 @@ export default function LoginPage() {
   }
 
   async function handlePasswordReset() {
-    if (!email) { setError("Ingresa tu email primero"); return; }
+    if (!email) { setError(t.auth.enterEmail); return; }
     setError(null);
     setLoading(true);
     const supabase = createClient();
@@ -61,7 +62,7 @@ export default function LoginPage() {
     });
     setLoading(false);
     if (resetError) { setError(resetError.message); return; }
-    setSuccess("Revisa tu email para restablecer tu contrasena");
+    setSuccess(t.auth.resetSent);
   }
 
   async function handleGoogleLogin() {
@@ -131,7 +132,7 @@ export default function LoginPage() {
               onClick={handlePasswordReset}
               className="mt-2 w-full text-[10px] text-neutral-600 hover:text-neutral-300 transition-colors"
             >
-              He olvidado mi contrasena
+              {t.auth.forgotPassword}
             </button>
           )}
         </form>
@@ -169,10 +170,10 @@ export default function LoginPage() {
 
         {isSignUp && (
           <p className="text-center text-[10px] text-neutral-600">
-            Al crear una cuenta aceptas los{" "}
-            <Link href="/terms" className="underline underline-offset-2 hover:text-neutral-300 transition-colors">Terminos de Servicio</Link>
-            {" "}y la{" "}
-            <Link href="/privacy" className="underline underline-offset-2 hover:text-neutral-300 transition-colors">Politica de Privacidad</Link>
+            {t.auth.termsPrefix}{" "}
+            <Link href="/terms" className="underline underline-offset-2 hover:text-neutral-300 transition-colors">{t.auth.termsLink}</Link>
+            {" "}{t.auth.termsAnd}{" "}
+            <Link href="/privacy" className="underline underline-offset-2 hover:text-neutral-300 transition-colors">{t.auth.privacyLink}</Link>
           </p>
         )}
       </div>

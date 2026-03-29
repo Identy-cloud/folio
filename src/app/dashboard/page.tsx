@@ -37,14 +37,24 @@ export default function DashboardPage() {
   const { t } = useTranslation();
   const [presentations, setPresentations] = useState<Presentation[]>([]);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [dialog, setDialog] = useState<Dialog>(null);
 
   useEffect(() => {
     const load = async () => {
-      const res = await fetch("/api/presentations");
-      if (res.ok) setPresentations(await res.json());
+      try {
+        const res = await fetch("/api/presentations");
+        if (res.ok) {
+          setPresentations(await res.json());
+          setFetchError(false);
+        } else {
+          setFetchError(true);
+        }
+      } catch {
+        setFetchError(true);
+      }
       setLoading(false);
     };
     load();
@@ -113,6 +123,21 @@ export default function DashboardPage() {
   }
 
   if (loading) return <SkeletonGrid />;
+
+  if (fetchError) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 text-center sm:py-32">
+        <p className="font-display text-3xl tracking-tight text-neutral-700 sm:text-5xl">{t.common.error}</p>
+        <p className="mt-3 text-sm text-neutral-400">{t.common.connectionError}</p>
+        <button
+          onClick={() => { setLoading(true); setFetchError(false); window.location.reload(); }}
+          className="mt-6 bg-white px-8 py-3 text-sm font-medium tracking-widest text-[#161616] uppercase hover:bg-neutral-200 transition-colors"
+        >
+          {t.common.loading}
+        </button>
+      </div>
+    );
+  }
 
   const filtered = search
     ? presentations.filter((p) => p.title.toLowerCase().includes(search.toLowerCase()))

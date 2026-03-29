@@ -12,12 +12,13 @@ function getR2Client() {
   });
 }
 
-export async function generateUploadUrl(key: string, contentType: string) {
+export async function generateUploadUrl(key: string, contentType: string, maxSize?: number) {
   const client = getR2Client();
   const command = new PutObjectCommand({
     Bucket: process.env.R2_BUCKET_NAME!,
     Key: key,
     ContentType: contentType,
+    ...(maxSize ? { ContentLength: maxSize } : {}),
   });
 
   const signedUrl = await getSignedUrl(client, command, { expiresIn: 600 });

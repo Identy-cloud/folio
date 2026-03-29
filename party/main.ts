@@ -22,6 +22,7 @@ export default class YjsServer implements Party.Server {
       return;
     }
 
+    let userId: string;
     try {
       const res = await fetch(`${supabaseUrl}/auth/v1/user`, {
         headers: {
@@ -34,8 +35,33 @@ export default class YjsServer implements Party.Server {
         conn.close(4001, "Invalid auth token");
         return;
       }
+
+      const userData = await res.json();
+      userId = userData.id;
     } catch {
       conn.close(4002, "Auth validation failed");
+      return;
+    }
+
+    // Verify user has access to this presentation room
+    const roomId = this.room.id;
+    try {
+      const dbRes = await fetch(
+        `${supabaseUrl}/rest/v1/presentations?id=eq.${roomId}&user_id=eq.${userId}&select=id`,
+        {
+          headers: {
+            apikey: supabaseKey,
+            Authorization: `Bearer ${supabaseKey}`,
+          },
+        }
+      );
+      const rows = await dbRes.json();
+      if (!Array.isArray(rows) || rows.length === 0) {
+        conn.close(4003, "Access denied");
+        return;
+      }
+    } catch {
+      conn.close(4002, "Authorization check failed");
       return;
     }
 
