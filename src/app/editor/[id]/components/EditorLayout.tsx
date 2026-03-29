@@ -19,7 +19,9 @@ import {
 import { BottomSheet } from "@/components/ui/BottomSheet";
 import { ShortcutsPanel } from "@/components/editor/ShortcutsPanel";
 import { HistoryPanel } from "./HistoryPanel";
-import { ClockCounterClockwise } from "@phosphor-icons/react";
+import { LayerPanel } from "./LayerPanel";
+import { SlideNotes } from "./SlideNotes";
+import { ClockCounterClockwise, Stack, NotePencil } from "@phosphor-icons/react";
 import { MobileSlidePanel } from "./Mobile/MobileSlidePanel";
 import { MobileInsertPanel } from "./Mobile/MobileInsertPanel";
 import { MobilePropertiesPanel } from "./Mobile/MobilePropertiesPanel";
@@ -38,6 +40,9 @@ export function EditorLayout() {
   const [mobilePanel, setMobilePanel] = useState<"slides" | "insert" | "properties" | null>(null);
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
+  const [layersOpen, setLayersOpen] = useState(false);
+  const [notesOpen, setNotesOpen] = useState(false);
+  const rightPanel = historyOpen ? "history" : layersOpen ? "layers" : "palette";
   const selectedIds = useEditorStore((s) => s.selectedElementIds);
   const hasSelection = selectedIds.length > 0;
 
@@ -60,8 +65,12 @@ export function EditorLayout() {
         <Toolbar
           connected={connected}
           peerCount={peers.length}
-          onToggleHistory={() => setHistoryOpen((v) => !v)}
+          onToggleHistory={() => { setHistoryOpen((v) => !v); setLayersOpen(false); }}
           historyOpen={historyOpen}
+          onToggleLayers={() => { setLayersOpen((v) => !v); setHistoryOpen(false); }}
+          layersOpen={layersOpen}
+          onToggleNotes={() => setNotesOpen((v) => !v)}
+          notesOpen={notesOpen}
         />
       </div>
       <div className="flex flex-1 overflow-hidden">
@@ -69,18 +78,25 @@ export function EditorLayout() {
           <SlidePanel />
         </div>
 
-        <div className="flex-1 flex items-center justify-center overflow-hidden">
-          <Canvas
-            peers={peers}
-            onCursorMove={updateCursor}
-            onCursorLeave={clearCursor}
-          />
+        <div className="flex flex-1 flex-col overflow-hidden">
+          <div className="flex-1 flex items-center justify-center overflow-hidden">
+            <Canvas
+              peers={peers}
+              onCursorMove={updateCursor}
+              onCursorLeave={clearCursor}
+            />
+          </div>
+          {notesOpen && <SlideNotes />}
         </div>
 
         <div data-panel="palette" className="hidden h-full md:block">
-          {historyOpen ? (
+          {rightPanel === "history" ? (
             <div className="flex h-full w-56 flex-col border-l border-neutral-800 bg-[#161616]">
               <HistoryPanel onClose={() => setHistoryOpen(false)} />
+            </div>
+          ) : rightPanel === "layers" ? (
+            <div className="flex h-full w-56 flex-col border-l border-neutral-800 bg-[#161616]">
+              <LayerPanel onClose={() => setLayersOpen(false)} />
             </div>
           ) : (
             <ElementPalette />

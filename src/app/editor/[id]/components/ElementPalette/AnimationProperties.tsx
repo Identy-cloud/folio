@@ -12,6 +12,9 @@ const ANIMATIONS: { id: ElementAnimation; label: string }[] = [
   { id: "fade-left", label: "←" },
   { id: "fade-right", label: "→" },
   { id: "zoom-in", label: "⊕" },
+  { id: "zoom-out", label: "⊖" },
+  { id: "rotate-in", label: "↻" },
+  { id: "bounce-in", label: "⌁" },
 ];
 
 interface Props {

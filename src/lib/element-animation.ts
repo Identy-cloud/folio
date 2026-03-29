@@ -6,6 +6,9 @@ const KEYFRAME_MAP: Record<Exclude<ElementAnimation, "none">, string> = {
   "fade-left": "el-fade-left",
   "fade-right": "el-fade-right",
   "zoom-in": "el-zoom-in",
+  "zoom-out": "el-zoom-out",
+  "rotate-in": "el-rotate-in",
+  "bounce-in": "el-bounce-in",
 };
 
 const EASING_MAP: Record<string, string> = {

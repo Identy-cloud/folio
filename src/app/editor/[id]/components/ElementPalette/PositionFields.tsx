@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useEditorStore } from "@/store/editorStore";
+import { LinkSimple, LinkSimpleBreak } from "@phosphor-icons/react";
 import type { SlideElement } from "@/types/elements";
 import { useTranslation } from "@/lib/i18n/context";
 
@@ -37,10 +38,22 @@ export function PositionFields({ element }: Props) {
   const { t } = useTranslation();
   const updateElement = useEditorStore((s) => s.updateElement);
   const pushHistory = useEditorStore((s) => s.pushHistory);
+  const [locked, setLocked] = useState(false);
+  const aspect = element.w / element.h;
 
   function update(updates: Partial<SlideElement>) {
     updateElement(element.id, updates);
     pushHistory();
+  }
+
+  function updateW(v: number) {
+    if (locked) update({ w: v, h: Math.round(v / aspect) });
+    else update({ w: v });
+  }
+
+  function updateH(v: number) {
+    if (locked) update({ h: v, w: Math.round(v * aspect) });
+    else update({ h: v });
   }
 
   return (
@@ -51,9 +64,18 @@ export function PositionFields({ element }: Props) {
       <div className="grid grid-cols-2 gap-2">
         <NumField label="X" value={element.x} onChange={(v) => update({ x: v })} />
         <NumField label="Y" value={element.y} onChange={(v) => update({ y: v })} />
-        <NumField label="W" value={element.w} onChange={(v) => update({ w: v })} />
-        <NumField label="H" value={element.h} onChange={(v) => update({ h: v })} />
+        <NumField label="W" value={element.w} onChange={updateW} />
+        <NumField label="H" value={element.h} onChange={updateH} />
       </div>
+      <button
+        onClick={() => setLocked((v) => !v)}
+        className={`flex items-center gap-1 rounded px-2 py-1 text-[10px] transition-colors ${
+          locked ? "bg-blue-500/20 text-blue-400" : "text-neutral-500 hover:bg-neutral-800"
+        }`}
+      >
+        {locked ? <LinkSimple size={12} /> : <LinkSimpleBreak size={12} />}
+        {locked ? "Ratio locked" : "Lock ratio"}
+      </button>
       <div className="grid grid-cols-2 gap-2">
         <NumField label={t.editor.rotation} value={element.rotation} onChange={(v) => update({ rotation: v })} />
         <label className="flex flex-col gap-0.5">

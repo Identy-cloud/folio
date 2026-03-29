@@ -67,6 +67,20 @@ body {
   from { opacity: 0; transform: scale(0.85); }
   to   { opacity: 1; transform: none; }
 }
+@keyframes el-zoom-out {
+  from { opacity: 0; transform: scale(1.25); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes el-rotate-in {
+  from { opacity: 0; transform: rotate(-15deg) scale(0.9); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes el-bounce-in {
+  0%   { opacity: 0; transform: scale(0.3); }
+  50%  { opacity: 1; transform: scale(1.05); }
+  70%  { transform: scale(0.95); }
+  100% { transform: none; }
+}
 
 /* Mobile properties button entrance */
 @keyframes props-in {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowCounterClockwise, ArrowClockwise, FilePdf, FileImage, Image as ImageIcon, Desktop, DeviceMobile, Play, ClockCounterClockwise } from "@phosphor-icons/react";
+import { ArrowCounterClockwise, ArrowClockwise, FilePdf, FileImage, Image as ImageIcon, Desktop, DeviceMobile, Play, ClockCounterClockwise, Stack, NotePencil } from "@phosphor-icons/react";
 import { Tooltip } from "@/components/ui/Tooltip";
 
 function Spinner() {
@@ -19,9 +19,13 @@ interface ToolbarProps {
   peerCount?: number;
   onToggleHistory?: () => void;
   historyOpen?: boolean;
+  onToggleLayers?: () => void;
+  layersOpen?: boolean;
+  onToggleNotes?: () => void;
+  notesOpen?: boolean;
 }
 
-export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen }: ToolbarProps) {
+export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen, onToggleLayers, layersOpen, onToggleNotes, notesOpen }: ToolbarProps) {
   const { t } = useTranslation();
   const undo = useEditorStore((s) => s.undo);
   const redo = useEditorStore((s) => s.redo);
@@ -103,6 +107,30 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
                 aria-pressed={historyOpen}
               >
                 <ClockCounterClockwise size={16} weight="regular" />
+              </button>
+            </Tooltip>
+          )}
+          {onToggleLayers && (
+            <Tooltip content="Layers">
+              <button
+                onClick={onToggleLayers}
+                className={`hidden md:flex rounded p-2 transition-colors ${layersOpen ? "bg-neutral-700 text-white" : "text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200"}`}
+                aria-label="Layers"
+                aria-pressed={layersOpen}
+              >
+                <Stack size={16} weight="regular" />
+              </button>
+            </Tooltip>
+          )}
+          {onToggleNotes && (
+            <Tooltip content="Notes">
+              <button
+                onClick={onToggleNotes}
+                className={`hidden md:flex rounded p-2 transition-colors ${notesOpen ? "bg-neutral-700 text-white" : "text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200"}`}
+                aria-label="Slide notes"
+                aria-pressed={notesOpen}
+              >
+                <NotePencil size={16} weight="regular" />
               </button>
             </Tooltip>
           )}

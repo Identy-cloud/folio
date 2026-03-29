@@ -1,6 +1,6 @@
 export type ElementType = "text" | "image" | "shape" | "arrow" | "divider";
 
-export type ElementAnimation = "none" | "fade-up" | "fade-down" | "fade-left" | "fade-right" | "zoom-in";
+export type ElementAnimation = "none" | "fade-up" | "fade-down" | "fade-left" | "fade-right" | "zoom-in" | "zoom-out" | "rotate-in" | "bounce-in";
 
 export interface BaseElement {
   id: string;
