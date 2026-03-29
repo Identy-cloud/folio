@@ -5,6 +5,8 @@ import { nanoid } from "nanoid";
 import { useEditorStore } from "@/store/editorStore";
 import { textDefaults } from "@/lib/templates/element-defaults";
 import { THEMES } from "@/lib/templates/themes";
+import { toast } from "sonner";
+import type { ImageElement } from "@/types/elements";
 import { CanvasElement } from "./CanvasElement";
 import { SelectionBox } from "./SelectionBox";
 import { SnapGuides } from "./SnapGuides";
@@ -104,12 +106,88 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
     onCursorMove(x, y, activeSlideIndex);
   }
 
+  const [dragOver, setDragOver] = useState(false);
+
+  function handleDragOver(e: React.DragEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragOver(true);
+  }
+
+  function handleDragLeave() {
+    setDragOver(false);
+  }
+
+  async function handleDrop(e: React.DragEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragOver(false);
+
+    const file = e.dataTransfer.files?.[0];
+    if (!file || !file.type.startsWith("image/")) return;
+
+    const allowed = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+    if (!allowed.includes(file.type)) return;
+
+    try {
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ contentType: file.type, filename: file.name, fileSize: file.size }),
+      });
+
+      if (res.status === 403) {
+        toast.error("Storage limit reached");
+        return;
+      }
+      if (!res.ok) { toast.error("Upload error"); return; }
+
+      const { signedUrl, publicUrl } = await res.json();
+      const putRes = await fetch(signedUrl, {
+        method: "PUT",
+        headers: { "Content-Type": file.type },
+        body: file,
+      });
+      if (!putRes.ok) { toast.error("Upload failed"); return; }
+
+      const bounds = (e.target as HTMLElement).closest("[data-slide-canvas]")?.getBoundingClientRect();
+      const dropX = bounds ? (e.clientX - bounds.left) / scale : 400;
+      const dropY = bounds ? (e.clientY - bounds.top) / scale : 200;
+
+      const currentSlide = useEditorStore.getState().getActiveSlide();
+      const el: ImageElement = {
+        id: nanoid(),
+        type: "image",
+        x: dropX - 200,
+        y: dropY - 150,
+        w: 400,
+        h: 300,
+        rotation: 0,
+        opacity: 1,
+        zIndex: (currentSlide?.elements.length ?? 0) + 1,
+        locked: false,
+        src: publicUrl,
+        objectFit: "cover",
+        filter: "",
+        isPlaceholder: false,
+      };
+
+      addElement(el);
+      toast.success("Image inserted");
+    } catch {
+      toast.error("Connection error");
+    }
+  }
+
   if (!slide) return null;
 
   return (
     <div
       ref={wrapperRef}
-      className="relative h-full w-full overflow-hidden touch-none"
+      className={`relative h-full w-full overflow-hidden touch-none ${dragOver ? "ring-2 ring-inset ring-blue-500/50" : ""}`}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
     >
       <div
         data-slide-canvas

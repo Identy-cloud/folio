@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { presentations, slides } from "@/db/schema";
+import { presentations, slides, users } from "@/db/schema";
 import { eq, asc } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -32,8 +32,15 @@ async function getPresentation(slug: string) {
     .where(eq(slides.presentationId, pres.id))
     .orderBy(asc(slides.order));
 
+  const [owner] = await db
+    .select({ plan: users.plan })
+    .from(users)
+    .where(eq(users.id, pres.userId))
+    .limit(1);
+
   return {
     presentation: pres,
+    ownerPlan: owner?.plan ?? "free",
     slides: slideRows.map((s) => ({
       id: s.id,
       presentationId: s.presentationId,
@@ -91,6 +98,7 @@ export default async function ViewerPage({
     <ViewerWrapper
       title={data.presentation.title}
       slides={data.slides as SlideRow[]}
+      showWatermark={data.ownerPlan === "free"}
     />
   );
 }

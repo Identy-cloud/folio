@@ -17,11 +17,12 @@ interface Slide {
 interface Props {
   title: string;
   slides: Slide[];
+  showWatermark?: boolean;
 }
 
 const TRANSITION_MS = 350;
 
-export function MobileViewer({ title, slides }: Props) {
+export function MobileViewer({ title, slides, showWatermark }: Props) {
   const { t } = useTranslation();
   const [current, setCurrent] = useState(0);
   const [displayed, setDisplayed] = useState(0);
@@ -155,6 +156,14 @@ export function MobileViewer({ title, slides }: Props) {
       onTouchEnd={handleTouchEnd}
     >
       <div className="relative flex-1" style={{ overflow: animating ? "visible" : "hidden" }}>
+        {/* Free tier watermark */}
+        {showWatermark && (
+          <div className="pointer-events-none absolute top-3 right-3 z-10">
+            <span className="rounded bg-black/40 px-2 py-0.5 text-[9px] font-medium tracking-[0.2em] text-white/50 uppercase backdrop-blur-sm">
+              Made with Folio
+            </span>
+          </div>
+        )}
         {/* Outgoing slide */}
         {animating && outgoing && (
           <div className="absolute inset-0" style={getStyle("out")}>

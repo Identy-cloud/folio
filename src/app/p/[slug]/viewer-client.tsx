@@ -23,9 +23,10 @@ interface Slide {
 interface Props {
   title: string;
   slides: Slide[];
+  showWatermark?: boolean;
 }
 
-export function ViewerClient({ title, slides }: Props) {
+export function ViewerClient({ title, slides, showWatermark }: Props) {
   const [current, setCurrent] = useState(0);
   const [displayed, setDisplayed] = useState(0);
   const [transitioning, setTransitioning] = useState(false);
@@ -138,7 +139,7 @@ export function ViewerClient({ title, slides }: Props) {
   }
 
   if (isMobile) {
-    return <MobileViewer title={title} slides={slides} />;
+    return <MobileViewer title={title} slides={slides} showWatermark={showWatermark} />;
   }
 
   const outgoing = slides[displayed];
@@ -235,6 +236,15 @@ export function ViewerClient({ title, slides }: Props) {
         transitionStyle={transitioning ? getTransitionStyles("in") : undefined}
         animateKey={transitioning ? -1 : current}
       />
+
+      {/* Free tier watermark */}
+      {showWatermark && (
+        <div className="pointer-events-none absolute top-4 right-4 z-10">
+          <span className="rounded bg-black/40 px-2.5 py-1 text-[10px] font-medium tracking-[0.2em] text-white/50 uppercase backdrop-blur-sm">
+            Made with Folio
+          </span>
+        </div>
+      )}
 
       {/* Navigation hover arrows */}
       {hoverZone === "left" && (

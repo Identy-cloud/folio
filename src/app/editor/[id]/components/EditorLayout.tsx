@@ -16,8 +16,10 @@ import { useSessionGuard } from "@/hooks/useSessionGuard";
 import {
   StackSimple, PlusCircle, SlidersHorizontal,
   TextT, Rectangle, Circle, Triangle, Image as ImageIcon,
+  ArrowCounterClockwise, ArrowClockwise,
 } from "@phosphor-icons/react";
 import { BottomSheet } from "@/components/ui/BottomSheet";
+import { ShortcutsPanel } from "@/components/editor/ShortcutsPanel";
 import { SlidePreview } from "@/components/SlidePreview";
 import type { TextElement, ShapeElement, ImageElement, ArrowElement, DividerElement, SlideTransition } from "@/types/elements";
 import { textDefaults, shapeDefaults } from "@/lib/templates/element-defaults";
@@ -48,8 +50,21 @@ export function EditorLayout() {
   useSessionGuard();
 
   const [mobilePanel, setMobilePanel] = useState<"slides" | "insert" | "properties" | null>(null);
+  const [shortcutsOpen, setShortcutsOpen] = useState(false);
   const selectedIds = useEditorStore((s) => s.selectedElementIds);
   const hasSelection = selectedIds.length > 0;
+
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.target as HTMLElement).tagName === "INPUT" || (e.target as HTMLElement).isContentEditable) return;
+      if (e.key === "?" || (e.key === "/" && e.shiftKey)) {
+        e.preventDefault();
+        setShortcutsOpen((v) => !v);
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   return (
     <div className="flex h-screen flex-col bg-[#111111]">
@@ -73,6 +88,24 @@ export function EditorLayout() {
         <div data-panel="palette" className="hidden md:block">
           <ElementPalette />
         </div>
+      </div>
+
+      {/* Mobile undo/redo */}
+      <div className="fixed top-14 right-2 z-40 flex gap-1 md:hidden">
+        <button
+          onClick={() => useEditorStore.getState().undo()}
+          className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-900/80 text-neutral-400 shadow active:scale-95 active:text-white transition-transform backdrop-blur-sm"
+          aria-label={t.editor.undo}
+        >
+          <ArrowCounterClockwise size={16} />
+        </button>
+        <button
+          onClick={() => useEditorStore.getState().redo()}
+          className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-900/80 text-neutral-400 shadow active:scale-95 active:text-white transition-transform backdrop-blur-sm"
+          aria-label={t.editor.redo}
+        >
+          <ArrowClockwise size={16} />
+        </button>
       </div>
 
       {/* Mobile floating buttons */}
@@ -120,6 +153,7 @@ export function EditorLayout() {
       </BottomSheet>
 
       <Onboarding />
+      <ShortcutsPanel open={shortcutsOpen} onClose={() => setShortcutsOpen(false)} />
     </div>
   );
 }

@@ -29,8 +29,9 @@ interface Slide {
 interface Props {
   title: string;
   slides: Slide[];
+  showWatermark?: boolean;
 }
 
-export function ViewerWrapper({ title, slides }: Props) {
-  return <ViewerClient title={title} slides={slides} />;
+export function ViewerWrapper({ title, slides, showWatermark }: Props) {
+  return <ViewerClient title={title} slides={slides} showWatermark={showWatermark} />;
 }
