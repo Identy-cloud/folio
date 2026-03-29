@@ -216,11 +216,10 @@ export function ViewerClient({ title, slides }: Props) {
 
       {/* Current slide */}
       <SlideLayer
-        key={`slide-${current}`}
         slide={incoming ?? outgoing}
         scale={scale}
         transitionStyle={transitioning ? getTransitionStyles("in") : undefined}
-        animate
+        animateKey={transitioning ? -1 : current}
       />
 
       {/* Bottom bar */}
@@ -270,17 +269,19 @@ function SlideLayer({
   slide,
   scale,
   transitionStyle,
-  animate,
+  animateKey,
 }: {
   slide: Slide;
   scale: number;
   transitionStyle?: React.CSSProperties;
-  animate?: boolean;
+  animateKey?: number;
 }) {
   const sorted = useMemo(
     () => slide.elements.slice().sort((a, b) => a.zIndex - b.zIndex),
     [slide.elements]
   );
+
+  const shouldAnimate = animateKey !== undefined && animateKey >= 0;
 
   return (
     <div
@@ -298,7 +299,11 @@ function SlideLayer({
       }}
     >
       {sorted.map((el, i) => (
-        <ViewerElement key={el.id} element={el} delay={animate ? i * 80 : 0} />
+        <ViewerElement
+          key={shouldAnimate ? `${el.id}-${animateKey}` : el.id}
+          element={el}
+          delay={shouldAnimate ? i * 80 : 0}
+        />
       ))}
     </div>
   );

@@ -172,7 +172,7 @@ export function MobileViewer({ title, slides }: Props) {
             className="h-full overflow-y-auto overscroll-contain pb-14"
             style={{ backgroundColor: activeSlide.backgroundColor }}
           >
-            <MobileSlideContent key={`m-${displayed}`} elements={inElements} bg={activeSlide.backgroundColor} />
+            <MobileSlideContent animateKey={animating ? -1 : current} elements={inElements} bg={activeSlide.backgroundColor} />
           </div>
         </div>
       </div>
@@ -212,7 +212,7 @@ export function MobileViewer({ title, slides }: Props) {
   );
 }
 
-function MobileSlideContent({ elements, bg }: { elements: SlideElement[]; bg: string }) {
+function MobileSlideContent({ elements, bg, animateKey }: { elements: SlideElement[]; bg: string; animateKey?: number }) {
   const sorted = useMemo(() => {
     const titles: SlideElement[] = [];
     const images: SlideElement[] = [];
@@ -236,10 +236,16 @@ function MobileSlideContent({ elements, bg }: { elements: SlideElement[]; bg: st
     return [...titles, ...images, ...body, ...decorative];
   }, [elements]);
 
+  const shouldAnimate = animateKey !== undefined && animateKey >= 0;
+
   return (
     <div className="min-h-full px-5 py-8 space-y-4" style={{ backgroundColor: bg }}>
       {sorted.map((el, i) => (
-        <MobileElement key={el.id} element={el} delay={i * 80} />
+        <MobileElement
+          key={shouldAnimate ? `${el.id}-${animateKey}` : el.id}
+          element={el}
+          delay={shouldAnimate ? i * 80 : 0}
+        />
       ))}
     </div>
   );
