@@ -14,9 +14,10 @@ import { useCollaboration } from "../hooks/useCollaboration";
 import { useEditorStore } from "@/store/editorStore";
 import { useSessionGuard } from "@/hooks/useSessionGuard";
 import {
-  StackSimple, PlusCircle, SlidersHorizontal, X,
+  StackSimple, PlusCircle, SlidersHorizontal,
   TextT, Rectangle, Circle, Triangle, Image as ImageIcon,
 } from "@phosphor-icons/react";
+import { BottomSheet } from "@/components/ui/BottomSheet";
 import { SlidePreview } from "@/components/SlidePreview";
 import type { TextElement, ShapeElement, ImageElement, ArrowElement, DividerElement, SlideTransition } from "@/types/elements";
 import { textDefaults, shapeDefaults } from "@/lib/templates/element-defaults";
@@ -102,41 +103,21 @@ export function EditorLayout() {
       </div>
 
       {/* Mobile drawer */}
-      {mobilePanel && (
-        <div
-          className="fixed inset-0 z-50 md:hidden"
-          onKeyDown={(e) => { if (e.key === "Escape") setMobilePanel(null); }}
-        >
-          <div
-            className="absolute inset-0 bg-black/40"
-            onClick={() => setMobilePanel(null)}
-          />
-          <div role="dialog" aria-modal="true" className="absolute bottom-0 left-0 right-0 max-h-[70vh] overflow-y-auto rounded-t-xl bg-[#1e1e1e] shadow-2xl">
-            <div className="sticky top-0 flex items-center justify-between border-b border-neutral-700 bg-[#1e1e1e] px-4 py-3 rounded-t-xl">
-              <span className="text-xs font-medium uppercase tracking-wider text-neutral-400">
-                {mobilePanel === "slides" ? t.editor.slides : mobilePanel === "properties" ? t.editor.properties : t.editor.insert}
-              </span>
-              <button
-                onClick={() => setMobilePanel(null)}
-                autoFocus
-                className="p-2 text-neutral-300 hover:text-white"
-                aria-label={t.common.close}
-              >
-                <X size={18} />
-              </button>
-            </div>
-            {mobilePanel === "slides" && (
-              <MobileSlidePanel onClose={() => setMobilePanel(null)} />
-            )}
-            {mobilePanel === "insert" && (
-              <MobileInsertPanel onClose={() => setMobilePanel(null)} />
-            )}
-            {mobilePanel === "properties" && (
-              <MobilePropertiesPanel onClose={() => setMobilePanel(null)} />
-            )}
-          </div>
-        </div>
-      )}
+      <BottomSheet
+        open={mobilePanel !== null}
+        title={mobilePanel === "slides" ? t.editor.slides : mobilePanel === "properties" ? t.editor.properties : t.editor.insert}
+        onClose={() => setMobilePanel(null)}
+      >
+        {mobilePanel === "slides" && (
+          <MobileSlidePanel onClose={() => setMobilePanel(null)} />
+        )}
+        {mobilePanel === "insert" && (
+          <MobileInsertPanel onClose={() => setMobilePanel(null)} />
+        )}
+        {mobilePanel === "properties" && (
+          <MobilePropertiesPanel onClose={() => setMobilePanel(null)} />
+        )}
+      </BottomSheet>
 
       <Onboarding />
     </div>

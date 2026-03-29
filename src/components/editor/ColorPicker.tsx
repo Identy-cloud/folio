@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
+import { useClickOutside } from "@/hooks/useClickOutside";
 
 const PRESETS = [
   "#ffffff", "#e5e5e5", "#a3a3a3", "#737373",
@@ -38,17 +39,10 @@ export function ColorPicker({ value, onChange, label }: Props) {
     setPos({ top, left });
   }, []);
 
+  useClickOutside(dropdownRef, () => setOpen(false), open);
+
   useEffect(() => {
-    if (!open) return;
-    updatePos();
-    function close(e: MouseEvent) {
-      const target = e.target as Node;
-      if (triggerRef.current?.contains(target)) return;
-      if (dropdownRef.current?.contains(target)) return;
-      setOpen(false);
-    }
-    document.addEventListener("mousedown", close);
-    return () => document.removeEventListener("mousedown", close);
+    if (open) updatePos();
   }, [open, updatePos]);
 
   function commitHex() {

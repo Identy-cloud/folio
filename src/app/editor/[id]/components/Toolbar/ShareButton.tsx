@@ -5,6 +5,7 @@ import { ShareNetwork, Link as LinkIcon, Check, Globe, Lock } from "@phosphor-ic
 import { useEditorStore } from "@/store/editorStore";
 import { toast } from "sonner";
 import { useTranslation } from "@/lib/i18n/context";
+import { useClickOutside } from "@/hooks/useClickOutside";
 
 interface PresentationMeta {
   slug: string;
@@ -28,15 +29,7 @@ export function ShareButton() {
       .catch(() => {});
   }, [open, presentationId]);
 
-  useEffect(() => {
-    function handleClick(e: MouseEvent) {
-      if (popRef.current && !popRef.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    }
-    if (open) document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, [open]);
+  useClickOutside(popRef, () => setOpen(false), open);
 
   async function togglePublic() {
     if (!meta) return;

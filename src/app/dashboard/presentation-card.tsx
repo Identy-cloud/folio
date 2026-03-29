@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { es } from "date-fns/locale";
 import { DotsThreeVertical } from "@phosphor-icons/react";
 import { SlidePreview } from "@/components/SlidePreview";
 import type { SlideElement } from "@/types/elements";
 import { useTranslation } from "@/lib/i18n/context";
+import { useClickOutside } from "@/hooks/useClickOutside";
 
 interface Props {
   presentation: {
@@ -43,15 +44,7 @@ export function PresentationCard({
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setMenuOpen(false);
-      }
-    }
-    if (menuOpen) document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [menuOpen]);
+  useClickOutside(menuRef, () => setMenuOpen(false), menuOpen);
 
   return (
     <div className="group relative flex flex-col border border-neutral-800 bg-[#1e1e1e] transition-shadow hover:shadow-lg">

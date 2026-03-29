@@ -1,22 +1,16 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { useTranslation } from "@/lib/i18n/context";
 import { LOCALES } from "@/lib/i18n";
+import { useClickOutside } from "@/hooks/useClickOutside";
 
 export function LocaleSelector() {
   const { locale, setLocale } = useTranslation();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!open) return;
-    function close(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
-    }
-    document.addEventListener("mousedown", close);
-    return () => document.removeEventListener("mousedown", close);
-  }, [open]);
+  useClickOutside(ref, () => setOpen(false), open);
 
   const current = LOCALES.find((l) => l.code === locale);
 
