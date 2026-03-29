@@ -182,33 +182,42 @@ export function ViewerClient({ title, slides }: Props) {
       />
 
       {/* Bottom bar */}
-      <div className="absolute bottom-0 left-0 right-0 z-10 flex items-center justify-between px-4 py-3 sm:px-6 sm:py-4">
-        <span className="max-w-[40%] truncate text-[10px] text-white/40 sm:text-xs">
-          {title}
-        </span>
-        <div className="flex items-center gap-3 sm:gap-4">
-          <span className="text-[10px] text-white/60 sm:text-xs">
-            {current + 1} / {total}
+      <div className="fixed bottom-0 left-0 right-0 z-10 bg-gradient-to-t from-black/80 to-transparent pt-8">
+        <div className="flex items-center justify-between px-4 pb-2 sm:px-6">
+          <span className="max-w-[40%] truncate text-[10px] text-white/40 sm:text-xs">
+            {title}
           </span>
-          <div className="h-1 w-16 overflow-hidden rounded-full bg-white/20 sm:w-32">
-            <div
-              className="h-full bg-white/60 transition-all duration-500 ease-out"
-              style={{ width: `${((current + 1) / total) * 100}%` }}
-            />
+          <div className="flex items-center gap-3 sm:gap-4">
+            <span className="text-[10px] text-white/60 sm:text-xs">
+              {current + 1} / {total}
+            </span>
+            <div className="h-1 w-16 overflow-hidden rounded-full bg-white/20 sm:w-32">
+              <div
+                className="h-full bg-white/60 transition-all duration-500 ease-out"
+                style={{ width: `${((current + 1) / total) * 100}%` }}
+              />
+            </div>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                document.documentElement.requestFullscreen?.();
+              }}
+              className="text-white/40 hover:text-white/80 transition-colors"
+              aria-label="Fullscreen"
+            >
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M2 2h4V0H0v6h2V2zm12 0h-4V0h6v6h-2V2zM2 14h4v2H0v-6h2v4zm12 0h-4v2h6v-6h-2v4z" />
+              </svg>
+            </button>
           </div>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              document.documentElement.requestFullscreen?.();
-            }}
-            className="text-white/40 hover:text-white/80 transition-colors"
-            title="Pantalla completa (F)"
-          >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-              <path d="M2 2h4V0H0v6h2V2zm12 0h-4V0h6v6h-2V2zM2 14h4v2H0v-6h2v4zm12 0h-4v2h6v-6h-2v4z" />
-            </svg>
-          </button>
         </div>
+        <a
+          href="/"
+          onClick={(e) => e.stopPropagation()}
+          className="block border-t border-white/5 px-4 py-2 text-center text-[10px] text-white/30 hover:text-white/50 transition-colors sm:text-xs"
+        >
+          Folio — Editorial Slides
+        </a>
       </div>
 
     </div>

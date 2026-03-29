@@ -48,34 +48,42 @@ export function MobileViewer({ title, slides }: Props) {
 
   return (
     <div
-      className="flex h-screen flex-col bg-black select-none"
+      className="relative h-screen bg-black select-none"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
       <div
-        className="flex-1 overflow-y-auto"
+        className="h-full overflow-y-auto pb-20"
         style={{ backgroundColor: slide.backgroundColor }}
       >
         <MobileSlideContent elements={elements} bg={slide.backgroundColor} />
       </div>
 
-      {/* Bottom bar */}
-      <div className="flex items-center justify-between px-4 py-3 bg-black">
-        <span className="max-w-[40%] truncate text-[10px] text-white/40">{title}</span>
-        <div className="flex items-center gap-3">
-          <span className="text-[10px] text-white/60">{current + 1} / {total}</span>
-          <div className="h-1 w-20 overflow-hidden rounded-full bg-white/20">
-            <div
-              className="h-full bg-white/60 transition-all duration-300"
-              style={{ width: `${((current + 1) / total) * 100}%` }}
-            />
+      {/* Fixed bottom bar */}
+      <div className="fixed bottom-0 left-0 right-0 z-20 border-t border-white/10 bg-black/90 backdrop-blur-sm">
+        <div className="flex items-center justify-between px-4 py-2.5">
+          <span className="max-w-[40%] truncate text-[10px] text-white/40">{title}</span>
+          <div className="flex items-center gap-3">
+            <span className="text-[10px] text-white/60">{current + 1} / {total}</span>
+            <div className="h-1 w-20 overflow-hidden rounded-full bg-white/20">
+              <div
+                className="h-full bg-white/60 transition-all duration-300"
+                style={{ width: `${((current + 1) / total) * 100}%` }}
+              />
+            </div>
           </div>
         </div>
+        <a
+          href="/"
+          className="block border-t border-white/5 px-4 py-2 text-center text-[10px] text-white/30 active:text-white/50"
+        >
+          {t.viewer.createOwn}
+        </a>
       </div>
 
       {/* Swipe hint */}
       {current === 0 && (
-        <div className="absolute inset-x-0 bottom-16 z-10 flex justify-center pointer-events-none animate-fade-out">
+        <div className="absolute inset-x-0 bottom-24 z-10 flex justify-center pointer-events-none animate-fade-out">
           <span className="rounded-full bg-white/10 px-4 py-1.5 text-[10px] text-white/50">
             {t.viewer.swipeHint}
           </span>
