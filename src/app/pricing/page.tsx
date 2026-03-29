@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import { Notebook } from "@phosphor-icons/react";
 import { Check, X as XIcon } from "@phosphor-icons/react";
 
 const tiers = [
@@ -110,7 +111,7 @@ export default function PricingPage() {
   return (
     <div className="flex min-h-screen flex-col bg-[#161616] text-white">
       <header className="flex items-center justify-between px-4 py-6 sm:px-8">
-        <Link href="/" className="font-display text-xl tracking-tight sm:text-2xl">FOLIO</Link>
+        <Link href="/" className="flex items-center gap-1.5 font-display text-xl tracking-tight sm:text-2xl"><Notebook size={22} weight="duotone" />FOLIO</Link>
         <Link href="/" className="text-xs tracking-[0.25em] text-neutral-400 uppercase hover:text-white transition-colors">Volver</Link>
       </header>
 

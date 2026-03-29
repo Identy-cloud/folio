@@ -1,10 +1,11 @@
 import Link from "next/link";
+import { FolioLogo } from "@/components/FolioLogo";
 
 export default function LandingPage() {
   return (
     <div className="flex min-h-screen flex-col bg-[#161616] text-white">
       <header className="flex items-center justify-between px-4 py-6 sm:px-8">
-        <span className="font-display text-xl tracking-tight sm:text-2xl">FOLIO</span>
+        <span className="text-xl sm:text-2xl"><FolioLogo size={22} /></span>
         <Link
           href="/login"
           className="text-xs tracking-[0.25em] text-neutral-400 uppercase hover:text-white transition-colors"

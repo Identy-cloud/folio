@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { LogoutButton } from "./logout-button";
 import { DeleteAccountButton } from "./delete-account-button";
 import { LocaleSelector } from "@/components/LocaleSelector";
+import { FolioLogo } from "@/components/FolioLogo";
 
 export default async function DashboardLayout({
   children,
@@ -28,8 +29,8 @@ export default async function DashboardLayout({
   return (
     <div className="flex min-h-screen flex-col bg-[#161616] text-neutral-200">
       <header className="flex h-14 items-center justify-between border-b border-neutral-800 px-4 sm:h-16 sm:px-6">
-        <h1 className="font-display text-xl tracking-tight sm:text-2xl">
-          FOLIO
+        <h1 className="text-xl text-white sm:text-2xl">
+          <FolioLogo size={22} />
         </h1>
         <div className="flex items-center gap-2 sm:gap-4">
           <Link href="/dashboard/profile" className="flex items-center gap-2 hover:opacity-80 transition-opacity">

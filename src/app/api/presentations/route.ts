@@ -6,6 +6,7 @@ import { eq, desc, and, inArray, count } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { z } from "zod";
 import { generateTemplate } from "@/lib/templates/generator";
+import { TEMPLATES } from "@/lib/templates/templates";
 import { THEMES } from "@/lib/templates/themes";
 import { getPlanLimits, FREE_THEMES } from "@/lib/plan-limits";
 import { getUserPlan } from "@/lib/stripe";
@@ -13,6 +14,7 @@ import { getUserPlan } from "@/lib/stripe";
 const createSchema = z.object({
   title: z.string().max(255).optional(),
   theme: z.enum(Object.keys(THEMES) as [string, ...string[]]).optional(),
+  templateId: z.string().max(50).optional(),
   useTemplate: z.boolean().optional(),
 });
 
@@ -93,6 +95,7 @@ export async function POST(request: Request) {
 
   const title = parsed.data.title ?? "Sin título";
   const theme = parsed.data.theme ?? "editorial-blue";
+  const templateId = parsed.data.templateId;
   const useTemplate = parsed.data.useTemplate !== false;
 
   if (!limits.canUseAllTemplates && !(FREE_THEMES as readonly string[]).includes(theme)) {
@@ -113,7 +116,11 @@ export async function POST(request: Request) {
     .returning();
 
   if (useTemplate) {
-    const templateSlides = generateTemplate(theme, presentation.id);
+    const tpl = templateId ? TEMPLATES.find((t) => t.id === templateId) : null;
+    const themeObj = THEMES[theme];
+    const templateSlides = tpl && themeObj
+      ? tpl.generate(themeObj, theme, presentation.id)
+      : generateTemplate(theme, presentation.id);
     if (templateSlides.length > 0) {
       await db.insert(slides).values(
         templateSlides.map((s) => ({

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
 import { useTranslation } from "@/lib/i18n/context";
+import { Notebook } from "@phosphor-icons/react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -77,7 +78,8 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-[#161616] px-4">
       <div className="w-full max-w-sm space-y-10">
         <div className="text-center">
-          <h1 className="font-display text-6xl tracking-tight text-white leading-none sm:text-8xl">
+          <h1 className="flex items-center justify-center gap-3 font-display text-6xl tracking-tight text-white leading-none sm:text-8xl">
+            <Notebook size={64} weight="duotone" className="sm:h-20 sm:w-20" />
             FOLIO
           </h1>
           <p className="mt-1 text-[11px] tracking-[0.4em] text-neutral-500 uppercase">

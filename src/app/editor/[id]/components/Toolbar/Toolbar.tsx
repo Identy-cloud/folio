@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ArrowCounterClockwise, ArrowClockwise, FilePdf, FileImage, Image as ImageIcon, Desktop, DeviceMobile, Play, ClockCounterClockwise, Stack, NotePencil } from "@phosphor-icons/react";
+import { FolioLogo } from "@/components/FolioLogo";
 import { Tooltip } from "@/components/ui/Tooltip";
 
 function Spinner() {
@@ -88,7 +89,7 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
           href="/dashboard"
           className="font-display text-xl tracking-tight text-white sm:text-2xl"
         >
-          FOLIO
+          <FolioLogo size={20} />
         </Link>
         <div className="h-5 w-px bg-neutral-700" />
         <div className="flex gap-1">
