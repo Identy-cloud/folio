@@ -263,7 +263,7 @@ function MobileSlideContent({ elements, bg, animateKey }: { elements: SlideEleme
 
 function MobileElement({ element, delay = 0, animate = true }: { element: SlideElement; delay?: number; animate?: boolean }) {
   const totalDelay = (element.animationDelay ?? 0) + delay;
-  const animStyle = animate ? getElementAnimationStyle(element.animation, totalDelay) : {};
+  const animStyle = animate ? getElementAnimationStyle(element.animation, totalDelay, element.animationDuration, element.animationEasing) : {};
   if (element.type === "arrow") return null;
 
   if (element.type === "shape") {

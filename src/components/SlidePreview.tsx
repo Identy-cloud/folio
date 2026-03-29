@@ -98,6 +98,8 @@ const PreviewElement = memo(function PreviewElement({ element }: { element: Slid
             height: "100%",
             objectFit: element.objectFit,
             filter: element.filter || undefined,
+            borderRadius: element.borderRadius ?? 0,
+            transform: `${element.flipX ? "scaleX(-1)" : ""} ${element.flipY ? "scaleY(-1)" : ""}`.trim() || undefined,
           }}
         />
       )}

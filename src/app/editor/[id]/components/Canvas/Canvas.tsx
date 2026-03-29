@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect, useCallback, type WheelEvent as ReactWheelEvent } from "react";
-import { MagnifyingGlassPlus, MagnifyingGlassMinus } from "@phosphor-icons/react";
+import { MagnifyingGlassPlus, MagnifyingGlassMinus, GridFour } from "@phosphor-icons/react";
 import { nanoid } from "nanoid";
 import { useEditorStore } from "@/store/editorStore";
 import { textDefaults } from "@/lib/templates/element-defaults";
@@ -42,6 +42,7 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
   const [zoomOverride, setZoomOverride] = useState<number | null>(null);
   const autoScale = useRef(0.5);
   const [ctxMenu, setCtxMenu] = useState<{ x: number; y: number; elementId: string | null } | null>(null);
+  const [showGrid, setShowGrid] = useState(false);
 
   const slide = useEditorStore((s) => s.getActiveSlide());
   const activeSlideIndex = useEditorStore((s) => s.activeSlideIndex);
@@ -82,24 +83,33 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
     }
 
     if (activeTool === "text") {
-      const bounds = e.currentTarget.getBoundingClientRect();
-      const x = (e.clientX - bounds.left) / scale;
-      const y = (e.clientY - bounds.top) / scale;
-      addElement({
-        id: nanoid(),
-        type: "text",
-        x,
-        y,
-        w: 400,
-        h: 80,
-        rotation: 0,
-        opacity: 1,
-        zIndex: (slide?.elements.length ?? 0) + 1,
-        locked: false,
-        content: "",
-        ...textDefaults(theme),
-      });
+      addTextAtPoint(e);
     }
+  }
+
+  function addTextAtPoint(e: React.PointerEvent | React.MouseEvent) {
+    const bounds = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    const x = (e.clientX - bounds.left) / scale;
+    const y = (e.clientY - bounds.top) / scale;
+    addElement({
+      id: nanoid(),
+      type: "text",
+      x,
+      y,
+      w: 400,
+      h: 80,
+      rotation: 0,
+      opacity: 1,
+      zIndex: (slide?.elements.length ?? 0) + 1,
+      locked: false,
+      content: "",
+      ...textDefaults(theme),
+    });
+  }
+
+  function handleDoubleClick(e: React.MouseEvent) {
+    if (e.target !== e.currentTarget) return;
+    addTextAtPoint(e);
   }
 
   function handlePointerEnter(e: React.PointerEvent) {
@@ -257,10 +267,21 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
           boxShadow: "0 4px 30px rgba(0,0,0,0.3)",
         }}
         onPointerDown={handleCanvasClick}
+        onDoubleClick={handleDoubleClick}
         onPointerEnter={handlePointerEnter}
         onPointerMove={handlePointerMove}
         onPointerLeave={onCursorLeave}
       >
+        {showGrid && (
+          <svg className="pointer-events-none absolute inset-0" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#grid)" />
+          </svg>
+        )}
         <SnapGuides />
         {(isMobileMode && slide.mobileElements ? slide.mobileElements : slide.elements)
           .slice()
@@ -291,8 +312,17 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
         />
       )}
 
-      {/* Zoom controls */}
+      {/* Zoom + Grid controls */}
       <div className="absolute bottom-3 right-3 z-30 hidden md:flex items-center gap-1 rounded bg-neutral-900/80 px-1 py-0.5 backdrop-blur-sm">
+        <button
+          onClick={() => setShowGrid((v) => !v)}
+          className={`rounded p-1 transition-colors ${showGrid ? "text-blue-400" : "text-neutral-400 hover:text-white"}`}
+          aria-label="Toggle grid"
+          aria-pressed={showGrid}
+        >
+          <GridFour size={14} />
+        </button>
+        <div className="w-px h-3 bg-neutral-700" />
         <button onClick={zoomOut} className="rounded p-1 text-neutral-400 hover:text-white transition-colors" aria-label="Zoom out">
           <MagnifyingGlassMinus size={14} />
         </button>

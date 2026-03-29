@@ -413,7 +413,7 @@ function SlideLayer({
 
 function ViewerElement({ element, delay, animate }: { element: SlideElement; delay: number; animate: boolean }) {
   const totalDelay = (element.animationDelay ?? 0) + delay;
-  const animStyle = animate ? getElementAnimationStyle(element.animation, totalDelay) : {};
+  const animStyle = animate ? getElementAnimationStyle(element.animation, totalDelay, element.animationDuration, element.animationEasing) : {};
 
   return (
     <div
@@ -448,6 +448,8 @@ function ViewerElement({ element, delay, animate }: { element: SlideElement; del
             height: "100%",
             objectFit: element.objectFit,
             filter: element.filter || undefined,
+            borderRadius: element.borderRadius ?? 0,
+            transform: `${element.flipX ? "scaleX(-1)" : ""} ${element.flipY ? "scaleY(-1)" : ""}`.trim() || undefined,
           }}
           draggable={false}
           loading="lazy"

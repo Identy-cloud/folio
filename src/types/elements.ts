@@ -15,6 +15,8 @@ export interface BaseElement {
   locked: boolean;
   animation?: ElementAnimation;
   animationDelay?: number;
+  animationDuration?: number;
+  animationEasing?: "ease" | "ease-in" | "ease-out" | "ease-in-out" | "linear";
 }
 
 export interface TextElement extends BaseElement {
@@ -37,6 +39,9 @@ export interface ImageElement extends BaseElement {
   src: string;
   objectFit: "cover" | "contain" | "fill";
   filter: string;
+  borderRadius?: number;
+  flipX?: boolean;
+  flipY?: boolean;
   isPlaceholder?: boolean;
 }
 

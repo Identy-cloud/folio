@@ -124,7 +124,7 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
       {element.type === "arrow" && <ArrowRenderer element={element} />}
       {element.type === "divider" && <DividerRenderer element={element} />}
       {element.type === "image" && (
-        <div style={{ width: "100%", height: "100%", position: "relative" }}>
+        <div style={{ width: "100%", height: "100%", position: "relative", borderRadius: element.borderRadius ?? 0, overflow: "hidden" }}>
           <img
             src={element.src}
             alt=""
@@ -133,6 +133,7 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
               height: "100%",
               objectFit: element.objectFit,
               filter: element.filter || undefined,
+              transform: `${element.flipX ? "scaleX(-1)" : ""} ${element.flipY ? "scaleY(-1)" : ""}`.trim() || undefined,
             }}
             draggable={false}
           />

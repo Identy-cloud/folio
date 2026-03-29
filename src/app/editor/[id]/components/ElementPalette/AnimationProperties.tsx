@@ -63,21 +63,58 @@ export function AnimationProperties({ element }: Props) {
         ))}
       </div>
       {current !== "none" && (
-        <label className="flex items-center gap-2">
-          <span className="text-[10px] text-neutral-500">Delay</span>
-          <input
-            type="number"
-            min={0}
-            max={3000}
-            step={50}
-            value={delay}
-            onChange={(e) => setDelay(e.target.value)}
-            onBlur={commitDelay}
-            onKeyDown={(e) => e.key === "Enter" && commitDelay()}
-            className="w-16 rounded border border-neutral-700 bg-[#161616] px-2 py-1 text-xs text-neutral-200 outline-none focus:border-neutral-500"
-          />
-          <span className="text-[10px] text-neutral-600">ms</span>
-        </label>
+        <div className="space-y-2">
+          <div className="flex gap-2">
+            <label className="flex items-center gap-1">
+              <span className="text-[10px] text-neutral-500">Delay</span>
+              <input
+                type="number"
+                min={0}
+                max={3000}
+                step={50}
+                value={delay}
+                onChange={(e) => setDelay(e.target.value)}
+                onBlur={commitDelay}
+                onKeyDown={(e) => e.key === "Enter" && commitDelay()}
+                className="w-14 rounded border border-neutral-700 bg-[#161616] px-1.5 py-1 text-xs text-neutral-200 outline-none focus:border-neutral-500"
+              />
+            </label>
+            <label className="flex items-center gap-1">
+              <span className="text-[10px] text-neutral-500">Duration</span>
+              <input
+                type="number"
+                min={100}
+                max={3000}
+                step={50}
+                value={element.animationDuration ?? 500}
+                onChange={(e) => {
+                  const n = parseInt(e.target.value, 10);
+                  if (!isNaN(n)) { updateElement(element.id, { animationDuration: n }); pushHistory(); }
+                }}
+                className="w-14 rounded border border-neutral-700 bg-[#161616] px-1.5 py-1 text-xs text-neutral-200 outline-none focus:border-neutral-500"
+              />
+            </label>
+            <span className="text-[10px] text-neutral-600 self-center">ms</span>
+          </div>
+          <div>
+            <span className="mb-1 block text-[10px] text-neutral-500">Easing</span>
+            <div className="flex gap-1">
+              {(["ease", "ease-in", "ease-out", "ease-in-out", "linear"] as const).map((e) => (
+                <button
+                  key={e}
+                  onClick={() => { updateElement(element.id, { animationEasing: e }); pushHistory(); }}
+                  className={`flex-1 rounded px-0.5 py-1 text-[9px] transition-colors ${
+                    (element.animationEasing ?? "ease") === e
+                      ? "bg-white text-[#161616]"
+                      : "text-neutral-500 hover:bg-neutral-800"
+                  }`}
+                >
+                  {e.replace("ease-", "")}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
-import { Image as ImageIcon } from "@phosphor-icons/react";
+import { useState, useEffect } from "react";
+import { Image as ImageIcon, FlipHorizontal, FlipVertical } from "@phosphor-icons/react";
 import { useEditorStore } from "@/store/editorStore";
 import { useImageReplace } from "../../hooks/useImageReplace";
 import { useTranslation } from "@/lib/i18n/context";
@@ -77,6 +77,40 @@ export function ImageProperties({ element }: Props) {
             {f.label}
           </button>
         ))}
+      </div>
+
+      {/* Border radius */}
+      <label className="flex items-center gap-2">
+        <span className="text-[10px] text-neutral-500 shrink-0">Radius</span>
+        <input
+          type="range"
+          min={0}
+          max={50}
+          value={element.borderRadius ?? 0}
+          onChange={(e) => { updateElement(element.id, { borderRadius: parseInt(e.target.value) }); pushHistory(); }}
+          className="flex-1 accent-white"
+        />
+        <span className="text-[9px] text-neutral-600 w-6 text-right">{element.borderRadius ?? 0}</span>
+      </label>
+
+      {/* Flip */}
+      <div className="flex gap-1">
+        <button
+          onClick={() => { updateElement(element.id, { flipX: !element.flipX }); pushHistory(); }}
+          className={`flex-1 flex items-center justify-center gap-1 rounded py-1 text-[10px] transition-colors ${
+            element.flipX ? "bg-white text-[#161616]" : "text-neutral-500 hover:bg-neutral-800"
+          }`}
+        >
+          <FlipHorizontal size={14} /> Flip H
+        </button>
+        <button
+          onClick={() => { updateElement(element.id, { flipY: !element.flipY }); pushHistory(); }}
+          className={`flex-1 flex items-center justify-center gap-1 rounded py-1 text-[10px] transition-colors ${
+            element.flipY ? "bg-white text-[#161616]" : "text-neutral-500 hover:bg-neutral-800"
+          }`}
+        >
+          <FlipVertical size={14} /> Flip V
+        </button>
       </div>
 
       {/* Filters */}
