@@ -83,21 +83,28 @@ export function SlidePanel() {
             items={slides.map((s) => s.id)}
             strategy={verticalListSortingStrategy}
           >
-            <div className="space-y-2">
+            <div className="space-y-0">
               {slides.map((slide, i) => (
-                <SortableSlideThumb
-                  key={slide.id}
-                  slide={slide}
-                  index={i}
-                  isActive={i === activeSlideIndex}
-                  onClick={() => setActiveSlide(i)}
-                  onContextMenu={(e) => handleContextMenu(e, slide.id)}
-                  onDelete={
-                    slides.length > 1
-                      ? () => deleteSlide(slide.id)
-                      : undefined
-                  }
-                />
+                <div key={slide.id}>
+                  <SortableSlideThumb
+                    slide={slide}
+                    index={i}
+                    isActive={i === activeSlideIndex}
+                    onClick={() => setActiveSlide(i)}
+                    onContextMenu={(e) => handleContextMenu(e, slide.id)}
+                    onDelete={
+                      slides.length > 1
+                        ? () => deleteSlide(slide.id)
+                        : undefined
+                    }
+                  />
+                  {i < slides.length - 1 && (
+                    <InlineTransitionPicker
+                      current={slides[i + 1].transition}
+                      onChange={(tr) => updateSlideTransition(slides[i + 1].id, tr)}
+                    />
+                  )}
+                </div>
               ))}
             </div>
           </SortableContext>
@@ -147,6 +154,63 @@ export function SlidePanel() {
             />
           )}
         </div>
+      )}
+    </div>
+  );
+}
+
+const TRANSITION_ICONS: Record<string, string> = {
+  none: "—",
+  fade: "◐",
+  "slide-left": "→",
+  "slide-up": "↑",
+  zoom: "⊕",
+};
+
+const TRANSITION_ORDER = ["none", "fade", "slide-left", "slide-up", "zoom"] as const;
+
+function InlineTransitionPicker({
+  current,
+  onChange,
+}: {
+  current: string;
+  onChange: (t: import("@/types/elements").SlideTransition) => void;
+}) {
+  const [open, setOpen] = useState(false);
+
+  function cycle() {
+    const idx = TRANSITION_ORDER.indexOf(current as typeof TRANSITION_ORDER[number]);
+    const next = TRANSITION_ORDER[(idx + 1) % TRANSITION_ORDER.length];
+    onChange(next);
+  }
+
+  return (
+    <div className="flex items-center justify-center py-1">
+      {open ? (
+        <div className="flex gap-0.5 rounded bg-neutral-800/60 p-0.5">
+          {TRANSITION_ORDER.map((tr) => (
+            <button
+              key={tr}
+              onClick={() => { onChange(tr); setOpen(false); }}
+              className={`flex h-5 w-5 items-center justify-center rounded text-[9px] transition-colors ${
+                current === tr
+                  ? "bg-white text-[#161616]"
+                  : "text-neutral-500 hover:text-neutral-200"
+              }`}
+            >
+              {TRANSITION_ICONS[tr]}
+            </button>
+          ))}
+        </div>
+      ) : (
+        <button
+          onClick={() => setOpen(true)}
+          onDoubleClick={cycle}
+          className="flex h-5 items-center gap-1 rounded px-1.5 text-[9px] text-neutral-500 hover:bg-neutral-800 hover:text-neutral-300 transition-colors"
+          title={current}
+        >
+          <span>{TRANSITION_ICONS[current] ?? "◐"}</span>
+        </button>
       )}
     </div>
   );
