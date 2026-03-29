@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { LogoutButton } from "./logout-button";
@@ -31,22 +32,24 @@ export default async function DashboardLayout({
           FOLIO
         </h1>
         <div className="flex items-center gap-2 sm:gap-4">
-          <span className="hidden text-sm text-neutral-400 sm:block">
-            {user.user_metadata?.full_name ?? user.email}
-          </span>
-          {user.user_metadata?.avatar_url ? (
-            <Image
-              src={user.user_metadata.avatar_url}
-              alt=""
-              width={32}
-              height={32}
-              className="rounded-full"
-            />
-          ) : (
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-300 text-xs font-medium text-[#161616]">
-              {initials}
-            </div>
-          )}
+          <Link href="/dashboard/profile" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+            <span className="hidden text-sm text-neutral-400 sm:block">
+              {user.user_metadata?.full_name ?? user.email}
+            </span>
+            {user.user_metadata?.avatar_url ? (
+              <Image
+                src={user.user_metadata.avatar_url}
+                alt=""
+                width={32}
+                height={32}
+                className="rounded-full"
+              />
+            ) : (
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-300 text-xs font-medium text-[#161616]">
+                {initials}
+              </div>
+            )}
+          </Link>
           <LocaleSelector />
           <LogoutButton />
         </div>

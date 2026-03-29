@@ -5,6 +5,7 @@ import {
   timestamp,
   boolean,
   integer,
+  bigint,
   jsonb,
 } from "drizzle-orm/pg-core";
 
@@ -13,6 +14,8 @@ export const users = pgTable("users", {
   email: text("email").unique().notNull(),
   name: text("name"),
   avatarUrl: text("avatar_url"),
+  plan: text("plan").default("free").notNull(),
+  storageUsed: bigint("storage_used", { mode: "number" }).default(0).notNull(),
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
     .notNull(),

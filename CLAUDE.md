@@ -146,3 +146,25 @@ npx wrangler r2 bucket domain add folio-assets
 - R2_BUCKET_NAME → folio-assets
 - R2_PUBLIC_URL → dominio público del bucket
 - NEXT_PUBLIC_PARTYKIT_HOST → output del deploy PartyKit
+
+## Pendientes — No olvidar
+
+### Infraestructura
+- Rate limiting real con Upstash Redis (actual in-memory no sirve en serverless)
+- Image CDN resize — configurar Cloudflare Image Resizing o similar
+- Monitoreo de errores — Sentry o similar
+- Tests — al menos API routes y editorStore
+
+### Seguridad
+- JWT en WebSocket headers en vez de query params (requiere cambio en y-websocket provider)
+- Re-autenticación (password) antes de borrar cuenta
+- `getUser()` en vez de `getSession()` en useCollaboration
+
+### Pricing — Modelo de planes
+- **Free**: 5 presentaciones, 100 MB almacenamiento, 5 temas, exportar como imagen
+- **Pro** ($12/mes): ilimitadas, 10 GB, temas custom, PDF, sin watermark
+- **Team** ($29/mes/miembro): todo Pro + colaboración realtime, workspace, roles
+- Columna `plan` en tabla `users` (free/pro/team)
+- Columna `storageUsed` en tabla `users` (bytes)
+- Enforced en: POST /api/presentations, POST /api/upload, exportToPdf
+- Página de pricing existe pero es solo visual, no hay enforcement

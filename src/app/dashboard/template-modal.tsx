@@ -45,6 +45,9 @@ export function TemplateModal({ open, onClose }: Props) {
         const p = await res.json();
         router.push(`/editor/${p.id}`);
         router.refresh();
+      } else if (res.status === 403) {
+        toast.error(t.dashboard.planLimitReached ?? "Plan limit reached");
+        setCreating(null);
       } else {
         toast.error(t.dashboard.errorCreate);
         setCreating(null);
@@ -67,6 +70,9 @@ export function TemplateModal({ open, onClose }: Props) {
         const p = await res.json();
         router.push(`/editor/${p.id}`);
         router.refresh();
+      } else if (res.status === 403) {
+        toast.error(t.dashboard.planLimitReached ?? "Plan limit reached");
+        setCreating(null);
       } else {
         toast.error(t.dashboard.errorCreate);
         setCreating(null);

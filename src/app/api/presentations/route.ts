@@ -2,11 +2,12 @@ import { db } from "@/db";
 import { presentations, slides } from "@/db/schema";
 import { getAuthenticatedUser } from "@/lib/auth";
 import { checkRateLimit, rateLimitResponse } from "@/lib/rate-limit";
-import { eq, desc, and, inArray } from "drizzle-orm";
+import { eq, desc, and, inArray, count } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { z } from "zod";
 import { generateTemplate } from "@/lib/templates/generator";
 import { THEMES } from "@/lib/templates/themes";
+import { getPlanLimits } from "@/lib/plan-limits";
 
 const createSchema = z.object({
   title: z.string().max(255).optional(),
@@ -67,6 +68,20 @@ export async function POST(request: Request) {
 
   const rl = checkRateLimit(`create:${user.id}`, 10, 3600_000);
   if (!rl.allowed) return rateLimitResponse(rl);
+
+  // Check plan limits
+  const limits = getPlanLimits(user.plan);
+  const [presCount] = await db
+    .select({ total: count() })
+    .from(presentations)
+    .where(eq(presentations.userId, user.id));
+
+  if ((presCount?.total ?? 0) >= limits.maxPresentations) {
+    return Response.json(
+      { error: "Plan limit reached", limit: limits.maxPresentations },
+      { status: 403 }
+    );
+  }
 
   const raw = await request.json().catch(() => ({}));
   const parsed = createSchema.safeParse(raw);
