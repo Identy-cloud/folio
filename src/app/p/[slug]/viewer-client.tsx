@@ -303,15 +303,16 @@ function SlideLayer({
           key={shouldAnimate ? `${el.id}-${animateKey}` : el.id}
           element={el}
           delay={shouldAnimate ? i * 80 : 0}
+          animate={shouldAnimate}
         />
       ))}
     </div>
   );
 }
 
-function ViewerElement({ element, delay }: { element: SlideElement; delay: number }) {
+function ViewerElement({ element, delay, animate }: { element: SlideElement; delay: number; animate: boolean }) {
   const totalDelay = (element.animationDelay ?? 0) + delay;
-  const animStyle = getElementAnimationStyle(element.animation, totalDelay);
+  const animStyle = animate ? getElementAnimationStyle(element.animation, totalDelay) : {};
 
   return (
     <div

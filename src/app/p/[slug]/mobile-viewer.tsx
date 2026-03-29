@@ -245,15 +245,16 @@ function MobileSlideContent({ elements, bg, animateKey }: { elements: SlideEleme
           key={shouldAnimate ? `${el.id}-${animateKey}` : el.id}
           element={el}
           delay={shouldAnimate ? i * 80 : 0}
+          animate={shouldAnimate}
         />
       ))}
     </div>
   );
 }
 
-function MobileElement({ element, delay = 0 }: { element: SlideElement; delay?: number }) {
+function MobileElement({ element, delay = 0, animate = true }: { element: SlideElement; delay?: number; animate?: boolean }) {
   const totalDelay = (element.animationDelay ?? 0) + delay;
-  const animStyle = getElementAnimationStyle(element.animation, totalDelay);
+  const animStyle = animate ? getElementAnimationStyle(element.animation, totalDelay) : {};
   if (element.type === "arrow") return null;
 
   if (element.type === "shape") {
