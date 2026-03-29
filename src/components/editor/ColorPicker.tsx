@@ -120,9 +120,25 @@ export function ColorPicker({ value, onChange, label }: Props) {
               onChange={(e) => setHex(e.target.value)}
               onBlur={commitHex}
               onKeyDown={(e) => e.key === "Enter" && commitHex()}
-              className="w-full rounded border border-neutral-700 bg-[#161616] px-2 py-1 text-[11px] text-neutral-200 outline-none focus:border-neutral-500"
+              className="flex-1 rounded border border-neutral-700 bg-[#161616] px-2 py-1 text-[11px] text-neutral-200 outline-none focus:border-neutral-500"
               placeholder="#000000"
             />
+            {"EyeDropper" in window && (
+              <button
+                onClick={async () => {
+                  try {
+                    const ed = new (window as unknown as { EyeDropper: new () => { open: () => Promise<{ sRGBHex: string }> } }).EyeDropper();
+                    const result = await ed.open();
+                    onChange(result.sRGBHex);
+                    setHex(result.sRGBHex);
+                  } catch { /* user cancelled */ }
+                }}
+                className="rounded border border-neutral-700 px-2 py-1 text-[11px] text-neutral-400 hover:bg-neutral-800 hover:text-white transition-colors"
+                title="Pick color from screen"
+              >
+                💧
+              </button>
+            )}
           </div>
         </div>,
         document.body

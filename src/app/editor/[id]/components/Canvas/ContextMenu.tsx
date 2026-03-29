@@ -70,6 +70,25 @@ export function ContextMenu({ x, y, elementId, onClose }: Props) {
           <button className={btn} onClick={() => { store.pasteClipboard(); onClose(); }}>
             <Clipboard size={14} /> Paste
           </button>
+          <div className="my-1 h-px bg-neutral-700" />
+          <button className={btn} onClick={() => {
+            const s = store.getActiveSlide();
+            const els = store.editingMode === "mobile" && s?.mobileElements ? s.mobileElements : s?.elements ?? [];
+            els.forEach((e) => store.updateElement(e.id, { locked: true }));
+            store.pushHistory();
+            onClose();
+          }}>
+            <LockSimple size={14} /> Lock all
+          </button>
+          <button className={btn} onClick={() => {
+            const s = store.getActiveSlide();
+            const els = store.editingMode === "mobile" && s?.mobileElements ? s.mobileElements : s?.elements ?? [];
+            els.forEach((e) => store.updateElement(e.id, { locked: false }));
+            store.pushHistory();
+            onClose();
+          }}>
+            <LockSimpleOpen size={14} /> Unlock all
+          </button>
         </>
       )}
     </div>

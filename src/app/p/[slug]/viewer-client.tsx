@@ -391,13 +391,32 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
             </button>
           </div>
         </div>
-        <a
-          href="/"
-          onClick={(e) => e.stopPropagation()}
-          className="block border-t border-white/5 px-4 py-2 text-center text-[10px] text-white/30 hover:text-white/50 transition-colors sm:text-xs"
-        >
-          Folio — Editorial Slides
-        </a>
+        <div className="flex items-center justify-between border-t border-white/5 px-4 py-2">
+          <a
+            href="/"
+            onClick={(e) => e.stopPropagation()}
+            className="text-[10px] text-white/30 hover:text-white/50 transition-colors sm:text-xs"
+          >
+            Folio — Editorial Slides
+          </a>
+          {presentationId && (
+            <button
+              onClick={async (e) => {
+                e.stopPropagation();
+                const res = await fetch(`/api/presentations/${presentationId}/clone`, { method: "POST" });
+                if (res.ok) {
+                  const p = await res.json();
+                  window.open(`/editor/${p.id}`, "_blank");
+                } else if (res.status === 401) {
+                  window.open("/login", "_blank");
+                }
+              }}
+              className="text-[10px] text-white/40 hover:text-white/70 transition-colors sm:text-xs"
+            >
+              Use as template →
+            </button>
+          )}
+        </div>
       </div>
 
       {presentationId && (
