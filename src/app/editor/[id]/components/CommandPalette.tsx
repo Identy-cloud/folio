@@ -186,6 +186,46 @@ export function CommandPalette({ open, onClose }: Props) {
       if (!slide || !confirm(`Delete all ${slide.elements.length} elements?`)) return;
       slide.elements.forEach((el) => s.deleteElement(el.id));
     }},
+    { id: "match-x", label: "Match X position", category: "Align", action: () => {
+      const s = useEditorStore.getState();
+      if (s.selectedElementIds.length < 2) return;
+      const slide = s.getActiveSlide();
+      const els = s.editingMode === "mobile" && slide?.mobileElements ? slide.mobileElements : slide?.elements ?? [];
+      const first = els.find((e) => e.id === s.selectedElementIds[0]);
+      if (first) { s.selectedElementIds.forEach((id) => s.updateElement(id, { x: first.x })); s.pushHistory(); }
+    }},
+    { id: "match-y", label: "Match Y position", category: "Align", action: () => {
+      const s = useEditorStore.getState();
+      if (s.selectedElementIds.length < 2) return;
+      const slide = s.getActiveSlide();
+      const els = s.editingMode === "mobile" && slide?.mobileElements ? slide.mobileElements : slide?.elements ?? [];
+      const first = els.find((e) => e.id === s.selectedElementIds[0]);
+      if (first) { s.selectedElementIds.forEach((id) => s.updateElement(id, { y: first.y })); s.pushHistory(); }
+    }},
+    { id: "stack-v", label: "Stack vertically (equal spacing)", category: "Align", action: () => {
+      const s = useEditorStore.getState();
+      if (s.selectedElementIds.length < 2) return;
+      const slide = s.getActiveSlide();
+      const els = (s.editingMode === "mobile" && slide?.mobileElements ? slide.mobileElements : slide?.elements ?? [])
+        .filter((e) => s.selectedElementIds.includes(e.id))
+        .sort((a, b) => a.y - b.y);
+      const gap = 20;
+      let y = els[0].y;
+      els.forEach((el) => { s.updateElement(el.id, { y }); y += el.h + gap; });
+      s.pushHistory();
+    }},
+    { id: "stack-h", label: "Stack horizontally (equal spacing)", category: "Align", action: () => {
+      const s = useEditorStore.getState();
+      if (s.selectedElementIds.length < 2) return;
+      const slide = s.getActiveSlide();
+      const els = (s.editingMode === "mobile" && slide?.mobileElements ? slide.mobileElements : slide?.elements ?? [])
+        .filter((e) => s.selectedElementIds.includes(e.id))
+        .sort((a, b) => a.x - b.x);
+      const gap = 20;
+      let x = els[0].x;
+      els.forEach((el) => { s.updateElement(el.id, { x }); x += el.w + gap; });
+      s.pushHistory();
+    }},
   ];
 
   const filtered = query

@@ -35,6 +35,7 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
   const [pwInput, setPwInput] = useState("");
   const [pwError, setPwError] = useState(false);
   const [autoplay, setAutoplay] = useState(false);
+  const [loop, setLoop] = useState(true);
   const autoplayRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [showHelp, setShowHelp] = useState(true);
 
@@ -180,7 +181,14 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
       const currentSlide = slides[current];
       const ms = ((currentSlide as { duration?: number })?.duration ?? 5) * 1000;
       autoplayRef.current = setTimeout(() => {
-        setCurrent((c) => (c >= total - 1 ? 0 : c + 1));
+        setCurrent((c) => {
+          if (c >= total - 1) {
+            if (loop) return 0;
+            setAutoplay(false);
+            return c;
+          }
+          return c + 1;
+        });
         scheduleNext();
       }, ms);
     }
@@ -455,6 +463,14 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
               aria-label="Autoplay"
             >
               {autoplay ? "⏸" : "▶"}
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); setLoop((v) => !v); }}
+              className={`text-[10px] transition-colors ${loop ? "text-blue-400" : "text-white/30 hover:text-white/60"}`}
+              aria-label="Loop"
+              title={loop ? "Loop on" : "Loop off"}
+            >
+              ↻
             </button>
             <button
               onClick={(e) => {
