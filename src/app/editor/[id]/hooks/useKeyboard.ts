@@ -98,6 +98,19 @@ export function useKeyboard() {
         return;
       }
 
+      // Ctrl+Arrow Up/Down = reorder slides
+      if (meta && (e.key === "ArrowUp" || e.key === "ArrowDown") && state.selectedElementIds.length === 0) {
+        if (inInput) return;
+        e.preventDefault();
+        const idx = state.activeSlideIndex;
+        const newIdx = e.key === "ArrowUp" ? idx - 1 : idx + 1;
+        if (newIdx >= 0 && newIdx < state.slides.length) {
+          state.reorderSlides(idx, newIdx);
+          state.setActiveSlide(newIdx);
+        }
+        return;
+      }
+
       // Number keys 1-9 = opacity 10%-90%, 0 = 100%
       if (!meta && !e.altKey && e.key >= "0" && e.key <= "9" && state.selectedElementIds.length > 0) {
         if (inInput) return;

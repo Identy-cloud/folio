@@ -1,19 +1,34 @@
 import Link from "next/link";
 import { FolioLogo } from "@/components/FolioLogo";
 
+const FEATURES = [
+  { title: "Editorial Design", desc: "Expressive typography, asymmetric layouts, and bold visual storytelling." },
+  { title: "5 Templates", desc: "Creative Brief, Pitch Deck, Portfolio, Report, and Minimal — ready to use." },
+  { title: "5 Themes", desc: "Editorial Blue, Monochrome, Dark Editorial, Warm Magazine, Swiss Minimal." },
+  { title: "Real-time Collaboration", desc: "Work together with your team — see cursors and changes live." },
+  { title: "Mobile Adaptive", desc: "Every presentation looks perfect on any device, automatically." },
+  { title: "Smart Editor", desc: "Multi-select, snap to grid, layers panel, keyboard shortcuts, and more." },
+];
+
 export default function LandingPage() {
   return (
     <div className="flex min-h-screen flex-col bg-[#161616] text-white">
       <header className="flex items-center justify-between px-4 py-6 sm:px-8">
         <span className="text-xl sm:text-2xl"><FolioLogo size={22} /></span>
-        <Link
-          href="/login"
-          className="text-xs tracking-[0.25em] text-neutral-400 uppercase hover:text-white transition-colors"
-        >
-          Iniciar sesión
-        </Link>
+        <div className="flex items-center gap-4">
+          <Link href="/pricing" className="hidden sm:block text-xs tracking-[0.15em] text-neutral-500 uppercase hover:text-white transition-colors">
+            Pricing
+          </Link>
+          <Link
+            href="/login"
+            className="text-xs tracking-[0.25em] text-neutral-400 uppercase hover:text-white transition-colors"
+          >
+            Login
+          </Link>
+        </div>
       </header>
 
+      {/* Hero */}
       <main className="flex flex-1 flex-col items-center justify-center px-4 text-center sm:px-6">
         <p className="text-[10px] tracking-[0.5em] text-neutral-500 uppercase">
           Editorial Slides
@@ -44,10 +59,42 @@ export default function LandingPage() {
         </div>
       </main>
 
-      <footer className="flex flex-col items-center gap-3 py-8">
+      {/* Features grid */}
+      <section className="border-t border-neutral-800 px-4 py-16 sm:px-8 sm:py-24">
+        <p className="text-center text-[10px] tracking-[0.5em] text-neutral-500 uppercase">Features</p>
+        <h2 className="mt-3 text-center font-display text-3xl tracking-tight sm:text-5xl">
+          TODO LO QUE NECESITAS
+        </h2>
+        <div className="mx-auto mt-12 grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {FEATURES.map((f) => (
+            <div key={f.title} className="border border-neutral-800 p-6">
+              <h3 className="font-display text-lg tracking-tight">{f.title}</h3>
+              <p className="mt-2 text-xs leading-relaxed text-neutral-500">{f.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="border-t border-neutral-800 px-4 py-16 text-center sm:px-8 sm:py-24">
+        <h2 className="font-display text-3xl tracking-tight sm:text-5xl">
+          EMPIEZA HOY
+        </h2>
+        <p className="mt-4 text-sm text-neutral-500">
+          Plan gratuito con 3 presentaciones. Sin tarjeta de crédito.
+        </p>
+        <Link
+          href="/login"
+          className="mt-8 inline-block bg-white px-8 py-3 text-xs font-semibold tracking-[0.25em] text-black uppercase hover:bg-neutral-200 transition-colors"
+        >
+          Crear cuenta gratis
+        </Link>
+      </section>
+
+      <footer className="flex flex-col items-center gap-3 border-t border-neutral-800 py-8">
         <div className="flex gap-6">
           <Link href="/terms" className="text-[10px] tracking-[0.2em] text-neutral-600 uppercase hover:text-neutral-400 transition-colors">
-            Terminos
+            Términos
           </Link>
           <Link href="/privacy" className="text-[10px] tracking-[0.2em] text-neutral-600 uppercase hover:text-neutral-400 transition-colors">
             Privacidad

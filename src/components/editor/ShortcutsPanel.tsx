@@ -51,6 +51,7 @@ const GROUPS = [
       { keys: `${mod} + scroll`, label: "Zoom in / out" },
       { keys: "Right-click", label: "Context menu" },
       { keys: "Drag on empty area", label: "Rubber band select" },
+      { keys: `${mod} + ↑ / ↓`, label: "Reorder slide up / down" },
     ],
   },
   {
