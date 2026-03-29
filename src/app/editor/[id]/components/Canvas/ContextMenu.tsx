@@ -62,6 +62,28 @@ export function ContextMenu({ x, y, elementId, onClose }: Props) {
           </button>
           <div className="my-1 h-px bg-neutral-700" />
           <button className={btn} onClick={() => {
+            store.updateElement(el.id, { x: (1920 - el.w) / 2, y: (1080 - el.h) / 2 });
+            store.pushHistory();
+            onClose();
+          }}>
+            Center on canvas
+          </button>
+          <button className={btn} onClick={() => {
+            store.updateElement(el.id, { x: (1920 - el.w) / 2 });
+            store.pushHistory();
+            onClose();
+          }}>
+            Center H
+          </button>
+          <button className={btn} onClick={() => {
+            store.updateElement(el.id, { y: (1080 - el.h) / 2 });
+            store.pushHistory();
+            onClose();
+          }}>
+            Center V
+          </button>
+          <div className="my-1 h-px bg-neutral-700" />
+          <button className={btn} onClick={() => {
             store.updateElement(el.id, { x: 1920 - el.x - el.w });
             store.pushHistory();
             onClose();

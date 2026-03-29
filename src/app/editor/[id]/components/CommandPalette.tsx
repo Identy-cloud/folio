@@ -21,6 +21,7 @@ interface Props {
 
 export function CommandPalette({ open, onClose }: Props) {
   const [query, setQuery] = useState("");
+  const [selectedIdx, setSelectedIdx] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const addElement = useEditorStore((s) => s.addElement);
   const addSlide = useEditorStore((s) => s.addSlide);
@@ -30,7 +31,7 @@ export function CommandPalette({ open, onClose }: Props) {
   const zBase = (activeSlide?.elements.length ?? 0) + 1;
 
   useEffect(() => {
-    if (open) { setQuery(""); setTimeout(() => inputRef.current?.focus(), 50); }
+    if (open) { setQuery(""); setSelectedIdx(0); setTimeout(() => inputRef.current?.focus(), 50); }
   }, [open]);
 
   if (!open) return null;
@@ -189,20 +190,24 @@ export function CommandPalette({ open, onClose }: Props) {
         <input
           ref={inputRef}
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => { setQuery(e.target.value); setSelectedIdx(0); }}
           onKeyDown={(e) => {
             if (e.key === "Escape") onClose();
-            if (e.key === "Enter" && filtered.length > 0) run(filtered[0]);
+            if (e.key === "ArrowDown") { e.preventDefault(); setSelectedIdx((i) => Math.min(i + 1, filtered.length - 1)); }
+            if (e.key === "ArrowUp") { e.preventDefault(); setSelectedIdx((i) => Math.max(i - 1, 0)); }
+            if (e.key === "Enter" && filtered.length > 0) run(filtered[selectedIdx]);
           }}
           placeholder="Type to search commands..."
           className="w-full border-b border-neutral-700 bg-transparent px-4 py-3 text-sm text-white outline-none placeholder:text-neutral-500"
         />
         <div className="max-h-60 overflow-y-auto p-1">
-          {filtered.map((cmd) => (
+          {filtered.map((cmd, i) => (
             <button
               key={cmd.id}
               onClick={() => run(cmd)}
-              className="flex w-full items-center justify-between rounded px-3 py-2 text-left text-sm text-neutral-300 hover:bg-neutral-800 transition-colors"
+              className={`flex w-full items-center justify-between rounded px-3 py-2 text-left text-sm transition-colors ${
+                i === selectedIdx ? "bg-neutral-800 text-white" : "text-neutral-300 hover:bg-neutral-800"
+              }`}
             >
               <span>{cmd.label}</span>
               <span className="text-[10px] text-neutral-600">{cmd.category}</span>

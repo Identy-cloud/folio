@@ -145,6 +145,7 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
       if (e.key === "f" || e.key === "F") document.documentElement.requestFullscreen?.();
       if (e.key === "Escape") document.exitFullscreen?.();
       // Type digits to jump to slide number
+      if (e.key === "?") { setShowHelp((v) => !v); return; }
       if (e.key >= "1" && e.key <= "9") {
         const n = parseInt(e.key) - 1;
         if (n < total) setCurrent(n);
