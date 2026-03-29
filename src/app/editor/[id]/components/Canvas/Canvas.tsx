@@ -4,7 +4,7 @@ import { useRef, useState, useEffect, useCallback, type WheelEvent as ReactWheel
 import { MagnifyingGlassPlus, MagnifyingGlassMinus, GridFour } from "@phosphor-icons/react";
 import { nanoid } from "nanoid";
 import { useEditorStore } from "@/store/editorStore";
-import { textDefaults } from "@/lib/templates/element-defaults";
+import { textDefaults, shapeDefaults } from "@/lib/templates/element-defaults";
 import { THEMES } from "@/lib/templates/themes";
 import { toast } from "sonner";
 import type { ImageElement } from "@/types/elements";
@@ -81,7 +81,7 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
   function handleCanvasClick(e: React.PointerEvent) {
     if (e.target === e.currentTarget) {
       clearSelection();
-      if (activeTool === "select") {
+      if (activeTool === "select" || activeTool === "shape") {
         const bounds = e.currentTarget.getBoundingClientRect();
         const sx = (e.clientX - bounds.left) / scale;
         const sy = (e.clientY - bounds.top) / scale;
@@ -108,16 +108,32 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
     if (!rubberBand || !slide) { setRubberBand(null); return; }
     const x1 = Math.min(rubberBand.startX, rubberBand.curX);
     const y1 = Math.min(rubberBand.startY, rubberBand.curY);
-    const x2 = Math.max(rubberBand.startX, rubberBand.curX);
-    const y2 = Math.max(rubberBand.startY, rubberBand.curY);
-    if (x2 - x1 < 5 && y2 - y1 < 5) { setRubberBand(null); return; }
+    const w = Math.abs(rubberBand.curX - rubberBand.startX);
+    const h = Math.abs(rubberBand.curY - rubberBand.startY);
+    if (w < 5 && h < 5) { setRubberBand(null); return; }
 
-    const els = isMobileMode && slide.mobileElements ? slide.mobileElements : slide.elements;
-    const inside = els.filter((el) =>
-      el.x >= x1 && el.y >= y1 && el.x + el.w <= x2 && el.y + el.h <= y2
-    );
-    if (inside.length > 0) {
-      useEditorStore.setState({ selectedElementIds: inside.map((e) => e.id) });
+    if (activeTool === "shape") {
+      addElement({
+        id: nanoid(),
+        type: "shape",
+        x: x1, y: y1, w: Math.max(w, 20), h: Math.max(h, 20),
+        rotation: 0, opacity: 1,
+        zIndex: (slide.elements.length ?? 0) + 1,
+        locked: false,
+        shape: "rect",
+        ...shapeDefaults(theme),
+      });
+      useEditorStore.setState({ activeTool: "select" });
+    } else {
+      const els = isMobileMode && slide.mobileElements ? slide.mobileElements : slide.elements;
+      const x2 = x1 + w;
+      const y2 = y1 + h;
+      const inside = els.filter((el) =>
+        el.x >= x1 && el.y >= y1 && el.x + el.w <= x2 && el.y + el.h <= y2
+      );
+      if (inside.length > 0) {
+        useEditorStore.setState({ selectedElementIds: inside.map((e) => e.id) });
+      }
     }
     setRubberBand(null);
   }
@@ -362,7 +378,10 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
       {/* Zoom + Grid controls */}
       <div className="absolute bottom-3 right-3 z-30 hidden md:flex items-center gap-1 rounded bg-neutral-900/80 px-1 py-0.5 backdrop-blur-sm">
         <button
-          onClick={() => setShowGrid((v) => !v)}
+          onClick={() => {
+            setShowGrid((v) => !v);
+            useEditorStore.setState((s) => ({ snapToGrid: !s.snapToGrid }));
+          }}
           className={`rounded p-1 transition-colors ${showGrid ? "text-blue-400" : "text-neutral-400 hover:text-white"}`}
           aria-label="Toggle grid"
           aria-pressed={showGrid}

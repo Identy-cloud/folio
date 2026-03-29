@@ -60,10 +60,14 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
       clearTimeout(longPressRef.current);
       longPressRef.current = null;
     }
-    updateElement(element.id, {
-      x: dragRef.current.origX + dx,
-      y: dragRef.current.origY + dy,
-    });
+    let newX = dragRef.current.origX + dx;
+    let newY = dragRef.current.origY + dy;
+    if (useEditorStore.getState().snapToGrid) {
+      const GRID = 40;
+      newX = Math.round(newX / GRID) * GRID;
+      newY = Math.round(newY / GRID) * GRID;
+    }
+    updateElement(element.id, { x: newX, y: newY });
   }
 
   function onPointerUp() {

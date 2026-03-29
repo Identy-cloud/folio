@@ -16,6 +16,7 @@ interface EditorState {
   selectedElementIds: string[];
   activeTool: ActiveTool;
   editingMode: EditingMode;
+  snapToGrid: boolean;
   clipboard: SlideElement[];
   saveStatus: SaveStatus;
 
@@ -97,6 +98,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   selectedElementIds: [],
   activeTool: "select",
   editingMode: "desktop",
+  snapToGrid: false,
   clipboard: [],
   saveStatus: "saved",
   history: [],

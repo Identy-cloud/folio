@@ -98,6 +98,16 @@ export function useKeyboard() {
         return;
       }
 
+      // Number keys 1-9 = opacity 10%-90%, 0 = 100%
+      if (!meta && !e.altKey && e.key >= "0" && e.key <= "9" && state.selectedElementIds.length > 0) {
+        if (inInput) return;
+        e.preventDefault();
+        const opacity = e.key === "0" ? 1 : parseInt(e.key) / 10;
+        state.selectedElementIds.forEach((id) => state.updateElement(id, { opacity }));
+        state.pushHistory();
+        return;
+      }
+
       const ARROW_KEYS = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
       if (ARROW_KEYS.includes(e.key) && state.selectedElementIds.length > 0) {
         if (inInput) return;

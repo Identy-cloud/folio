@@ -32,6 +32,7 @@ const GROUPS = [
       { keys: "Shift + arrows", label: "Move 10px" },
       { keys: "Alt + arrows", label: "Resize element" },
       { keys: "Shift + click", label: "Multi-select" },
+      { keys: "1-9 / 0", label: "Opacity 10%-90% / 100%" },
       { keys: "Double-click canvas", label: "Add text" },
     ],
   },
