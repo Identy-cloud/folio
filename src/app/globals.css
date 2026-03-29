@@ -93,6 +93,23 @@ body {
   to   { opacity: 1; transform: none; }
 }
 
+/* Print styles for presentations */
+@media print {
+  body { background: white !important; }
+  header, footer, nav, [data-panel], .fixed { display: none !important; }
+  [data-slide-canvas] {
+    position: relative !important;
+    transform: none !important;
+    top: auto !important;
+    left: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 16/9;
+    page-break-after: always;
+    box-shadow: none !important;
+  }
+}
+
 /* Accessibility: reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

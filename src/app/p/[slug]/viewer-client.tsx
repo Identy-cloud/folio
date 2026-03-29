@@ -462,6 +462,18 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
                 <path d="M2 2h4V0H0v6h2V2zm12 0h-4V0h6v6h-2V2zM2 14h4v2H0v-6h2v4zm12 0h-4v2h6v-6h-2v4z" />
               </svg>
             </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                navigator.clipboard.writeText(window.location.href);
+                const btn = e.currentTarget;
+                btn.textContent = "Copied!";
+                setTimeout(() => { btn.textContent = "Share"; }, 1500);
+              }}
+              className="text-white/40 hover:text-white/80 transition-colors text-[10px] sm:text-xs"
+            >
+              Share
+            </button>
           </div>
         </div>
         <div className="flex items-center justify-between border-t border-white/5 px-4 py-2">

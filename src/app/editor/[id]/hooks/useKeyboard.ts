@@ -67,6 +67,32 @@ export function useKeyboard() {
         }
         return;
       }
+      // Shift+H flip horizontal, Shift+V flip vertical (images only)
+      if (e.key === "H" && e.shiftKey && !meta && state.selectedElementIds.length > 0) {
+        if (inInput) return;
+        e.preventDefault();
+        state.selectedElementIds.forEach((id) => {
+          const slide = state.getActiveSlide();
+          const els = state.editingMode === "mobile" && slide?.mobileElements ? slide.mobileElements : slide?.elements ?? [];
+          const el = els.find((e) => e.id === id);
+          if (el?.type === "image") state.updateElement(id, { flipX: !(el as { flipX?: boolean }).flipX });
+        });
+        state.pushHistory();
+        return;
+      }
+      if (e.key === "V" && e.shiftKey && !meta && state.selectedElementIds.length > 0) {
+        if (inInput) return;
+        e.preventDefault();
+        state.selectedElementIds.forEach((id) => {
+          const slide = state.getActiveSlide();
+          const els = state.editingMode === "mobile" && slide?.mobileElements ? slide.mobileElements : slide?.elements ?? [];
+          const el = els.find((e) => e.id === id);
+          if (el?.type === "image") state.updateElement(id, { flipY: !(el as { flipY?: boolean }).flipY });
+        });
+        state.pushHistory();
+        return;
+      }
+
       // PageUp/PageDown navigate slides (when no elements selected)
       if ((e.key === "PageUp" || e.key === "PageDown") && state.selectedElementIds.length === 0) {
         if (inInput) return;

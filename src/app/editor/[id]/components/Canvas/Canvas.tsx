@@ -466,6 +466,16 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
         <button onClick={zoomIn} className="rounded p-1 text-neutral-400 hover:text-white transition-colors" aria-label="Zoom in">
           <MagnifyingGlassPlus size={14} />
         </button>
+        <div className="w-px h-3 bg-neutral-700" />
+        {[50, 100, 150].map((p) => (
+          <button
+            key={p}
+            onClick={() => { setScale(p / 100); setZoomOverride(p / 100); setPanOffset({ x: 0, y: 0 }); }}
+            className={`px-1 text-[9px] transition-colors ${Math.round(scale * 100) === p ? "text-white" : "text-neutral-500 hover:text-neutral-300"}`}
+          >
+            {p}
+          </button>
+        ))}
       </div>
     </div>
   );
