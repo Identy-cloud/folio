@@ -226,6 +226,35 @@ export function CommandPalette({ open, onClose }: Props) {
       els.forEach((el) => { s.updateElement(el.id, { x }); x += el.w + gap; });
       s.pushHistory();
     }},
+    { id: "fit-width", label: "Fit to canvas width", category: "Size", action: () => {
+      const s = useEditorStore.getState();
+      const cw = s.editingMode === "mobile" ? 430 : 1920;
+      s.selectedElementIds.forEach((id) => s.updateElement(id, { x: 0, w: cw }));
+      s.pushHistory();
+    }},
+    { id: "fit-height", label: "Fit to canvas height", category: "Size", action: () => {
+      const s = useEditorStore.getState();
+      const ch = s.editingMode === "mobile" ? 932 : 1080;
+      s.selectedElementIds.forEach((id) => s.updateElement(id, { y: 0, h: ch }));
+      s.pushHistory();
+    }},
+    { id: "fit-canvas", label: "Fit to full canvas", category: "Size", action: () => {
+      const s = useEditorStore.getState();
+      const cw = s.editingMode === "mobile" ? 430 : 1920;
+      const ch = s.editingMode === "mobile" ? 932 : 1080;
+      s.selectedElementIds.forEach((id) => s.updateElement(id, { x: 0, y: 0, w: cw, h: ch }));
+      s.pushHistory();
+    }},
+    { id: "reset-rotation", label: "Reset rotation to 0°", category: "Edit", action: () => {
+      const s = useEditorStore.getState();
+      s.selectedElementIds.forEach((id) => s.updateElement(id, { rotation: 0 }));
+      s.pushHistory();
+    }},
+    { id: "reset-opacity", label: "Reset opacity to 100%", category: "Edit", action: () => {
+      const s = useEditorStore.getState();
+      s.selectedElementIds.forEach((id) => s.updateElement(id, { opacity: 1 }));
+      s.pushHistory();
+    }},
   ];
 
   const filtered = query

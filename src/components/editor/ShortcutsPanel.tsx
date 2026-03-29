@@ -68,6 +68,7 @@ const GROUPS = [
       { keys: "/", label: "Command palette" },
       { keys: "F2", label: "Slide sorter" },
       { keys: "F5", label: "Start presentation" },
+      { keys: "F11", label: "Compact mode (hide panels)" },
     ],
   },
   {

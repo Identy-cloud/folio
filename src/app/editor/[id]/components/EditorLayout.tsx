@@ -49,6 +49,7 @@ export function EditorLayout() {
   const [themeCustomizerOpen, setThemeCustomizerOpen] = useState(false);
   const [commentsOpen, setCommentsOpen] = useState(false);
   const [commandOpen, setCommandOpen] = useState(false);
+  const [compact, setCompact] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
   const [layersOpen, setLayersOpen] = useState(false);
   const [notesOpen, setNotesOpen] = useState(false);
@@ -74,6 +75,10 @@ export function EditorLayout() {
       if (e.key === "F2") {
         e.preventDefault();
         setSorterOpen((v) => !v);
+      }
+      if (e.key === "F11") {
+        e.preventDefault();
+        setCompact((v) => !v);
       }
       if (e.key === "F5") {
         e.preventDefault();
@@ -103,7 +108,7 @@ export function EditorLayout() {
         />
       </div>
       <div className="flex flex-1 overflow-hidden">
-        <div data-panel="slides" className="hidden h-full md:block">
+        <div data-panel="slides" className={`hidden h-full md:block ${compact ? "md:hidden" : ""}`}>
           <SlidePanel />
         </div>
 
@@ -118,7 +123,7 @@ export function EditorLayout() {
           {notesOpen && <SlideNotes />}
         </div>
 
-        <div data-panel="palette" className="hidden h-full md:block">
+        <div data-panel="palette" className={`hidden h-full md:block ${compact ? "md:hidden" : ""}`}>
           {rightPanel === "history" ? (
             <div className="flex h-full w-56 flex-col border-l border-neutral-800 bg-[#161616]">
               <HistoryPanel onClose={() => setHistoryOpen(false)} />

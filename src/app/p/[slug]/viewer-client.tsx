@@ -380,6 +380,20 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
       />
 
       {/* Free tier watermark */}
+      {/* Autoplay countdown bar */}
+      {autoplay && (
+        <div className="pointer-events-none absolute top-0 left-0 right-0 z-20 h-0.5 bg-white/10">
+          <div
+            className="h-full bg-blue-500/60"
+            style={{
+              animation: `countdown-bar ${((slides[current] as { duration?: number })?.duration ?? 5)}s linear`,
+              animationFillMode: "forwards",
+            }}
+            key={`${current}-${Date.now()}`}
+          />
+        </div>
+      )}
+
       {showHelp && (
         <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center">
           <div className="rounded-lg bg-black/70 px-6 py-4 backdrop-blur-sm text-center animate-[fade-in_0.3s_ease-out]">
