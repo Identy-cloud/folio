@@ -39,16 +39,21 @@ export function MobileViewer({ title, slides }: Props) {
     setCurrent((c) => c - 1);
   }, [animating, current]);
 
+  const [phase, setPhase] = useState<"idle" | "enter" | "active">("idle");
+
   useEffect(() => {
     if (current === displayed) return;
     const tr = slides[current]?.transition ?? "fade";
     if (tr === "none") { setDisplayed(current); return; }
     setAnimating(true);
+    setPhase("enter");
+    const raf = requestAnimationFrame(() => setPhase("active"));
     const timer = setTimeout(() => {
       setDisplayed(current);
       setAnimating(false);
+      setPhase("idle");
     }, TRANSITION_MS);
-    return () => clearTimeout(timer);
+    return () => { clearTimeout(timer); cancelAnimationFrame(raf); };
   }, [current, displayed, slides]);
 
   function handleTouchStart(e: React.TouchEvent) {
@@ -85,28 +90,54 @@ export function MobileViewer({ title, slides }: Props) {
     if (!animating) return {};
     const dur = `${TRANSITION_MS}ms`;
     const ease = "cubic-bezier(0.22, 1, 0.36, 1)";
+    const isEntering = phase === "enter";
+
     if (transType === "fade") {
-      return { transition: `opacity ${dur} ${ease}`, opacity: role === "in" ? 1 : 0 };
+      if (role === "in") {
+        return { transition: isEntering ? "none" : `opacity ${dur} ${ease}`, opacity: isEntering ? 0 : 1 };
+      }
+      return { transition: `opacity ${dur} ${ease}`, opacity: 0 };
     }
     if (transType === "slide-left") {
+      if (role === "in") {
+        return {
+          transition: isEntering ? "none" : `transform ${dur} ${ease}, opacity ${dur} ${ease}`,
+          transform: isEntering ? `translateX(${dir * 30}%)` : "translateX(0)",
+          opacity: isEntering ? 0 : 1,
+        };
+      }
       return {
         transition: `transform ${dur} ${ease}, opacity ${dur} ${ease}`,
-        transform: role === "in" ? "translateX(0)" : `translateX(${-dir * 30}%)`,
-        opacity: role === "in" ? 1 : 0,
+        transform: `translateX(${-dir * 30}%)`,
+        opacity: 0,
       };
     }
     if (transType === "slide-up") {
+      if (role === "in") {
+        return {
+          transition: isEntering ? "none" : `transform ${dur} ${ease}, opacity ${dur} ${ease}`,
+          transform: isEntering ? "translateY(30%)" : "translateY(0)",
+          opacity: isEntering ? 0 : 1,
+        };
+      }
       return {
         transition: `transform ${dur} ${ease}, opacity ${dur} ${ease}`,
-        transform: role === "in" ? "translateY(0)" : "translateY(15%)",
-        opacity: role === "in" ? 1 : 0,
+        transform: "translateY(-15%)",
+        opacity: 0,
       };
     }
     if (transType === "zoom") {
+      if (role === "in") {
+        return {
+          transition: isEntering ? "none" : `transform ${dur} ${ease}, opacity ${dur} ${ease}`,
+          transform: isEntering ? "scale(0.85)" : "scale(1)",
+          opacity: isEntering ? 0 : 1,
+        };
+      }
       return {
         transition: `transform ${dur} ${ease}, opacity ${dur} ${ease}`,
-        transform: role === "in" ? "scale(1)" : "scale(0.9)",
-        opacity: role === "in" ? 1 : 0,
+        transform: "scale(1.15)",
+        opacity: 0,
       };
     }
     return {};

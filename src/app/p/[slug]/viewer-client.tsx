@@ -28,6 +28,7 @@ export function ViewerClient({ title, slides }: Props) {
   const [current, setCurrent] = useState(0);
   const [displayed, setDisplayed] = useState(0);
   const [transitioning, setTransitioning] = useState(false);
+  const [phase, setPhase] = useState<"idle" | "enter" | "active">("idle");
   const [scale, setScale] = useState(1);
   const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -63,11 +64,21 @@ export function ViewerClient({ title, slides }: Props) {
       return;
     }
     setTransitioning(true);
+    setPhase("enter");
+
+    // Frame 1: render with "enter" styles (starting position)
+    const raf = requestAnimationFrame(() => {
+      // Frame 2: switch to "active" styles (triggers CSS transition)
+      setPhase("active");
+    });
+
     const timer = setTimeout(() => {
       setDisplayed(current);
       setTransitioning(false);
+      setPhase("idle");
     }, TRANSITION_MS);
-    return () => clearTimeout(timer);
+
+    return () => { clearTimeout(timer); cancelAnimationFrame(raf); };
   }, [current, displayed, slides]);
 
   const goNext = useCallback(() => {
@@ -126,31 +137,60 @@ export function ViewerClient({ title, slides }: Props) {
   function getTransitionStyles(role: "in" | "out"): React.CSSProperties {
     const dur = `${TRANSITION_MS}ms`;
     const ease = "cubic-bezier(0.22, 1, 0.36, 1)";
+    const isEntering = phase === "enter";
+
     if (transType === "fade") {
+      if (role === "in") {
+        return {
+          transition: isEntering ? "none" : `opacity ${dur} ${ease}`,
+          opacity: isEntering ? 0 : 1,
+        };
+      }
       return {
         transition: `opacity ${dur} ${ease}`,
-        opacity: role === "in" ? 1 : 0,
+        opacity: 0,
       };
     }
     if (transType === "slide-left") {
+      if (role === "in") {
+        return {
+          transition: isEntering ? "none" : `transform ${dur} ${ease}, opacity ${dur} ${ease}`,
+          transform: `scale(${scale}) translateX(${isEntering ? `${dir * 30}%` : "0%"})`,
+          opacity: isEntering ? 0 : 1,
+        };
+      }
       return {
         transition: `transform ${dur} ${ease}, opacity ${dur} ${ease}`,
-        transform: `scale(${scale}) translateX(${role === "in" ? "0%" : `${-dir * 30}%`})`,
-        opacity: role === "in" ? 1 : 0,
+        transform: `scale(${scale}) translateX(${-dir * 30}%)`,
+        opacity: 0,
       };
     }
     if (transType === "slide-up") {
+      if (role === "in") {
+        return {
+          transition: isEntering ? "none" : `transform ${dur} ${ease}, opacity ${dur} ${ease}`,
+          transform: `scale(${scale}) translateY(${isEntering ? "30%" : "0%"})`,
+          opacity: isEntering ? 0 : 1,
+        };
+      }
       return {
         transition: `transform ${dur} ${ease}, opacity ${dur} ${ease}`,
-        transform: `scale(${scale}) translateY(${role === "in" ? "0%" : `${30}%`})`,
-        opacity: role === "in" ? 1 : 0,
+        transform: `scale(${scale}) translateY(-30%)`,
+        opacity: 0,
       };
     }
     if (transType === "zoom") {
+      if (role === "in") {
+        return {
+          transition: isEntering ? "none" : `transform ${dur} ${ease}, opacity ${dur} ${ease}`,
+          transform: `scale(${isEntering ? scale * 0.85 : scale})`,
+          opacity: isEntering ? 0 : 1,
+        };
+      }
       return {
         transition: `transform ${dur} ${ease}, opacity ${dur} ${ease}`,
-        transform: `scale(${role === "in" ? scale : scale * 0.85})`,
-        opacity: role === "in" ? 1 : 0,
+        transform: `scale(${scale * 1.15})`,
+        opacity: 0,
       };
     }
     return { opacity: 1 };
