@@ -30,6 +30,7 @@ interface Props {
   onDelete: () => void;
   onTogglePublic: () => void;
   onChangeTheme: () => void;
+  onAnalytics: () => void;
 }
 
 export function PresentationCard({
@@ -39,6 +40,7 @@ export function PresentationCard({
   onDelete,
   onTogglePublic,
   onChangeTheme,
+  onAnalytics,
 }: Props) {
   const { t } = useTranslation();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -90,6 +92,7 @@ export function PresentationCard({
               <MenuItem label={t.dashboard.rename} onClick={() => { setMenuOpen(false); onRename(); }} />
               <MenuItem label={t.dashboard.duplicate} onClick={() => { setMenuOpen(false); onDuplicate(); }} />
               <MenuItem label={t.dashboard.changeTheme} onClick={() => { setMenuOpen(false); onChangeTheme(); }} />
+              <MenuItem label="Analytics" onClick={() => { setMenuOpen(false); onAnalytics(); }} />
               <MenuItem
                 label={presentation.isPublic ? t.dashboard.makePrivate : t.dashboard.makePublic}
                 onClick={() => { setMenuOpen(false); onTogglePublic(); }}

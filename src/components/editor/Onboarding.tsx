@@ -11,10 +11,10 @@ export function Onboarding() {
 
   const STEPS = [
     { target: "[data-slide-canvas]", title: t.onboarding.step1Title, text: t.onboarding.step1Text },
-    { target: "[data-slide-canvas]", title: t.onboarding.step2Title, text: t.onboarding.step2Text },
-    { target: "[data-panel='slides']", title: t.onboarding.step3Title, text: t.onboarding.step3Text },
-    { target: "[data-panel='palette']", title: t.onboarding.step4Title, text: t.onboarding.step4Text },
-    { target: "[data-panel='toolbar']", title: t.onboarding.step5Title, text: t.onboarding.step5Text },
+    { target: "[data-slide-canvas]", title: t.onboarding.step2Title, text: t.onboarding.step2Text + " Double-click the canvas to add text. Drag to draw shapes." },
+    { target: "[data-panel='slides']", title: t.onboarding.step3Title, text: t.onboarding.step3Text + " Use Ctrl+Up/Down to reorder slides." },
+    { target: "[data-panel='palette']", title: t.onboarding.step4Title, text: t.onboarding.step4Text + " Toggle layers and history with the toolbar icons." },
+    { target: "[data-panel='toolbar']", title: t.onboarding.step5Title, text: t.onboarding.step5Text + " Press ? anytime to see all shortcuts." },
   ];
 
   useEffect(() => {

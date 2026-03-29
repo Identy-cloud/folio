@@ -11,6 +11,7 @@ import { ConfirmDialog } from "./confirm-dialog";
 import { PromptDialog } from "./prompt-dialog";
 import { ThemeDialog } from "./theme-dialog";
 import { useTranslation } from "@/lib/i18n/context";
+import { AnalyticsDialog } from "./analytics-dialog";
 
 interface Presentation {
   id: string;
@@ -31,6 +32,7 @@ type Dialog =
   | { type: "rename"; id: string; current: string }
   | { type: "delete"; id: string }
   | { type: "theme"; id: string; current: string }
+  | { type: "analytics"; id: string; title: string }
   | null;
 
 export default function DashboardPage() {
@@ -228,6 +230,7 @@ export default function DashboardPage() {
               onDelete={() => setDialog({ type: "delete", id: p.id })}
               onTogglePublic={() => handleTogglePublic(p.id, p.isPublic)}
               onChangeTheme={() => setDialog({ type: "theme", id: p.id, current: p.theme })}
+              onAnalytics={() => setDialog({ type: "analytics", id: p.id, title: p.title })}
             />
           ))}
         </div>
@@ -259,6 +262,13 @@ export default function DashboardPage() {
         currentTheme={dialog?.type === "theme" ? dialog.current : ""}
         onSelect={handleChangeTheme}
         onCancel={() => setDialog(null)}
+      />
+
+      <AnalyticsDialog
+        open={dialog?.type === "analytics"}
+        presentationId={dialog?.type === "analytics" ? dialog.id : null}
+        title={dialog?.type === "analytics" ? dialog.title : ""}
+        onClose={() => setDialog(null)}
       />
     </div>
   );

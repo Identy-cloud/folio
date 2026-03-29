@@ -89,6 +89,12 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "Folio — Editorial Slides",
   description: "Presentaciones con estética editorial de agencia",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Folio",
+  },
 };
 
 export default function RootLayout({
