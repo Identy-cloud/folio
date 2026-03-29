@@ -222,12 +222,26 @@ export default function ProfilePage() {
             {planLabels[profile.plan] ?? profile.plan}
           </p>
         </div>
-        <Link
-          href="/pricing"
-          className="text-xs tracking-[0.2em] text-neutral-400 uppercase hover:text-white transition-colors"
-        >
-          {t.dashboard.profileUpgrade ?? "Ver planes"}
-        </Link>
+        <div className="flex items-center gap-3">
+          {profile.plan !== "free" && (
+            <button
+              onClick={async () => {
+                const res = await fetch("/api/stripe/portal", { method: "POST" });
+                const data = await res.json();
+                if (data.url) window.location.href = data.url;
+              }}
+              className="text-xs tracking-[0.2em] text-neutral-500 uppercase hover:text-white transition-colors"
+            >
+              Manage
+            </button>
+          )}
+          <Link
+            href="/pricing"
+            className="text-xs tracking-[0.2em] text-neutral-400 uppercase hover:text-white transition-colors"
+          >
+            {t.dashboard.profileUpgrade ?? "Ver planes"}
+          </Link>
+        </div>
       </div>
 
       {/* Stats */}

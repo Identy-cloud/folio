@@ -1,4 +1,8 @@
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const tiers = [
   {
@@ -16,8 +20,8 @@ const tiers = [
     ],
     cta: "Empezar gratis",
     href: "/login",
+    plan: null,
     highlighted: false,
-    available: true,
   },
   {
     name: "Pro",
@@ -32,10 +36,10 @@ const tiers = [
       "Sin marca de agua Folio",
       "Soporte prioritario",
     ],
-    cta: "Proximamente",
-    href: "#",
+    cta: "Comenzar Pro",
+    href: null,
+    plan: "pro" as const,
     highlighted: true,
-    available: false,
   },
   {
     name: "Team",
@@ -50,14 +54,36 @@ const tiers = [
       "Roles y permisos",
       "Facturacion centralizada",
     ],
-    cta: "Proximamente",
-    href: "#",
+    cta: "Comenzar Team",
+    href: null,
+    plan: "team" as const,
     highlighted: false,
-    available: false,
   },
 ];
 
 export default function PricingPage() {
+  const router = useRouter();
+  const [loading, setLoading] = useState<string | null>(null);
+
+  async function handleCheckout(plan: string) {
+    setLoading(plan);
+    try {
+      const res = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else if (res.status === 401) {
+        router.push("/login");
+      }
+    } catch {
+      setLoading(null);
+    }
+  }
+
   return (
     <div className="flex min-h-screen flex-col bg-[#161616] text-white">
       <header className="flex items-center justify-between px-4 py-6 sm:px-8">
@@ -124,18 +150,26 @@ export default function PricingPage() {
               </ul>
 
               <div className="mt-8">
-                {tier.available ? (
+                {tier.href ? (
                   <Link
                     href={tier.href}
                     className="block w-full bg-white py-3 text-center text-xs font-semibold tracking-[0.25em] text-black uppercase hover:bg-neutral-200 transition-colors"
                   >
                     {tier.cta}
                   </Link>
-                ) : (
-                  <span className="block w-full border border-neutral-700 py-3 text-center text-xs tracking-[0.25em] text-neutral-500 uppercase cursor-default">
-                    {tier.cta}
-                  </span>
-                )}
+                ) : tier.plan ? (
+                  <button
+                    onClick={() => handleCheckout(tier.plan!)}
+                    disabled={loading !== null}
+                    className={`block w-full py-3 text-center text-xs font-semibold tracking-[0.25em] uppercase transition-colors ${
+                      tier.highlighted
+                        ? "bg-white text-black hover:bg-neutral-200"
+                        : "border border-neutral-600 text-neutral-300 hover:border-white hover:text-white"
+                    } disabled:opacity-50`}
+                  >
+                    {loading === tier.plan ? "..." : tier.cta}
+                  </button>
+                ) : null}
               </div>
             </div>
           ))}

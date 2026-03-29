@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { withSentryConfig } from "@sentry/nextjs";
 
 const securityHeaders = [
   { key: "X-Frame-Options", value: "DENY" },
@@ -13,7 +14,7 @@ const securityHeaders = [
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' blob: data: https://*.r2.dev https://*.googleusercontent.com https://*.supabase.co https://images.unsplash.com",
       "font-src 'self' https://fonts.gstatic.com",
-      "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.r2.dev https://*.partykit.io wss://*.partykit.io",
+      "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.r2.dev https://*.partykit.io wss://*.partykit.io https://*.sentry.io https://*.posthog.com https://us.i.posthog.com",
       "frame-ancestors 'none'",
     ].join("; "),
   },
@@ -56,4 +57,10 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withSentryConfig(nextConfig, {
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  silent: true,
+  widenClientFileUpload: true,
+  disableLogger: true,
+});
