@@ -24,6 +24,7 @@ import { SlideNotes } from "./SlideNotes";
 import { FindReplace } from "./FindReplace";
 import { SlideSorter } from "./SlideSorter";
 import { ThemeCustomizer } from "./ThemeCustomizer";
+import { EditorComments } from "./EditorComments";
 import { ClockCounterClockwise, Stack, NotePencil } from "@phosphor-icons/react";
 import { MobileSlidePanel } from "./Mobile/MobileSlidePanel";
 import { MobileInsertPanel } from "./Mobile/MobileInsertPanel";
@@ -45,6 +46,7 @@ export function EditorLayout() {
   const [findOpen, setFindOpen] = useState(false);
   const [sorterOpen, setSorterOpen] = useState(false);
   const [themeCustomizerOpen, setThemeCustomizerOpen] = useState(false);
+  const [commentsOpen, setCommentsOpen] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
   const [layersOpen, setLayersOpen] = useState(false);
   const [notesOpen, setNotesOpen] = useState(false);
@@ -91,6 +93,7 @@ export function EditorLayout() {
           notesOpen={notesOpen}
           onToggleSorter={() => setSorterOpen((v) => !v)}
           onToggleThemeCustomizer={() => setThemeCustomizerOpen((v) => !v)}
+          onToggleComments={() => setCommentsOpen((v) => !v)}
         />
       </div>
       <div className="flex flex-1 overflow-hidden">
@@ -189,6 +192,7 @@ export function EditorLayout() {
       <FindReplace open={findOpen} onClose={() => setFindOpen(false)} />
       <SlideSorter open={sorterOpen} onClose={() => setSorterOpen(false)} />
       <ThemeCustomizer open={themeCustomizerOpen} onClose={() => setThemeCustomizerOpen(false)} />
+      <EditorComments open={commentsOpen} onClose={() => setCommentsOpen(false)} />
       <Onboarding />
       <ShortcutsPanel open={shortcutsOpen} onClose={() => setShortcutsOpen(false)} />
     </div>

@@ -115,6 +115,7 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
   return (
     <div
       data-element-id={element.id}
+      title={`${element.type}${element.type === "text" ? `: ${(element as import("@/types/elements").TextElement).content.replace(/<[^>]*>/g, "").slice(0, 30)}` : ""} — ${Math.round(element.w)}×${Math.round(element.h)}`}
       style={{
         position: "absolute",
         left: element.x,

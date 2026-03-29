@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { ArrowCounterClockwise, ArrowClockwise, FilePdf, FileImage, Image as ImageIcon, Desktop, DeviceMobile, Play, ClockCounterClockwise, Stack, NotePencil } from "@phosphor-icons/react";
+import { ArrowCounterClockwise, ArrowClockwise, FilePdf, FileImage, Image as ImageIcon, Desktop, DeviceMobile, Play, ClockCounterClockwise, Stack, NotePencil, ChatCircle } from "@phosphor-icons/react";
 import { FolioLogo } from "@/components/FolioLogo";
 import { Tooltip } from "@/components/ui/Tooltip";
 
@@ -28,9 +28,10 @@ interface ToolbarProps {
   notesOpen?: boolean;
   onToggleSorter?: () => void;
   onToggleThemeCustomizer?: () => void;
+  onToggleComments?: () => void;
 }
 
-export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen, onToggleLayers, layersOpen, onToggleNotes, notesOpen, onToggleSorter, onToggleThemeCustomizer }: ToolbarProps) {
+export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen, onToggleLayers, layersOpen, onToggleNotes, notesOpen, onToggleSorter, onToggleThemeCustomizer, onToggleComments }: ToolbarProps) {
   const { t } = useTranslation();
   const undo = useEditorStore((s) => s.undo);
   const redo = useEditorStore((s) => s.redo);
@@ -217,6 +218,17 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
                 aria-pressed={notesOpen}
               >
                 <NotePencil size={16} weight="regular" />
+              </button>
+            </Tooltip>
+          )}
+          {onToggleComments && (
+            <Tooltip content="Comments">
+              <button
+                onClick={onToggleComments}
+                className="hidden md:flex rounded p-2 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 transition-colors"
+                aria-label="Comments"
+              >
+                <ChatCircle size={16} weight="regular" />
               </button>
             </Tooltip>
           )}

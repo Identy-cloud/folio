@@ -111,12 +111,22 @@ export function AnalyticsDialog({ open, presentationId, title, onClose }: Props)
         </div>
       )}
 
-      <button
-        onClick={onClose}
-        className="mt-4 w-full rounded px-4 py-2 text-xs text-neutral-400 hover:bg-neutral-800 transition-colors"
-      >
-        Close
-      </button>
+      <div className="mt-4 flex gap-2">
+        {presentationId && data && (
+          <a
+            href={`/dashboard/${presentationId}/analytics`}
+            className="flex-1 rounded border border-neutral-700 py-2 text-center text-xs text-neutral-400 hover:bg-neutral-800 transition-colors"
+          >
+            Full report →
+          </a>
+        )}
+        <button
+          onClick={onClose}
+          className="flex-1 rounded px-4 py-2 text-xs text-neutral-400 hover:bg-neutral-800 transition-colors"
+        >
+          Close
+        </button>
+      </div>
     </DialogShell>
   );
 }
