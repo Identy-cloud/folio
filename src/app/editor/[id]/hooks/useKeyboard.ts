@@ -50,6 +50,15 @@ export function useKeyboard() {
         }
         return;
       }
+      if (e.key === "a" && meta) {
+        if (inInput) return;
+        e.preventDefault();
+        const slide = state.getActiveSlide();
+        if (!slide) return;
+        const els = state.editingMode === "mobile" && slide.mobileElements ? slide.mobileElements : slide.elements;
+        useEditorStore.setState({ selectedElementIds: els.map((e) => e.id) });
+        return;
+      }
       if (e.key === "Escape") {
         state.clearSelection();
         state.setActiveTool("select");

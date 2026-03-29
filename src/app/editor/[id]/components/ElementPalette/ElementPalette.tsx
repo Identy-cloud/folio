@@ -17,6 +17,7 @@ import { AlignControls } from "./AlignControls";
 import { AnimationProperties } from "./AnimationProperties";
 import { LockToggle } from "./LockToggle";
 import { DeleteButton } from "./DeleteButton";
+import { MultiSelectControls } from "./MultiSelectControls";
 import { ColorPicker } from "@/components/editor/ColorPicker";
 import type { TextElement, ShapeElement, ArrowElement, DividerElement, ImageElement, SlideElement } from "@/types/elements";
 import { textDefaults, shapeDefaults, arrowDefaults, dividerDefaults } from "@/lib/templates/element-defaults";
@@ -71,7 +72,23 @@ export function ElementPalette() {
         </button>
       </div>
 
-      {selectedElement ? (
+      {selectedIds.length > 1 ? (
+        <div className="flex-1 overflow-y-auto border-t border-neutral-800 p-3 space-y-4">
+          <span className="text-[10px] font-medium text-neutral-400 uppercase tracking-wider">
+            {selectedIds.length} elements selected
+          </span>
+          <MultiSelectControls elementIds={selectedIds} />
+          <button
+            onClick={() => {
+              const deleteElement = useEditorStore.getState().deleteElement;
+              selectedIds.forEach((id) => deleteElement(id));
+            }}
+            className="flex w-full items-center justify-center gap-2 rounded border border-red-900/50 bg-red-950/30 px-3 py-2 text-xs text-red-400 hover:bg-red-950/50 transition-colors"
+          >
+            {t.editor.deleteElement}
+          </button>
+        </div>
+      ) : selectedElement ? (
         <div className="flex-1 overflow-y-auto border-t border-neutral-800 p-3 space-y-4">
           <PositionFields element={selectedElement} />
           {selectedElement.type === "text" && <TextProperties element={selectedElement} />}
