@@ -364,6 +364,22 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
             <rect width="100%" height="100%" fill="url(#grid)" />
           </svg>
         )}
+        {/* Ruler marks */}
+        <svg className="pointer-events-none absolute inset-0 z-0" width="100%" height="100%">
+          {Array.from({ length: Math.floor(canvasW / 100) + 1 }, (_, i) => (
+            <g key={`rx${i}`}>
+              <line x1={i * 100} y1={0} x2={i * 100} y2={i % 5 === 0 ? 8 : 4} stroke="rgba(255,255,255,0.08)" strokeWidth={0.5} />
+              {i % 5 === 0 && i > 0 && (
+                <text x={i * 100} y={14} fill="rgba(255,255,255,0.06)" fontSize={7} textAnchor="middle">{i * 100}</text>
+              )}
+            </g>
+          ))}
+          {Array.from({ length: Math.floor(canvasH / 100) + 1 }, (_, i) => (
+            <g key={`ry${i}`}>
+              <line x1={0} y1={i * 100} x2={i % 5 === 0 ? 8 : 4} y2={i * 100} stroke="rgba(255,255,255,0.08)" strokeWidth={0.5} />
+            </g>
+          ))}
+        </svg>
         <SnapGuides />
         {(isMobileMode && slide.mobileElements ? slide.mobileElements : slide.elements)
           .slice()

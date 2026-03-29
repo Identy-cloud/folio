@@ -406,8 +406,8 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
             {title}
           </span>
           <div className="flex items-center gap-3 sm:gap-4">
-            <span className="text-[10px] text-white/60 sm:text-xs">
-              {current + 1} / {total}
+            <span className="text-[10px] text-white/60 sm:text-xs tabular-nums transition-all duration-200">
+              <span key={current} className="inline-block animate-[fade-in_0.2s_ease-out]">{current + 1}</span> / {total}
             </span>
             {total <= 20 ? (
               <div className="flex gap-1">

@@ -45,6 +45,36 @@ export function ContextMenu({ x, y, elementId, onClose }: Props) {
           <button className={btn} onClick={() => { store.duplicateElement(el.id); onClose(); }}>
             <CopySimple size={14} /> Duplicate
           </button>
+          <button className={btn} onClick={() => {
+            const r = el.rotation === 0 ? 0 : -el.rotation;
+            store.updateElement(el.id, { rotation: el.rotation + 90 });
+            store.pushHistory();
+            onClose();
+          }}>
+            Rotate 90°
+          </button>
+          <div className="my-1 h-px bg-neutral-700" />
+          <button className={btn} onClick={() => { store.bringToFront(el.id); onClose(); }}>
+            Bring to front
+          </button>
+          <button className={btn} onClick={() => { store.sendToBack(el.id); onClose(); }}>
+            Send to back
+          </button>
+          <div className="my-1 h-px bg-neutral-700" />
+          <button className={btn} onClick={() => {
+            store.updateElement(el.id, { x: 1920 - el.x - el.w });
+            store.pushHistory();
+            onClose();
+          }}>
+            Mirror H
+          </button>
+          <button className={btn} onClick={() => {
+            store.updateElement(el.id, { y: 1080 - el.y - el.h });
+            store.pushHistory();
+            onClose();
+          }}>
+            Mirror V
+          </button>
           <button
             className={btn}
             onClick={() => {
