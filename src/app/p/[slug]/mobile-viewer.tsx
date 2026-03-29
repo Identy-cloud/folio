@@ -153,22 +153,26 @@ export function MobileViewer({ title, slides }: Props) {
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
-      <div className="relative flex-1 overflow-hidden">
+      <div className="relative flex-1" style={{ overflow: animating ? "visible" : "hidden" }}>
         {/* Outgoing slide */}
         {animating && outgoing && (
-          <div
-            className="absolute inset-0 overflow-y-auto overscroll-contain pb-14"
-            style={{ backgroundColor: outgoing.backgroundColor, ...getStyle("out") }}
-          >
-            <MobileSlideContent elements={outgoing.mobileElements ?? outgoing.elements} bg={outgoing.backgroundColor} />
+          <div className="absolute inset-0" style={getStyle("out")}>
+            <div
+              className="h-full overflow-y-auto overscroll-contain pb-14"
+              style={{ backgroundColor: outgoing.backgroundColor }}
+            >
+              <MobileSlideContent elements={outgoing.mobileElements ?? outgoing.elements} bg={outgoing.backgroundColor} />
+            </div>
           </div>
         )}
         {/* Current slide */}
-        <div
-          className="absolute inset-0 overflow-y-auto overscroll-contain pb-14"
-          style={{ backgroundColor: activeSlide.backgroundColor, ...getStyle("in") }}
-        >
-          <MobileSlideContent elements={inElements} bg={activeSlide.backgroundColor} />
+        <div className="absolute inset-0" style={getStyle("in")}>
+          <div
+            className="h-full overflow-y-auto overscroll-contain pb-14"
+            style={{ backgroundColor: activeSlide.backgroundColor }}
+          >
+            <MobileSlideContent elements={inElements} bg={activeSlide.backgroundColor} />
+          </div>
         </div>
       </div>
 
