@@ -18,7 +18,7 @@ import {
   TextT, Rectangle, Circle, Triangle, Image as ImageIcon,
 } from "@phosphor-icons/react";
 import { SlidePreview } from "@/components/SlidePreview";
-import type { TextElement, ShapeElement, ImageElement, ArrowElement, DividerElement } from "@/types/elements";
+import type { TextElement, ShapeElement, ImageElement, ArrowElement, DividerElement, SlideTransition } from "@/types/elements";
 import { textDefaults, shapeDefaults } from "@/lib/templates/element-defaults";
 import { THEMES } from "@/lib/templates/themes";
 import { PositionFields } from "./ElementPalette/PositionFields";
@@ -138,6 +138,11 @@ export function EditorLayout() {
   );
 }
 
+const MOBILE_TR_ICONS: Record<string, string> = {
+  none: "—", fade: "◐", "slide-left": "→", "slide-up": "↑", zoom: "⊕",
+};
+const MOBILE_TR_ORDER: SlideTransition[] = ["none", "fade", "slide-left", "slide-up", "zoom"];
+
 function MobileSlidePanel({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
   const slides = useEditorStore((s) => s.slides);
@@ -145,17 +150,16 @@ function MobileSlidePanel({ onClose }: { onClose: () => void }) {
   const setActiveSlide = useEditorStore((s) => s.setActiveSlide);
   const addSlide = useEditorStore((s) => s.addSlide);
   const deleteSlide = useEditorStore((s) => s.deleteSlide);
+  const updateSlideTransition = useEditorStore((s) => s.updateSlideTransition);
+  const [expandedTr, setExpandedTr] = useState<number | null>(null);
 
   return (
-    <div className="p-4 space-y-3">
-      <div className="grid grid-cols-3 gap-2">
-        {slides.map((slide, i) => (
+    <div className="p-4 space-y-2">
+      {slides.map((slide, i) => (
+        <div key={slide.id}>
           <div
-            key={slide.id}
             className={`relative overflow-hidden rounded border-2 transition-colors ${
-              i === activeSlideIndex
-                ? "border-blue-500"
-                : "border-neutral-700"
+              i === activeSlideIndex ? "border-blue-500" : "border-neutral-700"
             }`}
           >
             <button
@@ -177,8 +181,37 @@ function MobileSlidePanel({ onClose }: { onClose: () => void }) {
               </button>
             )}
           </div>
-        ))}
-      </div>
+          {i < slides.length - 1 && (
+            <div className="flex items-center justify-center py-1.5">
+              {expandedTr === i ? (
+                <div className="flex gap-1 rounded-full bg-neutral-800 px-2 py-1">
+                  {MOBILE_TR_ORDER.map((tr) => (
+                    <button
+                      key={tr}
+                      onClick={() => { updateSlideTransition(slides[i + 1].id, tr); setExpandedTr(null); }}
+                      className={`flex h-7 w-7 items-center justify-center rounded-full text-xs transition-colors ${
+                        slides[i + 1].transition === tr
+                          ? "bg-white text-[#161616]"
+                          : "text-neutral-400 active:bg-neutral-700"
+                      }`}
+                    >
+                      {MOBILE_TR_ICONS[tr]}
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <button
+                  onClick={() => setExpandedTr(i)}
+                  className="flex h-7 items-center gap-1.5 rounded-full bg-neutral-800/50 px-3 text-[10px] text-neutral-500 active:bg-neutral-700"
+                >
+                  <span>{MOBILE_TR_ICONS[slides[i + 1].transition] ?? "◐"}</span>
+                  <span className="text-[9px] uppercase tracking-wider">{slides[i + 1].transition}</span>
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+      ))}
       <button
         onClick={() => { addSlide(); onClose(); }}
         className="w-full rounded border border-dashed border-neutral-600 py-2 text-xs text-neutral-400"
