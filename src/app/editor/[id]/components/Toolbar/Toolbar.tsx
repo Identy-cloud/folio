@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowCounterClockwise, ArrowClockwise, Cursor, TextT, Shapes, FilePdf, Image as ImageIcon, Desktop, DeviceMobile } from "@phosphor-icons/react";
+import { ArrowCounterClockwise, ArrowClockwise, Cursor, TextT, Shapes, FilePdf, FileImage, Image as ImageIcon, Desktop, DeviceMobile } from "@phosphor-icons/react";
+import { toPng } from "html-to-image";
 import { useEditorStore } from "@/store/editorStore";
 import type { ActiveTool } from "@/store/editorStore";
 import { exportToPdf } from "@/lib/export-pdf";
@@ -57,6 +58,16 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
     setActiveSlide(currentIndex);
     setExporting(false);
     setExportProgress("");
+  }
+
+  async function handleExportPng() {
+    const el = document.querySelector("[data-slide-canvas]") as HTMLElement;
+    if (!el) return;
+    const dataUrl = await toPng(el, { width: 1920, height: 1080, pixelRatio: 1, cacheBust: true });
+    const a = document.createElement("a");
+    a.href = dataUrl;
+    a.download = `slide-${useEditorStore.getState().activeSlideIndex + 1}.png`;
+    a.click();
   }
 
   const statusText: Record<string, string> = {
@@ -115,6 +126,13 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
         >
           <FilePdf size={14} weight="duotone" />
           {exporting ? exportProgress : t.editor.pdf}
+        </button>
+        <button
+          onClick={handleExportPng}
+          className="hidden md:flex items-center gap-1 rounded px-3 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200"
+        >
+          <FileImage size={14} weight="duotone" />
+          PNG
         </button>
         <div className="hidden md:block h-5 w-px bg-neutral-700" />
         <div className="hidden md:flex gap-0.5 rounded border border-neutral-700 p-0.5" role="group" aria-label={t.editor.editMode}>

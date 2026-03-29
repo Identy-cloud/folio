@@ -193,6 +193,9 @@ export const en = {
     unresolve: "Reopen",
     embed: "Embed",
     embedCopied: "Embed code copied",
+    importSlide: "IMPORT SLIDE",
+    importSlideDesc: "Select a slide from another presentation to import",
+    noOtherPresentations: "No other presentations found",
   },
   onboarding: {
     skip: "Skip tour",

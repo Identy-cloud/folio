@@ -193,6 +193,9 @@ export const fr = {
     unresolve: "Rouvrir",
     embed: "Intégrer",
     embedCopied: "Code copié",
+    importSlide: "IMPORTER UN SLIDE",
+    importSlideDesc: "Sélectionnez un slide d'une autre présentation",
+    noOtherPresentations: "Aucune autre présentation",
   },
   onboarding: {
     skip: "Passer le tour",

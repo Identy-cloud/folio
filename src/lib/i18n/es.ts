@@ -191,6 +191,9 @@ export const es = {
     unresolve: "Reabrir",
     embed: "Embeber",
     embedCopied: "Código de embed copiado",
+    importSlide: "IMPORTAR SLIDE",
+    importSlideDesc: "Selecciona un slide de otra presentación para importar",
+    noOtherPresentations: "No tienes otras presentaciones",
   },
   onboarding: {
     skip: "Saltar tour",

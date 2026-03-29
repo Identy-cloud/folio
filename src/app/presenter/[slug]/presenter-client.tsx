@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { SlidePreview } from "@/components/SlidePreview";
 import type { SlideElement } from "@/types/elements";
 
@@ -22,6 +22,24 @@ interface Props {
 export function PresenterClient({ title, slides, slug }: Props) {
   const [current, setCurrent] = useState(0);
   const total = slides.length;
+
+  // Timer
+  const [elapsed, setElapsed] = useState(0);
+  const [timerRunning, setTimerRunning] = useState(true);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    if (timerRunning) {
+      timerRef.current = setInterval(() => setElapsed((e) => e + 1), 1000);
+    }
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+  }, [timerRunning]);
+
+  function formatTime(s: number) {
+    const m = Math.floor(s / 60);
+    const sec = s % 60;
+    return `${m}:${sec.toString().padStart(2, "0")}`;
+  }
 
   const goNext = useCallback(() => {
     setCurrent((c) => Math.min(c + 1, total - 1));
@@ -105,6 +123,23 @@ export function PresenterClient({ title, slides, slug }: Props) {
           >
             ← Prev
           </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setTimerRunning(!timerRunning)}
+              className="text-[10px] text-neutral-500 hover:text-neutral-300 transition-colors"
+            >
+              {timerRunning ? "⏸" : "▶"}
+            </button>
+            <span className="font-mono text-sm text-neutral-300 tabular-nums">
+              {formatTime(elapsed)}
+            </span>
+            <button
+              onClick={() => { setElapsed(0); setTimerRunning(true); }}
+              className="text-[10px] text-neutral-500 hover:text-neutral-300 transition-colors"
+            >
+              ↺
+            </button>
+          </div>
           <a
             href={`/p/${slug}`}
             target="_blank"

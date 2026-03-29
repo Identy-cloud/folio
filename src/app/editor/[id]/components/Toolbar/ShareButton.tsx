@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import QRCode from "qrcode";
 import { ShareNetwork, Link as LinkIcon, Check, Globe, Lock } from "@phosphor-icons/react";
 import { useEditorStore } from "@/store/editorStore";
 import { toast } from "sonner";
@@ -21,6 +22,7 @@ export function ShareButton() {
   const [toggling, setToggling] = useState(false);
   const [copied, setCopied] = useState(false);
   const [pw, setPw] = useState("");
+  const [qrUrl, setQrUrl] = useState<string | null>(null);
   const popRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -32,6 +34,16 @@ export function ShareButton() {
   }, [open, presentationId]);
 
   useClickOutside(popRef, () => setOpen(false), open);
+
+  useEffect(() => {
+    if (meta?.isPublic && meta.slug) {
+      QRCode.toDataURL(`${window.location.origin}/p/${meta.slug}`, {
+        width: 120, margin: 1, color: { dark: "#ffffff", light: "#00000000" },
+      }).then(setQrUrl).catch(() => {});
+    } else {
+      setQrUrl(null);
+    }
+  }, [meta?.isPublic, meta?.slug]);
 
   async function togglePublic() {
     if (!meta) return;
@@ -122,6 +134,13 @@ export function ShareButton() {
                       {copied ? <Check size={14} /> : <LinkIcon size={14} />}
                     </button>
                   </div>
+
+                  {/* QR Code */}
+                  {qrUrl && (
+                    <div className="flex justify-center">
+                      <img src={qrUrl} alt="QR" width={96} height={96} className="rounded" />
+                    </div>
+                  )}
 
                   {/* Password */}
                   <div className="flex items-center gap-2">

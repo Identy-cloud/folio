@@ -1,8 +1,9 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Plus } from "@phosphor-icons/react";
+import { Plus, ArrowSquareIn } from "@phosphor-icons/react";
 import { NotesEditor } from "./NotesEditor";
+import { ImportSlideModal } from "../ImportSlideModal";
 import {
   DndContext,
   closestCenter,
@@ -33,6 +34,7 @@ export function SlidePanel() {
   const reorderSlides = useEditorStore((s) => s.reorderSlides);
   const updateSlideTransition = useEditorStore((s) => s.updateSlideTransition);
   const parentRef = useRef<HTMLDivElement>(null);
+  const [importOpen, setImportOpen] = useState(false);
 
   const [contextMenu, setContextMenu] = useState<{
     x: number;
@@ -63,12 +65,21 @@ export function SlidePanel() {
         <span className="text-xs font-medium text-neutral-400 uppercase tracking-wider">
           {t.editor.slides} ({slides.length})
         </span>
-        <button
-          onClick={addSlide}
-          className="text-xs text-neutral-500 hover:text-neutral-200"
-        >
-          <Plus size={12} className="inline" /> {t.editor.addSlide}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setImportOpen(true)}
+            className="text-neutral-500 hover:text-neutral-200"
+            title={t.editor.importSlide ?? "Import slide"}
+          >
+            <ArrowSquareIn size={14} />
+          </button>
+          <button
+            onClick={addSlide}
+            className="text-xs text-neutral-500 hover:text-neutral-200"
+          >
+            <Plus size={12} className="inline" /> {t.editor.addSlide}
+          </button>
+        </div>
       </div>
       <div
         ref={parentRef}
@@ -157,6 +168,7 @@ export function SlidePanel() {
         </div>
       )}
       <NotesEditor />
+      <ImportSlideModal open={importOpen} onClose={() => setImportOpen(false)} />
     </div>
   );
 }
