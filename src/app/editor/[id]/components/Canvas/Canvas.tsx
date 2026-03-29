@@ -45,6 +45,17 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
   const [ctxMenu, setCtxMenu] = useState<{ x: number; y: number; elementId: string | null } | null>(null);
   const [showGrid, setShowGrid] = useState(false);
   const [rubberBand, setRubberBand] = useState<{ startX: number; startY: number; curX: number; curY: number } | null>(null);
+  const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
+  const panRef = useRef<{ startX: number; startY: number; origX: number; origY: number } | null>(null);
+  const spaceDown = useRef(false);
+
+  useEffect(() => {
+    function down(e: KeyboardEvent) { if (e.key === " " && !e.repeat) spaceDown.current = true; }
+    function up(e: KeyboardEvent) { if (e.key === " ") { spaceDown.current = false; panRef.current = null; } }
+    window.addEventListener("keydown", down);
+    window.addEventListener("keyup", up);
+    return () => { window.removeEventListener("keydown", down); window.removeEventListener("keyup", up); };
+  }, []);
 
   const slide = useEditorStore((s) => s.getActiveSlide());
   const activeSlideIndex = useEditorStore((s) => s.activeSlideIndex);
@@ -289,6 +300,7 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
   function zoomFit() {
     setZoomOverride(null);
     setScale(autoScale.current);
+    setPanOffset({ x: 0, y: 0 });
   }
 
   if (!slide) return null;
@@ -302,6 +314,23 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
       onDrop={handleDrop}
       onWheel={handleWheel}
       onContextMenu={handleContextMenu}
+      onPointerDown={(e) => {
+        if (spaceDown.current) {
+          e.preventDefault();
+          (e.target as HTMLElement).setPointerCapture(e.pointerId);
+          panRef.current = { startX: e.clientX, startY: e.clientY, origX: panOffset.x, origY: panOffset.y };
+        }
+      }}
+      onPointerMove={(e) => {
+        if (panRef.current) {
+          setPanOffset({
+            x: panRef.current.origX + (e.clientX - panRef.current.startX),
+            y: panRef.current.origY + (e.clientY - panRef.current.startY),
+          });
+        }
+      }}
+      onPointerUp={() => { panRef.current = null; }}
+      style={{ cursor: spaceDown.current ? "grab" : undefined }}
     >
       <div
         data-slide-canvas
@@ -313,7 +342,7 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
             ? Math.min(12 + (canvasH * scale) / 2, wrapperRef.current ? wrapperRef.current.clientHeight / 2 : 12 + (canvasH * scale) / 2)
             : "50%",
           left: "50%",
-          transform: `translate(-50%, -50%) scale(${scale})`,
+          transform: `translate(calc(-50% + ${panOffset.x}px), calc(-50% + ${panOffset.y}px)) scale(${scale})`,
           transformOrigin: "center center",
           background: slide.backgroundColor,
           boxShadow: "0 4px 30px rgba(0,0,0,0.3)",

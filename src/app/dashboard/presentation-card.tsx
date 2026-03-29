@@ -78,6 +78,7 @@ export function PresentationCard({
               locale: es,
             })}
             {presentation.isPublic && ` · ${t.dashboard.public}`}
+            {` · ${presentation.theme.replace(/-/g, " ")}`}
           </p>
         </div>
 

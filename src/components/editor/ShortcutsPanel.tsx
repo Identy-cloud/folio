@@ -56,6 +56,7 @@ const GROUPS = [
       { keys: `${mod} + ↑ / ↓`, label: "Reorder slide up / down" },
       { keys: `${mod} + Enter`, label: "Add new slide" },
       { keys: `${mod} + H`, label: "Find & Replace" },
+      { keys: "Space + drag", label: "Pan canvas" },
     ],
   },
   {

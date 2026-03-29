@@ -181,6 +181,30 @@ export function ColorPicker({ value, onChange, label }: Props) {
               </button>
             )}
           </div>
+          {!value.startsWith("linear-gradient") && !value.startsWith("radial-gradient") && (
+            <div className="mt-1.5 flex items-center gap-1.5">
+              <span className="text-[9px] text-neutral-600">Alpha</span>
+              <input
+                type="range"
+                min={0}
+                max={100}
+                value={(() => {
+                  const m = value.match(/rgba?\([^)]+,\s*([\d.]+)\)/);
+                  return m ? Math.round(parseFloat(m[1]) * 100) : 100;
+                })()}
+                onChange={(e) => {
+                  const alpha = parseInt(e.target.value) / 100;
+                  const hex6 = value.replace(/^#/, "").replace(/^(.{3})$/, "$1$3");
+                  const r = parseInt(hex6.slice(0, 2), 16) || 0;
+                  const g = parseInt(hex6.slice(2, 4), 16) || 0;
+                  const b = parseInt(hex6.slice(4, 6), 16) || 0;
+                  if (alpha >= 1) applyColor(`#${hex6.slice(0, 6)}`);
+                  else applyColor(`rgba(${r},${g},${b},${alpha.toFixed(2)})`);
+                }}
+                className="flex-1 accent-white"
+              />
+            </div>
+          )}
         </div>,
         document.body
       )}
