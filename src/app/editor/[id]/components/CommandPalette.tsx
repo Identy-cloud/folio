@@ -103,6 +103,75 @@ export function CommandPalette({ open, onClose }: Props) {
       a.click();
       URL.revokeObjectURL(a.href);
     }},
+    { id: "export-json", label: "Export as JSON (backup)", category: "Export", action: () => {
+      const { slides, theme, presentationId } = useEditorStore.getState();
+      const data = JSON.stringify({ version: 1, theme, slides }, null, 2);
+      const blob = new Blob([data], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `presentation-${presentationId}.json`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }},
+    { id: "import-json", label: "Import from JSON", category: "Import", action: () => {
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = ".json";
+      input.onchange = async () => {
+        const file = input.files?.[0];
+        if (!file) return;
+        try {
+          const text = await file.text();
+          const data = JSON.parse(text);
+          if (data.version === 1 && Array.isArray(data.slides)) {
+            const store = useEditorStore.getState();
+            useEditorStore.setState({
+              slides: data.slides,
+              activeSlideIndex: 0,
+              selectedElementIds: [],
+              dirty: true,
+              saveStatus: "unsaved" as const,
+            });
+            store.pushHistory();
+            alert(`Imported ${data.slides.length} slides`);
+          } else {
+            alert("Invalid file format");
+          }
+        } catch { alert("Failed to parse file"); }
+        input.remove();
+      };
+      input.click();
+    }},
+    { id: "equal-width", label: "Make same width", category: "Edit", action: () => {
+      const s = useEditorStore.getState();
+      if (s.selectedElementIds.length < 2) return;
+      const slide = s.getActiveSlide();
+      const els = s.editingMode === "mobile" && slide?.mobileElements ? slide.mobileElements : slide?.elements ?? [];
+      const first = els.find((e) => e.id === s.selectedElementIds[0]);
+      if (!first) return;
+      s.selectedElementIds.forEach((id) => s.updateElement(id, { w: first.w }));
+      s.pushHistory();
+    }},
+    { id: "equal-height", label: "Make same height", category: "Edit", action: () => {
+      const s = useEditorStore.getState();
+      if (s.selectedElementIds.length < 2) return;
+      const slide = s.getActiveSlide();
+      const els = s.editingMode === "mobile" && slide?.mobileElements ? slide.mobileElements : slide?.elements ?? [];
+      const first = els.find((e) => e.id === s.selectedElementIds[0]);
+      if (!first) return;
+      s.selectedElementIds.forEach((id) => s.updateElement(id, { h: first.h }));
+      s.pushHistory();
+    }},
+    { id: "equal-size", label: "Make same size", category: "Edit", action: () => {
+      const s = useEditorStore.getState();
+      if (s.selectedElementIds.length < 2) return;
+      const slide = s.getActiveSlide();
+      const els = s.editingMode === "mobile" && slide?.mobileElements ? slide.mobileElements : slide?.elements ?? [];
+      const first = els.find((e) => e.id === s.selectedElementIds[0]);
+      if (!first) return;
+      s.selectedElementIds.forEach((id) => s.updateElement(id, { w: first.w, h: first.h }));
+      s.pushHistory();
+    }},
   ];
 
   const filtered = query

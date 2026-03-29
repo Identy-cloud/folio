@@ -67,6 +67,16 @@ export function useKeyboard() {
         }
         return;
       }
+      // PageUp/PageDown navigate slides (when no elements selected)
+      if ((e.key === "PageUp" || e.key === "PageDown") && state.selectedElementIds.length === 0) {
+        if (inInput) return;
+        e.preventDefault();
+        const idx = state.activeSlideIndex;
+        const next = e.key === "PageUp" ? Math.max(0, idx - 1) : Math.min(state.slides.length - 1, idx + 1);
+        if (next !== idx) state.setActiveSlide(next);
+        return;
+      }
+
       // Ctrl+Shift+M = center element on canvas
       if (e.key === "m" && meta && e.shiftKey) {
         if (inInput) return;
