@@ -42,9 +42,9 @@ export async function POST(request: Request) {
   }
 
   // Check storage limit
-  const limits = getPlanLimits(user.plan);
+  const limits = getPlanLimits(user.plan ?? "free");
   const fileSize = parsed.data.fileSize ?? 0;
-  if (user.storageUsed + fileSize > limits.maxStorageBytes) {
+  if ((user.storageUsed ?? 0) + fileSize > limits.maxStorageBytes) {
     return Response.json(
       { error: "Storage limit reached", limit: limits.maxStorageBytes },
       { status: 403 }
@@ -59,12 +59,16 @@ export async function POST(request: Request) {
     parsed.data.contentType
   );
 
-  // Track storage usage
+  // Track storage usage (best-effort, column may not exist pre-migration)
   if (fileSize > 0) {
-    await db
-      .update(users)
-      .set({ storageUsed: sql`${users.storageUsed} + ${fileSize}` })
-      .where(eq(users.id, user.id));
+    try {
+      await db
+        .update(users)
+        .set({ storageUsed: sql`COALESCE(${users.storageUsed}, 0) + ${fileSize}` })
+        .where(eq(users.id, user.id));
+    } catch {
+      // Column not yet migrated — skip tracking
+    }
   }
 
   return Response.json({ signedUrl, publicUrl });

@@ -32,15 +32,21 @@ async function getPresentation(slug: string) {
     .where(eq(slides.presentationId, pres.id))
     .orderBy(asc(slides.order));
 
-  const [owner] = await db
-    .select({ plan: users.plan })
-    .from(users)
-    .where(eq(users.id, pres.userId))
-    .limit(1);
+  let ownerPlan = "free";
+  try {
+    const [owner] = await db
+      .select({ plan: users.plan })
+      .from(users)
+      .where(eq(users.id, pres.userId))
+      .limit(1);
+    ownerPlan = owner?.plan ?? "free";
+  } catch {
+    // Column not yet migrated
+  }
 
   return {
     presentation: pres,
-    ownerPlan: owner?.plan ?? "free",
+    ownerPlan,
     slides: slideRows.map((s) => ({
       id: s.id,
       presentationId: s.presentationId,

@@ -19,7 +19,7 @@ export async function POST(
   const rl = checkRateLimit(`create:${user.id}`, 10, 3600_000);
   if (!rl.allowed) return rateLimitResponse(rl);
 
-  const limits = getPlanLimits(user.plan);
+  const limits = getPlanLimits(user.plan ?? "free");
   const [presCount] = await db
     .select({ total: count() })
     .from(presentations)

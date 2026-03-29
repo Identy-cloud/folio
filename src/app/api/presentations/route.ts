@@ -70,7 +70,7 @@ export async function POST(request: Request) {
   if (!rl.allowed) return rateLimitResponse(rl);
 
   // Check plan limits
-  const limits = getPlanLimits(user.plan);
+  const limits = getPlanLimits(user.plan ?? "free");
   const [presCount] = await db
     .select({ total: count() })
     .from(presentations)

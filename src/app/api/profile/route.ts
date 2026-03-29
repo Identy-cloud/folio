@@ -20,8 +20,8 @@ export async function GET() {
     email: user.email,
     name: user.name,
     avatarUrl: user.avatarUrl,
-    plan: user.plan,
-    storageUsed: user.storageUsed,
+    plan: user.plan ?? "free",
+    storageUsed: user.storageUsed ?? 0,
     createdAt: user.createdAt,
     presentationCount: stats?.total ?? 0,
   });
