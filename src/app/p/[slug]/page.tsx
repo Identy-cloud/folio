@@ -100,11 +100,33 @@ export default async function ViewerPage({
   const data = await getPresentation(slug);
   if (!data) notFound();
 
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "";
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "PresentationDigitalDocument",
+    name: data.presentation.title,
+    url: `${appUrl}/p/${slug}`,
+    dateModified: data.presentation.updatedAt,
+    datePublished: data.presentation.createdAt,
+    image: `${appUrl}/api/og/${slug}`,
+    provider: {
+      "@type": "Organization",
+      name: "Folio",
+      url: appUrl,
+    },
+  };
+
   return (
-    <ViewerWrapper
-      title={data.presentation.title}
-      slides={data.slides as SlideRow[]}
-      showWatermark={data.ownerPlan === "free"}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <ViewerWrapper
+        title={data.presentation.title}
+        slides={data.slides as SlideRow[]}
+        showWatermark={data.ownerPlan === "free"}
+      />
+    </>
   );
 }

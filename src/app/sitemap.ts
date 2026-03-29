@@ -13,6 +13,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     { url, lastModified: new Date(), changeFrequency: "monthly", priority: 1 },
+    { url: `${url}/pricing`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
+    { url: `${url}/login`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.5 },
     ...publicPresentations.map((p) => ({
       url: `${url}/p/${p.slug}`,
       lastModified: p.updatedAt,
