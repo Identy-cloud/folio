@@ -79,7 +79,8 @@ export function CommandPalette({ open, onClose }: Props) {
           textEls++;
         }
       }));
-      alert(`${words} words · ${chars} characters · ${textEls} text elements · ${slides.length} slides`);
+      const minutes = Math.ceil(words / 150); // ~150 words per minute speaking
+      alert(`${words} words · ${chars} chars · ${slides.length} slides\n\nEstimated presentation time: ~${minutes} min`);
     }},
     { id: "export-notes", label: "Export speaker notes", category: "Export", action: () => {
       const { slides } = useEditorStore.getState();
@@ -172,6 +173,18 @@ export function CommandPalette({ open, onClose }: Props) {
       if (!first) return;
       s.selectedElementIds.forEach((id) => s.updateElement(id, { w: first.w, h: first.h }));
       s.pushHistory();
+    }},
+    { id: "reset-zoom", label: "Reset zoom & pan", category: "View", action: () => {
+      window.dispatchEvent(new CustomEvent("folio:zoom-fit"));
+    }},
+    { id: "toggle-grid", label: "Toggle grid", category: "View", action: () => {
+      window.dispatchEvent(new CustomEvent("folio:toggle-grid"));
+    }},
+    { id: "delete-all", label: "Delete all elements on slide", category: "Edit", action: () => {
+      const s = useEditorStore.getState();
+      const slide = s.getActiveSlide();
+      if (!slide || !confirm(`Delete all ${slide.elements.length} elements?`)) return;
+      slide.elements.forEach((el) => s.deleteElement(el.id));
     }},
   ];
 

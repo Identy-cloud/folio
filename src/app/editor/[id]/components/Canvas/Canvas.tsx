@@ -48,6 +48,7 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
   const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
   const panRef = useRef<{ startX: number; startY: number; origX: number; origY: number } | null>(null);
   const spaceDown = useRef(false);
+  const [darkCanvas, setDarkCanvas] = useState(true);
 
   useEffect(() => {
     function down(e: KeyboardEvent) { if (e.key === " " && !e.repeat) spaceDown.current = true; }
@@ -69,6 +70,14 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
   const isMobileMode = editingMode === "mobile";
   const canvasW = isMobileMode ? MOBILE_W : DESKTOP_W;
   const canvasH = isMobileMode ? MOBILE_H : DESKTOP_H;
+
+  useEffect(() => {
+    function onZoomFit() { zoomFit(); }
+    function onToggleGrid() { setShowGrid((v) => !v); useEditorStore.setState((s) => ({ snapToGrid: !s.snapToGrid })); }
+    window.addEventListener("folio:zoom-fit", onZoomFit);
+    window.addEventListener("folio:toggle-grid", onToggleGrid);
+    return () => { window.removeEventListener("folio:zoom-fit", onZoomFit); window.removeEventListener("folio:toggle-grid", onToggleGrid); };
+  }, []);
 
   const updateScale = useCallback(() => {
     if (!wrapperRef.current) return;
@@ -308,7 +317,7 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
   return (
     <div
       ref={wrapperRef}
-      className={`relative h-full w-full overflow-hidden touch-none ${dragOver ? "ring-2 ring-inset ring-blue-500/50" : ""}`}
+      className={`relative h-full w-full overflow-hidden touch-none ${dragOver ? "ring-2 ring-inset ring-blue-500/50" : ""} ${darkCanvas ? "bg-[#111]" : "bg-[#e5e5e5]"}`}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
@@ -476,6 +485,14 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
             {p}
           </button>
         ))}
+        <div className="w-px h-3 bg-neutral-700" />
+        <button
+          onClick={() => setDarkCanvas((v) => !v)}
+          className="px-1 text-[9px] text-neutral-500 hover:text-neutral-300 transition-colors"
+          title="Toggle canvas background"
+        >
+          {darkCanvas ? "☀" : "☾"}
+        </button>
       </div>
     </div>
   );
