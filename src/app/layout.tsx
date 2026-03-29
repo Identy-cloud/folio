@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import {
   Bebas_Neue,
   DM_Sans,
@@ -77,6 +77,12 @@ const fontVars = [
   barlowCondensed.variable,
   barlow.variable,
 ].join(" ");
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
 
 export const metadata: Metadata = {
   title: "Folio — Editorial Slides",

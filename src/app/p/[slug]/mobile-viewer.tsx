@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useRef, useMemo, useCallback, useEffect } from "react";
+import { useState, useRef, useMemo, useCallback } from "react";
 import DOMPurify from "dompurify";
-import type { SlideElement, TextElement } from "@/types/elements";
+import type { SlideElement, TextElement, ShapeElement } from "@/types/elements";
 import { useTranslation } from "@/lib/i18n/context";
 
 interface Slide {
@@ -20,22 +20,30 @@ interface Props {
 export function MobileViewer({ title, slides }: Props) {
   const { t } = useTranslation();
   const [current, setCurrent] = useState(0);
-  const touchRef = useRef<{ x: number; y: number } | null>(null);
+  const touchRef = useRef<{ x: number; y: number; t: number } | null>(null);
+  const scrollingRef = useRef(false);
   const total = slides.length;
 
   const goNext = useCallback(() => setCurrent((c) => Math.min(c + 1, total - 1)), [total]);
   const goPrev = useCallback(() => setCurrent((c) => Math.max(c - 1, 0)), []);
 
   function handleTouchStart(e: React.TouchEvent) {
-    touchRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    scrollingRef.current = false;
+    touchRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY, t: Date.now() };
+  }
+
+  function handleTouchMove(e: React.TouchEvent) {
+    if (!touchRef.current) return;
+    const dy = Math.abs(e.touches[0].clientY - touchRef.current.y);
+    if (dy > 10) scrollingRef.current = true;
   }
 
   function handleTouchEnd(e: React.TouchEvent) {
-    if (!touchRef.current) return;
+    if (!touchRef.current || scrollingRef.current) { touchRef.current = null; return; }
     const dx = e.changedTouches[0].clientX - touchRef.current.x;
-    const dy = e.changedTouches[0].clientY - touchRef.current.y;
+    const elapsed = Date.now() - touchRef.current.t;
     touchRef.current = null;
-    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+    if (Math.abs(dx) > 30 && elapsed < 500) {
       if (dx < 0) goNext();
       else goPrev();
     }
@@ -48,26 +56,28 @@ export function MobileViewer({ title, slides }: Props) {
 
   return (
     <div
-      className="relative h-screen bg-black select-none"
+      className="relative flex flex-col bg-black select-none"
+      style={{ height: "100dvh" }}
       onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
       <div
-        className="h-full overflow-y-auto pb-20"
+        className="flex-1 overflow-y-auto overscroll-contain pb-14"
         style={{ backgroundColor: slide.backgroundColor }}
       >
         <MobileSlideContent elements={elements} bg={slide.backgroundColor} />
       </div>
 
       {/* Fixed bottom bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-20 border-t border-white/10 bg-black/90 backdrop-blur-sm">
-        <div className="flex items-center justify-between px-4 py-2.5">
-          <span className="max-w-[40%] truncate text-[10px] text-white/40">{title}</span>
+      <div className="shrink-0 border-t border-white/10 bg-black safe-b">
+        <div className="flex items-center justify-between px-4 py-2">
+          <span className="max-w-[40%] truncate text-[10px] text-white/50">{title}</span>
           <div className="flex items-center gap-3">
-            <span className="text-[10px] text-white/60">{current + 1} / {total}</span>
+            <span className="text-[10px] text-white/70">{current + 1} / {total}</span>
             <div className="h-1 w-20 overflow-hidden rounded-full bg-white/20">
               <div
-                className="h-full bg-white/60 transition-all duration-300"
+                className="h-full bg-white/70 transition-all duration-300"
                 style={{ width: `${((current + 1) / total) * 100}%` }}
               />
             </div>
@@ -75,15 +85,16 @@ export function MobileViewer({ title, slides }: Props) {
         </div>
         <a
           href="/"
-          className="block border-t border-white/5 px-4 py-2 text-center text-[10px] text-white/30 active:text-white/50"
+          onClick={(e) => e.stopPropagation()}
+          className="block border-t border-white/5 px-4 py-1.5 text-center text-[10px] text-white/30 active:text-white/50"
         >
           {t.viewer.createOwn}
         </a>
       </div>
 
       {/* Swipe hint */}
-      {current === 0 && (
-        <div className="absolute inset-x-0 bottom-24 z-10 flex justify-center pointer-events-none animate-fade-out">
+      {current === 0 && total > 1 && (
+        <div className="absolute inset-x-0 bottom-20 z-10 flex justify-center pointer-events-none animate-fade-out">
           <span className="rounded-full bg-white/10 px-4 py-1.5 text-[10px] text-white/50">
             {t.viewer.swipeHint}
           </span>
@@ -98,11 +109,14 @@ function MobileSlideContent({ elements, bg }: { elements: SlideElement[]; bg: st
     const titles: SlideElement[] = [];
     const images: SlideElement[] = [];
     const body: SlideElement[] = [];
+    const decorative: SlideElement[] = [];
 
     for (const el of elements) {
       if (el.type === "text" && el.fontSize >= 48) titles.push(el);
       else if (el.type === "image") images.push(el);
       else if (el.type === "text" && el.opacity > 0.2) body.push(el);
+      else if (el.type === "divider") decorative.push(el);
+      else if (el.type === "shape") decorative.push(el);
     }
 
     titles.sort((a, b) => {
@@ -111,7 +125,7 @@ function MobileSlideContent({ elements, bg }: { elements: SlideElement[]; bg: st
       return fb - fa;
     });
 
-    return [...titles, ...images, ...body];
+    return [...titles, ...images, ...body, ...decorative];
   }, [elements]);
 
   return (
@@ -124,7 +138,11 @@ function MobileSlideContent({ elements, bg }: { elements: SlideElement[]; bg: st
 }
 
 function MobileElement({ element }: { element: SlideElement }) {
-  if (element.type === "shape" || element.type === "arrow") return null;
+  if (element.type === "arrow") return null;
+
+  if (element.type === "shape") {
+    return <MobileShape element={element} />;
+  }
 
   if (element.type === "divider") {
     return (
@@ -139,6 +157,7 @@ function MobileElement({ element }: { element: SlideElement }) {
       <img
         src={element.src}
         alt=""
+        loading="lazy"
         className="w-full rounded"
         style={{
           aspectRatio: `${element.w} / ${element.h}`,
@@ -157,11 +176,26 @@ function MobileElement({ element }: { element: SlideElement }) {
   return null;
 }
 
+function MobileShape({ element }: { element: ShapeElement }) {
+  if (element.shape === "circle") {
+    return (
+      <div className="flex justify-center py-2">
+        <div style={{ width: 48, height: 48, borderRadius: "50%", backgroundColor: element.fill, opacity: element.opacity }} />
+      </div>
+    );
+  }
+  return (
+    <div className="py-1">
+      <div style={{ height: 4, borderRadius: element.borderRadius, backgroundColor: element.fill, opacity: element.opacity }} />
+    </div>
+  );
+}
+
 function MobileText({ element }: { element: TextElement }) {
   const isTitle = element.fontSize >= 48;
   const mobileFontSize = isTitle
-    ? Math.min(element.fontSize * 0.4, 48)
-    : Math.max(element.fontSize * 0.75, 14);
+    ? Math.min(element.fontSize * 0.5, 56)
+    : Math.max(element.fontSize * 0.85, 14);
 
   const sanitized = useMemo(() => DOMPurify.sanitize(element.content), [element.content]);
 
