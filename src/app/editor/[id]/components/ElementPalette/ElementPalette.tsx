@@ -157,6 +157,31 @@ export function ElementPalette() {
               </div>
             )}
           </div>
+          {/* Background patterns */}
+          <div className="space-y-1.5">
+            <span className="text-[10px] text-neutral-500">Pattern overlay</span>
+            <div className="flex flex-wrap gap-1">
+              {[
+                { label: "None", value: "" },
+                { label: "Dots", value: "radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px)" },
+                { label: "Grid", value: "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)" },
+                { label: "Diagonal", value: "repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.03) 10px, rgba(255,255,255,0.03) 11px)" },
+                { label: "Noise", value: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E\")" },
+              ].map((p) => (
+                <button
+                  key={p.label}
+                  onClick={() => {
+                    if (!p.value) { updateSlideBackgroundImage(null); return; }
+                    updateSlideBackgroundImage(p.value);
+                  }}
+                  className="rounded px-2 py-1 text-[10px] text-neutral-500 hover:bg-neutral-800 hover:text-neutral-300 transition-colors"
+                >
+                  {p.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <TransitionPicker
             current={activeSlide.transition}
             onChange={(tr) => updateSlideTransition(activeSlide.id, tr)}

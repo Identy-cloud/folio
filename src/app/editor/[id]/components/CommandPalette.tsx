@@ -46,6 +46,14 @@ export function CommandPalette({ open, onClose }: Props) {
     { id: "line", label: "Line / Divider", category: "Insert", action: () => addElement({ id: nanoid(), type: "divider", x: 100, y: 500, w: 600, h: 10, rotation: 0, opacity: 1, zIndex: zBase, locked: false, ...dividerDefaults(theme) } satisfies DividerElement) },
     { id: "embed", label: "Embed (YouTube, Vimeo)", category: "Insert", action: () => { const url = prompt("Paste video URL:"); if (url) addElement({ id: nanoid(), type: "embed", x: 200, y: 200, w: 640, h: 360, rotation: 0, opacity: 1, zIndex: zBase, locked: false, url } as EmbedElement); } },
     { id: "slide", label: "New slide", category: "Slide", action: () => addSlide() },
+    { id: "select-all", label: "Select all elements", category: "Edit", action: () => { const s = useEditorStore.getState().getActiveSlide(); if (s) useEditorStore.setState({ selectedElementIds: s.elements.map((e) => e.id) }); } },
+    { id: "deselect", label: "Deselect all", category: "Edit", action: () => useEditorStore.setState({ selectedElementIds: [] }) },
+    { id: "undo", label: "Undo", category: "Edit", action: () => useEditorStore.getState().undo() },
+    { id: "redo", label: "Redo", category: "Edit", action: () => useEditorStore.getState().redo() },
+    { id: "preview", label: "Preview presentation", category: "View", action: () => window.open(`/preview/${useEditorStore.getState().presentationId}`, "_blank") },
+    { id: "hexagon", label: "Hexagon", category: "Shape", action: () => addElement({ id: nanoid(), type: "shape", x: 200, y: 200, w: 200, h: 200, rotation: 0, opacity: 1, zIndex: zBase, locked: false, shape: "hexagon", ...shapeDefaults(theme) } satisfies ShapeElement) },
+    { id: "pentagon", label: "Pentagon", category: "Shape", action: () => addElement({ id: nanoid(), type: "shape", x: 200, y: 200, w: 200, h: 200, rotation: 0, opacity: 1, zIndex: zBase, locked: false, shape: "pentagon", ...shapeDefaults(theme) } satisfies ShapeElement) },
+    { id: "triangle", label: "Triangle", category: "Shape", action: () => addElement({ id: nanoid(), type: "shape", x: 200, y: 200, w: 200, h: 200, rotation: 0, opacity: 1, zIndex: zBase, locked: false, shape: "triangle", ...shapeDefaults(theme) } satisfies ShapeElement) },
   ];
 
   const filtered = query

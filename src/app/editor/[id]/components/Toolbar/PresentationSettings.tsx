@@ -115,6 +115,23 @@ export function PresentationSettings({ open, onClose }: Props) {
             </div>
           )}
 
+          {/* Duplicate */}
+          <button
+            onClick={async () => {
+              const res = await fetch(`/api/presentations/${presentationId}/duplicate`, { method: "POST" });
+              if (res.ok) {
+                const p = await res.json();
+                toast.success("Duplicated");
+                window.open(`/editor/${p.id}`, "_blank");
+              } else {
+                toast.error("Failed to duplicate");
+              }
+            }}
+            className="flex w-full items-center justify-center gap-2 rounded border border-neutral-700 px-3 py-2 text-xs text-neutral-300 hover:bg-neutral-800 transition-colors"
+          >
+            Duplicate presentation
+          </button>
+
           {/* Delete */}
           <div className="border-t border-neutral-800 pt-4">
             {!deleting ? (
