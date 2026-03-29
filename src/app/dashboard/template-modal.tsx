@@ -3,6 +3,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { THEMES, ALL_FONTS } from "@/lib/templates/themes";
+import { FREE_THEMES } from "@/lib/plan-limits";
+import { usePlanLimits } from "@/hooks/usePlanLimits";
 import { toast } from "sonner";
 import { X, Plus } from "@phosphor-icons/react";
 import { useTranslation } from "@/lib/i18n/context";
@@ -20,6 +22,7 @@ export function TemplateModal({ open, onClose }: Props) {
   const { t } = useTranslation();
   const [creating, setCreating] = useState<string | null>(null);
   const trapRef = useFocusTrap<HTMLDivElement>(open);
+  const { limits } = usePlanLimits();
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === "Escape" && creating === null) onClose();
@@ -108,12 +111,17 @@ export function TemplateModal({ open, onClose }: Props) {
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
           {themeKeys.map((key) => {
             const th = THEMES[key];
+            const isFree = (FREE_THEMES as readonly string[]).includes(key);
+            const isLocked = !limits.canUseAllTemplates && !isFree;
             return (
               <button
                 key={key}
-                onClick={() => handleSelect(key)}
+                onClick={() => {
+                  if (isLocked) { toast.error("Upgrade your plan to use this theme"); return; }
+                  handleSelect(key);
+                }}
                 disabled={creating !== null}
-                className="group relative overflow-hidden border border-neutral-700 text-left transition-shadow hover:shadow-lg disabled:opacity-50"
+                className={`group relative overflow-hidden border text-left transition-shadow hover:shadow-lg disabled:opacity-50 ${isLocked ? "border-neutral-800 opacity-60" : "border-neutral-700"}`}
               >
                 <div
                   className="flex aspect-video items-end p-4"
@@ -139,11 +147,14 @@ export function TemplateModal({ open, onClose }: Props) {
                     style={{ backgroundColor: th.accent }}
                   />
                 </div>
-                <div className="px-4 py-2">
+                <div className="flex items-center justify-between px-4 py-2">
                   <p className="text-xs text-neutral-400">
                     {ALL_FONTS.find((f) => f.value === th.fontDisplay)?.label ?? th.fontDisplay} +{" "}
                     {ALL_FONTS.find((f) => f.value === th.fontBody)?.label ?? th.fontBody}
                   </p>
+                  {isLocked && (
+                    <span className="rounded bg-amber-500/20 px-1.5 py-0.5 text-[9px] font-medium text-amber-400">PRO</span>
+                  )}
                 </div>
                 {creating === key && (
                   <div className="absolute inset-0 flex items-center justify-center bg-black/70">

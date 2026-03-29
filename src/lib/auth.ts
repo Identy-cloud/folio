@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { db } from "@/db";
-import { users } from "@/db/schema";
+import { users, subscriptions } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
 export async function getAuthenticatedUser() {
@@ -35,6 +35,12 @@ export async function getAuthenticatedUser() {
         },
       })
       .returning();
+
+    await db
+      .insert(subscriptions)
+      .values({ userId: user.id, plan: "free", status: "active" })
+      .onConflictDoNothing();
+
     return newUser;
   }
 
