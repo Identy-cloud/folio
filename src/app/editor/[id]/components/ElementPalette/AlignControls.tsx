@@ -20,7 +20,7 @@ export function AlignControls({ elementId }: { elementId: string }) {
     pushHistory();
   }
 
-  const btn = "flex h-7 w-7 items-center justify-center rounded text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 transition-colors";
+  const btn = "flex h-8 w-8 items-center justify-center rounded text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 transition-colors";
 
   return (
     <div>

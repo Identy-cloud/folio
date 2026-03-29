@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { THEMES, ALL_FONTS } from "@/lib/templates/themes";
 import { toast } from "sonner";
 import { X, Plus } from "@phosphor-icons/react";
 import { useTranslation } from "@/lib/i18n/context";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 interface Props {
   open: boolean;
@@ -18,6 +19,17 @@ export function TemplateModal({ open, onClose }: Props) {
   const router = useRouter();
   const { t } = useTranslation();
   const [creating, setCreating] = useState<string | null>(null);
+  const trapRef = useFocusTrap<HTMLDivElement>(open);
+
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (e.key === "Escape" && creating === null) onClose();
+  }, [onClose, creating]);
+
+  useEffect(() => {
+    if (!open) return;
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [open, handleKeyDown]);
 
   if (!open) return null;
 
@@ -66,8 +78,8 @@ export function TemplateModal({ open, onClose }: Props) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 sm:items-center" role="dialog" aria-modal="true" aria-label={t.dashboard.newPresentation}>
-      <div className="max-h-[90vh] w-full overflow-y-auto rounded-t-xl bg-[#1e1e1e] p-4 shadow-2xl sm:max-w-4xl sm:rounded-sm sm:p-8">
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 sm:items-center" role="dialog" aria-modal="true" aria-label={t.dashboard.newPresentation} onClick={() => creating === null && onClose()}>
+      <div ref={trapRef} className="max-h-[90vh] w-full overflow-y-auto rounded-t-xl bg-[#1e1e1e] p-4 shadow-2xl sm:max-w-4xl sm:rounded-sm sm:p-8" onClick={(e) => e.stopPropagation()}>
         <div className="mb-4 flex items-center justify-between sm:mb-6">
           <div>
             <h2 className="font-display text-2xl tracking-tight text-neutral-200 sm:text-3xl">

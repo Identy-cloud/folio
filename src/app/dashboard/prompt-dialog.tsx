@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useTranslation } from "@/lib/i18n/context";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 interface Props {
   open: boolean;
@@ -17,6 +18,7 @@ export function PromptDialog({ open, title, message, defaultValue = "", placehol
   const { t } = useTranslation();
   const [value, setValue] = useState(defaultValue);
   const inputRef = useRef<HTMLInputElement>(null);
+  const trapRef = useFocusTrap<HTMLFormElement>(open);
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === "Escape") onCancel();
@@ -40,7 +42,7 @@ export function PromptDialog({ open, title, message, defaultValue = "", placehol
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60" role="dialog" aria-modal="true" aria-label={title} onClick={onCancel}>
-      <form onSubmit={handleSubmit} onClick={(e) => e.stopPropagation()} className="w-full max-w-sm rounded bg-[#1e1e1e] border border-neutral-700 p-6 shadow-xl mx-4">
+      <form ref={trapRef} onSubmit={handleSubmit} onClick={(e) => e.stopPropagation()} className="w-full max-w-sm rounded bg-[#1e1e1e] border border-neutral-700 p-6 shadow-xl mx-4">
         <h3 className="font-display text-lg tracking-tight text-neutral-200">{title}</h3>
         {message && <p className="mt-2 text-sm text-neutral-400">{message}</p>}
         <input

@@ -89,7 +89,7 @@ export function ColorPicker({ value, onChange, label }: Props) {
                 key={c}
                 onClick={() => { onChange(c); setHex(c); }}
                 aria-label={c}
-                className={`h-5 w-5 rounded-sm border transition-transform hover:scale-110 ${
+                className={`h-6 w-6 rounded-sm border transition-transform hover:scale-110 ${
                   value === c ? "border-white ring-1 ring-white" : "border-neutral-500"
                 }`}
                 style={{ backgroundColor: c }}

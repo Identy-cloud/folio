@@ -66,13 +66,9 @@ export default function DashboardPage() {
   }
 
   async function handleDuplicate(id: string) {
-    const original = presentations.find((p) => p.id === id);
-    if (!original) return;
-    await fetch("/api/presentations", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title: `${original.title} (copia)`, theme: original.theme, useTemplate: false }),
-    });
+    const res = await fetch(`/api/presentations/${id}/duplicate`, { method: "POST" });
+    if (res.ok) toast.success(t.dashboard.duplicate);
+    else toast.error(t.dashboard.errorCreate);
     refreshPresentations();
   }
 

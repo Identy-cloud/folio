@@ -3,8 +3,10 @@
 import { memo } from "react";
 import { useEditorStore } from "@/store/editorStore";
 
-const SLIDE_WIDTH = 1920;
-const SLIDE_HEIGHT = 1080;
+const DESKTOP_W = 1920;
+const DESKTOP_H = 1080;
+const MOBILE_W = 430;
+const MOBILE_H = 932;
 const SNAP_THRESHOLD = 4;
 
 interface Guide {
@@ -19,7 +21,11 @@ export const SnapGuides = memo(function SnapGuides() {
 
   if (!slide || selectedIds.length !== 1) return null;
 
-  const elements = editingMode === "mobile" && slide.mobileElements ? slide.mobileElements : slide.elements;
+  const isMobile = editingMode === "mobile";
+  const SLIDE_WIDTH = isMobile ? MOBILE_W : DESKTOP_W;
+  const SLIDE_HEIGHT = isMobile ? MOBILE_H : DESKTOP_H;
+
+  const elements = isMobile && slide.mobileElements ? slide.mobileElements : slide.elements;
   const selected = elements.find((el) => el.id === selectedIds[0]);
   if (!selected) return null;
 

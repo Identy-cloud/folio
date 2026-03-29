@@ -31,7 +31,7 @@ export function TransitionPicker({ current, onChange }: Props) {
             key={tr}
             onClick={() => onChange(tr)}
             title={LABELS[tr]}
-            className={`flex h-7 w-7 items-center justify-center rounded text-xs transition-colors ${
+            className={`flex h-8 w-8 items-center justify-center rounded text-xs transition-colors ${
               current === tr
                 ? "bg-white text-[#161616]"
                 : "text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200"

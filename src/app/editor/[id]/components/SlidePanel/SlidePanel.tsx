@@ -178,7 +178,7 @@ function InlineTransitionPicker({
             <button
               key={tr}
               onClick={() => { onChange(tr); setOpen(false); }}
-              className={`flex h-6 w-6 items-center justify-center rounded-full transition-colors ${
+              className={`flex h-7 w-7 items-center justify-center rounded-full transition-colors ${
                 current === tr
                   ? "bg-white text-[#161616]"
                   : "text-neutral-400 hover:bg-neutral-700 hover:text-neutral-200"

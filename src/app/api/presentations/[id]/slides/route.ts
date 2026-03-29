@@ -5,14 +5,74 @@ import { and, eq, asc } from "drizzle-orm";
 import { z } from "zod";
 import type { NextRequest } from "next/server";
 
+const animationEnum = z.enum(["none", "fade-up", "fade-down", "fade-left", "fade-right", "zoom-in"]).optional();
+
+const baseElementSchema = z.object({
+  id: z.string().min(1),
+  type: z.enum(["text", "image", "shape", "arrow", "divider"]),
+  x: z.number(), y: z.number(), w: z.number(), h: z.number(),
+  rotation: z.number(), opacity: z.number().min(0).max(1),
+  zIndex: z.number().int(), locked: z.boolean(),
+  animation: animationEnum,
+  animationDelay: z.number().min(0).optional(),
+});
+
+const textElementSchema = baseElementSchema.extend({
+  type: z.literal("text"),
+  content: z.string().max(50000),
+  fontFamily: z.string().max(100),
+  fontSize: z.number().min(1).max(1000),
+  fontWeight: z.number(),
+  lineHeight: z.number(),
+  letterSpacing: z.number(),
+  color: z.string().max(50),
+  textAlign: z.enum(["left", "center", "right"]),
+  verticalAlign: z.enum(["top", "middle", "bottom"]),
+});
+
+const imageElementSchema = baseElementSchema.extend({
+  type: z.literal("image"),
+  src: z.string().url().max(2048),
+  objectFit: z.enum(["cover", "contain", "fill"]),
+  filter: z.string().max(200),
+  isPlaceholder: z.boolean().optional(),
+});
+
+const shapeElementSchema = baseElementSchema.extend({
+  type: z.literal("shape"),
+  shape: z.enum(["rect", "circle", "triangle"]),
+  fill: z.string().max(50),
+  stroke: z.string().max(50),
+  strokeWidth: z.number().min(0),
+  borderRadius: z.number().min(0),
+});
+
+const arrowElementSchema = baseElementSchema.extend({
+  type: z.literal("arrow"),
+  direction: z.enum(["right", "left", "up", "down"]),
+  color: z.string().max(50),
+  strokeWidth: z.number().min(0),
+});
+
+const dividerElementSchema = baseElementSchema.extend({
+  type: z.literal("divider"),
+  color: z.string().max(50),
+  strokeWidth: z.number().min(0),
+});
+
+const elementSchema = z.discriminatedUnion("type", [
+  textElementSchema, imageElementSchema, shapeElementSchema,
+  arrowElementSchema, dividerElementSchema,
+]);
+
 const slideSchema = z.object({
   id: z.string().min(1),
   order: z.number().int().min(0),
   transition: z.enum(["fade", "slide-left", "slide-up", "zoom", "none"]).default("fade"),
   backgroundColor: z.string().max(50),
-  backgroundImage: z.string().url().nullable(),
-  elements: z.array(z.record(z.string(), z.unknown())),
-  mobileElements: z.array(z.record(z.string(), z.unknown())).nullable().default(null),
+  backgroundImage: z.string().url().nullable().or(z.literal("")),
+  elements: z.array(elementSchema).max(500),
+  mobileElements: z.array(elementSchema).max(500).nullable().default(null),
 });
 
 const putSlidesSchema = z.array(slideSchema).max(200);

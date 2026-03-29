@@ -74,6 +74,14 @@ function cloneSlides(slides: Slide[]): Slide[] {
   return JSON.parse(JSON.stringify(slides));
 }
 
+let historyTimer: ReturnType<typeof setTimeout> | null = null;
+function debouncedPushHistory() {
+  if (historyTimer) clearTimeout(historyTimer);
+  historyTimer = setTimeout(() => {
+    useEditorStore.getState().pushHistory();
+  }, 300);
+}
+
 export const useEditorStore = create<EditorState>((set, get) => ({
   presentationId: "",
   theme: "editorial-blue",
@@ -230,6 +238,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       };
     });
     set({ slides: updated, dirty: true, saveStatus: "unsaved" });
+    debouncedPushHistory();
   },
 
   deleteElement: (elementId) => {

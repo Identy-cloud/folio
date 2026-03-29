@@ -2,6 +2,7 @@
 
 import { useEffect, useCallback } from "react";
 import { useTranslation } from "@/lib/i18n/context";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 interface Props {
   open: boolean;
@@ -15,6 +16,7 @@ interface Props {
 
 export function ConfirmDialog({ open, title, message, confirmLabel, destructive, onConfirm, onCancel }: Props) {
   const { t } = useTranslation();
+  const trapRef = useFocusTrap<HTMLDivElement>(open);
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === "Escape") onCancel();
@@ -30,7 +32,7 @@ export function ConfirmDialog({ open, title, message, confirmLabel, destructive,
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60" role="dialog" aria-modal="true" aria-label={title} onClick={onCancel}>
-      <div className="w-full max-w-sm rounded bg-[#1e1e1e] border border-neutral-700 p-6 shadow-xl mx-4" onClick={(e) => e.stopPropagation()}>
+      <div ref={trapRef} className="w-full max-w-sm rounded bg-[#1e1e1e] border border-neutral-700 p-6 shadow-xl mx-4" onClick={(e) => e.stopPropagation()}>
         <h3 className="font-display text-lg tracking-tight text-neutral-200">{title}</h3>
         <p className="mt-2 text-sm text-neutral-400">{message}</p>
         <div className="mt-5 flex gap-2 justify-end">

@@ -118,12 +118,23 @@ export function ViewerClient({ title, slides }: Props) {
     }
   }
 
+  const [hoverZone, setHoverZone] = useState<"left" | "right" | null>(null);
+
   function handleClick(e: React.MouseEvent) {
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     if (x > rect.width * 0.65) goNext();
     else if (x < rect.width * 0.35) goPrev();
+  }
+
+  function handleMouseMove(e: React.MouseEvent) {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    if (x > rect.width * 0.65 && current < total - 1) setHoverZone("right");
+    else if (x < rect.width * 0.35 && current > 0) setHoverZone("left");
+    else setHoverZone(null);
   }
 
   if (isMobile) {
@@ -204,6 +215,9 @@ export function ViewerClient({ title, slides }: Props) {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
       onClick={handleClick}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={() => setHoverZone(null)}
+      style={{ cursor: hoverZone ? "pointer" : "default" }}
     >
       {/* Outgoing slide */}
       {transitioning && outgoing && (
@@ -221,6 +235,18 @@ export function ViewerClient({ title, slides }: Props) {
         transitionStyle={transitioning ? getTransitionStyles("in") : undefined}
         animateKey={transitioning ? -1 : current}
       />
+
+      {/* Navigation hover arrows */}
+      {hoverZone === "left" && (
+        <div className="pointer-events-none absolute left-4 top-1/2 z-10 -translate-y-1/2 text-white/30 transition-opacity">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg>
+        </div>
+      )}
+      {hoverZone === "right" && (
+        <div className="pointer-events-none absolute right-4 top-1/2 z-10 -translate-y-1/2 text-white/30 transition-opacity">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+        </div>
+      )}
 
       {/* Bottom bar */}
       <div className="fixed bottom-0 left-0 right-0 z-10 bg-gradient-to-t from-black/80 to-transparent pt-8">

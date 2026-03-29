@@ -3,6 +3,7 @@
 import { useEffect, useCallback } from "react";
 import { THEMES } from "@/lib/templates/themes";
 import { useTranslation } from "@/lib/i18n/context";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 const themeKeys = Object.keys(THEMES);
 
@@ -15,6 +16,7 @@ interface Props {
 
 export function ThemeDialog({ open, currentTheme, onSelect, onCancel }: Props) {
   const { t } = useTranslation();
+  const trapRef = useFocusTrap<HTMLDivElement>(open);
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === "Escape") onCancel();
@@ -30,7 +32,7 @@ export function ThemeDialog({ open, currentTheme, onSelect, onCancel }: Props) {
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60" role="dialog" aria-modal="true" aria-label={t.dashboard.themeTitle} onClick={onCancel}>
-      <div className="w-full max-w-xs rounded bg-[#1e1e1e] border border-neutral-700 p-5 shadow-xl mx-4" onClick={(e) => e.stopPropagation()}>
+      <div ref={trapRef} className="w-full max-w-xs rounded bg-[#1e1e1e] border border-neutral-700 p-5 shadow-xl mx-4" onClick={(e) => e.stopPropagation()}>
         <h3 className="font-display text-lg tracking-tight text-neutral-200">{t.dashboard.themeTitle}</h3>
         <div className="mt-3 space-y-1.5">
           {themeKeys.map((key) => {
