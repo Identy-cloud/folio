@@ -103,6 +103,22 @@ export function MultiSelectControls({ elementIds }: { elementIds: string[] }) {
         </button>
       </div>
 
+      {/* Group / Ungroup */}
+      <div className="flex gap-1">
+        <button
+          onClick={() => useEditorStore.getState().groupSelection()}
+          className="flex-1 rounded border border-neutral-700 py-1.5 text-[10px] text-neutral-400 hover:bg-neutral-800 transition-colors"
+        >
+          Group
+        </button>
+        <button
+          onClick={() => useEditorStore.getState().ungroupSelection()}
+          className="flex-1 rounded border border-neutral-700 py-1.5 text-[10px] text-neutral-400 hover:bg-neutral-800 transition-colors"
+        >
+          Ungroup
+        </button>
+      </div>
+
       {selected.length >= 3 && (
         <>
           <span className="block text-[10px] font-medium text-neutral-400 uppercase tracking-wider">

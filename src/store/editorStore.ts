@@ -53,6 +53,8 @@ interface EditorState {
   selectElement: (id: string, multi?: boolean) => void;
   clearSelection: () => void;
   setActiveTool: (tool: ActiveTool) => void;
+  groupSelection: () => void;
+  ungroupSelection: () => void;
 
   copySelection: () => void;
   pasteClipboard: () => void;
@@ -387,18 +389,63 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     get().pushHistory();
   },
 
-  selectElement: (id, multi) =>
-    set((state) => ({
-      selectedElementIds: multi
-        ? state.selectedElementIds.includes(id)
-          ? state.selectedElementIds.filter((eid) => eid !== id)
-          : [...state.selectedElementIds, id]
-        : [id],
-    })),
+  selectElement: (id, multi) => {
+    const state = get();
+    const slide = state.getActiveSlide();
+    const els = state.editingMode === "mobile" && slide?.mobileElements ? slide.mobileElements : slide?.elements ?? [];
+    const el = els.find((e) => e.id === id);
+    const groupId = el?.groupId;
+
+    if (multi) {
+      set((s) => ({
+        selectedElementIds: s.selectedElementIds.includes(id)
+          ? s.selectedElementIds.filter((eid) => eid !== id)
+          : [...s.selectedElementIds, id],
+      }));
+    } else if (groupId) {
+      const groupIds = els.filter((e) => e.groupId === groupId).map((e) => e.id);
+      set({ selectedElementIds: groupIds });
+    } else {
+      set({ selectedElementIds: [id] });
+    }
+  },
 
   clearSelection: () => set({ selectedElementIds: [] }),
 
   setActiveTool: (tool) => set({ activeTool: tool, selectedElementIds: [] }),
+
+  groupSelection: () => {
+    const { selectedElementIds, slides, activeSlideIndex, editingMode } = get();
+    if (selectedElementIds.length < 2) return;
+    const gid = nanoid(8);
+    const slide = slides[activeSlideIndex];
+    const key = editingMode === "mobile" && slide.mobileElements ? "mobileElements" : "elements";
+    const els = (slide[key] ?? slide.elements) as import("@/types/elements").SlideElement[];
+    const updated = els.map((e) =>
+      selectedElementIds.includes(e.id) ? { ...e, groupId: gid } : e
+    );
+    const newSlides = slides.map((s, i) =>
+      i === activeSlideIndex ? { ...s, [key]: updated } : s
+    );
+    set({ slides: newSlides, dirty: true, saveStatus: "unsaved" });
+    get().pushHistory();
+  },
+
+  ungroupSelection: () => {
+    const { selectedElementIds, slides, activeSlideIndex, editingMode } = get();
+    if (selectedElementIds.length === 0) return;
+    const slide = slides[activeSlideIndex];
+    const key = editingMode === "mobile" && slide.mobileElements ? "mobileElements" : "elements";
+    const els = (slide[key] ?? slide.elements) as import("@/types/elements").SlideElement[];
+    const updated = els.map((e) =>
+      selectedElementIds.includes(e.id) ? { ...e, groupId: undefined } : e
+    );
+    const newSlides = slides.map((s, i) =>
+      i === activeSlideIndex ? { ...s, [key]: updated } : s
+    );
+    set({ slides: newSlides, dirty: true, saveStatus: "unsaved" });
+    get().pushHistory();
+  },
 
   copySelection: () => {
     const slide = get().getActiveSlide();

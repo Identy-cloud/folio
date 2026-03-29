@@ -50,6 +50,18 @@ export function useKeyboard() {
         }
         return;
       }
+      if (e.key === "g" && meta && !e.shiftKey) {
+        if (inInput) return;
+        e.preventDefault();
+        state.groupSelection();
+        return;
+      }
+      if (e.key === "g" && meta && e.shiftKey) {
+        if (inInput) return;
+        e.preventDefault();
+        state.ungroupSelection();
+        return;
+      }
       if (e.key === "a" && meta) {
         if (inInput) return;
         e.preventDefault();

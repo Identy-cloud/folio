@@ -21,6 +21,7 @@ export interface BaseElement {
   zIndex: number;
   locked: boolean;
   shadow?: ElementShadow;
+  groupId?: string;
   animation?: ElementAnimation;
   animationDelay?: number;
   animationDuration?: number;

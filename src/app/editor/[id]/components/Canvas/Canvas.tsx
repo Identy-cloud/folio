@@ -43,6 +43,7 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
   const autoScale = useRef(0.5);
   const [ctxMenu, setCtxMenu] = useState<{ x: number; y: number; elementId: string | null } | null>(null);
   const [showGrid, setShowGrid] = useState(false);
+  const [rubberBand, setRubberBand] = useState<{ startX: number; startY: number; curX: number; curY: number } | null>(null);
 
   const slide = useEditorStore((s) => s.getActiveSlide());
   const activeSlideIndex = useEditorStore((s) => s.activeSlideIndex);
@@ -80,11 +81,45 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
   function handleCanvasClick(e: React.PointerEvent) {
     if (e.target === e.currentTarget) {
       clearSelection();
+      if (activeTool === "select") {
+        const bounds = e.currentTarget.getBoundingClientRect();
+        const sx = (e.clientX - bounds.left) / scale;
+        const sy = (e.clientY - bounds.top) / scale;
+        setRubberBand({ startX: sx, startY: sy, curX: sx, curY: sy });
+        e.currentTarget.setPointerCapture(e.pointerId);
+      }
     }
 
     if (activeTool === "text") {
       addTextAtPoint(e);
     }
+  }
+
+  function handleCanvasPointerMove(e: React.PointerEvent) {
+    handlePointerMove(e);
+    if (!rubberBand) return;
+    const bounds = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    const cx = (e.clientX - bounds.left) / scale;
+    const cy = (e.clientY - bounds.top) / scale;
+    setRubberBand({ ...rubberBand, curX: cx, curY: cy });
+  }
+
+  function handleCanvasPointerUp() {
+    if (!rubberBand || !slide) { setRubberBand(null); return; }
+    const x1 = Math.min(rubberBand.startX, rubberBand.curX);
+    const y1 = Math.min(rubberBand.startY, rubberBand.curY);
+    const x2 = Math.max(rubberBand.startX, rubberBand.curX);
+    const y2 = Math.max(rubberBand.startY, rubberBand.curY);
+    if (x2 - x1 < 5 && y2 - y1 < 5) { setRubberBand(null); return; }
+
+    const els = isMobileMode && slide.mobileElements ? slide.mobileElements : slide.elements;
+    const inside = els.filter((el) =>
+      el.x >= x1 && el.y >= y1 && el.x + el.w <= x2 && el.y + el.h <= y2
+    );
+    if (inside.length > 0) {
+      useEditorStore.setState({ selectedElementIds: inside.map((e) => e.id) });
+    }
+    setRubberBand(null);
   }
 
   function addTextAtPoint(e: React.PointerEvent | React.MouseEvent) {
@@ -267,9 +302,10 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
           boxShadow: "0 4px 30px rgba(0,0,0,0.3)",
         }}
         onPointerDown={handleCanvasClick}
+        onPointerMove={handleCanvasPointerMove}
+        onPointerUp={handleCanvasPointerUp}
         onDoubleClick={handleDoubleClick}
         onPointerEnter={handlePointerEnter}
-        onPointerMove={handlePointerMove}
         onPointerLeave={onCursorLeave}
       >
         {showGrid && (
@@ -301,6 +337,17 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
           return <SelectionBox key={`sel-${id}`} element={el} scale={scale} />;
         })}
         <RemoteCursors peers={peers} />
+        {rubberBand && (
+          <div
+            className="pointer-events-none absolute border border-blue-500/60 bg-blue-500/10"
+            style={{
+              left: Math.min(rubberBand.startX, rubberBand.curX),
+              top: Math.min(rubberBand.startY, rubberBand.curY),
+              width: Math.abs(rubberBand.curX - rubberBand.startX),
+              height: Math.abs(rubberBand.curY - rubberBand.startY),
+            }}
+          />
+        )}
       </div>
 
       {ctxMenu && (
