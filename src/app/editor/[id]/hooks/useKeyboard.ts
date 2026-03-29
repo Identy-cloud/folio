@@ -56,6 +56,14 @@ export function useKeyboard() {
         state.pasteClipboard();
         return;
       }
+      if (e.key === "d" && meta && e.shiftKey) {
+        if (inInput) return;
+        e.preventDefault();
+        const slide = state.getActiveSlide();
+        if (slide) state.duplicateSlide(slide.id);
+        toast("Slide duplicated", { duration: 1000 });
+        return;
+      }
       if (e.key === "d" && meta) {
         if (inInput) return;
         e.preventDefault();

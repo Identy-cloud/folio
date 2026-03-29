@@ -159,6 +159,7 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
           className="hidden sm:block w-28 md:w-40 truncate bg-transparent text-xs text-neutral-400 outline-none hover:text-neutral-200 focus:text-white"
           placeholder="Untitled"
         />
+        <span className="hidden sm:inline text-[9px] text-neutral-600">{slides.length}s</span>
         <Tooltip content="Settings">
           <button
             onClick={() => setSettingsOpen(true)}

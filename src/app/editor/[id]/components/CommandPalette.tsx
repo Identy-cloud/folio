@@ -250,6 +250,9 @@ export function CommandPalette({ open, onClose }: Props) {
       s.selectedElementIds.forEach((id) => s.updateElement(id, { rotation: 0 }));
       s.pushHistory();
     }},
+    { id: "toggle-safe-area", label: "Toggle safe area guides", category: "View", action: () => {
+      window.dispatchEvent(new CustomEvent("folio:toggle-safe-area"));
+    }},
     { id: "reset-opacity", label: "Reset opacity to 100%", category: "Edit", action: () => {
       const s = useEditorStore.getState();
       s.selectedElementIds.forEach((id) => s.updateElement(id, { opacity: 1 }));

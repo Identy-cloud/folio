@@ -47,6 +47,7 @@ const GROUPS = [
       { keys: `${mod} + ]`, label: "Bring forward" },
       { keys: `${mod} + [`, label: "Send backward" },
       { keys: `${mod} + Shift + M`, label: "Center on canvas" },
+      { keys: `${mod} + Shift + D`, label: "Duplicate current slide" },
       { keys: `${mod} + G`, label: "Group elements" },
       { keys: `${mod} + Shift + G`, label: "Ungroup" },
       { keys: `${mod} + Alt + C`, label: "Copy style" },

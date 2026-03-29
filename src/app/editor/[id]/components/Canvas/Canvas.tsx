@@ -49,6 +49,7 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
   const panRef = useRef<{ startX: number; startY: number; origX: number; origY: number } | null>(null);
   const spaceDown = useRef(false);
   const [darkCanvas, setDarkCanvas] = useState(true);
+  const [safeArea, setSafeArea] = useState(false);
 
   useEffect(() => {
     function down(e: KeyboardEvent) { if (e.key === " " && !e.repeat) spaceDown.current = true; }
@@ -74,9 +75,11 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
   useEffect(() => {
     function onZoomFit() { zoomFit(); }
     function onToggleGrid() { setShowGrid((v) => !v); useEditorStore.setState((s) => ({ snapToGrid: !s.snapToGrid })); }
+    function onToggleSafe() { setSafeArea((v) => !v); }
     window.addEventListener("folio:zoom-fit", onZoomFit);
     window.addEventListener("folio:toggle-grid", onToggleGrid);
-    return () => { window.removeEventListener("folio:zoom-fit", onZoomFit); window.removeEventListener("folio:toggle-grid", onToggleGrid); };
+    window.addEventListener("folio:toggle-safe-area", onToggleSafe);
+    return () => { window.removeEventListener("folio:zoom-fit", onZoomFit); window.removeEventListener("folio:toggle-grid", onToggleGrid); window.removeEventListener("folio:toggle-safe-area", onToggleSafe); };
   }, []);
 
   const updateScale = useCallback(() => {
@@ -372,6 +375,13 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
             </defs>
             <rect width="100%" height="100%" fill="url(#grid)" />
           </svg>
+        )}
+        {/* Safe area guides */}
+        {safeArea && (
+          <div
+            className="pointer-events-none absolute border border-dashed border-red-500/20 z-0"
+            style={{ left: "5%", top: "5%", width: "90%", height: "90%" }}
+          />
         )}
         {/* Ruler marks */}
         <svg className="pointer-events-none absolute inset-0 z-0" width="100%" height="100%">
