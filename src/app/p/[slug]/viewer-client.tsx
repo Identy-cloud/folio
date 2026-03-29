@@ -216,7 +216,7 @@ export function ViewerClient({ title, slides }: Props) {
 
       {/* Current slide */}
       <SlideLayer
-        key={`slide-${displayed}`}
+        key={`slide-${current}`}
         slide={incoming ?? outgoing}
         scale={scale}
         transitionStyle={transitioning ? getTransitionStyles("in") : undefined}
@@ -316,12 +316,18 @@ function ViewerElement({ element, delay }: { element: SlideElement; delay: numbe
         top: element.y,
         width: element.w,
         height: element.h,
-        transform: element.rotation ? `rotate(${element.rotation}deg)` : undefined,
-        opacity: element.opacity,
         zIndex: element.zIndex,
         ...animStyle,
       }}
     >
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          transform: element.rotation ? `rotate(${element.rotation}deg)` : undefined,
+          opacity: element.opacity,
+        }}
+      >
       {element.type === "text" && <ViewerText element={element} />}
       {element.type === "shape" && <ViewerShape element={element} />}
       {element.type === "arrow" && <ViewerArrow element={element} />}
@@ -339,6 +345,7 @@ function ViewerElement({ element, delay }: { element: SlideElement; delay: numbe
           draggable={false}
         />
       )}
+      </div>
     </div>
   );
 }
