@@ -57,7 +57,7 @@ export function EditorLayout() {
         <Toolbar connected={connected} peerCount={peers.length} />
       </div>
       <div className="flex flex-1 overflow-hidden">
-        <div data-panel="slides" className="hidden md:block">
+        <div data-panel="slides" className="hidden h-full md:block">
           <SlidePanel />
         </div>
 
@@ -69,7 +69,7 @@ export function EditorLayout() {
           />
         </div>
 
-        <div data-panel="palette" className="hidden md:block">
+        <div data-panel="palette" className="hidden h-full md:block">
           <ElementPalette />
         </div>
       </div>

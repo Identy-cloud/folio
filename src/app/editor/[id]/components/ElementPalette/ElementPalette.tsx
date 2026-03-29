@@ -47,7 +47,7 @@ export function ElementPalette() {
   const btn = "flex w-full items-center gap-2 rounded border border-neutral-700 px-3 py-2 text-xs text-neutral-300 hover:bg-neutral-800";
 
   return (
-    <div className="flex w-56 flex-col border-l border-neutral-800 bg-[#161616]">
+    <div className="flex h-full w-56 flex-col border-l border-neutral-800 bg-[#161616]">
       <div className="border-b border-neutral-800 px-3 py-2">
         <span className="text-xs font-medium text-neutral-400 uppercase tracking-wider">{t.editor.insert}</span>
       </div>

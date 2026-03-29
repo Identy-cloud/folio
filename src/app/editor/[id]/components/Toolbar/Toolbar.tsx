@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ArrowCounterClockwise, ArrowClockwise, Cursor, TextT, Shapes, FilePdf, FileImage, Image as ImageIcon, Desktop, DeviceMobile } from "@phosphor-icons/react";
 import { toPng } from "html-to-image";
+import { Tooltip } from "@/components/ui/Tooltip";
 import { useEditorStore } from "@/store/editorStore";
 import type { ActiveTool } from "@/store/editorStore";
 import { exportToPdf } from "@/lib/export-pdf";
@@ -90,8 +91,12 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
         </Link>
         <div className="h-5 w-px bg-neutral-700" />
         <div className="flex gap-1">
-          <button onClick={undo} className="rounded p-2 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200" title={`${t.editor.undo} (Ctrl+Z)`} aria-label={t.editor.undo}><ArrowCounterClockwise size={16} weight="regular" /></button>
-          <button onClick={redo} className="rounded p-2 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200" title={`${t.editor.redo} (Ctrl+Y)`} aria-label={t.editor.redo}><ArrowClockwise size={16} weight="regular" /></button>
+          <Tooltip content={t.editor.undo} shortcut="Ctrl+Z">
+            <button onClick={undo} className="rounded p-2 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200" aria-label={t.editor.undo}><ArrowCounterClockwise size={16} weight="regular" /></button>
+          </Tooltip>
+          <Tooltip content={t.editor.redo} shortcut="Ctrl+Y">
+            <button onClick={redo} className="rounded p-2 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200" aria-label={t.editor.redo}><ArrowClockwise size={16} weight="regular" /></button>
+          </Tooltip>
         </div>
         <div className="hidden md:block h-5 w-px bg-neutral-700" />
         <div className="hidden md:flex gap-1">
@@ -111,29 +116,35 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
           ))}
         </div>
         <div className="hidden md:block h-5 w-px bg-neutral-700" />
-        <button
-          onClick={triggerUpload}
-          disabled={uploading}
-          className="hidden md:flex items-center gap-1 rounded px-3 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 disabled:opacity-50"
-        >
-          <ImageIcon size={14} weight="duotone" />
-          {uploading ? "..." : t.editor.image}
-        </button>
-        <button
-          onClick={handleExport}
-          disabled={exporting}
-          className="hidden md:flex items-center gap-1 rounded px-3 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 disabled:opacity-50"
-        >
-          <FilePdf size={14} weight="duotone" />
-          {exporting ? exportProgress : t.editor.pdf}
-        </button>
-        <button
-          onClick={handleExportPng}
-          className="hidden md:flex items-center gap-1 rounded px-3 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200"
-        >
-          <FileImage size={14} weight="duotone" />
-          PNG
-        </button>
+        <Tooltip content={t.editor.image}>
+          <button
+            onClick={triggerUpload}
+            disabled={uploading}
+            className="hidden md:flex items-center gap-1 rounded px-3 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 disabled:opacity-50"
+          >
+            <ImageIcon size={14} weight="duotone" />
+            {uploading ? "..." : t.editor.image}
+          </button>
+        </Tooltip>
+        <Tooltip content="Export PDF">
+          <button
+            onClick={handleExport}
+            disabled={exporting}
+            className="hidden md:flex items-center gap-1 rounded px-3 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 disabled:opacity-50"
+          >
+            <FilePdf size={14} weight="duotone" />
+            {exporting ? exportProgress : t.editor.pdf}
+          </button>
+        </Tooltip>
+        <Tooltip content="Export PNG">
+          <button
+            onClick={handleExportPng}
+            className="hidden md:flex items-center gap-1 rounded px-3 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200"
+          >
+            <FileImage size={14} weight="duotone" />
+            PNG
+          </button>
+        </Tooltip>
         <div className="hidden md:block h-5 w-px bg-neutral-700" />
         <div className="hidden md:flex gap-0.5 rounded border border-neutral-700 p-0.5" role="group" aria-label={t.editor.editMode}>
           <button

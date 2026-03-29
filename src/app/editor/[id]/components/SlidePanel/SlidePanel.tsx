@@ -60,7 +60,7 @@ export function SlidePanel() {
   }
 
   return (
-    <div className="flex w-56 flex-col border-r border-neutral-800 bg-[#161616]">
+    <div className="flex h-full w-56 flex-col border-r border-neutral-800 bg-[#161616]">
       <div className="flex items-center justify-between border-b border-neutral-800 px-3 py-2">
         <span className="text-xs font-medium text-neutral-400 uppercase tracking-wider">
           {t.editor.slides} ({slides.length})
