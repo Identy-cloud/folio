@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useRef, useMemo, useCallback } from "react";
+import { useState, useRef, useMemo, useCallback, useEffect } from "react";
 import DOMPurify from "dompurify";
-import type { SlideElement, TextElement, ShapeElement } from "@/types/elements";
+import type { SlideElement, TextElement, ShapeElement, SlideTransition } from "@/types/elements";
 import { useTranslation } from "@/lib/i18n/context";
 
 interface Slide {
   id: string;
+  transition: SlideTransition;
   backgroundColor: string;
   elements: SlideElement[];
   mobileElements?: SlideElement[] | null;
@@ -17,15 +18,38 @@ interface Props {
   slides: Slide[];
 }
 
+const TRANSITION_MS = 350;
+
 export function MobileViewer({ title, slides }: Props) {
   const { t } = useTranslation();
   const [current, setCurrent] = useState(0);
+  const [displayed, setDisplayed] = useState(0);
+  const [animating, setAnimating] = useState(false);
   const touchRef = useRef<{ x: number; y: number; t: number } | null>(null);
   const scrollingRef = useRef(false);
   const total = slides.length;
 
-  const goNext = useCallback(() => setCurrent((c) => Math.min(c + 1, total - 1)), [total]);
-  const goPrev = useCallback(() => setCurrent((c) => Math.max(c - 1, 0)), []);
+  const goNext = useCallback(() => {
+    if (animating || current >= total - 1) return;
+    setCurrent((c) => c + 1);
+  }, [animating, current, total]);
+
+  const goPrev = useCallback(() => {
+    if (animating || current <= 0) return;
+    setCurrent((c) => c - 1);
+  }, [animating, current]);
+
+  useEffect(() => {
+    if (current === displayed) return;
+    const tr = slides[current]?.transition ?? "fade";
+    if (tr === "none") { setDisplayed(current); return; }
+    setAnimating(true);
+    const timer = setTimeout(() => {
+      setDisplayed(current);
+      setAnimating(false);
+    }, TRANSITION_MS);
+    return () => clearTimeout(timer);
+  }, [current, displayed, slides]);
 
   function handleTouchStart(e: React.TouchEvent) {
     scrollingRef.current = false;
@@ -49,10 +73,46 @@ export function MobileViewer({ title, slides }: Props) {
     }
   }
 
-  const slide = slides[current];
-  if (!slide) return null;
+  const incoming = slides[current];
+  const outgoing = slides[displayed];
+  if (!incoming && !outgoing) return null;
 
-  const elements = slide.mobileElements ?? slide.elements;
+  const activeSlide = incoming ?? outgoing;
+  const transType = incoming?.transition ?? "fade";
+  const dir = current > displayed ? 1 : -1;
+
+  function getStyle(role: "in" | "out"): React.CSSProperties {
+    if (!animating) return {};
+    const dur = `${TRANSITION_MS}ms`;
+    const ease = "cubic-bezier(0.22, 1, 0.36, 1)";
+    if (transType === "fade") {
+      return { transition: `opacity ${dur} ${ease}`, opacity: role === "in" ? 1 : 0 };
+    }
+    if (transType === "slide-left") {
+      return {
+        transition: `transform ${dur} ${ease}, opacity ${dur} ${ease}`,
+        transform: role === "in" ? "translateX(0)" : `translateX(${-dir * 30}%)`,
+        opacity: role === "in" ? 1 : 0,
+      };
+    }
+    if (transType === "slide-up") {
+      return {
+        transition: `transform ${dur} ${ease}, opacity ${dur} ${ease}`,
+        transform: role === "in" ? "translateY(0)" : "translateY(15%)",
+        opacity: role === "in" ? 1 : 0,
+      };
+    }
+    if (transType === "zoom") {
+      return {
+        transition: `transform ${dur} ${ease}, opacity ${dur} ${ease}`,
+        transform: role === "in" ? "scale(1)" : "scale(0.9)",
+        opacity: role === "in" ? 1 : 0,
+      };
+    }
+    return {};
+  }
+
+  const inElements = activeSlide.mobileElements ?? activeSlide.elements;
 
   return (
     <div
@@ -62,11 +122,23 @@ export function MobileViewer({ title, slides }: Props) {
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
-      <div
-        className="flex-1 overflow-y-auto overscroll-contain pb-14"
-        style={{ backgroundColor: slide.backgroundColor }}
-      >
-        <MobileSlideContent elements={elements} bg={slide.backgroundColor} />
+      <div className="relative flex-1 overflow-hidden">
+        {/* Outgoing slide */}
+        {animating && outgoing && (
+          <div
+            className="absolute inset-0 overflow-y-auto overscroll-contain pb-14"
+            style={{ backgroundColor: outgoing.backgroundColor, ...getStyle("out") }}
+          >
+            <MobileSlideContent elements={outgoing.mobileElements ?? outgoing.elements} bg={outgoing.backgroundColor} />
+          </div>
+        )}
+        {/* Current slide */}
+        <div
+          className="absolute inset-0 overflow-y-auto overscroll-contain pb-14"
+          style={{ backgroundColor: activeSlide.backgroundColor, ...getStyle("in") }}
+        >
+          <MobileSlideContent elements={inElements} bg={activeSlide.backgroundColor} />
+        </div>
       </div>
 
       {/* Fixed bottom bar */}
