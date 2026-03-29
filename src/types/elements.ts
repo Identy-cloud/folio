@@ -108,4 +108,5 @@ export interface Slide {
   elements: SlideElement[];
   mobileElements: SlideElement[] | null;
   notes: string;
+  duration?: number;
 }

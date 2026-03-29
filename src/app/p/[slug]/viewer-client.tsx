@@ -145,12 +145,18 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
   }
 
   useEffect(() => {
-    if (!autoplay) { if (autoplayRef.current) clearInterval(autoplayRef.current); return; }
-    autoplayRef.current = setInterval(() => {
-      setCurrent((c) => (c >= total - 1 ? 0 : c + 1));
-    }, 5000);
-    return () => { if (autoplayRef.current) clearInterval(autoplayRef.current); };
-  }, [autoplay, total]);
+    if (!autoplay) { if (autoplayRef.current) clearTimeout(autoplayRef.current); return; }
+    function scheduleNext() {
+      const currentSlide = slides[current];
+      const ms = ((currentSlide as { duration?: number })?.duration ?? 5) * 1000;
+      autoplayRef.current = setTimeout(() => {
+        setCurrent((c) => (c >= total - 1 ? 0 : c + 1));
+        scheduleNext();
+      }, ms);
+    }
+    scheduleNext();
+    return () => { if (autoplayRef.current) clearTimeout(autoplayRef.current); };
+  }, [autoplay, total, current, slides]);
 
   const [hoverZone, setHoverZone] = useState<"left" | "right" | null>(null);
 

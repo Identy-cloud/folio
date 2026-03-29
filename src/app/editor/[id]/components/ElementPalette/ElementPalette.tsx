@@ -160,6 +160,13 @@ export function ElementPalette() {
           <TransitionPicker
             current={activeSlide.transition}
             onChange={(tr) => updateSlideTransition(activeSlide.id, tr)}
+            duration={activeSlide.duration}
+            onDurationChange={(d) => {
+              const slides = useEditorStore.getState().slides;
+              const updated = slides.map((s) => s.id === activeSlide.id ? { ...s, duration: d || undefined } : s);
+              useEditorStore.setState({ slides: updated, dirty: true, saveStatus: "unsaved" });
+              useEditorStore.getState().pushHistory();
+            }}
           />
         </div>
       )}

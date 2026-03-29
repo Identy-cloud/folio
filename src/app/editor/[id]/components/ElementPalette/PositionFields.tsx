@@ -79,7 +79,7 @@ export function PositionFields({ element }: Props) {
       <div className="grid grid-cols-2 gap-2">
         <NumField label={t.editor.rotation} value={element.rotation} onChange={(v) => update({ rotation: v })} />
         <label className="flex flex-col gap-0.5">
-          <span className="text-[10px] text-neutral-500">{t.editor.opacity}</span>
+          <span className="text-[10px] text-neutral-500">{t.editor.opacity} {Math.round(element.opacity * 100)}%</span>
           <input
             type="range"
             min={0} max={1} step={0.05}

@@ -7,9 +7,11 @@ import { useTranslation } from "@/lib/i18n/context";
 interface Props {
   current: SlideTransition;
   onChange: (t: SlideTransition) => void;
+  duration?: number;
+  onDurationChange?: (d: number) => void;
 }
 
-export function TransitionPicker({ current, onChange }: Props) {
+export function TransitionPicker({ current, onChange, duration, onDurationChange }: Props) {
   const { t } = useTranslation();
 
   const LABELS: Record<SlideTransition, string> = {
@@ -43,6 +45,24 @@ export function TransitionPicker({ current, onChange }: Props) {
           </button>
         ))}
       </div>
+      {onDurationChange && (
+        <label className="mt-2 flex items-center gap-2">
+          <span className="text-[10px] text-neutral-500">Auto-advance</span>
+          <select
+            value={duration ?? 0}
+            onChange={(e) => onDurationChange(parseInt(e.target.value))}
+            className="rounded border border-neutral-700 bg-[#161616] px-1.5 py-1 text-[10px] text-neutral-300 outline-none"
+          >
+            <option value={0}>Off</option>
+            <option value={3}>3s</option>
+            <option value={5}>5s</option>
+            <option value={8}>8s</option>
+            <option value={10}>10s</option>
+            <option value={15}>15s</option>
+            <option value={30}>30s</option>
+          </select>
+        </label>
+      )}
     </div>
   );
 }

@@ -60,6 +60,11 @@ export const SortableSlideThumb = memo(function SortableSlideThumb({
       <span className="absolute top-1 right-1 rounded bg-black/40 px-1 text-[8px] text-white/50">
         {slide.elements.length}
       </span>
+      {slide.duration && slide.duration > 0 && (
+        <span className="absolute bottom-1 left-1 rounded bg-blue-500/30 px-1 text-[7px] text-blue-300" title={`Auto-advance: ${slide.duration}s`}>
+          {slide.duration}s
+        </span>
+      )}
       {slide.notes && slide.notes.trim().length > 0 && (
         <span className="absolute bottom-1 right-1 h-1.5 w-1.5 rounded-full bg-amber-500" title="Has notes" />
       )}
