@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import DOMPurify from "dompurify";
-import type { SlideElement, TextElement, ShapeElement, ArrowElement, DividerElement, SlideTransition } from "@/types/elements";
+import type { SlideElement, TextElement, SlideTransition } from "@/types/elements";
 import { getElementAnimationStyle } from "@/lib/element-animation";
+import { ShapeRenderer, ArrowRenderer, DividerRenderer } from "@/components/elements";
 import { MobileViewer } from "./mobile-viewer";
 
 const SLIDE_W = 1920;
@@ -371,9 +372,9 @@ function ViewerElement({ element, delay, animate }: { element: SlideElement; del
         }}
       >
       {element.type === "text" && <ViewerText element={element} />}
-      {element.type === "shape" && <ViewerShape element={element} />}
-      {element.type === "arrow" && <ViewerArrow element={element} />}
-      {element.type === "divider" && <ViewerDivider element={element} />}
+      {element.type === "shape" && <ShapeRenderer element={element} />}
+      {element.type === "arrow" && <ArrowRenderer element={element} />}
+      {element.type === "divider" && <DividerRenderer element={element} />}
       {element.type === "image" && (
         <img
           src={element.src}
@@ -422,54 +423,3 @@ function ViewerText({ element }: { element: TextElement }) {
   );
 }
 
-function ViewerShape({ element }: { element: ShapeElement }) {
-  if (element.shape === "circle") {
-    return (
-      <div
-        style={{
-          width: "100%",
-          height: "100%",
-          borderRadius: "50%",
-          backgroundColor: element.fill,
-          border: element.strokeWidth > 0 ? `${element.strokeWidth}px solid ${element.stroke}` : "none",
-        }}
-      />
-    );
-  }
-  if (element.shape === "triangle") {
-    return (
-      <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
-        <polygon points="50,0 100,100 0,100" fill={element.fill} stroke={element.stroke} strokeWidth={element.strokeWidth} />
-      </svg>
-    );
-  }
-  return (
-    <div
-      style={{
-        width: "100%",
-        height: "100%",
-        backgroundColor: element.fill,
-        borderRadius: element.borderRadius,
-        border: element.strokeWidth > 0 ? `${element.strokeWidth}px solid ${element.stroke}` : "none",
-      }}
-    />
-  );
-}
-
-function ViewerArrow({ element }: { element: ArrowElement }) {
-  const rotate = { right: 0, down: 90, left: 180, up: 270 }[element.direction];
-  return (
-    <svg width="100%" height="100%" viewBox="0 0 100 50" preserveAspectRatio="none" style={{ transform: `rotate(${rotate}deg)` }}>
-      <line x1="0" y1="25" x2="85" y2="25" stroke={element.color} strokeWidth={element.strokeWidth} />
-      <polygon points="85,10 100,25 85,40" fill={element.color} />
-    </svg>
-  );
-}
-
-function ViewerDivider({ element }: { element: DividerElement }) {
-  return (
-    <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center" }}>
-      <div style={{ width: "100%", height: element.strokeWidth, backgroundColor: element.color }} />
-    </div>
-  );
-}
