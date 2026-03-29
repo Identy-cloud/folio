@@ -204,6 +204,36 @@ export function TextProperties({ element }: Props) {
 
       {/* Color */}
       <ColorPicker label={t.editor.color} value={element.color} onChange={(c) => update({ color: c })} />
+
+      {/* Text stroke */}
+      <div>
+        <div className="flex items-center justify-between">
+          <span className="text-[10px] text-neutral-500">Text outline</span>
+          <button
+            onClick={() => update({ textStroke: element.textStroke ? undefined : { width: 1, color: "#000000" } })}
+            className={`rounded px-2 py-0.5 text-[10px] transition-colors ${element.textStroke ? "bg-white text-[#161616]" : "text-neutral-500 hover:bg-neutral-800"}`}
+          >
+            {element.textStroke ? "On" : "Off"}
+          </button>
+        </div>
+        {element.textStroke && (
+          <div className="mt-1.5 flex gap-2">
+            <label className="flex items-center gap-1 flex-1">
+              <span className="text-[9px] text-neutral-600">W</span>
+              <input
+                type="number"
+                min={0.5}
+                max={5}
+                step={0.5}
+                value={element.textStroke.width}
+                onChange={(e) => update({ textStroke: { ...element.textStroke!, width: parseFloat(e.target.value) || 1 } })}
+                className="w-12 rounded border border-neutral-700 bg-[#161616] px-1.5 py-0.5 text-[10px] text-neutral-300 outline-none"
+              />
+            </label>
+            <ColorPicker value={element.textStroke.color} onChange={(c) => update({ textStroke: { ...element.textStroke!, color: c } })} />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

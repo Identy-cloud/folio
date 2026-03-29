@@ -149,6 +149,13 @@ export function SlidePanel() {
               setContextMenu(null);
             }}
           />
+          <CtxItem
+            label="Add slide after"
+            onClick={() => {
+              addSlide();
+              setContextMenu(null);
+            }}
+          />
           <div className="border-t border-neutral-700">
             <TransitionPicker
               current={slides.find((s) => s.id === contextMenu.slideId)?.transition ?? "fade"}

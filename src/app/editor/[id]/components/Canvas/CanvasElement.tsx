@@ -249,6 +249,7 @@ function TextRenderer({
         fontWeight: element.fontWeight,
         fontStyle: element.fontStyle ?? "normal",
         textDecoration: element.textDecoration ?? "none",
+        WebkitTextStroke: element.textStroke ? `${element.textStroke.width}px ${element.textStroke.color}` : undefined,
         lineHeight: element.lineHeight,
         letterSpacing: `${element.letterSpacing}em`,
         color: element.color,

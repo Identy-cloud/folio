@@ -36,6 +36,7 @@ export interface TextElement extends BaseElement {
   fontWeight: number;
   fontStyle?: "normal" | "italic";
   textDecoration?: "none" | "underline" | "line-through";
+  textStroke?: { width: number; color: string };
   lineHeight: number;
   letterSpacing: number;
   color: string;

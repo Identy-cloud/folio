@@ -127,9 +127,22 @@ export function ElementPalette() {
                 <button onClick={() => updateSlideBackgroundImage(null)} className="w-full text-[10px] text-red-400 hover:text-red-300">{t.editor.removeBgImage}</button>
               </div>
             ) : (
-              <button onClick={triggerBgUpload} disabled={bgUploading} className="w-full rounded border border-dashed border-neutral-700 py-2 text-[10px] text-neutral-500 hover:border-neutral-500 disabled:opacity-50">
-                {bgUploading ? t.editor.uploading : t.editor.addBgImage}
-              </button>
+              <div className="space-y-1.5">
+                <button onClick={triggerBgUpload} disabled={bgUploading} className="w-full rounded border border-dashed border-neutral-700 py-2 text-[10px] text-neutral-500 hover:border-neutral-500 disabled:opacity-50">
+                  {bgUploading ? t.editor.uploading : t.editor.addBgImage}
+                </button>
+                <input
+                  type="url"
+                  placeholder="Or paste image URL..."
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      const url = (e.target as HTMLInputElement).value.trim();
+                      if (url) { updateSlideBackgroundImage(url); (e.target as HTMLInputElement).value = ""; }
+                    }
+                  }}
+                  className="w-full rounded border border-neutral-800 bg-[#111] px-2 py-1.5 text-[10px] text-neutral-400 outline-none placeholder:text-neutral-700 focus:border-neutral-600"
+                />
+              </div>
             )}
           </div>
           <TransitionPicker
