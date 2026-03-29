@@ -178,25 +178,20 @@ function InlineTransitionPicker({
 }) {
   const [open, setOpen] = useState(false);
 
-  function cycle() {
-    const idx = TRANSITION_ORDER.indexOf(current as typeof TRANSITION_ORDER[number]);
-    const next = TRANSITION_ORDER[(idx + 1) % TRANSITION_ORDER.length];
-    onChange(next);
-  }
-
   return (
-    <div className="flex items-center justify-center py-1">
+    <div className="flex items-center justify-center py-1.5">
       {open ? (
-        <div className="flex gap-0.5 rounded bg-neutral-800/60 p-0.5">
+        <div className="flex gap-1 rounded-full bg-neutral-800 px-1.5 py-1">
           {TRANSITION_ORDER.map((tr) => (
             <button
               key={tr}
               onClick={() => { onChange(tr); setOpen(false); }}
-              className={`flex h-5 w-5 items-center justify-center rounded text-[9px] transition-colors ${
+              className={`flex h-6 w-6 items-center justify-center rounded-full text-[10px] transition-colors ${
                 current === tr
                   ? "bg-white text-[#161616]"
-                  : "text-neutral-500 hover:text-neutral-200"
+                  : "text-neutral-400 hover:bg-neutral-700 hover:text-neutral-200"
               }`}
+              title={tr}
             >
               {TRANSITION_ICONS[tr]}
             </button>
@@ -205,11 +200,12 @@ function InlineTransitionPicker({
       ) : (
         <button
           onClick={() => setOpen(true)}
-          onDoubleClick={cycle}
-          className="flex h-5 items-center gap-1 rounded px-1.5 text-[9px] text-neutral-500 hover:bg-neutral-800 hover:text-neutral-300 transition-colors"
-          title={current}
+          className="group flex h-6 items-center gap-1.5 rounded-full bg-neutral-800/50 px-2.5 text-[10px] text-neutral-500 hover:bg-neutral-800 hover:text-neutral-300 transition-colors"
         >
-          <span>{TRANSITION_ICONS[current] ?? "◐"}</span>
+          <span className="text-[10px]">{TRANSITION_ICONS[current] ?? "◐"}</span>
+          <span className="text-[9px] uppercase tracking-wider opacity-60 group-hover:opacity-100">
+            {current === "none" ? "—" : current}
+          </span>
         </button>
       )}
     </div>

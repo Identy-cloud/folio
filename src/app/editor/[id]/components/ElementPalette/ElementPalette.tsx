@@ -18,6 +18,7 @@ import { ColorPicker } from "@/components/editor/ColorPicker";
 import type { TextElement, ShapeElement, ArrowElement, DividerElement, ImageElement, SlideElement } from "@/types/elements";
 import { textDefaults, shapeDefaults, arrowDefaults, dividerDefaults } from "@/lib/templates/element-defaults";
 import { THEMES } from "@/lib/templates/themes";
+import type { SlideTransition } from "@/types/elements";
 import { useTranslation } from "@/lib/i18n/context";
 
 export function ElementPalette() {
@@ -29,6 +30,7 @@ export function ElementPalette() {
   const editingMode = useEditorStore((s) => s.editingMode);
   const updateSlideBackground = useEditorStore((s) => s.updateSlideBackground);
   const updateSlideBackgroundImage = useEditorStore((s) => s.updateSlideBackgroundImage);
+  const updateSlideTransition = useEditorStore((s) => s.updateSlideTransition);
   const { trigger: triggerUpload, uploading } = useImageUpload();
   const { trigger: triggerBgUpload, uploading: bgUploading } = useBgImageUpload();
 
@@ -80,21 +82,68 @@ export function ElementPalette() {
           <DeleteButton elementId={selectedElement.id} />
         </div>
       ) : activeSlide && (
-        <div className="border-t border-neutral-800 p-3 space-y-3">
-          <span className="text-[10px] font-medium text-neutral-400 uppercase tracking-wider">{t.editor.slideBg}</span>
-          <ColorPicker value={activeSlide.backgroundColor} onChange={updateSlideBackground} />
-          {activeSlide.backgroundImage ? (
-            <div className="space-y-1">
-              <img src={activeSlide.backgroundImage} alt="" className="w-full rounded border border-neutral-700 aspect-video object-cover" />
-              <button onClick={() => updateSlideBackgroundImage(null)} className="w-full text-[10px] text-red-400 hover:text-red-300">{t.editor.removeBgImage}</button>
-            </div>
-          ) : (
-            <button onClick={triggerBgUpload} disabled={bgUploading} className="w-full rounded border border-dashed border-neutral-700 py-2 text-[10px] text-neutral-500 hover:border-neutral-500 disabled:opacity-50">
-              {bgUploading ? t.editor.uploading : t.editor.addBgImage}
-            </button>
-          )}
+        <div className="flex-1 overflow-y-auto border-t border-neutral-800 p-3 space-y-4">
+          <div className="space-y-2">
+            <span className="text-[10px] font-medium text-neutral-400 uppercase tracking-wider">{t.editor.slideBg}</span>
+            <ColorPicker value={activeSlide.backgroundColor} onChange={updateSlideBackground} />
+            {activeSlide.backgroundImage ? (
+              <div className="space-y-1">
+                <img src={activeSlide.backgroundImage} alt="" className="w-full rounded border border-neutral-700 aspect-video object-cover" />
+                <button onClick={() => updateSlideBackgroundImage(null)} className="w-full text-[10px] text-red-400 hover:text-red-300">{t.editor.removeBgImage}</button>
+              </div>
+            ) : (
+              <button onClick={triggerBgUpload} disabled={bgUploading} className="w-full rounded border border-dashed border-neutral-700 py-2 text-[10px] text-neutral-500 hover:border-neutral-500 disabled:opacity-50">
+                {bgUploading ? t.editor.uploading : t.editor.addBgImage}
+              </button>
+            )}
+          </div>
+          <SlideTransitionPicker
+            current={activeSlide.transition}
+            onChange={(tr) => updateSlideTransition(activeSlide.id, tr)}
+          />
         </div>
       )}
+    </div>
+  );
+}
+
+const TRANSITIONS: { id: SlideTransition; label: string; icon: string }[] = [
+  { id: "none", label: "None", icon: "—" },
+  { id: "fade", label: "Fade", icon: "◐" },
+  { id: "slide-left", label: "Slide", icon: "→" },
+  { id: "slide-up", label: "Slide Up", icon: "↑" },
+  { id: "zoom", label: "Zoom", icon: "⊕" },
+];
+
+function SlideTransitionPicker({
+  current,
+  onChange,
+}: {
+  current: SlideTransition;
+  onChange: (t: SlideTransition) => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div className="space-y-2">
+      <span className="text-[10px] font-medium text-neutral-400 uppercase tracking-wider">
+        {t.editor.transition}
+      </span>
+      <div className="flex gap-1">
+        {TRANSITIONS.map((tr) => (
+          <button
+            key={tr.id}
+            onClick={() => onChange(tr.id)}
+            title={tr.label}
+            className={`flex h-8 flex-1 items-center justify-center rounded border text-xs transition-colors ${
+              current === tr.id
+                ? "border-blue-500 bg-blue-500/10 text-blue-400"
+                : "border-neutral-700 text-neutral-500 hover:border-neutral-600 hover:text-neutral-300"
+            }`}
+          >
+            {tr.icon}
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
