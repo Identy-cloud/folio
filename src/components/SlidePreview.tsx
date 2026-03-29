@@ -81,6 +81,9 @@ const PreviewElement = memo(function PreviewElement({ element }: { element: Slid
         transform: element.rotation ? `rotate(${element.rotation}deg)` : undefined,
         opacity: element.opacity,
         zIndex: element.zIndex,
+        boxShadow: element.shadow
+          ? `${element.shadow.offsetX}px ${element.shadow.offsetY}px ${element.shadow.blur}px ${element.shadow.color}`
+          : undefined,
         pointerEvents: "none",
       }}
     >

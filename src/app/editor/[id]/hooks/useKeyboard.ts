@@ -84,16 +84,32 @@ export function useKeyboard() {
         const slide = state.getActiveSlide();
         if (!slide) return;
         const els = state.editingMode === "mobile" && slide.mobileElements ? slide.mobileElements : slide.elements;
-        movable.forEach((id) => {
-          const el = els.find((el) => el.id === id);
-          if (!el) return;
-          const updates: Record<string, number> = {};
-          if (e.key === "ArrowUp") updates.y = el.y - step;
-          if (e.key === "ArrowDown") updates.y = el.y + step;
-          if (e.key === "ArrowLeft") updates.x = el.x - step;
-          if (e.key === "ArrowRight") updates.x = el.x + step;
-          state.updateElement(id, updates);
-        });
+
+        if (e.altKey) {
+          // Alt+Arrow = resize
+          movable.forEach((id) => {
+            const el = els.find((el) => el.id === id);
+            if (!el) return;
+            const updates: Record<string, number> = {};
+            if (e.key === "ArrowRight") updates.w = el.w + step;
+            if (e.key === "ArrowLeft") updates.w = Math.max(10, el.w - step);
+            if (e.key === "ArrowDown") updates.h = el.h + step;
+            if (e.key === "ArrowUp") updates.h = Math.max(10, el.h - step);
+            state.updateElement(id, updates);
+          });
+        } else {
+          // Arrow / Shift+Arrow = move
+          movable.forEach((id) => {
+            const el = els.find((el) => el.id === id);
+            if (!el) return;
+            const updates: Record<string, number> = {};
+            if (e.key === "ArrowUp") updates.y = el.y - step;
+            if (e.key === "ArrowDown") updates.y = el.y + step;
+            if (e.key === "ArrowLeft") updates.x = el.x - step;
+            if (e.key === "ArrowRight") updates.x = el.x + step;
+            state.updateElement(id, updates);
+          });
+        }
         state.pushHistory();
       }
     }

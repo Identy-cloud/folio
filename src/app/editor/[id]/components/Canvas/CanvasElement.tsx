@@ -107,6 +107,9 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
         outline: isSelected ? "2px solid #3b82f6" : "none",
         outlineOffset: 1,
         zIndex: element.zIndex,
+        boxShadow: element.shadow
+          ? `${element.shadow.offsetX}px ${element.shadow.offsetY}px ${element.shadow.blur}px ${element.shadow.color}`
+          : undefined,
       }}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}

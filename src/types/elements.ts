@@ -2,6 +2,13 @@ export type ElementType = "text" | "image" | "shape" | "arrow" | "divider";
 
 export type ElementAnimation = "none" | "fade-up" | "fade-down" | "fade-left" | "fade-right" | "zoom-in" | "zoom-out" | "rotate-in" | "bounce-in";
 
+export interface ElementShadow {
+  offsetX: number;
+  offsetY: number;
+  blur: number;
+  color: string;
+}
+
 export interface BaseElement {
   id: string;
   type: ElementType;
@@ -13,6 +20,7 @@ export interface BaseElement {
   opacity: number;
   zIndex: number;
   locked: boolean;
+  shadow?: ElementShadow;
   animation?: ElementAnimation;
   animationDelay?: number;
   animationDuration?: number;

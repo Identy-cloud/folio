@@ -424,6 +424,9 @@ function ViewerElement({ element, delay, animate }: { element: SlideElement; del
         width: element.w,
         height: element.h,
         zIndex: element.zIndex,
+        boxShadow: element.shadow
+          ? `${element.shadow.offsetX}px ${element.shadow.offsetY}px ${element.shadow.blur}px ${element.shadow.color}`
+          : undefined,
         ...animStyle,
       }}
     >

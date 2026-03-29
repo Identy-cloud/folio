@@ -18,6 +18,7 @@ import { AnimationProperties } from "./AnimationProperties";
 import { LockToggle } from "./LockToggle";
 import { DeleteButton } from "./DeleteButton";
 import { MultiSelectControls } from "./MultiSelectControls";
+import { ShadowControls } from "./ShadowControls";
 import { ColorPicker } from "@/components/editor/ColorPicker";
 import type { TextElement, ShapeElement, ArrowElement, DividerElement, ImageElement, SlideElement } from "@/types/elements";
 import { textDefaults, shapeDefaults, arrowDefaults, dividerDefaults } from "@/lib/templates/element-defaults";
@@ -108,6 +109,7 @@ export function ElementPalette() {
           {selectedElement.type === "image" && <ImageProperties element={selectedElement as ImageElement} />}
           {selectedElement.type === "arrow" && <ArrowProperties element={selectedElement as ArrowElement} />}
           {selectedElement.type === "divider" && <DividerProperties element={selectedElement as DividerElement} />}
+          <ShadowControls element={selectedElement} />
           <AnimationProperties element={selectedElement} />
           <AlignControls elementId={selectedElement.id} />
           <LayerControls elementId={selectedElement.id} />
