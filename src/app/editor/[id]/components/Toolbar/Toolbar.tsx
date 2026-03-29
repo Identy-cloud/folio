@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowCounterClockwise, ArrowClockwise, FilePdf, FileImage, Image as ImageIcon, Desktop, DeviceMobile } from "@phosphor-icons/react";
+import { ArrowCounterClockwise, ArrowClockwise, FilePdf, FileImage, Image as ImageIcon, Desktop, DeviceMobile, Play } from "@phosphor-icons/react";
 import { Tooltip } from "@/components/ui/Tooltip";
 
 function Spinner() {
@@ -148,6 +148,16 @@ export function Toolbar({ connected, peerCount = 0 }: ToolbarProps) {
         </div>
       </div>
       <div className="flex items-center gap-2 md:gap-4">
+        <Tooltip content="Preview">
+          <Link
+            href={`/preview/${useEditorStore.getState().presentationId}`}
+            target="_blank"
+            className="flex items-center gap-1 rounded bg-white px-2.5 py-1 text-xs font-medium text-[#161616] hover:bg-neutral-200 transition-colors md:px-3"
+          >
+            <Play size={12} weight="fill" />
+            <span className="hidden sm:inline">Preview</span>
+          </Link>
+        </Tooltip>
         <ShareButton />
         {peerCount > 0 && (
           <span className="hidden md:inline text-xs text-neutral-500">
