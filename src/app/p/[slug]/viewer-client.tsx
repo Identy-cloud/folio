@@ -215,10 +215,11 @@ export function ViewerClient({ title, slides }: Props) {
 
       {/* Current slide */}
       <SlideLayer
+        key={`slide-${displayed}`}
         slide={incoming ?? outgoing}
         scale={scale}
-        transitionStyle={transitioning ? getTransitionStyles("in") : undefined
-        }
+        transitionStyle={transitioning ? getTransitionStyles("in") : undefined}
+        animate
       />
 
       {/* Bottom bar */}
@@ -268,11 +269,18 @@ function SlideLayer({
   slide,
   scale,
   transitionStyle,
+  animate,
 }: {
   slide: Slide;
   scale: number;
   transitionStyle?: React.CSSProperties;
+  animate?: boolean;
 }) {
+  const sorted = useMemo(
+    () => slide.elements.slice().sort((a, b) => a.zIndex - b.zIndex),
+    [slide.elements]
+  );
+
   return (
     <div
       style={{
@@ -288,17 +296,14 @@ function SlideLayer({
         ...transitionStyle,
       }}
     >
-      {slide.elements
-        .slice()
-        .sort((a, b) => a.zIndex - b.zIndex)
-        .map((el) => (
-          <ViewerElement key={el.id} element={el} />
-        ))}
+      {sorted.map((el, i) => (
+        <ViewerElement key={el.id} element={el} delay={animate ? i * 80 : 0} />
+      ))}
     </div>
   );
 }
 
-function ViewerElement({ element }: { element: SlideElement }) {
+function ViewerElement({ element, delay }: { element: SlideElement; delay: number }) {
   return (
     <div
       style={{
@@ -308,8 +313,11 @@ function ViewerElement({ element }: { element: SlideElement }) {
         width: element.w,
         height: element.h,
         transform: element.rotation ? `rotate(${element.rotation}deg)` : undefined,
-        opacity: element.opacity,
+        opacity: delay > 0 ? 0 : element.opacity,
         zIndex: element.zIndex,
+        animation: delay > 0
+          ? `el-enter 0.4s cubic-bezier(0.22,1,0.36,1) ${delay}ms forwards`
+          : undefined,
       }}
     >
       {element.type === "text" && <ViewerText element={element} />}

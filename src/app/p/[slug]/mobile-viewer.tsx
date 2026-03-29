@@ -171,7 +171,7 @@ export function MobileViewer({ title, slides }: Props) {
             className="h-full overflow-y-auto overscroll-contain pb-14"
             style={{ backgroundColor: activeSlide.backgroundColor }}
           >
-            <MobileSlideContent elements={inElements} bg={activeSlide.backgroundColor} />
+            <MobileSlideContent key={`m-${displayed}`} elements={inElements} bg={activeSlide.backgroundColor} />
           </div>
         </div>
       </div>
@@ -237,23 +237,26 @@ function MobileSlideContent({ elements, bg }: { elements: SlideElement[]; bg: st
 
   return (
     <div className="min-h-full px-5 py-8 space-y-4" style={{ backgroundColor: bg }}>
-      {sorted.map((el) => (
-        <MobileElement key={el.id} element={el} />
+      {sorted.map((el, i) => (
+        <MobileElement key={el.id} element={el} delay={i * 80} />
       ))}
     </div>
   );
 }
 
-function MobileElement({ element }: { element: SlideElement }) {
+function MobileElement({ element, delay = 0 }: { element: SlideElement; delay?: number }) {
+  const animStyle: React.CSSProperties = delay > 0
+    ? { opacity: 0, animation: `el-enter 0.4s cubic-bezier(0.22,1,0.36,1) ${delay}ms forwards` }
+    : {};
   if (element.type === "arrow") return null;
 
   if (element.type === "shape") {
-    return <MobileShape element={element} />;
+    return <div style={animStyle}><MobileShape element={element} /></div>;
   }
 
   if (element.type === "divider") {
     return (
-      <div className="py-2">
+      <div className="py-2" style={animStyle}>
         <div style={{ height: element.strokeWidth, backgroundColor: element.color, opacity: element.opacity }} />
       </div>
     );
@@ -261,23 +264,25 @@ function MobileElement({ element }: { element: SlideElement }) {
 
   if (element.type === "image") {
     return (
-      <img
-        src={element.src}
-        alt=""
-        loading="lazy"
-        className="w-full rounded"
-        style={{
-          aspectRatio: `${element.w} / ${element.h}`,
-          objectFit: "cover",
-          filter: element.filter || undefined,
-        }}
-        draggable={false}
-      />
+      <div style={animStyle}>
+        <img
+          src={element.src}
+          alt=""
+          loading="lazy"
+          className="w-full rounded"
+          style={{
+            aspectRatio: `${element.w} / ${element.h}`,
+            objectFit: "cover",
+            filter: element.filter || undefined,
+          }}
+          draggable={false}
+        />
+      </div>
     );
   }
 
   if (element.type === "text") {
-    return <MobileText element={element} />;
+    return <div style={animStyle}><MobileText element={element} /></div>;
   }
 
   return null;
