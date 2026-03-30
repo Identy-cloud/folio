@@ -105,6 +105,25 @@ export function CommandPalette({ open, onClose }: Props) {
       a.click();
       URL.revokeObjectURL(a.href);
     }},
+    { id: "export-pptx", label: "Export as PPTX (PowerPoint)", category: "Export", action: () => {
+      const { presentationId } = useEditorStore.getState();
+      if (!presentationId) return;
+      fetch(`/api/presentations/${presentationId}/export-pptx`)
+        .then((res) => {
+          if (!res.ok) { alert("PPTX export requires Studio or Agency plan"); return null; }
+          return res.blob();
+        })
+        .then((blob) => {
+          if (!blob) return;
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `presentation-${presentationId}.pptx`;
+          a.click();
+          URL.revokeObjectURL(url);
+        })
+        .catch(() => alert("Export failed"));
+    }},
     { id: "export-json", label: "Export as JSON (backup)", category: "Export", action: () => {
       const { slides, theme, presentationId } = useEditorStore.getState();
       const data = JSON.stringify({ version: 1, theme, slides }, null, 2);

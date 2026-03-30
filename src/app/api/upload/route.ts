@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const rl = checkRateLimit(`upload:${user.id}`, 20, 3600_000);
+  const rl = await checkRateLimit(`upload:${user.id}`, 20, 3600_000);
   if (!rl.allowed) return rateLimitResponse(rl);
 
   const raw = await request.json().catch(() => null);

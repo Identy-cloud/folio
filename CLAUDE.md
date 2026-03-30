@@ -113,6 +113,8 @@ SENTRY_ORG
 SENTRY_PROJECT
 NEXT_PUBLIC_POSTHOG_KEY
 NEXT_PUBLIC_POSTHOG_HOST
+UPSTASH_REDIS_REST_URL
+UPSTASH_REDIS_REST_TOKEN
 
 ## Cloudflare — Setup automático requerido
 
@@ -159,7 +161,6 @@ npx wrangler r2 bucket domain add folio-assets
 ## Pendientes — No olvidar
 
 ### Infraestructura
-- Rate limiting real con Upstash Redis (actual in-memory no sirve en serverless)
 - Image CDN resize — configurar Cloudflare Image Resizing o similar
 - Monitoreo de errores — Sentry o similar
 - Tests — al menos API routes y editorStore

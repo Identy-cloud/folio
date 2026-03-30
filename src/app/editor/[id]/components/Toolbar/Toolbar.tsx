@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { ArrowCounterClockwise, ArrowClockwise, FilePdf, FileImage, Image as ImageIcon, Desktop, DeviceMobile, Play, ClockCounterClockwise, Stack, NotePencil, ChatCircle } from "@phosphor-icons/react";
+import { ArrowCounterClockwise, ArrowClockwise, FilePdf, FilePpt, FileImage, Image as ImageIcon, Desktop, DeviceMobile, Play, ClockCounterClockwise, Stack, NotePencil, ChatCircle } from "@phosphor-icons/react";
 import { FolioLogo } from "@/components/FolioLogo";
 import { Tooltip } from "@/components/ui/Tooltip";
 
@@ -131,6 +131,33 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
     setActiveSlide(currentIndex);
     setExporting(false);
     setExportProgress("");
+  }
+
+  const [exportingPptx, setExportingPptx] = useState(false);
+
+  async function handleExportPptx() {
+    if (!presentationId) return;
+    setExportingPptx(true);
+    try {
+      const res = await fetch(`/api/presentations/${presentationId}/export-pptx`);
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        if (data?.error === "PLAN_LIMIT") {
+          alert("Upgrade to Studio or Agency plan to export PPTX");
+        }
+        return;
+      }
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      const safeName = (title || "presentation").replace(/[^a-zA-Z0-9-_ ]/g, "").trim();
+      a.download = `${safeName}.pptx`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } finally {
+      setExportingPptx(false);
+    }
   }
 
   const statusDot: Record<string, string> = {
@@ -277,6 +304,16 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
           >
             <FileImage size={14} weight="duotone" />
             {exporting && exportProgress ? exportProgress : "All PNG"}
+          </button>
+        </Tooltip>
+        <Tooltip content={limits.canExportPptx ? "Export PPTX" : "Upgrade to Studio to export PPTX"}>
+          <button
+            onClick={handleExportPptx}
+            disabled={exportingPptx || !limits.canExportPptx}
+            className="hidden md:flex items-center gap-1 rounded px-3 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 disabled:opacity-50"
+          >
+            <FilePpt size={14} weight="duotone" />
+            {exportingPptx ? "..." : "PPTX"}
           </button>
         </Tooltip>
         <div className="hidden md:block h-5 w-px bg-neutral-700" />

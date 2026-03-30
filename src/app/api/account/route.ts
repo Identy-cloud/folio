@@ -5,13 +5,33 @@ import { createClient } from "@/lib/supabase/server";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { eq } from "drizzle-orm";
 
-export async function DELETE() {
+export async function DELETE(request: Request) {
   const user = await getAuthenticatedUser();
   if (!user) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // Delete all presentations (slides + collaborators cascade via DB)
+  const body = await request.json().catch(() => null);
+  if (!body || typeof body.password !== "string" || !body.password.trim()) {
+    return Response.json(
+      { error: "Password is required" },
+      { status: 400 },
+    );
+  }
+
+  const supabaseAuth = await createClient();
+  const { error: signInError } = await supabaseAuth.auth.signInWithPassword({
+    email: user.email,
+    password: body.password,
+  });
+
+  if (signInError) {
+    return Response.json(
+      { error: "Invalid password" },
+      { status: 403 },
+    );
+  }
+
   await db.delete(presentations).where(eq(presentations.userId, user.id));
 
   // Delete user from DB
@@ -24,9 +44,7 @@ export async function DELETE() {
   );
   await adminClient.auth.admin.deleteUser(user.id);
 
-  // Sign out current session
-  const supabase = await createClient();
-  await supabase.auth.signOut();
+  await supabaseAuth.auth.signOut();
 
   return Response.json({ ok: true });
 }

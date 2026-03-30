@@ -36,6 +36,8 @@ export const es = {
     deleteConfirm: "¿Seguro?",
     deleteAction: "Eliminar",
     deleteCancel: "No",
+    enterPassword: "Ingresa tu contraseña",
+    wrongPassword: "Contraseña incorrecta",
   },
   landing: {
     subtitle: "Editorial Slides",

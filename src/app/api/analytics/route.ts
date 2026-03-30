@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     request.headers.get("x-real-ip") ??
     "unknown";
 
-  const rl = checkRateLimit(`analytics:${ip}`, 60, 60_000);
+  const rl = await checkRateLimit(`analytics:${ip}`, 60, 60_000);
   if (!rl.allowed) return rateLimitResponse(rl);
 
   const raw = await request.json().catch(() => ({}));

@@ -21,7 +21,7 @@ export async function POST(
 
   const { id } = await params;
 
-  const rl = checkRateLimit(`verify-pw:${ip}:${id}`, 10, 60_000);
+  const rl = await checkRateLimit(`verify-pw:${ip}:${id}`, 10, 60_000);
   if (!rl.allowed) return rateLimitResponse(rl);
 
   const raw = await request.json().catch(() => ({}));

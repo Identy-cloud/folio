@@ -17,7 +17,7 @@ export async function POST(
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const rl = checkRateLimit(`create:${user.id}`, 10, 3600_000);
+  const rl = await checkRateLimit(`create:${user.id}`, 10, 3600_000);
   if (!rl.allowed) return rateLimitResponse(rl);
 
   const plan = await getUserPlan(user.id);

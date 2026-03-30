@@ -38,6 +38,8 @@ export const pt = {
     deleteConfirm: "Tens a certeza?",
     deleteAction: "Eliminar",
     deleteCancel: "Não",
+    enterPassword: "Introduz a tua palavra-passe",
+    wrongPassword: "Palavra-passe incorreta",
   },
   landing: {
     subtitle: "Editorial Slides",
