@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
 import { useTranslation } from "@/lib/i18n/context";
-import { Notebook } from "@phosphor-icons/react";
+import { Notebook, GithubLogo, GoogleLogo } from "@phosphor-icons/react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -75,6 +75,14 @@ export default function LoginPage() {
     });
   }
 
+  async function handleGitHubLogin() {
+    const supabase = createClient();
+    await supabase.auth.signInWithOAuth({
+      provider: "github",
+      options: { redirectTo: `${window.location.origin}/auth/callback` },
+    });
+  }
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#161616] px-4">
       <div className="w-full max-w-sm space-y-10">
@@ -89,6 +97,34 @@ export default function LoginPage() {
           <div className="mx-auto mt-6 h-px w-12 bg-neutral-700" />
         </div>
 
+        <div className="space-y-3">
+          <button
+            onClick={handleGoogleLogin}
+            className="flex w-full min-h-[44px] items-center justify-center gap-3 bg-white py-3 text-xs font-semibold tracking-[0.15em] text-black hover:bg-neutral-200 transition-colors"
+          >
+            <GoogleLogo size={18} weight="bold" />
+            {t.auth.google}
+          </button>
+          <button
+            onClick={handleGitHubLogin}
+            className="flex w-full min-h-[44px] items-center justify-center gap-3 bg-neutral-800 py-3 text-xs font-semibold tracking-[0.15em] text-white hover:bg-neutral-700 transition-colors"
+          >
+            <GithubLogo size={18} weight="bold" />
+            {t.auth.github}
+          </button>
+        </div>
+
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-neutral-800" />
+          </div>
+          <div className="relative flex justify-center">
+            <span className="bg-[#161616] px-4 text-[10px] text-neutral-600 uppercase tracking-[0.3em]">
+              {t.auth.or}
+            </span>
+          </div>
+        </div>
+
         <form onSubmit={handleEmailAuth} className="space-y-3">
           <input
             type="email"
@@ -97,7 +133,6 @@ export default function LoginPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            autoFocus
             className="w-full border-b border-neutral-700 bg-transparent px-2 py-3 text-sm text-white placeholder-neutral-500 outline-none focus:border-white transition-colors"
           />
           <input
@@ -156,24 +191,6 @@ export default function LoginPage() {
             </button>
           )}
         </form>
-
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-neutral-800" />
-          </div>
-          <div className="relative flex justify-center">
-            <span className="bg-[#161616] px-4 text-[10px] text-neutral-600 uppercase tracking-[0.3em]">
-              {t.auth.or}
-            </span>
-          </div>
-        </div>
-
-        <button
-          onClick={handleGoogleLogin}
-          className="w-full border border-neutral-700 py-3 text-xs tracking-[0.25em] text-neutral-400 uppercase hover:border-white hover:text-white transition-colors"
-        >
-          {t.auth.google}
-        </button>
 
         <p className="text-center text-[11px] text-neutral-600">
           {isSignUp ? t.auth.hasAccount : t.auth.noAccount}{" "}

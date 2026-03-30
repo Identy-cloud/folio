@@ -115,6 +115,7 @@ NEXT_PUBLIC_POSTHOG_KEY
 NEXT_PUBLIC_POSTHOG_HOST
 UPSTASH_REDIS_REST_URL
 UPSTASH_REDIS_REST_TOKEN
+UNSPLASH_ACCESS_KEY
 
 ## Cloudflare — Setup automático requerido
 
@@ -164,6 +165,13 @@ npx wrangler r2 bucket domain add folio-assets
 - Image CDN resize — configurar Cloudflare Image Resizing o similar
 - Monitoreo de errores — Sentry o similar
 - Tests — al menos API routes y editorStore
+
+### OAuth Social Login
+- Google y GitHub OAuth están implementados en el código (login page + callback route)
+- Para que funcionen, hay que habilitar los providers en Supabase Dashboard:
+  - Authentication → Providers → Google: activar, añadir Client ID y Client Secret de Google Cloud Console
+  - Authentication → Providers → GitHub: activar, añadir Client ID y Client Secret de GitHub OAuth App
+- El callback URL a configurar en ambos providers es: `{NEXT_PUBLIC_APP_URL}/auth/callback`
 
 ### Seguridad
 - JWT en WebSocket headers en vez de query params (requiere cambio en y-websocket provider)

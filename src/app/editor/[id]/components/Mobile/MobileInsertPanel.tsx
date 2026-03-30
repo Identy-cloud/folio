@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import { nanoid } from "nanoid";
-import { TextT, Rectangle, Circle, Triangle, Image as ImageIcon, Diamond, Star, ArrowRight, Minus, LineSegment, GridNine, Smiley, VideoCamera } from "@phosphor-icons/react";
+import { TextT, Rectangle, Circle, Triangle, Image as ImageIcon, Diamond, Star, ArrowRight, Minus, LineSegment, GridNine, Smiley, VideoCamera, ImageSquare } from "@phosphor-icons/react";
 import { useEditorStore } from "@/store/editorStore";
 import { textDefaults, shapeDefaults } from "@/lib/templates/element-defaults";
 import { THEMES } from "@/lib/templates/themes";
 import { useImageUpload } from "../../hooks/useImageUpload";
 import { useTranslation } from "@/lib/i18n/context";
 import { IconPicker } from "../IconPicker";
+import { UnsplashPicker } from "../UnsplashPicker";
 import type { TextElement, ShapeElement, ArrowElement, DividerElement, LineElement, TableElement, VideoElement } from "@/types/elements";
 import { arrowDefaults, dividerDefaults, lineDefaults, tableDefaults, videoDefaults } from "@/lib/templates/element-defaults";
 
@@ -19,6 +20,7 @@ export function MobileInsertPanel({ onClose }: { onClose: () => void }) {
   const theme = useEditorStore((s) => THEMES[s.theme] ?? THEMES["editorial-blue"]);
   const { trigger: triggerUpload, uploading } = useImageUpload();
   const [showIconPicker, setShowIconPicker] = useState(false);
+  const [showUnsplash, setShowUnsplash] = useState(false);
 
   function addText() {
     const el: TextElement = {
@@ -104,7 +106,11 @@ export function MobileInsertPanel({ onClose }: { onClose: () => void }) {
       <button onClick={() => { triggerUpload(); onClose(); }} disabled={uploading} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800 disabled:opacity-50">
         <ImageIcon size={18} weight="regular" /> {uploading ? t.editor.uploading : t.editor.image}
       </button>
+      <button onClick={() => setShowUnsplash(true)} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800">
+        <ImageSquare size={18} weight="regular" /> Stock Images
+      </button>
       {showIconPicker && <IconPicker onClose={() => { setShowIconPicker(false); onClose(); }} />}
+      {showUnsplash && <UnsplashPicker onClose={() => { setShowUnsplash(false); onClose(); }} />}
     </div>
   );
 }

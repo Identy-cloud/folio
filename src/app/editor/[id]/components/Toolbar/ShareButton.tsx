@@ -7,6 +7,7 @@ import { useEditorStore } from "@/store/editorStore";
 import { toast } from "sonner";
 import { useTranslation } from "@/lib/i18n/context";
 import { useClickOutside } from "@/hooks/useClickOutside";
+import { EmbedPanel } from "./EmbedPanel";
 
 interface PresentationMeta {
   slug: string;
@@ -176,16 +177,7 @@ export function ShareButton() {
                   </div>
 
                   {/* Embed */}
-                  <button
-                    onClick={() => {
-                      const code = `<iframe src="${window.location.origin}/embed/${meta.slug}" width="800" height="450" frameborder="0" allowfullscreen></iframe>`;
-                      navigator.clipboard.writeText(code);
-                      toast.success(t.editor.embedCopied);
-                    }}
-                    className="w-full rounded border border-neutral-700 py-1.5 text-[10px] text-neutral-400 hover:bg-neutral-800 transition-colors"
-                  >
-                    {t.editor.embed} — Copy iframe
-                  </button>
+                  <EmbedPanel slug={meta.slug} />
 
                   {/* Social sharing */}
                   <div className="flex gap-1.5">

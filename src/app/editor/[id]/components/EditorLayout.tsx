@@ -27,6 +27,8 @@ import { ThemeCustomizer } from "./ThemeCustomizer";
 import { EditorComments } from "./EditorComments";
 import { CollaboratorsPanel } from "./CollaboratorsPanel";
 import { CommandPalette } from "./CommandPalette";
+import { UnsplashPicker } from "./UnsplashPicker";
+import { LayoutPicker } from "./LayoutPicker";
 import { ClockCounterClockwise, Stack, NotePencil } from "@phosphor-icons/react";
 import { MobileSlidePanel } from "./Mobile/MobileSlidePanel";
 import { MobileInsertPanel } from "./Mobile/MobileInsertPanel";
@@ -56,9 +58,17 @@ export function EditorLayout() {
   const [historyOpen, setHistoryOpen] = useState(false);
   const [layersOpen, setLayersOpen] = useState(false);
   const [notesOpen, setNotesOpen] = useState(false);
+  const [unsplashOpen, setUnsplashOpen] = useState(false);
+  const [layoutPickerOpen, setLayoutPickerOpen] = useState(false);
   const rightPanel = historyOpen ? "history" : layersOpen ? "layers" : "palette";
   const selectedIds = useEditorStore((s) => s.selectedElementIds);
   const hasSelection = selectedIds.length > 0;
+
+  useEffect(() => {
+    const onOpenUnsplash = () => setUnsplashOpen(true);
+    window.addEventListener("folio:open-unsplash", onOpenUnsplash);
+    return () => window.removeEventListener("folio:open-unsplash", onOpenUnsplash);
+  }, []);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -118,6 +128,7 @@ export function EditorLayout() {
           onToggleComments={() => setCommentsOpen((v) => !v)}
           onToggleCollaborators={() => setCollaboratorsOpen((v) => !v)}
           collaboratorsOpen={collaboratorsOpen}
+          onToggleLayoutPicker={() => setLayoutPickerOpen((v) => !v)}
         />
       </div>
       <div className="flex flex-1 overflow-hidden">
@@ -219,6 +230,8 @@ export function EditorLayout() {
       <EditorComments open={commentsOpen} onClose={() => setCommentsOpen(false)} />
       <CollaboratorsPanel open={collaboratorsOpen} onClose={() => setCollaboratorsOpen(false)} />
       <CommandPalette open={commandOpen} onClose={() => setCommandOpen(false)} />
+      <LayoutPicker open={layoutPickerOpen} onClose={() => setLayoutPickerOpen(false)} />
+      {unsplashOpen && <UnsplashPicker onClose={() => setUnsplashOpen(false)} />}
       <Onboarding />
       <ShortcutsPanel open={shortcutsOpen} onClose={() => setShortcutsOpen(false)} />
     </div>

@@ -3,9 +3,9 @@ import { presentations, slides } from "@/db/schema";
 import { getUserPlan } from "@/lib/stripe";
 import { eq, asc } from "drizzle-orm";
 import { notFound } from "next/navigation";
-import { ViewerWrapper } from "@/app/p/[slug]/viewer-wrapper";
 import type { SlideElement, SlideTransition } from "@/types/elements";
 import type { Metadata } from "next";
+import { EmbedViewer } from "./embed-viewer";
 
 interface SlideRow {
   id: string;
@@ -54,14 +54,19 @@ export async function generateMetadata({
 
 export default async function EmbedPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ autoplay?: string }>;
 }) {
   const { slug } = await params;
+  const sp = await searchParams;
   const data = await getData(slug);
   if (!data) notFound();
 
-  const mappedSlides = data.slideRows.map((s) => ({
+  const autoplay = sp.autoplay === "1";
+
+  const mappedSlides: SlideRow[] = data.slideRows.map((s) => ({
     id: s.id,
     presentationId: s.presentationId,
     order: s.order,
@@ -73,11 +78,13 @@ export default async function EmbedPage({
   }));
 
   return (
-    <ViewerWrapper
+    <EmbedViewer
       title={data.pres.title}
-      slides={mappedSlides as SlideRow[]}
+      slides={mappedSlides}
       showWatermark={data.ownerPlan === "free"}
       presentationId={data.pres.id}
+      hasPassword={!!data.pres.password}
+      autoplay={autoplay}
     />
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { ArrowCounterClockwise, ArrowClockwise, FilePdf, FilePpt, FileImage, Image as ImageIcon, Desktop, DeviceMobile, Play, ClockCounterClockwise, Stack, NotePencil, ChatCircle, UsersThree, Export, CaretDown } from "@phosphor-icons/react";
+import { ArrowCounterClockwise, ArrowClockwise, FilePdf, FilePpt, FileImage, Image as ImageIcon, Desktop, DeviceMobile, Play, ClockCounterClockwise, Stack, NotePencil, ChatCircle, UsersThree, Export, CaretDown, Layout } from "@phosphor-icons/react";
 import { FolioLogo } from "@/components/FolioLogo";
 import { Tooltip } from "@/components/ui/Tooltip";
 
@@ -31,9 +31,10 @@ interface ToolbarProps {
   onToggleComments?: () => void;
   onToggleCollaborators?: () => void;
   collaboratorsOpen?: boolean;
+  onToggleLayoutPicker?: () => void;
 }
 
-export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen, onToggleLayers, layersOpen, onToggleNotes, notesOpen, onToggleSorter, onToggleThemeCustomizer, onToggleComments, onToggleCollaborators, collaboratorsOpen }: ToolbarProps) {
+export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen, onToggleLayers, layersOpen, onToggleNotes, notesOpen, onToggleSorter, onToggleThemeCustomizer, onToggleComments, onToggleCollaborators, collaboratorsOpen, onToggleLayoutPicker }: ToolbarProps) {
   const { t } = useTranslation();
   const undo = useEditorStore((s) => s.undo);
   const redo = useEditorStore((s) => s.redo);
@@ -209,6 +210,13 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
           <Tooltip content="Theme colors">
             <button onClick={onToggleThemeCustomizer} className="hidden sm:flex rounded p-1.5 text-neutral-500 hover:bg-neutral-800 hover:text-neutral-300 transition-colors">
               <Palette size={14} />
+            </button>
+          </Tooltip>
+        )}
+        {onToggleLayoutPicker && (
+          <Tooltip content="Slide layout">
+            <button onClick={onToggleLayoutPicker} className="hidden sm:flex rounded p-1.5 text-neutral-500 hover:bg-neutral-800 hover:text-neutral-300 transition-colors">
+              <Layout size={14} />
             </button>
           </Tooltip>
         )}

@@ -5,6 +5,7 @@ import { nanoid } from "nanoid";
 import { useEditorStore } from "@/store/editorStore";
 import { textDefaults, shapeDefaults, arrowDefaults, dividerDefaults, lineDefaults, tableDefaults, videoDefaults, iconDefaults } from "@/lib/templates/element-defaults";
 import { THEMES } from "@/lib/templates/themes";
+import { SLIDE_LAYOUTS } from "@/lib/slide-layouts";
 import type { TextElement, ShapeElement, ArrowElement, DividerElement, EmbedElement, LineElement, TableElement, VideoElement, IconElement } from "@/types/elements";
 
 interface Command {
@@ -281,6 +282,28 @@ export function CommandPalette({ open, onClose }: Props) {
       s.selectedElementIds.forEach((id) => s.updateElement(id, { opacity: 1 }));
       s.pushHistory();
     }},
+    { id: "stock-images", label: "Search stock images", category: "Insert", action: () => {
+      window.dispatchEvent(new CustomEvent("folio:open-unsplash"));
+    }},
+    ...SLIDE_LAYOUTS.map((layout) => ({
+      id: `layout-${layout.id}`,
+      label: `Apply layout: ${layout.name}`,
+      category: "Layout",
+      action: () => {
+        const state = useEditorStore.getState();
+        const slide = state.getActiveSlide();
+        if (!slide) return;
+        if (slide.elements.length > 0 && !confirm("Replace current slide content with this layout?")) return;
+        const th = THEMES[state.theme] ?? THEMES["editorial-blue"];
+        const elements = layout.generate(th, 1);
+        const { slides, activeSlideIndex } = state;
+        const updated = slides.map((s, i) =>
+          i === activeSlideIndex ? { ...s, elements } : s
+        );
+        useEditorStore.setState({ slides: updated, selectedElementIds: [], dirty: true, saveStatus: "unsaved" as const });
+        state.pushHistory();
+      },
+    })),
   ];
 
   const filtered = query

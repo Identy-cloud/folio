@@ -4,7 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useEditorStore } from "@/store/editorStore";
 import { nanoid } from "nanoid";
-import { TextT, Rectangle, Circle, Triangle, Image as ImageIcon, ArrowRight, Minus, Diamond, Star, Pentagon, Hexagon, Code, LineSegment, GridNine, Smiley, VideoCamera } from "@phosphor-icons/react";
+import { TextT, Rectangle, Circle, Triangle, Image as ImageIcon, ArrowRight, Minus, Diamond, Star, Pentagon, Hexagon, Code, LineSegment, GridNine, Smiley, VideoCamera, ImageSquare } from "@phosphor-icons/react";
 import { useImageUpload } from "../../hooks/useImageUpload";
 import { PositionFields } from "./PositionFields";
 import { TextProperties } from "./TextProperties";
@@ -30,6 +30,7 @@ import { textDefaults, shapeDefaults, arrowDefaults, dividerDefaults, lineDefaul
 import { THEMES } from "@/lib/templates/themes";
 import { TransitionPicker } from "../SlidePanel/TransitionPicker";
 import { IconPicker } from "../IconPicker";
+import { UnsplashPicker } from "../UnsplashPicker";
 import { useTranslation } from "@/lib/i18n/context";
 import { CollapsibleSection } from "@/components/ui/CollapsibleSection";
 
@@ -46,6 +47,7 @@ export function ElementPalette() {
   const { trigger: triggerUpload, uploading } = useImageUpload();
   const { trigger: triggerBgUpload, uploading: bgUploading } = useBgImageUpload();
   const [showIconPicker, setShowIconPicker] = useState(false);
+  const [showUnsplash, setShowUnsplash] = useState(false);
 
   const elements = editingMode === "mobile" && activeSlide?.mobileElements ? activeSlide.mobileElements : activeSlide?.elements;
   const selectedElement = elements?.find((el) => selectedIds.includes(el.id));
@@ -123,8 +125,12 @@ export function ElementPalette() {
         <button onClick={() => setShowIconPicker(true)} className={btn}>
           <Smiley size={16} weight="regular" /> Icon
         </button>
+        <button onClick={() => setShowUnsplash(true)} className={btn}>
+          <ImageSquare size={16} weight="regular" /> Stock Images
+        </button>
       </div>
       {showIconPicker && <IconPicker onClose={() => setShowIconPicker(false)} />}
+      {showUnsplash && <UnsplashPicker onClose={() => setShowUnsplash(false)} />}
 
       {selectedIds.length > 1 ? (
         <div className="flex-1 overflow-y-auto border-t border-neutral-800 p-3 space-y-4">
