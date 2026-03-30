@@ -10,7 +10,8 @@ const securityHeaders = [
     key: "Content-Security-Policy",
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.posthog.com https://us-assets.i.posthog.com",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.posthog.com https://us-assets.i.posthog.com https://*.sentry.io",
+      "script-src-elem 'self' 'unsafe-inline' https://*.posthog.com https://us-assets.i.posthog.com https://*.sentry.io",
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' blob: data: https://*.r2.dev https://*.googleusercontent.com https://*.supabase.co https://images.unsplash.com https://image.pollinations.ai",
       "font-src 'self' https://fonts.gstatic.com https://*.r2.dev",
