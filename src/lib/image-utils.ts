@@ -11,11 +11,21 @@ export const IMAGE_PRESETS = {
   full: { width: 1920 },
 } as const satisfies Record<string, ImageResizeOptions>;
 
+function isCdnUrl(url: string): boolean {
+  try {
+    const parsed = new URL(url);
+    return parsed.hostname.endsWith(".r2.dev") || parsed.hostname.endsWith(".cloudflarestorage.com");
+  } catch {
+    return false;
+  }
+}
+
 export function getOptimizedImageUrl(
   originalUrl: string,
   options?: ImageResizeOptions,
 ): string {
   if (!options) return originalUrl;
+  if (!isCdnUrl(originalUrl)) return originalUrl;
 
   const params: string[] = [];
   if (options.width) params.push(`width=${options.width}`);

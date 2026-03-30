@@ -12,6 +12,9 @@ import { PromptDialog } from "./prompt-dialog";
 import { ThemeDialog } from "./theme-dialog";
 import { useTranslation } from "@/lib/i18n/context";
 import { AnalyticsDialog } from "./analytics-dialog";
+import { FolderList } from "./folder-list";
+import type { FolderItem } from "./folder-list";
+import { MoveToFolderDialog } from "./move-folder-dialog";
 
 interface Presentation {
   id: string;
@@ -21,6 +24,7 @@ interface Presentation {
   isPublic: boolean;
   thumbnailUrl: string | null;
   updatedAt: string;
+  folderId: string | null;
   coverSlide?: {
     backgroundColor: string;
     backgroundImage: string | null;
@@ -33,6 +37,9 @@ type Dialog =
   | { type: "delete"; id: string }
   | { type: "theme"; id: string; current: string }
   | { type: "analytics"; id: string; title: string }
+  | { type: "rename-folder"; folder: FolderItem }
+  | { type: "delete-folder"; folderId: string }
+  | { type: "move"; presentationId: string }
   | null;
 
 export default function DashboardPage() {
@@ -47,6 +54,8 @@ export default function DashboardPage() {
   const [starred, setStarred] = useState<Set<string>>(new Set());
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [dialog, setDialog] = useState<Dialog>(null);
+  const [folders, setFolders] = useState<FolderItem[]>([]);
+  const [activeFolderId, setActiveFolderId] = useState<string | null>(null);
 
   useEffect(() => {
     try {
@@ -67,12 +76,18 @@ export default function DashboardPage() {
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await fetch("/api/presentations");
-        if (res.ok) {
-          setPresentations(await res.json());
+        const [presRes, foldersRes] = await Promise.all([
+          fetch("/api/presentations"),
+          fetch("/api/folders"),
+        ]);
+        if (presRes.ok) {
+          setPresentations(await presRes.json());
           setFetchError(false);
         } else {
           setFetchError(true);
+        }
+        if (foldersRes.ok) {
+          setFolders(await foldersRes.json());
         }
       } catch {
         setFetchError(true);
@@ -85,6 +100,68 @@ export default function DashboardPage() {
   async function refreshPresentations() {
     const res = await fetch("/api/presentations");
     if (res.ok) setPresentations(await res.json());
+  }
+
+  async function refreshFolders() {
+    const res = await fetch("/api/folders");
+    if (res.ok) setFolders(await res.json());
+  }
+
+  async function handleCreateFolder() {
+    const name = prompt("Folder name:");
+    if (!name?.trim()) return;
+    const res = await fetch("/api/folders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: name.trim() }),
+    });
+    if (res.ok) {
+      toast.success("Folder created");
+      refreshFolders();
+    } else {
+      toast.error("Failed to create folder");
+    }
+  }
+
+  async function handleRenameFolder(name: string) {
+    if (!dialog || dialog.type !== "rename-folder") return;
+    const res = await fetch(`/api/folders/${dialog.folder.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name }),
+    });
+    if (res.ok) toast.success("Folder renamed");
+    else toast.error("Failed to rename folder");
+    setDialog(null);
+    refreshFolders();
+  }
+
+  async function handleDeleteFolder() {
+    if (!dialog || dialog.type !== "delete-folder") return;
+    const folderId = dialog.folderId;
+    if (activeFolderId === folderId) setActiveFolderId(null);
+    const res = await fetch(`/api/folders/${folderId}`, { method: "DELETE" });
+    if (res.ok) {
+      toast.success("Folder deleted");
+      refreshFolders();
+      refreshPresentations();
+    } else {
+      toast.error("Failed to delete folder");
+    }
+    setDialog(null);
+  }
+
+  async function handleMoveToFolder(folderId: string | null) {
+    if (!dialog || dialog.type !== "move") return;
+    const res = await fetch(`/api/presentations/${dialog.presentationId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ folderId }),
+    });
+    if (res.ok) toast.success("Presentation moved");
+    else toast.error("Failed to move presentation");
+    setDialog(null);
+    refreshPresentations();
   }
 
   async function handleDuplicate(id: string) {
@@ -164,6 +241,7 @@ export default function DashboardPage() {
 
   const filtered = presentations
     .filter((p) => {
+      if (activeFolderId !== null && p.folderId !== activeFolderId) return false;
       if (search && !p.title.toLowerCase().includes(search.toLowerCase())) return false;
       if (filterBy === "public" && !p.isPublic) return false;
       if (filterBy === "private" && p.isPublic) return false;
@@ -181,10 +259,25 @@ export default function DashboardPage() {
     });
 
   return (
-    <div>
+    <div className="flex flex-col gap-4 lg:flex-row lg:gap-6">
+      {/* Folder sidebar (desktop) / chips (mobile) */}
+      <div className="shrink-0 lg:w-52">
+        <FolderList
+          folders={folders}
+          activeFolderId={activeFolderId}
+          onSelect={setActiveFolderId}
+          onCreate={handleCreateFolder}
+          onRename={(f) => setDialog({ type: "rename-folder", folder: f })}
+          onDelete={(id) => setDialog({ type: "delete-folder", folderId: id })}
+        />
+      </div>
+
+      <div className="min-w-0 flex-1">
       <div className="mb-6 flex flex-col gap-3 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="font-display text-2xl tracking-tight sm:text-4xl">
-          {t.dashboard.title}
+          {activeFolderId
+            ? folders.find((f) => f.id === activeFolderId)?.name ?? t.dashboard.title
+            : t.dashboard.title}
         </h2>
         <div className="flex flex-wrap gap-2">
           <div className="relative flex-1 sm:w-48 sm:flex-initial">
@@ -278,6 +371,7 @@ export default function DashboardPage() {
               onTogglePublic={() => handleTogglePublic(p.id, p.isPublic)}
               onChangeTheme={() => setDialog({ type: "theme", id: p.id, current: p.theme })}
               onAnalytics={() => setDialog({ type: "analytics", id: p.id, title: p.title })}
+              onMove={() => setDialog({ type: "move", presentationId: p.id })}
               isStarred={starred.has(p.id)}
               onToggleStar={() => toggleStar(p.id)}
             />
@@ -319,6 +413,34 @@ export default function DashboardPage() {
         title={dialog?.type === "analytics" ? dialog.title : ""}
         onClose={() => setDialog(null)}
       />
+
+      <PromptDialog
+        open={dialog?.type === "rename-folder"}
+        title="Rename folder"
+        defaultValue={dialog?.type === "rename-folder" ? dialog.folder.name : ""}
+        placeholder="Folder name"
+        onSubmit={handleRenameFolder}
+        onCancel={() => setDialog(null)}
+      />
+
+      <ConfirmDialog
+        open={dialog?.type === "delete-folder"}
+        title="Delete folder"
+        message="Presentations inside will be moved to 'All presentations'."
+        confirmLabel="Delete"
+        destructive
+        onConfirm={handleDeleteFolder}
+        onCancel={() => setDialog(null)}
+      />
+
+      {dialog?.type === "move" && (
+        <MoveToFolderDialog
+          folders={folders}
+          onSelect={handleMoveToFolder}
+          onCancel={() => setDialog(null)}
+        />
+      )}
+      </div>
     </div>
   );
 }

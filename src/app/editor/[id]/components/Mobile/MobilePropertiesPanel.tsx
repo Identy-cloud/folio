@@ -14,7 +14,9 @@ import { LayerControls } from "../ElementPalette/LayerControls";
 import { LockToggle } from "../ElementPalette/LockToggle";
 import { DeleteButton } from "../ElementPalette/DeleteButton";
 import { EmbedProperties } from "../ElementPalette/EmbedProperties";
-import type { ImageElement, ArrowElement, DividerElement, EmbedElement } from "@/types/elements";
+import { LineProperties } from "../ElementPalette/LineProperties";
+import { TableProperties } from "../ElementPalette/TableProperties";
+import type { ImageElement, ArrowElement, DividerElement, EmbedElement, LineElement, TableElement } from "@/types/elements";
 
 export function MobilePropertiesPanel({ onClose }: { onClose: () => void }) {
   const activeSlide = useEditorStore((s) => s.getActiveSlide());
@@ -41,6 +43,8 @@ export function MobilePropertiesPanel({ onClose }: { onClose: () => void }) {
       {el.type === "arrow" && <ArrowProperties element={el as ArrowElement} />}
       {el.type === "divider" && <DividerProperties element={el as DividerElement} />}
       {el.type === "embed" && <EmbedProperties element={el as EmbedElement} />}
+      {el.type === "line" && <LineProperties element={el as LineElement} />}
+      {el.type === "table" && <TableProperties element={el as TableElement} />}
       <AnimationProperties element={el} />
       <AlignControls elementId={el.id} />
       <LayerControls elementId={el.id} />

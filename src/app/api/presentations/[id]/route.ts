@@ -36,6 +36,7 @@ const patchSchema = z.object({
   theme: z.enum(Object.keys(THEMES) as [string, ...string[]]).optional(),
   thumbnailUrl: z.string().url().optional(),
   password: z.string().max(100).nullable().optional(),
+  folderId: z.string().uuid().nullable().optional(),
 });
 
 export async function PATCH(
@@ -59,6 +60,7 @@ export async function PATCH(
   if (parsed.data.isPublic !== undefined) updates.isPublic = parsed.data.isPublic;
   if (parsed.data.theme !== undefined) updates.theme = parsed.data.theme;
   if (parsed.data.thumbnailUrl !== undefined) updates.thumbnailUrl = parsed.data.thumbnailUrl;
+  if (parsed.data.folderId !== undefined) updates.folderId = parsed.data.folderId;
   if (parsed.data.password !== undefined) {
     updates.password = parsed.data.password
       ? await hash(parsed.data.password, 10)

@@ -1,8 +1,9 @@
 "use client";
 
 import { memo, useRef, useEffect, useCallback } from "react";
-import type { Slide, SlideElement, TextElement } from "@/types/elements";
-import { ShapeRenderer, ArrowRenderer, DividerRenderer } from "@/components/elements";
+import type { Slide, SlideElement, TextElement, TableElement } from "@/types/elements";
+import { ShapeRenderer, ArrowRenderer, DividerRenderer, LineRenderer, TableRenderer } from "@/components/elements";
+import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/image-utils";
 
 const W = 1920;
 const H = 1080;
@@ -92,20 +93,31 @@ const PreviewElement = memo(function PreviewElement({ element }: { element: Slid
       {element.type === "shape" && <ShapeRenderer element={element} />}
       {element.type === "arrow" && <ArrowRenderer element={element} />}
       {element.type === "divider" && <DividerRenderer element={element} />}
+      {element.type === "line" && <LineRenderer element={element} />}
+      {element.type === "table" && <TableRenderer element={element as TableElement} />}
       {element.type === "image" && (
-        <img
-          src={element.src}
-          alt=""
-          draggable={false}
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: element.objectFit,
-            filter: element.filter || undefined,
-            borderRadius: element.borderRadius ?? 0,
-            transform: `${element.flipX ? "scaleX(-1)" : ""} ${element.flipY ? "scaleY(-1)" : ""}`.trim() || undefined,
-          }}
-        />
+        <div style={{
+          width: "100%",
+          height: "100%",
+          overflow: "hidden",
+          borderRadius: element.borderRadius ?? 0,
+          clipPath: (element.cropWidth ?? 1) < 1 || (element.cropHeight ?? 1) < 1 || (element.cropX ?? 0) > 0 || (element.cropY ?? 0) > 0
+            ? `inset(${(element.cropY ?? 0) * 100}% ${(1 - (element.cropX ?? 0) - (element.cropWidth ?? 1)) * 100}% ${(1 - (element.cropY ?? 0) - (element.cropHeight ?? 1)) * 100}% ${(element.cropX ?? 0) * 100}%)`
+            : undefined,
+        }}>
+          <img
+            src={getOptimizedImageUrl(element.src, IMAGE_PRESETS.thumbnail)}
+            alt=""
+            draggable={false}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: element.objectFit,
+              filter: element.filter || undefined,
+              transform: `${element.flipX ? "scaleX(-1)" : ""} ${element.flipY ? "scaleY(-1)" : ""}`.trim() || undefined,
+            }}
+          />
+        </div>
       )}
     </div>
   );

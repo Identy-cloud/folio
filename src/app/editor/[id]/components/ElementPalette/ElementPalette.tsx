@@ -4,7 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useEditorStore } from "@/store/editorStore";
 import { nanoid } from "nanoid";
-import { TextT, Rectangle, Circle, Triangle, Image as ImageIcon, ArrowRight, Minus, Diamond, Star, Pentagon, Hexagon, Code } from "@phosphor-icons/react";
+import { TextT, Rectangle, Circle, Triangle, Image as ImageIcon, ArrowRight, Minus, Diamond, Star, Pentagon, Hexagon, Code, LineSegment, GridNine } from "@phosphor-icons/react";
 import { useImageUpload } from "../../hooks/useImageUpload";
 import { PositionFields } from "./PositionFields";
 import { TextProperties } from "./TextProperties";
@@ -20,9 +20,11 @@ import { DeleteButton } from "./DeleteButton";
 import { MultiSelectControls } from "./MultiSelectControls";
 import { ShadowControls } from "./ShadowControls";
 import { EmbedProperties } from "./EmbedProperties";
+import { LineProperties } from "./LineProperties";
+import { TableProperties } from "./TableProperties";
 import { ColorPicker } from "@/components/editor/ColorPicker";
-import type { TextElement, ShapeElement, ArrowElement, DividerElement, ImageElement, EmbedElement, SlideElement } from "@/types/elements";
-import { textDefaults, shapeDefaults, arrowDefaults, dividerDefaults } from "@/lib/templates/element-defaults";
+import type { TextElement, ShapeElement, ArrowElement, DividerElement, ImageElement, EmbedElement, LineElement, TableElement, SlideElement } from "@/types/elements";
+import { textDefaults, shapeDefaults, arrowDefaults, dividerDefaults, lineDefaults, tableDefaults } from "@/lib/templates/element-defaults";
 import { THEMES } from "@/lib/templates/themes";
 import { TransitionPicker } from "../SlidePanel/TransitionPicker";
 import { useTranslation } from "@/lib/i18n/context";
@@ -81,6 +83,15 @@ export function ElementPalette() {
         <button onClick={() => add({ id: nanoid(), type: "divider", x: 100, y: 500, w: 600, h: 10, rotation: 0, opacity: 1, zIndex: zBase, locked: false, ...dividerDefaults(theme) } satisfies DividerElement)} className={btn}>
           <Minus size={16} weight="duotone" /> {t.editor.line}
         </button>
+        <button onClick={() => {
+          const x1 = 0; const y1 = 0; const x2 = 300; const y2 = 200;
+          add({ id: nanoid(), type: "line", x: 200, y: 300, w: 300, h: 200, rotation: 0, opacity: 1, zIndex: zBase, locked: false, x1, y1, x2, y2, ...lineDefaults(theme) } satisfies LineElement);
+        }} className={btn}>
+          <LineSegment size={16} weight="duotone" /> Connector
+        </button>
+        <button onClick={() => add({ id: nanoid(), type: "table", x: 200, y: 200, w: 600, h: 300, rotation: 0, opacity: 1, zIndex: zBase, locked: false, ...tableDefaults(theme) } satisfies TableElement)} className={btn}>
+          <GridNine size={16} weight="duotone" /> Table
+        </button>
         <button onClick={triggerUpload} disabled={uploading} className={`${btn} disabled:opacity-50`}>
           <ImageIcon size={16} weight="duotone" /> {uploading ? t.editor.uploading : t.editor.image}
         </button>
@@ -121,6 +132,8 @@ export function ElementPalette() {
           {selectedElement.type === "arrow" && <ArrowProperties element={selectedElement as ArrowElement} />}
           {selectedElement.type === "divider" && <DividerProperties element={selectedElement as DividerElement} />}
           {selectedElement.type === "embed" && <EmbedProperties element={selectedElement as EmbedElement} />}
+          {selectedElement.type === "line" && <LineProperties element={selectedElement as LineElement} />}
+          {selectedElement.type === "table" && <TableProperties element={selectedElement as TableElement} />}
           <ShadowControls element={selectedElement} />
           <AnimationProperties element={selectedElement} />
           <AlignControls elementId={selectedElement.id} />

@@ -2,7 +2,7 @@
 
 import { useState, useRef, useMemo, useCallback, useEffect } from "react";
 import DOMPurify from "dompurify";
-import type { SlideElement, TextElement, ShapeElement, SlideTransition } from "@/types/elements";
+import type { SlideElement, TextElement, ShapeElement, TableElement, SlideTransition } from "@/types/elements";
 import { getElementAnimationStyle } from "@/lib/element-animation";
 import { useTranslation } from "@/lib/i18n/context";
 
@@ -265,6 +265,7 @@ function MobileElement({ element, delay = 0, animate = true }: { element: SlideE
   const totalDelay = (element.animationDelay ?? 0) + delay;
   const animStyle = animate ? getElementAnimationStyle(element.animation, totalDelay, element.animationDuration, element.animationEasing) : {};
   if (element.type === "arrow") return null;
+  if (element.type === "line") return null;
 
   if (element.type === "shape") {
     return <div style={animStyle}><MobileShape element={element} /></div>;
@@ -279,8 +280,14 @@ function MobileElement({ element, delay = 0, animate = true }: { element: SlideE
   }
 
   if (element.type === "image") {
+    const hasCrop = (element.cropWidth ?? 1) < 1 || (element.cropHeight ?? 1) < 1 || (element.cropX ?? 0) > 0 || (element.cropY ?? 0) > 0;
     return (
-      <div style={animStyle}>
+      <div style={{
+        ...animStyle,
+        clipPath: hasCrop
+          ? `inset(${(element.cropY ?? 0) * 100}% ${(1 - (element.cropX ?? 0) - (element.cropWidth ?? 1)) * 100}% ${(1 - (element.cropY ?? 0) - (element.cropHeight ?? 1)) * 100}% ${(element.cropX ?? 0) * 100}%)`
+          : undefined,
+      }}>
         <img
           src={element.src}
           alt=""
@@ -299,6 +306,10 @@ function MobileElement({ element, delay = 0, animate = true }: { element: SlideE
 
   if (element.type === "text") {
     return <div style={animStyle}><MobileText element={element} /></div>;
+  }
+
+  if (element.type === "table") {
+    return <div style={animStyle} className="w-full overflow-x-auto"><MobileTable element={element} /></div>;
   }
 
   return null;
@@ -343,5 +354,39 @@ function MobileText({ element }: { element: TextElement }) {
       }}
       dangerouslySetInnerHTML={{ __html: sanitized }}
     />
+  );
+}
+
+function MobileTable({ element }: { element: TableElement }) {
+  return (
+    <table
+      style={{
+        width: "100%",
+        borderCollapse: "collapse",
+        fontSize: Math.min(element.fontSize, 14),
+      }}
+    >
+      <tbody>
+        {element.cells.map((row, ri) => (
+          <tr key={ri}>
+            {row.map((cell, ci) => (
+              <td
+                key={ci}
+                style={{
+                  border: `1px solid ${element.borderColor}`,
+                  padding: Math.min(element.cellPadding, 6),
+                  backgroundColor: element.headerRow && ri === 0 ? element.headerBgColor : "transparent",
+                  color: element.headerRow && ri === 0 ? "#ffffff" : "inherit",
+                  fontWeight: element.headerRow && ri === 0 ? 600 : 400,
+                  wordBreak: "break-word",
+                }}
+              >
+                {cell}
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
 }

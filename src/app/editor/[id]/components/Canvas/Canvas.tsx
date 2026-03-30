@@ -14,6 +14,8 @@ import { SnapGuides } from "./SnapGuides";
 import { RemoteCursors } from "./RemoteCursors";
 import { ContextMenu } from "./ContextMenu";
 import { QuickActions } from "./QuickActions";
+import { LineEndpointHandles } from "./LineEndpointHandles";
+import { CropOverlay } from "./CropOverlay";
 
 const DESKTOP_W = 1920;
 const DESKTOP_H = 1080;
@@ -50,6 +52,15 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
   const spaceDown = useRef(false);
   const [darkCanvas, setDarkCanvas] = useState(true);
   const [safeArea, setSafeArea] = useState(false);
+  const [cropElementId, setCropElementId] = useState<string | null>(null);
+
+  useEffect(() => {
+    function onCropImage(e: Event) {
+      setCropElementId((e as CustomEvent).detail as string);
+    }
+    window.addEventListener("folio:crop-image", onCropImage);
+    return () => window.removeEventListener("folio:crop-image", onCropImage);
+  }, []);
 
   useEffect(() => {
     function down(e: KeyboardEvent) { if (e.key === " " && !e.repeat) spaceDown.current = true; }
@@ -416,12 +427,31 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
           const els = isMobileMode && slide.mobileElements ? slide.mobileElements : slide.elements;
           const el = els.find((e) => e.id === id);
           if (!el) return null;
-          return <SelectionBox key={`sel-${id}`} element={el} scale={scale} />;
+          return el.type === "line"
+            ? <LineEndpointHandles key={`line-${id}`} element={el} scale={scale} />
+            : <SelectionBox key={`sel-${id}`} element={el} scale={scale} />;
         })}
         {!editingTextId && selectedIds.length === 1 && !rubberBand && (() => {
           const els = isMobileMode && slide.mobileElements ? slide.mobileElements : slide.elements;
           const sel = els.find((e) => e.id === selectedIds[0]);
           return sel ? <QuickActions element={sel} scale={scale} /> : null;
+        })()}
+        {cropElementId && (() => {
+          const els = isMobileMode && slide.mobileElements ? slide.mobileElements : slide.elements;
+          const cropEl = els.find((e) => e.id === cropElementId && e.type === "image");
+          if (!cropEl || cropEl.type !== "image") return null;
+          return (
+            <CropOverlay
+              element={cropEl}
+              scale={scale}
+              onApply={(crop) => {
+                useEditorStore.getState().updateElement(cropElementId, crop);
+                useEditorStore.getState().pushHistory();
+                setCropElementId(null);
+              }}
+              onCancel={() => setCropElementId(null)}
+            />
+          );
         })()}
         <RemoteCursors peers={peers} />
         {rubberBand && (

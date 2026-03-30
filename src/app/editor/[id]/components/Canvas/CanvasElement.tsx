@@ -1,12 +1,13 @@
 "use client";
 
-import { useRef, useState, memo, useMemo, useCallback } from "react";
-import DOMPurify from "dompurify";
+import { useRef, useState, memo, useCallback } from "react";
 import { nanoid } from "nanoid";
 import { Camera } from "@phosphor-icons/react";
 import { useEditorStore } from "@/store/editorStore";
 import type { SlideElement, TextElement } from "@/types/elements";
-import { ShapeRenderer, ArrowRenderer, DividerRenderer, EmbedRenderer } from "@/components/elements";
+import { ShapeRenderer, ArrowRenderer, DividerRenderer, EmbedRenderer, LineRenderer, TableRenderer } from "@/components/elements";
+import { TextRenderer } from "./TextRenderer";
+import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/image-utils";
 
 interface Props {
   element: SlideElement;
@@ -60,11 +61,11 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
       origY: element.y,
     };
 
-    if (element.type === "text" || element.type === "image") {
+    if (element.type === "text" || element.type === "image" || element.type === "table") {
       longPressRef.current = setTimeout(() => {
         longPressRef.current = null;
         dragRef.current = null;
-        if (element.type === "text") setEditing(true);
+        if (element.type === "text" || element.type === "table") setEditing(true);
         if (element.type === "image") {
           window.dispatchEvent(new CustomEvent("folio:replace-image", { detail: element.id }));
         }
@@ -105,17 +106,17 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
 
   function onDoubleClick() {
     if (isBusy) return;
-    if (element.type === "text") setEditing(true);
+    if (element.type === "text" || element.type === "table") setEditing(true);
     if (element.type === "image") {
       window.dispatchEvent(new CustomEvent("folio:replace-image", { detail: element.id }));
     }
   }
 
-  function handleBlur(e: React.FocusEvent<HTMLDivElement>) {
+  const handleTextExit = useCallback((html: string) => {
     setEditing(false);
-    updateElement(element.id, { content: e.currentTarget.innerText });
+    updateElement(element.id, { content: html });
     pushHistory();
-  }
+  }, [element.id, setEditing, updateElement, pushHistory]);
 
   return (
     <div
@@ -156,17 +157,28 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
         <TextRenderer
           element={element}
           editing={editing}
-          onBlur={handleBlur}
+          onExitEdit={handleTextExit}
         />
       )}
       {element.type === "shape" && <ShapeRenderer element={element} />}
       {element.type === "arrow" && <ArrowRenderer element={element} />}
       {element.type === "divider" && <DividerRenderer element={element} />}
       {element.type === "embed" && <EmbedRenderer element={element} />}
+      {element.type === "line" && <LineRenderer element={element} />}
+      {element.type === "table" && <TableRenderer element={element} editable={editing} />}
       {element.type === "image" && (
-        <div style={{ width: "100%", height: "100%", position: "relative", borderRadius: element.borderRadius ?? 0, overflow: "hidden" }}>
+        <div style={{
+          width: "100%",
+          height: "100%",
+          position: "relative",
+          borderRadius: element.borderRadius ?? 0,
+          overflow: "hidden",
+          clipPath: (element.cropWidth ?? 1) < 1 || (element.cropHeight ?? 1) < 1 || (element.cropX ?? 0) > 0 || (element.cropY ?? 0) > 0
+            ? `inset(${(element.cropY ?? 0) * 100}% ${(1 - (element.cropX ?? 0) - (element.cropWidth ?? 1)) * 100}% ${(1 - (element.cropY ?? 0) - (element.cropHeight ?? 1)) * 100}% ${(element.cropX ?? 0) * 100}%)`
+            : undefined,
+        }}>
           <img
-            src={element.src}
+            src={getOptimizedImageUrl(element.src, IMAGE_PRESETS.preview)}
             alt=""
             style={{
               width: "100%",
@@ -235,51 +247,3 @@ function BusyOverlay() {
   );
 }
 
-function TextRenderer({
-  element,
-  editing,
-  onBlur,
-}: {
-  element: TextElement;
-  editing: boolean;
-  onBlur: (e: React.FocusEvent<HTMLDivElement>) => void;
-}) {
-  const alignMap = { top: "flex-start", middle: "center", bottom: "flex-end" };
-  const sanitized = useMemo(
-    () => DOMPurify.sanitize(element.content),
-    [element.content]
-  );
-
-  return (
-    <div
-      contentEditable={editing}
-      suppressContentEditableWarning
-      onBlur={onBlur}
-      style={{
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        alignItems: alignMap[element.verticalAlign],
-        fontFamily: element.fontFamily,
-        fontSize: element.fontSize,
-        fontWeight: element.fontWeight,
-        fontStyle: element.fontStyle ?? "normal",
-        textDecoration: element.textDecoration ?? "none",
-        WebkitTextStroke: element.textStroke ? `${element.textStroke.width}px ${element.textStroke.color}` : undefined,
-        lineHeight: element.lineHeight,
-        letterSpacing: `${element.letterSpacing}em`,
-        color: element.color,
-        textAlign: element.textAlign,
-        cursor: editing ? "text" : "inherit",
-        outline: "none",
-        overflow: "hidden",
-        wordBreak: "break-word",
-      }}
-    >
-      <span
-        style={{ width: "100%", textAlign: element.textAlign }}
-        dangerouslySetInnerHTML={{ __html: sanitized }}
-      />
-    </div>
-  );
-}

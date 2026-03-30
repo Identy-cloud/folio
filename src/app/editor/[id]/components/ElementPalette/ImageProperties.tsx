@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Image as ImageIcon, FlipHorizontal, FlipVertical } from "@phosphor-icons/react";
+import { Image as ImageIcon, FlipHorizontal, FlipVertical, Crop } from "@phosphor-icons/react";
 import { useEditorStore } from "@/store/editorStore";
 import { useImageReplace } from "../../hooks/useImageReplace";
 import { useTranslation } from "@/lib/i18n/context";
@@ -62,6 +62,26 @@ export function ImageProperties({ element }: Props) {
         <ImageIcon size={14} weight="duotone" />
         {uploading ? t.editor.uploading : t.editor.changeImage}
       </button>
+
+      <div className="flex gap-1">
+        <button
+          onClick={() => window.dispatchEvent(new CustomEvent("folio:crop-image", { detail: element.id }))}
+          className="flex flex-1 items-center justify-center gap-1 rounded border border-neutral-700 px-3 py-2 text-xs text-neutral-300 hover:bg-neutral-800"
+        >
+          <Crop size={14} weight="duotone" /> Crop
+        </button>
+        {element.cropWidth !== undefined && element.cropWidth < 1 && (
+          <button
+            onClick={() => {
+              updateElement(element.id, { cropX: 0, cropY: 0, cropWidth: 1, cropHeight: 1 });
+              pushHistory();
+            }}
+            className="rounded border border-neutral-700 px-2 py-2 text-[10px] text-neutral-500 hover:bg-neutral-800 hover:text-neutral-300"
+          >
+            Reset
+          </button>
+        )}
+      </div>
 
       <div className="flex gap-1">
         {fits.map((f) => (

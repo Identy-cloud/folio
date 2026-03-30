@@ -2,9 +2,10 @@
 
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import DOMPurify from "dompurify";
-import type { SlideElement, TextElement, SlideTransition } from "@/types/elements";
+import type { SlideElement, TextElement, TableElement, SlideTransition } from "@/types/elements";
 import { getElementAnimationStyle } from "@/lib/element-animation";
-import { ShapeRenderer, ArrowRenderer, DividerRenderer, EmbedRenderer } from "@/components/elements";
+import { ShapeRenderer, ArrowRenderer, DividerRenderer, EmbedRenderer, LineRenderer, TableRenderer } from "@/components/elements";
+import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/image-utils";
 import { MobileViewer } from "./mobile-viewer";
 import { CommentsPanel } from "./comments-panel";
 
@@ -629,21 +630,32 @@ function ViewerElement({ element, delay, animate }: { element: SlideElement; del
       {element.type === "arrow" && <ArrowRenderer element={element} />}
       {element.type === "divider" && <DividerRenderer element={element} />}
       {element.type === "embed" && <EmbedRenderer element={element} />}
+      {element.type === "line" && <LineRenderer element={element} />}
+      {element.type === "table" && <TableRenderer element={element as TableElement} />}
       {element.type === "image" && (
-        <img
-          src={element.src}
-          alt=""
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: element.objectFit,
-            filter: element.filter || undefined,
-            borderRadius: element.borderRadius ?? 0,
-            transform: `${element.flipX ? "scaleX(-1)" : ""} ${element.flipY ? "scaleY(-1)" : ""}`.trim() || undefined,
-          }}
-          draggable={false}
-          loading="lazy"
-        />
+        <div style={{
+          width: "100%",
+          height: "100%",
+          overflow: "hidden",
+          borderRadius: element.borderRadius ?? 0,
+          clipPath: (element.cropWidth ?? 1) < 1 || (element.cropHeight ?? 1) < 1 || (element.cropX ?? 0) > 0 || (element.cropY ?? 0) > 0
+            ? `inset(${(element.cropY ?? 0) * 100}% ${(1 - (element.cropX ?? 0) - (element.cropWidth ?? 1)) * 100}% ${(1 - (element.cropY ?? 0) - (element.cropHeight ?? 1)) * 100}% ${(element.cropX ?? 0) * 100}%)`
+            : undefined,
+        }}>
+          <img
+            src={getOptimizedImageUrl(element.src, IMAGE_PRESETS.full)}
+            alt=""
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: element.objectFit,
+              filter: element.filter || undefined,
+              transform: `${element.flipX ? "scaleX(-1)" : ""} ${element.flipY ? "scaleY(-1)" : ""}`.trim() || undefined,
+            }}
+            draggable={false}
+            loading="lazy"
+          />
+        </div>
       )}
       </div>
       {element.linkUrl && (

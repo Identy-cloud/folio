@@ -1,14 +1,14 @@
 "use client";
 
 import { nanoid } from "nanoid";
-import { TextT, Rectangle, Circle, Triangle, Image as ImageIcon, Diamond, Star, ArrowRight, Minus } from "@phosphor-icons/react";
+import { TextT, Rectangle, Circle, Triangle, Image as ImageIcon, Diamond, Star, ArrowRight, Minus, LineSegment, GridNine } from "@phosphor-icons/react";
 import { useEditorStore } from "@/store/editorStore";
 import { textDefaults, shapeDefaults } from "@/lib/templates/element-defaults";
 import { THEMES } from "@/lib/templates/themes";
 import { useImageUpload } from "../../hooks/useImageUpload";
 import { useTranslation } from "@/lib/i18n/context";
-import type { TextElement, ShapeElement, ArrowElement, DividerElement } from "@/types/elements";
-import { arrowDefaults, dividerDefaults } from "@/lib/templates/element-defaults";
+import type { TextElement, ShapeElement, ArrowElement, DividerElement, LineElement, TableElement } from "@/types/elements";
+import { arrowDefaults, dividerDefaults, lineDefaults, tableDefaults } from "@/lib/templates/element-defaults";
 
 export function MobileInsertPanel({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
@@ -74,6 +74,18 @@ export function MobileInsertPanel({ onClose }: { onClose: () => void }) {
         onClose();
       }} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800">
         <Minus size={18} weight="duotone" /> Line
+      </button>
+      <button onClick={() => {
+        addElement({ id: nanoid(), type: "line", x: 200, y: 300, w: 300, h: 200, rotation: 0, opacity: 1, zIndex: (activeSlide?.elements.length ?? 0) + 1, locked: false, x1: 0, y1: 0, x2: 300, y2: 200, ...lineDefaults(theme) } satisfies LineElement);
+        onClose();
+      }} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800">
+        <LineSegment size={18} weight="duotone" /> Connector
+      </button>
+      <button onClick={() => {
+        addElement({ id: nanoid(), type: "table", x: 100, y: 200, w: 600, h: 300, rotation: 0, opacity: 1, zIndex: (activeSlide?.elements.length ?? 0) + 1, locked: false, ...tableDefaults(theme) } satisfies TableElement);
+        onClose();
+      }} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800">
+        <GridNine size={18} weight="duotone" /> Table
       </button>
       <button onClick={() => { triggerUpload(); onClose(); }} disabled={uploading} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800 disabled:opacity-50">
         <ImageIcon size={18} weight="duotone" /> {uploading ? t.editor.uploading : t.editor.image}

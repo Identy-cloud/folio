@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useEditorStore } from "@/store/editorStore";
-import { Stack, Eye, EyeSlash, LockSimple, LockSimpleOpen, TextT, Image as ImageIcon, Rectangle, ArrowRight, Minus, MagnifyingGlass } from "@phosphor-icons/react";
+import { Stack, Eye, EyeSlash, LockSimple, LockSimpleOpen, TextT, Image as ImageIcon, Rectangle, ArrowRight, Minus, MagnifyingGlass, LineSegment } from "@phosphor-icons/react";
 
 const TYPE_ICONS: Record<string, typeof TextT> = {
   text: TextT,
@@ -10,6 +10,7 @@ const TYPE_ICONS: Record<string, typeof TextT> = {
   shape: Rectangle,
   arrow: ArrowRight,
   divider: Minus,
+  line: LineSegment,
 };
 
 function truncate(s: string, max: number) {

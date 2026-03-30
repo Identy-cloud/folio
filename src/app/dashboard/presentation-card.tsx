@@ -31,6 +31,7 @@ interface Props {
   onTogglePublic: () => void;
   onChangeTheme: () => void;
   onAnalytics: () => void;
+  onMove?: () => void;
   isStarred?: boolean;
   onToggleStar?: () => void;
 }
@@ -43,6 +44,7 @@ export function PresentationCard({
   onTogglePublic,
   onChangeTheme,
   onAnalytics,
+  onMove,
   isStarred,
   onToggleStar,
 }: Props) {
@@ -107,6 +109,7 @@ export function PresentationCard({
               <MenuItem label={t.dashboard.duplicate} onClick={() => { setMenuOpen(false); onDuplicate(); }} />
               <MenuItem label={t.dashboard.changeTheme} onClick={() => { setMenuOpen(false); onChangeTheme(); }} />
               <MenuItem label="Analytics" onClick={() => { setMenuOpen(false); onAnalytics(); }} />
+              {onMove && <MenuItem label="Move to folder" onClick={() => { setMenuOpen(false); onMove(); }} />}
               <MenuItem
                 label={presentation.isPublic ? t.dashboard.makePrivate : t.dashboard.makePublic}
                 onClick={() => { setMenuOpen(false); onTogglePublic(); }}

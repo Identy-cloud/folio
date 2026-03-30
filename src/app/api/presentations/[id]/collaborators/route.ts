@@ -2,6 +2,7 @@ import { db } from "@/db";
 import { presentations, collaborators, users } from "@/db/schema";
 import { getAuthenticatedUser } from "@/lib/auth";
 import { getPlanLimits } from "@/lib/plan-limits";
+import { getUserPlan } from "@/lib/stripe";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 import type { NextRequest } from "next/server";
@@ -44,7 +45,7 @@ export async function GET(
     .innerJoin(users, eq(collaborators.userId, users.id))
     .where(eq(collaborators.presentationId, id));
 
-  const limits = getPlanLimits(user.plan);
+  const limits = getPlanLimits(await getUserPlan(user.id));
 
   return Response.json({
     collaborators: rows,
@@ -73,7 +74,7 @@ export async function POST(
     return Response.json({ error: "Not found" }, { status: 404 });
   }
 
-  const limits = getPlanLimits(user.plan);
+  const limits = getPlanLimits(await getUserPlan(user.id));
   if (!limits.canCollaborate) {
     return Response.json(
       { error: "Your plan does not support collaboration. Upgrade to Studio or Agency." },

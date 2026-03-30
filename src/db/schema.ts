@@ -22,11 +22,27 @@ export const users = pgTable("users", {
     .notNull(),
 });
 
+export const folders = pgTable("folders", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id")
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull(),
+  name: text("name").notNull(),
+  parentId: uuid("parent_id"),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+}, (table) => [
+  index("folders_user_id_idx").on(table.userId),
+]);
+
 export const presentations = pgTable("presentations", {
   id: uuid("id").primaryKey().defaultRandom(),
   userId: uuid("user_id")
     .references(() => users.id, { onDelete: "cascade" })
     .notNull(),
+  folderId: uuid("folder_id")
+    .references(() => folders.id, { onDelete: "set null" }),
   title: text("title").default("Sin título").notNull(),
   slug: text("slug").unique().notNull(),
   theme: text("theme").default("editorial-blue").notNull(),
