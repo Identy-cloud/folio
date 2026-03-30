@@ -11,15 +11,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .from(presentations)
     .where(eq(presentations.isPublic, true));
 
-  return [
+  const staticPages: MetadataRoute.Sitemap = [
     { url, lastModified: new Date(), changeFrequency: "monthly", priority: 1 },
-    { url: `${url}/pricing`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
+    { url: `${url}/pricing`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
     { url: `${url}/login`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.5 },
-    ...publicPresentations.map((p) => ({
-      url: `${url}/p/${p.slug}`,
-      lastModified: p.updatedAt,
-      changeFrequency: "weekly" as const,
-      priority: 0.8,
-    })),
+    { url: `${url}/terms`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.3 },
+    { url: `${url}/privacy`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.3 },
+    { url: `${url}/cookies`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.2 },
+    { url: `${url}/accessibility`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.2 },
+    { url: `${url}/dmca`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.2 },
   ];
+
+  const presentationPages: MetadataRoute.Sitemap = publicPresentations.map((p) => ({
+    url: `${url}/p/${p.slug}`,
+    lastModified: p.updatedAt,
+    changeFrequency: "weekly" as const,
+    priority: 0.8,
+  }));
+
+  return [...staticPages, ...presentationPages];
 }

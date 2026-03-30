@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { SlidePanel } from "./SlidePanel/SlidePanel";
 import { Canvas } from "./Canvas/Canvas";
 import { Toolbar } from "./Toolbar/Toolbar";
@@ -22,31 +23,32 @@ import { HistoryPanel } from "./HistoryPanel";
 import { VersionHistory } from "./VersionHistory";
 import { LayerPanel } from "./LayerPanel";
 import { SlideNotes } from "./SlideNotes";
-import { FindReplace } from "./FindReplace";
-import { SlideSorter } from "./SlideSorter";
-import { ThemeCustomizer } from "./ThemeCustomizer";
-import { EditorComments } from "./EditorComments";
-import { CollaboratorsPanel } from "./CollaboratorsPanel";
-import { CommandPalette } from "./CommandPalette";
-import { UnsplashPicker } from "./UnsplashPicker";
-import { LayoutPicker } from "./LayoutPicker";
-import { AnimationTimeline } from "./AnimationTimeline";
-import { SlideLibrary } from "./SlideLibrary";
-import { AIGenerateDialog } from "@/components/editor/AIGenerateDialog";
-import { AIGeneratePresentationDialog } from "@/components/editor/AIGeneratePresentationDialog";
-import { TranslateDialog } from "@/components/editor/TranslateDialog";
-import { AIImageDialog } from "@/components/editor/AIImageDialog";
-import { ImportSlideModal } from "./ImportSlideModal";
-import { UpgradeModal } from "@/components/UpgradeModal";
 import { usePlanLimits } from "@/hooks/usePlanLimits";
 import { requiredPlanFor } from "@/lib/plan-limits";
 import { ClockCounterClockwise, Stack, NotePencil, ChatCircleDots } from "@phosphor-icons/react";
-import { ChatPanel } from "./ChatPanel";
 import { useChat } from "../hooks/useChat";
 import { MobileSlidePanel } from "./Mobile/MobileSlidePanel";
 import { MobileInsertPanel } from "./Mobile/MobileInsertPanel";
 import { MobilePropertiesPanel } from "./Mobile/MobilePropertiesPanel";
 import { useTranslation } from "@/lib/i18n/context";
+
+const CommandPalette = dynamic(() => import("./CommandPalette").then((m) => m.CommandPalette), { ssr: false });
+const UnsplashPicker = dynamic(() => import("./UnsplashPicker").then((m) => m.UnsplashPicker), { ssr: false });
+const ThemeCustomizer = dynamic(() => import("./ThemeCustomizer").then((m) => m.ThemeCustomizer), { ssr: false });
+const FindReplace = dynamic(() => import("./FindReplace").then((m) => m.FindReplace), { ssr: false });
+const SlideSorter = dynamic(() => import("./SlideSorter").then((m) => m.SlideSorter), { ssr: false });
+const EditorComments = dynamic(() => import("./EditorComments").then((m) => m.EditorComments), { ssr: false });
+const CollaboratorsPanel = dynamic(() => import("./CollaboratorsPanel").then((m) => m.CollaboratorsPanel), { ssr: false });
+const LayoutPicker = dynamic(() => import("./LayoutPicker").then((m) => m.LayoutPicker), { ssr: false });
+const AnimationTimeline = dynamic(() => import("./AnimationTimeline").then((m) => m.AnimationTimeline), { ssr: false });
+const SlideLibrary = dynamic(() => import("./SlideLibrary").then((m) => m.SlideLibrary), { ssr: false });
+const AIGenerateDialog = dynamic(() => import("@/components/editor/AIGenerateDialog").then((m) => m.AIGenerateDialog), { ssr: false });
+const AIGeneratePresentationDialog = dynamic(() => import("@/components/editor/AIGeneratePresentationDialog").then((m) => m.AIGeneratePresentationDialog), { ssr: false });
+const TranslateDialog = dynamic(() => import("@/components/editor/TranslateDialog").then((m) => m.TranslateDialog), { ssr: false });
+const AIImageDialog = dynamic(() => import("@/components/editor/AIImageDialog").then((m) => m.AIImageDialog), { ssr: false });
+const ImportSlideModal = dynamic(() => import("./ImportSlideModal").then((m) => m.ImportSlideModal), { ssr: false });
+const UpgradeModal = dynamic(() => import("@/components/UpgradeModal").then((m) => m.UpgradeModal), { ssr: false });
+const ChatPanel = dynamic(() => import("./ChatPanel").then((m) => m.ChatPanel), { ssr: false });
 
 export function EditorLayout() {
   const { t } = useTranslation();

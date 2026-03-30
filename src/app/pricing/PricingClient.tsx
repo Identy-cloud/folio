@@ -1,0 +1,147 @@
+"use client";
+
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { Notebook } from "@phosphor-icons/react";
+import { useTranslation } from "@/lib/i18n/context";
+import { LocaleSelector } from "@/components/LocaleSelector";
+import { PricingTierCard } from "./PricingTierCard";
+
+function useTiers(p: ReturnType<typeof useTranslation>["t"]["pricing"]) {
+  return [
+    {
+      name: p.freeName, monthly: 0, annual: 0, description: p.freeDesc,
+      features: [
+        { text: p.freeF1, included: true }, { text: p.freeF2, included: true },
+        { text: p.freeF3, included: true }, { text: p.freeF4, included: false },
+        { text: p.freeF5, included: false }, { text: p.freeF6, included: false },
+      ],
+      cta: p.freeCta, plan: null as string | null, highlighted: false,
+    },
+    {
+      name: p.creatorName, monthly: 19, annual: 15, description: p.creatorDesc,
+      features: [
+        { text: p.creatorF1, included: true }, { text: p.creatorF2, included: true },
+        { text: p.creatorF3, included: true }, { text: p.creatorF4, included: true },
+        { text: p.creatorF5, included: true }, { text: p.creatorF6, included: true },
+        { text: p.creatorF7, included: false }, { text: p.creatorF8, included: false },
+      ],
+      cta: p.creatorCta, plan: "creator" as string | null, highlighted: false,
+    },
+    {
+      name: p.studioName, monthly: 49, annual: 39, description: p.studioDesc,
+      features: [
+        { text: p.studioF1, included: true }, { text: p.studioF2, included: true },
+        { text: p.studioF3, included: true }, { text: p.studioF4, included: true },
+        { text: p.studioF5, included: true }, { text: p.studioF6, included: true },
+      ],
+      cta: p.studioCta, plan: "studio" as string | null, highlighted: true,
+    },
+    {
+      name: p.agencyName, monthly: 149, annual: 119, description: p.agencyDesc,
+      features: [
+        { text: p.agencyF1, included: true }, { text: p.agencyF2, included: true },
+        { text: p.agencyF3, included: true }, { text: p.agencyF4, included: true },
+        { text: p.agencyF5, included: true }, { text: p.agencyF6, included: true },
+      ],
+      cta: p.agencyCta, plan: "agency" as string | null, highlighted: false,
+    },
+  ];
+}
+
+export function PricingClient() {
+  const router = useRouter();
+  const { t } = useTranslation();
+  const p = t.pricing;
+  const tiers = useTiers(p);
+  const [annual, setAnnual] = useState(false);
+  const [loading, setLoading] = useState<string | null>(null);
+  const [currentPlan, setCurrentPlan] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch("/api/profile")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d: { plan?: string } | null) => { if (d?.plan) setCurrentPlan(d.plan); })
+      .catch(() => {});
+  }, []);
+
+  async function handleCheckout(plan: string) {
+    setLoading(plan);
+    try {
+      const res = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan, period: annual ? "annual" : "monthly" }),
+      });
+      const data: { url?: string } = await res.json();
+      if (data.url) window.location.href = data.url;
+      else if (res.status === 401) router.push("/login");
+    } catch {
+      setLoading(null);
+    }
+  }
+
+  return (
+    <div className="flex min-h-screen flex-col bg-[#161616] text-white">
+      <header className="flex items-center justify-between px-4 py-6 sm:px-8">
+        <Link href="/" className="flex items-center gap-1.5 font-display text-xl tracking-tight sm:text-2xl"><Notebook size={22} weight="duotone" />FOLIO</Link>
+        <div className="flex items-center gap-4">
+          <LocaleSelector />
+          <Link href="/" className="text-xs tracking-[0.25em] text-neutral-400 uppercase hover:text-white transition-colors">{p.back}</Link>
+        </div>
+      </header>
+
+      <main className="flex flex-1 flex-col items-center px-4 py-8 sm:px-6 lg:py-16">
+        <p className="text-[10px] tracking-[0.5em] text-neutral-500 uppercase">{p.label}</p>
+        <h1 className="mt-4 font-display text-3xl tracking-tight sm:text-5xl lg:text-7xl">{p.heading}</h1>
+        <p className="mt-4 max-w-lg text-center text-sm leading-relaxed text-neutral-400">{p.description}</p>
+
+        <div className="mt-8 flex items-center gap-3">
+          <span className={`text-xs ${!annual ? "text-white" : "text-neutral-500"}`}>{p.monthly}</span>
+          <button
+            onClick={() => setAnnual(!annual)}
+            role="switch"
+            aria-checked={annual}
+            className={`relative h-6 w-11 rounded-full transition-colors ${annual ? "bg-green-600" : "bg-neutral-700"}`}
+          >
+            <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-transform ${annual ? "left-[22px]" : "left-0.5"}`} />
+          </button>
+          <span className={`text-xs ${annual ? "text-white" : "text-neutral-500"}`}>{p.annual} <span className="text-green-500">{p.discount}</span></span>
+        </div>
+
+        <div className="mt-12 grid w-full max-w-6xl grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {tiers.map((tier) => {
+            const price = annual ? tier.annual : tier.monthly;
+            const isCurrent = currentPlan === (tier.plan ?? "free");
+            return (
+              <PricingTierCard
+                key={tier.name}
+                name={tier.name}
+                price={price}
+                annualTotal={annual ? price * 12 : null}
+                description={tier.description}
+                features={tier.features}
+                cta={tier.cta}
+                plan={tier.plan}
+                highlighted={tier.highlighted}
+                isCurrent={isCurrent}
+                loading={loading}
+                currentPlanLabel={p.currentPlan}
+                popularLabel={p.popular}
+                perMonthLabel={p.perMonth}
+                perYearLabel={p.perYear}
+                onCheckout={handleCheckout}
+              />
+            );
+          })}
+        </div>
+        <p className="mt-10 text-xs text-neutral-600">{p.allPricesNote}</p>
+      </main>
+
+      <footer className="flex items-center justify-center py-8">
+        <p className="text-[10px] tracking-[0.3em] text-neutral-600 uppercase">{t.landing.footer}</p>
+      </footer>
+    </div>
+  );
+}

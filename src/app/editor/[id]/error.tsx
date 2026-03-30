@@ -5,7 +5,7 @@ import Link from "next/link";
 import * as Sentry from "@sentry/nextjs";
 import { FolioLogo } from "@/components/FolioLogo";
 
-export default function GlobalError({
+export default function EditorError({
   error,
   reset,
 }: {
@@ -20,13 +20,13 @@ export default function GlobalError({
     <div className="flex min-h-screen flex-col items-center justify-center bg-[#161616] px-4 text-center">
       <FolioLogo size={28} className="text-2xl text-white/20" />
       <p className="mt-6 text-[10px] tracking-[0.5em] text-neutral-600 uppercase">
-        Error
+        Editor error
       </p>
-      <h1 className="mt-4 font-display text-5xl tracking-tight text-white sm:text-8xl">
-        SOMETHING WENT WRONG
+      <h1 className="mt-4 font-display text-4xl tracking-tight text-white sm:text-6xl">
+        COULDN&apos;T LOAD EDITOR
       </h1>
       <p className="mt-4 max-w-md text-sm leading-relaxed text-neutral-400">
-        An unexpected error occurred. Try again or return to the dashboard.
+        The editor encountered an error. Your work has been saved automatically.
       </p>
       {process.env.NODE_ENV === "development" && error?.message && (
         <pre className="mt-4 max-w-lg overflow-auto rounded bg-red-950/30 px-4 py-2 text-left font-mono text-xs text-red-400">
@@ -49,7 +49,7 @@ export default function GlobalError({
           href="/dashboard"
           className="border border-neutral-700 px-6 py-2.5 text-xs tracking-[0.2em] text-neutral-300 uppercase transition-colors hover:border-white hover:text-white"
         >
-          Dashboard
+          Return to dashboard
         </Link>
       </div>
     </div>

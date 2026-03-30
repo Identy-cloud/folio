@@ -10,6 +10,9 @@ import { NotificationBell } from "@/components/NotificationBell";
 import { UpgradeButton } from "@/components/UpgradeButton";
 import { WorkspaceSwitcherWrapper } from "./workspace-switcher-wrapper";
 import { WorkspaceProvider } from "./workspace-context";
+import { db } from "@/db";
+import { users } from "@/db/schema";
+import { eq } from "drizzle-orm";
 
 export default async function DashboardLayout({
   children,
@@ -22,6 +25,12 @@ export default async function DashboardLayout({
   } = await supabase.auth.getUser();
 
   if (!user) redirect("/login");
+
+  const [dbUser] = await db
+    .select({ username: users.username })
+    .from(users)
+    .where(eq(users.id, user.id))
+    .limit(1);
 
   const initials = (user.user_metadata?.full_name ?? user.email ?? "U")
     .split(" ")
@@ -59,6 +68,14 @@ export default async function DashboardLayout({
               </div>
             )}
           </Link>
+          {dbUser?.username && (
+            <Link
+              href={`/u/${dbUser.username}`}
+              className="hidden text-[10px] tracking-[0.15em] text-neutral-500 uppercase hover:text-white transition-colors sm:block"
+            >
+              Portfolio
+            </Link>
+          )}
           <UpgradeButton />
           <NotificationBell />
           <LocaleSelector />

@@ -2,6 +2,7 @@ import { db } from "@/db";
 import { presentationViews, presentations } from "@/db/schema";
 import { getAuthenticatedUser } from "@/lib/auth";
 import { checkRateLimit, rateLimitResponse } from "@/lib/rate-limit";
+import { checkViewMilestone } from "@/lib/view-milestones";
 import { eq, and, desc, count, sql, gte } from "drizzle-orm";
 import { z } from "zod";
 import type { NextRequest } from "next/server";
@@ -47,6 +48,8 @@ export async function POST(request: NextRequest) {
     viewerIp: anonymizeIp(ip),
     userAgent: request.headers.get("user-agent")?.slice(0, 512) ?? null,
   });
+
+  checkViewMilestone(presentationId).catch(() => {});
 
   return Response.json({ ok: true }, { status: 201 });
 }

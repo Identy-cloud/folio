@@ -1,5 +1,6 @@
 import { db } from "@/db";
-import { presentations } from "@/db/schema";
+import { presentations, users } from "@/db/schema";
+import { sendScheduledPublishConfirmation } from "@/lib/email";
 import { and, eq, lte, isNotNull } from "drizzle-orm";
 import type { NextRequest } from "next/server";
 
@@ -14,7 +15,12 @@ export async function GET(request: NextRequest) {
   const now = new Date();
 
   const due = await db
-    .select({ id: presentations.id })
+    .select({
+      id: presentations.id,
+      title: presentations.title,
+      slug: presentations.slug,
+      userId: presentations.userId,
+    })
     .from(presentations)
     .where(
       and(
@@ -36,7 +42,27 @@ export async function GET(request: NextRequest) {
       })
       .where(eq(presentations.id, row.id));
     published++;
+
+    notifyPublishOwner(row.userId, row.title ?? "Untitled", row.slug);
   }
 
   return Response.json({ ok: true, published });
+}
+
+function notifyPublishOwner(userId: string, title: string, slug: string) {
+  db.select({ email: users.email, name: users.name, emailDigest: users.emailDigest })
+    .from(users)
+    .where(eq(users.id, userId))
+    .limit(1)
+    .then(([owner]) => {
+      if (owner?.email && owner.emailDigest) {
+        sendScheduledPublishConfirmation(
+          owner.email,
+          owner.name ?? "",
+          title,
+          slug
+        ).catch(() => {});
+      }
+    })
+    .catch(() => {});
 }

@@ -1,7 +1,7 @@
 import { db } from "@/db";
 import { users, presentations, presentationViews } from "@/db/schema";
 import { sendAnalyticsDigest } from "@/lib/email";
-import type { AnalyticsDigestData } from "@/lib/email-templates";
+import type { AnalyticsDigestData } from "@/lib/email-templates-digest";
 import { eq, and, gte, sql, inArray, count } from "drizzle-orm";
 import type { NextRequest } from "next/server";
 

@@ -88,8 +88,25 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Folio — Editorial Slides",
-  description: "Presentaciones con estética editorial de agencia",
+  title: {
+    default: "Folio — Editorial Slides",
+    template: "%s | Folio",
+  },
+  description: "Create stunning editorial-style presentations. Beautiful typography, agency-grade aesthetics, real-time collaboration, and public sharing.",
+  keywords: ["presentations", "slides", "editorial", "design", "agency", "collaboration", "templates", "portfolio"],
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"),
+  openGraph: {
+    type: "website",
+    siteName: "Folio",
+    title: "Folio — Editorial Slides",
+    description: "Create stunning editorial-style presentations. Beautiful typography, agency-grade aesthetics, real-time collaboration.",
+    locale: "es_ES",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Folio — Editorial Slides",
+    description: "Create stunning editorial-style presentations with agency-grade aesthetics.",
+  },
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,

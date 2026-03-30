@@ -2,11 +2,17 @@ import { Resend } from "resend";
 import {
   collaboratorInviteHtml,
   commentNotificationHtml,
+  commentReplyHtml,
+  viewMilestoneHtml,
+  scheduledPublishHtml,
   welcomeHtml,
   passwordResetHtml,
-  analyticsDigestTemplate,
 } from "./email-templates";
-import type { AnalyticsDigestData } from "./email-templates";
+import {
+  analyticsDigestTemplate,
+  collabDigestHtml,
+} from "./email-templates-digest";
+import type { AnalyticsDigestData, CollabDigestEntry } from "./email-templates-digest";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const EMAIL_FROM = process.env.EMAIL_FROM ?? "noreply@identy.cloud";
@@ -73,5 +79,57 @@ export function sendAnalyticsDigest(to: string, data: AnalyticsDigestData) {
     to,
     subject: `Your week in review: ${data.totalViews.toLocaleString()} views`,
     html: analyticsDigestTemplate(data),
+  });
+}
+
+export function sendCommentReply(
+  to: string,
+  replierName: string,
+  presentationTitle: string,
+  link: string
+) {
+  return sendEmail({
+    to,
+    subject: `${replierName} replied to your comment on "${presentationTitle}"`,
+    html: commentReplyHtml(replierName, presentationTitle, link),
+  });
+}
+
+export function sendViewMilestone(
+  to: string,
+  userName: string,
+  presentationTitle: string,
+  milestone: number,
+  link: string
+) {
+  return sendEmail({
+    to,
+    subject: `Your presentation "${presentationTitle}" just hit ${milestone.toLocaleString()} views!`,
+    html: viewMilestoneHtml(userName, presentationTitle, milestone, link),
+  });
+}
+
+export function sendCollabDigest(
+  to: string,
+  userName: string,
+  entries: CollabDigestEntry[]
+) {
+  return sendEmail({
+    to,
+    subject: `${entries.length} presentation${entries.length === 1 ? "" : "s"} edited by collaborators yesterday`,
+    html: collabDigestHtml(userName, entries),
+  });
+}
+
+export function sendScheduledPublishConfirmation(
+  to: string,
+  userName: string,
+  presentationTitle: string,
+  slug: string
+) {
+  return sendEmail({
+    to,
+    subject: `Your presentation "${presentationTitle}" is now live!`,
+    html: scheduledPublishHtml(userName, presentationTitle, slug),
   });
 }
