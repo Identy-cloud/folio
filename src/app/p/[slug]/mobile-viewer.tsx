@@ -297,7 +297,7 @@ export function MobileViewer({ title, slides, showWatermark, presentationId, for
               willChange: pinch.isZoomed ? "transform" : "auto",
             }}
           >
-            <MobileSlideContent animateKey={animating ? -1 : current} elements={inElements} bg={mobileBg(activeSlide)} onSlideJump={jumpToSlide} />
+            <MobileSlideContent animateKey={current} baseDelay={animating ? transMs : 0} elements={inElements} bg={mobileBg(activeSlide)} onSlideJump={jumpToSlide} />
           </div>
         </div>
         {/* Back button after non-linear jump */}
@@ -422,7 +422,7 @@ export function MobileViewer({ title, slides, showWatermark, presentationId, for
   );
 }
 
-function MobileSlideContent({ elements, bg, animateKey, onSlideJump }: { elements: SlideElement[]; bg: string; animateKey?: number; onSlideJump?: (index: number) => void }) {
+function MobileSlideContent({ elements, bg, animateKey, baseDelay = 0, onSlideJump }: { elements: SlideElement[]; bg: string; animateKey?: number; baseDelay?: number; onSlideJump?: (index: number) => void }) {
   const sorted = useMemo(() => {
     const titles: SlideElement[] = [];
     const images: SlideElement[] = [];
@@ -455,7 +455,7 @@ function MobileSlideContent({ elements, bg, animateKey, onSlideJump }: { element
         <MobileElement
           key={shouldAnimate ? `${el.id}-${animateKey}` : el.id}
           element={el}
-          delay={shouldAnimate ? i * 80 : 0}
+          delay={shouldAnimate ? baseDelay + i * 80 : 0}
           animate={shouldAnimate}
           onSlideJump={onSlideJump}
         />

@@ -463,7 +463,8 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
         slide={incoming ?? outgoing}
         scale={scale}
         transitionStyle={transitioning ? getTransitionStyles("in") : undefined}
-        animateKey={transitioning ? -1 : current}
+        animateKey={current}
+        baseDelay={transitioning ? transMs : 0}
         onSlideJump={jumpToSlide}
       />
 
@@ -727,12 +728,14 @@ function SlideLayer({
   scale,
   transitionStyle,
   animateKey,
+  baseDelay = 0,
   onSlideJump,
 }: {
   slide: Slide;
   scale: number;
   transitionStyle?: React.CSSProperties;
   animateKey?: number;
+  baseDelay?: number;
   onSlideJump?: (index: number) => void;
 }) {
   const sorted = useMemo(
@@ -758,7 +761,7 @@ function SlideLayer({
         <ViewerElement
           key={shouldAnimate ? `${el.id}-${animateKey}` : el.id}
           element={el}
-          delay={shouldAnimate ? i * 80 : 0}
+          delay={shouldAnimate ? baseDelay + i * 80 : 0}
           animate={shouldAnimate}
           onSlideJump={onSlideJump}
         />

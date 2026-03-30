@@ -11,6 +11,18 @@ const KEYFRAME_MAP: Record<Exclude<ElementAnimation, "none">, string> = {
   "bounce-in": "el-bounce-in",
 };
 
+/** Initial transform that matches the `from` keyframe so there is no visual jump. */
+const INITIAL_TRANSFORM: Record<Exclude<ElementAnimation, "none">, string | undefined> = {
+  "fade-up": "translateY(24px)",
+  "fade-down": "translateY(-24px)",
+  "fade-left": "translateX(24px)",
+  "fade-right": "translateX(-24px)",
+  "zoom-in": "scale(0.85)",
+  "zoom-out": "scale(1.25)",
+  "rotate-in": "rotate(-15deg) scale(0.9)",
+  "bounce-in": "scale(0.3)",
+};
+
 const EASING_MAP: Record<string, string> = {
   ease: "cubic-bezier(0.22,1,0.36,1)",
   "ease-in": "cubic-bezier(0.55,0.055,0.675,0.19)",
@@ -32,6 +44,7 @@ export function getElementAnimationStyle(
   const ease = EASING_MAP[easing ?? "ease"] ?? EASING_MAP.ease;
   return {
     opacity: 0,
+    transform: INITIAL_TRANSFORM[type],
     animation: `${keyframe} ${dur}s ${ease} ${delay}ms forwards`,
   };
 }
