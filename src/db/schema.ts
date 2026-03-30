@@ -20,6 +20,7 @@ export const users = pgTable("users", {
   avatarUrl: text("avatar_url"),
   plan: text("plan").default("free").notNull(),
   storageUsed: bigint("storage_used", { mode: "number" }).default(0).notNull(),
+  socialLinks: jsonb("social_links").$type<{ twitter?: string; linkedin?: string; github?: string; website?: string }>().default({}).notNull(),
   emailDigest: boolean("email_digest").default(true).notNull(),
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()

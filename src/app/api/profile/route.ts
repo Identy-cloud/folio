@@ -25,6 +25,7 @@ export async function GET() {
     avatarUrl: user.avatarUrl,
     plan: await getUserPlan(user.id),
     storageUsed: user.storageUsed ?? 0,
+    socialLinks: user.socialLinks ?? {},
     emailDigest: user.emailDigest,
     createdAt: user.createdAt,
     presentationCount: stats?.total ?? 0,
@@ -45,6 +46,12 @@ const patchSchema = z.object({
   bio: z.string().max(300).optional().nullable(),
   avatarUrl: z.string().url().max(2048).nullable().optional(),
   emailDigest: z.boolean().optional(),
+  socialLinks: z.object({
+    twitter: z.string().max(200).optional(),
+    linkedin: z.string().max(200).optional(),
+    github: z.string().max(200).optional(),
+    website: z.string().max(200).optional(),
+  }).optional(),
 });
 
 export async function PATCH(request: Request) {
@@ -64,6 +71,7 @@ export async function PATCH(request: Request) {
   if (parsed.data.avatarUrl !== undefined) updates.avatarUrl = parsed.data.avatarUrl;
   if (parsed.data.emailDigest !== undefined) updates.emailDigest = parsed.data.emailDigest;
   if (parsed.data.bio !== undefined) updates.bio = parsed.data.bio;
+  if (parsed.data.socialLinks !== undefined) updates.socialLinks = parsed.data.socialLinks;
 
   if (parsed.data.username !== undefined) {
     if (parsed.data.username !== null) {
@@ -99,5 +107,6 @@ export async function PATCH(request: Request) {
     username: updated.username,
     bio: updated.bio,
     avatarUrl: updated.avatarUrl,
+    socialLinks: updated.socialLinks,
   });
 }

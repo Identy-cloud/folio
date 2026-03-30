@@ -4,6 +4,7 @@ import { eq, and, count, inArray, desc } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { PortfolioClient } from "./portfolio-client";
+import { SocialIcons } from "./social-icons";
 
 interface Props {
   params: Promise<{ username: string }>;
@@ -17,6 +18,7 @@ async function getPortfolioData(username: string) {
       username: users.username,
       bio: users.bio,
       avatarUrl: users.avatarUrl,
+      socialLinks: users.socialLinks,
     })
     .from(users)
     .where(eq(users.username, username))
@@ -121,6 +123,7 @@ export default async function PortfolioPage({ params }: Props) {
               </p>
             )}
           </div>
+          <SocialIcons links={data.user.socialLinks ?? {}} />
           <p className="text-xs tracking-[0.2em] text-neutral-600 uppercase">
             {data.presentations.length} presentation{data.presentations.length !== 1 ? "s" : ""}
           </p>
