@@ -26,3 +26,19 @@ export async function generateUploadUrl(key: string, contentType: string, maxSiz
 
   return { signedUrl, publicUrl };
 }
+
+export async function uploadToR2(
+  key: string,
+  body: Buffer,
+  contentType: string,
+): Promise<string> {
+  const client = getR2Client();
+  const command = new PutObjectCommand({
+    Bucket: process.env.R2_BUCKET_NAME!,
+    Key: key,
+    Body: body,
+    ContentType: contentType,
+  });
+  await client.send(command);
+  return `${process.env.R2_PUBLIC_URL}/${key}`;
+}

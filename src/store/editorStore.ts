@@ -66,6 +66,9 @@ interface EditorState {
   redo: () => void;
   pushHistory: () => void;
 
+  editingTextId: string | null;
+  setEditingTextId: (id: string | null) => void;
+
   busyElementIds: Set<string>;
   setElementBusy: (id: string) => void;
   clearElementBusy: (id: string) => void;
@@ -104,6 +107,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   history: [],
   historyIndex: -1,
   dirty: false,
+  editingTextId: null,
   busyElementIds: new Set<string>(),
 
   init: (presentationId, slides, theme) => {
@@ -416,7 +420,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     }
   },
 
-  clearSelection: () => set({ selectedElementIds: [] }),
+  clearSelection: () => set({ selectedElementIds: [], editingTextId: null }),
 
   setActiveTool: (tool) => set({ activeTool: tool, selectedElementIds: [] }),
 
@@ -533,6 +537,8 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     if (next.length > 50) next.shift();
     set({ history: next, historyIndex: next.length - 1 });
   },
+
+  setEditingTextId: (id) => set({ editingTextId: id }),
 
   setElementBusy: (id) => {
     const next = new Set(get().busyElementIds);

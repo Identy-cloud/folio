@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { ArrowCounterClockwise, ArrowClockwise, FilePdf, FilePpt, FileImage, Image as ImageIcon, Desktop, DeviceMobile, Play, ClockCounterClockwise, Stack, NotePencil, ChatCircle } from "@phosphor-icons/react";
+import { ArrowCounterClockwise, ArrowClockwise, FilePdf, FilePpt, FileImage, Image as ImageIcon, Desktop, DeviceMobile, Play, ClockCounterClockwise, Stack, NotePencil, ChatCircle, UsersThree } from "@phosphor-icons/react";
 import { FolioLogo } from "@/components/FolioLogo";
 import { Tooltip } from "@/components/ui/Tooltip";
 
@@ -29,9 +29,11 @@ interface ToolbarProps {
   onToggleSorter?: () => void;
   onToggleThemeCustomizer?: () => void;
   onToggleComments?: () => void;
+  onToggleCollaborators?: () => void;
+  collaboratorsOpen?: boolean;
 }
 
-export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen, onToggleLayers, layersOpen, onToggleNotes, notesOpen, onToggleSorter, onToggleThemeCustomizer, onToggleComments }: ToolbarProps) {
+export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen, onToggleLayers, layersOpen, onToggleNotes, notesOpen, onToggleSorter, onToggleThemeCustomizer, onToggleComments, onToggleCollaborators, collaboratorsOpen }: ToolbarProps) {
   const { t } = useTranslation();
   const undo = useEditorStore((s) => s.undo);
   const redo = useEditorStore((s) => s.redo);
@@ -352,6 +354,18 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
           </Link>
         </Tooltip>
         <ShareButton />
+        {onToggleCollaborators && (
+          <Tooltip content="Collaborators">
+            <button
+              onClick={onToggleCollaborators}
+              className={`hidden md:flex rounded p-2 transition-colors ${collaboratorsOpen ? "bg-neutral-700 text-white" : "text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200"}`}
+              aria-label="Collaborators"
+              aria-pressed={collaboratorsOpen}
+            >
+              <UsersThree size={16} weight="regular" />
+            </button>
+          </Tooltip>
+        )}
         {peerCount > 0 && (
           <span className="hidden md:inline text-xs text-neutral-500">
             {peerCount} {peerCount > 1 ? t.editor.collaborators : t.editor.collaborator}

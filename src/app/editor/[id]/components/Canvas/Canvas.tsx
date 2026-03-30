@@ -67,6 +67,7 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
   const addElement = useEditorStore((s) => s.addElement);
   const theme = useEditorStore((s) => THEMES[s.theme] ?? THEMES["editorial-blue"]);
   const editingMode = useEditorStore((s) => s.editingMode);
+  const editingTextId = useEditorStore((s) => s.editingTextId);
 
   const isMobileMode = editingMode === "mobile";
   const canvasW = isMobileMode ? MOBILE_W : DESKTOP_W;
@@ -411,13 +412,13 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
               isSelected={selectedIds.includes(el.id)}
             />
           ))}
-        {selectedIds.map((id) => {
+        {!editingTextId && selectedIds.map((id) => {
           const els = isMobileMode && slide.mobileElements ? slide.mobileElements : slide.elements;
           const el = els.find((e) => e.id === id);
           if (!el) return null;
           return <SelectionBox key={`sel-${id}`} element={el} scale={scale} />;
         })}
-        {selectedIds.length === 1 && !rubberBand && (() => {
+        {!editingTextId && selectedIds.length === 1 && !rubberBand && (() => {
           const els = isMobileMode && slide.mobileElements ? slide.mobileElements : slide.elements;
           const sel = els.find((e) => e.id === selectedIds[0]);
           return sel ? <QuickActions element={sel} scale={scale} /> : null;

@@ -16,6 +16,8 @@ export function useKeyboard() {
       const state = useEditorStore.getState();
       const inInput = isInputFocused(e);
 
+      if (state.editingTextId) return;
+
       if (e.key === "z" && meta && !e.shiftKey) {
         if (inInput) return;
         e.preventDefault();

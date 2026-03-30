@@ -25,6 +25,7 @@ import { FindReplace } from "./FindReplace";
 import { SlideSorter } from "./SlideSorter";
 import { ThemeCustomizer } from "./ThemeCustomizer";
 import { EditorComments } from "./EditorComments";
+import { CollaboratorsPanel } from "./CollaboratorsPanel";
 import { CommandPalette } from "./CommandPalette";
 import { ClockCounterClockwise, Stack, NotePencil } from "@phosphor-icons/react";
 import { MobileSlidePanel } from "./Mobile/MobileSlidePanel";
@@ -48,6 +49,7 @@ export function EditorLayout() {
   const [sorterOpen, setSorterOpen] = useState(false);
   const [themeCustomizerOpen, setThemeCustomizerOpen] = useState(false);
   const [commentsOpen, setCommentsOpen] = useState(false);
+  const [collaboratorsOpen, setCollaboratorsOpen] = useState(false);
   const [commandOpen, setCommandOpen] = useState(false);
   const [compact, setCompact] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
@@ -105,6 +107,8 @@ export function EditorLayout() {
           onToggleSorter={() => setSorterOpen((v) => !v)}
           onToggleThemeCustomizer={() => setThemeCustomizerOpen((v) => !v)}
           onToggleComments={() => setCommentsOpen((v) => !v)}
+          onToggleCollaborators={() => setCollaboratorsOpen((v) => !v)}
+          collaboratorsOpen={collaboratorsOpen}
         />
       </div>
       <div className="flex flex-1 overflow-hidden">
@@ -204,6 +208,7 @@ export function EditorLayout() {
       <SlideSorter open={sorterOpen} onClose={() => setSorterOpen(false)} />
       <ThemeCustomizer open={themeCustomizerOpen} onClose={() => setThemeCustomizerOpen(false)} />
       <EditorComments open={commentsOpen} onClose={() => setCommentsOpen(false)} />
+      <CollaboratorsPanel open={collaboratorsOpen} onClose={() => setCollaboratorsOpen(false)} />
       <CommandPalette open={commandOpen} onClose={() => setCommandOpen(false)} />
       <Onboarding />
       <ShortcutsPanel open={shortcutsOpen} onClose={() => setShortcutsOpen(false)} />

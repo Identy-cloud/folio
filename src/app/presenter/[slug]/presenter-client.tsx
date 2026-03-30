@@ -24,6 +24,7 @@ export function PresenterClient({ title, slides, slug }: Props) {
   const total = slides.length;
   const [laser, setLaser] = useState<{ x: number; y: number } | null>(null);
   const laserTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [notesVisible, setNotesVisible] = useState(true);
 
   // Timer
   const [elapsed, setElapsed] = useState(0);
@@ -55,6 +56,7 @@ export function PresenterClient({ title, slides, slug }: Props) {
     function onKey(e: KeyboardEvent) {
       if (e.key === "ArrowRight" || e.key === " ") { e.preventDefault(); goNext(); }
       if (e.key === "ArrowLeft") { e.preventDefault(); goPrev(); }
+      if (e.key === "n" || e.key === "N") { e.preventDefault(); setNotesVisible((v) => !v); }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -121,17 +123,25 @@ export function PresenterClient({ title, slides, slug }: Props) {
         </div>
 
         {/* Notes */}
-        <div className="flex-1 overflow-y-auto p-4">
-          <p className="mb-2 text-[10px] font-medium uppercase tracking-wider text-neutral-500">
-            Notes
-          </p>
-          {currentSlide?.notes ? (
-            <p className="whitespace-pre-wrap text-sm leading-relaxed text-neutral-300">
-              {currentSlide.notes}
+        <div
+          className="overflow-hidden transition-all duration-300 ease-in-out"
+          style={{
+            maxHeight: notesVisible ? "999px" : "0px",
+            opacity: notesVisible ? 1 : 0,
+          }}
+        >
+          <div className="flex-1 overflow-y-auto p-4">
+            <p className="mb-2 text-[10px] font-medium uppercase tracking-wider text-neutral-500">
+              Notes
             </p>
-          ) : (
-            <p className="text-xs italic text-neutral-600">No notes for this slide</p>
-          )}
+            {currentSlide?.notes ? (
+              <p className="whitespace-pre-wrap text-sm leading-relaxed text-neutral-300">
+                {currentSlide.notes}
+              </p>
+            ) : (
+              <p className="text-xs italic text-neutral-600">No notes for this slide</p>
+            )}
+          </div>
         </div>
 
         {/* Controls */}

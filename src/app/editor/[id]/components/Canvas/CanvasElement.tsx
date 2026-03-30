@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, memo, useMemo } from "react";
+import { useRef, useState, memo, useMemo, useCallback } from "react";
 import DOMPurify from "dompurify";
 import { nanoid } from "nanoid";
 import { Camera } from "@phosphor-icons/react";
@@ -18,8 +18,10 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
   const selectElement = useEditorStore((s) => s.selectElement);
   const updateElement = useEditorStore((s) => s.updateElement);
   const pushHistory = useEditorStore((s) => s.pushHistory);
+  const setEditingTextId = useEditorStore((s) => s.setEditingTextId);
+  const editing = useEditorStore((s) => s.editingTextId === element.id);
   const isBusy = useEditorStore((s) => s.busyElementIds.has(element.id));
-  const [editing, setEditing] = useState(false);
+  const setEditing = useCallback((v: boolean) => setEditingTextId(v ? element.id : null), [element.id, setEditingTextId]);
   const [dragging, setDragging] = useState(false);
 
   const dragRef = useRef<{
