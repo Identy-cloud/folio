@@ -25,7 +25,7 @@ export function ShapeProperties({ element }: Props) {
 
   return (
     <div className="space-y-3">
-      <span className="text-[10px] font-medium text-neutral-400 uppercase tracking-wider">{t.editor.shape}</span>
+      <span className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">{t.editor.shape}</span>
 
       <ColorPicker label={t.editor.fill} value={element.fill} onChange={(c) => update({ fill: c })} />
       <ColorPicker label={t.editor.stroke} value={element.stroke} onChange={(c) => update({ stroke: c })} />

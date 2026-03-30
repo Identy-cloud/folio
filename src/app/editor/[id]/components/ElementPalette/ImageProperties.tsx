@@ -50,7 +50,7 @@ export function ImageProperties({ element }: Props) {
 
   return (
     <div className="space-y-2">
-      <span className="text-[10px] font-medium text-neutral-400 uppercase tracking-wider">
+      <span className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">
         {t.editor.image}
       </span>
 
@@ -59,7 +59,7 @@ export function ImageProperties({ element }: Props) {
         disabled={uploading}
         className="flex w-full items-center gap-2 rounded border border-neutral-700 px-3 py-2 text-xs text-neutral-300 hover:bg-neutral-800 disabled:opacity-50"
       >
-        <ImageIcon size={14} weight="duotone" />
+        <ImageIcon size={14} weight="regular" />
         {uploading ? t.editor.uploading : t.editor.changeImage}
       </button>
 
@@ -68,7 +68,7 @@ export function ImageProperties({ element }: Props) {
           onClick={() => window.dispatchEvent(new CustomEvent("folio:crop-image", { detail: element.id }))}
           className="flex flex-1 items-center justify-center gap-1 rounded border border-neutral-700 px-3 py-2 text-xs text-neutral-300 hover:bg-neutral-800"
         >
-          <Crop size={14} weight="duotone" /> Crop
+          <Crop size={14} weight="regular" /> Crop
         </button>
         {element.cropWidth !== undefined && element.cropWidth < 1 && (
           <button
@@ -110,7 +110,7 @@ export function ImageProperties({ element }: Props) {
           onChange={(e) => { updateElement(element.id, { borderRadius: parseInt(e.target.value) }); pushHistory(); }}
           className="flex-1 accent-white"
         />
-        <span className="text-[9px] text-neutral-600 w-6 text-right">{element.borderRadius ?? 0}</span>
+        <span className="text-[10px] text-neutral-600 w-6 text-right">{element.borderRadius ?? 0}</span>
       </label>
 
       {/* Flip */}

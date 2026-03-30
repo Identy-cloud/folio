@@ -3,6 +3,7 @@
 import { useEditorStore } from "@/store/editorStore";
 import { ArrowFatUp, ArrowFatDown, ArrowFatLineUp, ArrowFatLineDown } from "@phosphor-icons/react";
 import { useTranslation } from "@/lib/i18n/context";
+import { Tooltip } from "@/components/ui/Tooltip";
 
 export function LayerControls({ elementId }: { elementId: string }) {
   const { t } = useTranslation();
@@ -16,22 +17,27 @@ export function LayerControls({ elementId }: { elementId: string }) {
 
   return (
     <div>
-      <span className="mb-1 block text-[10px] font-medium text-neutral-400 uppercase tracking-wider">
-        {t.editor.layers}
-      </span>
       <div className="flex gap-1">
-        <button onClick={() => bringToFront(elementId)} className={btn} title={t.editor.toFront}>
-          <ArrowFatLineUp size={14} weight="duotone" />
-        </button>
-        <button onClick={() => bringForward(elementId)} className={btn} title={t.editor.forward}>
-          <ArrowFatUp size={14} weight="duotone" />
-        </button>
-        <button onClick={() => sendBackward(elementId)} className={btn} title={t.editor.backward}>
-          <ArrowFatDown size={14} weight="duotone" />
-        </button>
-        <button onClick={() => sendToBack(elementId)} className={btn} title={t.editor.toBack}>
-          <ArrowFatLineDown size={14} weight="duotone" />
-        </button>
+        <Tooltip content={t.editor.toFront}>
+          <button onClick={() => bringToFront(elementId)} className={btn}>
+            <ArrowFatLineUp size={14} weight="regular" />
+          </button>
+        </Tooltip>
+        <Tooltip content={t.editor.forward}>
+          <button onClick={() => bringForward(elementId)} className={btn}>
+            <ArrowFatUp size={14} weight="regular" />
+          </button>
+        </Tooltip>
+        <Tooltip content={t.editor.backward}>
+          <button onClick={() => sendBackward(elementId)} className={btn}>
+            <ArrowFatDown size={14} weight="regular" />
+          </button>
+        </Tooltip>
+        <Tooltip content={t.editor.toBack}>
+          <button onClick={() => sendToBack(elementId)} className={btn}>
+            <ArrowFatLineDown size={14} weight="regular" />
+          </button>
+        </Tooltip>
       </div>
     </div>
   );

@@ -93,6 +93,9 @@ export const pt = {
     profileMember: "Membro desde",
     planLimitReached: "Limite do plano atingido. Faz upgrade para continuar.",
     storageLimitReached: "Armazenamento cheio. Faz upgrade para enviar mais.",
+    exportData: "Exportar meus dados",
+    exportDataDesc: "Baixe uma cópia de todos os seus dados em formato JSON (LGPD)",
+    exportAction: "Exportar",
   },
   editor: {
     loadError: "Não foi possível carregar a apresentação",

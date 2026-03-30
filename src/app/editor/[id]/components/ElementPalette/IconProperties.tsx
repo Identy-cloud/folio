@@ -32,7 +32,7 @@ export function IconProperties({ element }: Props) {
 
   return (
     <div className="space-y-3">
-      <span className="text-[10px] font-medium text-neutral-400 uppercase tracking-wider">Icon</span>
+      <span className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">Icon</span>
 
       {IconComponent && (
         <div className="flex items-center gap-2 rounded border border-neutral-800 px-3 py-2">

@@ -48,7 +48,7 @@ export function EditorComments({ open, onClose }: Props) {
             Comments ({comments.length})
           </span>
         </div>
-        <button onClick={onClose} className="text-neutral-500 hover:text-neutral-300"><X size={14} /></button>
+        <button onClick={onClose} className="rounded p-1.5 text-neutral-500 hover:bg-neutral-700 hover:text-neutral-300 transition-colors"><X size={14} /></button>
       </div>
       <div className="flex-1 overflow-y-auto p-3 space-y-2">
         {loading && <p className="text-xs text-neutral-600 py-4 text-center">Loading...</p>}
@@ -57,10 +57,10 @@ export function EditorComments({ open, onClose }: Props) {
         )}
         {slideComments.length > 0 && (
           <div>
-            <p className="text-[9px] text-neutral-500 uppercase tracking-wider mb-1">Slide {activeSlideIndex + 1}</p>
+            <p className="text-[10px] text-neutral-500 uppercase tracking-wider mb-1">Slide {activeSlideIndex + 1}</p>
             {slideComments.map((c) => (
               <div key={c.id} className={`rounded px-2 py-1.5 text-xs mb-1 ${c.resolved ? "bg-neutral-800/50 text-neutral-600 line-through" : "bg-neutral-800 text-neutral-300"}`}>
-                <span className="text-[9px] text-neutral-500">{c.authorName}</span>
+                <span className="text-[10px] text-neutral-500">{c.authorName}</span>
                 <p>{c.content}</p>
               </div>
             ))}
@@ -68,10 +68,10 @@ export function EditorComments({ open, onClose }: Props) {
         )}
         {otherComments.length > 0 && (
           <div>
-            <p className="text-[9px] text-neutral-500 uppercase tracking-wider mb-1">Other slides</p>
+            <p className="text-[10px] text-neutral-500 uppercase tracking-wider mb-1">Other slides</p>
             {otherComments.map((c) => (
               <div key={c.id} className="rounded bg-neutral-800/50 px-2 py-1.5 text-xs text-neutral-500 mb-1">
-                <span className="text-[9px] text-neutral-600">Slide {c.slideIndex + 1} · {c.authorName}</span>
+                <span className="text-[10px] text-neutral-600">Slide {c.slideIndex + 1} · {c.authorName}</span>
                 <p>{c.content}</p>
               </div>
             ))}

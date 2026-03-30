@@ -74,15 +74,15 @@ export const SortableSlideThumb = memo(function SortableSlideThumb({
         }`}
       >
         <SlidePreview slide={slide} className="w-full rounded-sm" />
-        <span className="absolute bottom-1 left-1 rounded bg-black/40 px-1 text-[9px] text-white">
+        <span className="absolute bottom-1 left-1 rounded bg-black/40 px-1 text-[10px] text-white">
           {index + 1}
         </span>
-        <span className="absolute top-1 right-1 rounded bg-black/40 px-1 text-[8px] text-white/50">
+        <span className="absolute top-1 right-1 rounded bg-black/40 px-1 text-[10px] text-white/50">
           {slide.elements.length}
         </span>
         {slide.duration && slide.duration > 0 && (
           <span
-            className="absolute bottom-1 left-1 rounded bg-blue-500/30 px-1 text-[7px] text-blue-300"
+            className="absolute bottom-1 left-1 rounded bg-blue-500/30 px-1 text-[10px] text-blue-300"
             title={`Auto-advance: ${slide.duration}s`}
           >
             {slide.duration}s
@@ -100,9 +100,9 @@ export const SortableSlideThumb = memo(function SortableSlideThumb({
               e.stopPropagation();
               onDelete();
             }}
-            className="absolute right-1 top-1 hidden rounded bg-red-500 p-0.5 text-white group-hover:block"
+            className="absolute right-1 top-1 hidden h-6 w-6 items-center justify-center rounded bg-red-500 text-white hover:bg-red-600 transition-colors group-hover:flex"
           >
-            <X size={10} />
+            <X size={14} />
           </button>
         )}
       </div>

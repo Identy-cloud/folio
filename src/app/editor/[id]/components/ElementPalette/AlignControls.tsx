@@ -3,6 +3,7 @@
 import { useEditorStore } from "@/store/editorStore";
 import { AlignLeft, AlignCenterHorizontalSimple, AlignRight, AlignTop, AlignCenterVerticalSimple, AlignBottom } from "@phosphor-icons/react";
 import { useTranslation } from "@/lib/i18n/context";
+import { Tooltip } from "@/components/ui/Tooltip";
 
 const DESKTOP_W = 1920;
 const DESKTOP_H = 1080;
@@ -33,29 +34,38 @@ export function AlignControls({ elementId }: { elementId: string }) {
 
   return (
     <div>
-      <span className="mb-1 block text-[10px] font-medium text-neutral-400 uppercase tracking-wider">
-        {t.editor.alignCanvas}
-      </span>
       <div className="flex gap-1">
-        <button onClick={() => align({ x: 0 })} className={btn} aria-label="Align left">
-          <AlignLeft size={14} weight="duotone" />
-        </button>
-        <button onClick={() => align({ x: (CANVAS_W - el.w) / 2 })} className={btn} aria-label="Align center horizontal">
-          <AlignCenterHorizontalSimple size={14} weight="duotone" />
-        </button>
-        <button onClick={() => align({ x: CANVAS_W - el.w })} className={btn} aria-label="Align right">
-          <AlignRight size={14} weight="duotone" />
-        </button>
+        <Tooltip content="Align left">
+          <button onClick={() => align({ x: 0 })} className={btn} aria-label="Align left">
+            <AlignLeft size={14} weight="regular" />
+          </button>
+        </Tooltip>
+        <Tooltip content="Align center">
+          <button onClick={() => align({ x: (CANVAS_W - el.w) / 2 })} className={btn} aria-label="Align center horizontal">
+            <AlignCenterHorizontalSimple size={14} weight="regular" />
+          </button>
+        </Tooltip>
+        <Tooltip content="Align right">
+          <button onClick={() => align({ x: CANVAS_W - el.w })} className={btn} aria-label="Align right">
+            <AlignRight size={14} weight="regular" />
+          </button>
+        </Tooltip>
         <div className="w-px bg-neutral-700" />
-        <button onClick={() => align({ y: 0 })} className={btn} aria-label="Align top">
-          <AlignTop size={14} weight="duotone" />
-        </button>
-        <button onClick={() => align({ y: (CANVAS_H - el.h) / 2 })} className={btn} aria-label="Align center vertical">
-          <AlignCenterVerticalSimple size={14} weight="duotone" />
-        </button>
-        <button onClick={() => align({ y: CANVAS_H - el.h })} className={btn} aria-label="Align bottom">
-          <AlignBottom size={14} weight="duotone" />
-        </button>
+        <Tooltip content="Align top">
+          <button onClick={() => align({ y: 0 })} className={btn} aria-label="Align top">
+            <AlignTop size={14} weight="regular" />
+          </button>
+        </Tooltip>
+        <Tooltip content="Align middle">
+          <button onClick={() => align({ y: (CANVAS_H - el.h) / 2 })} className={btn} aria-label="Align center vertical">
+            <AlignCenterVerticalSimple size={14} weight="regular" />
+          </button>
+        </Tooltip>
+        <Tooltip content="Align bottom">
+          <button onClick={() => align({ y: CANVAS_H - el.h })} className={btn} aria-label="Align bottom">
+            <AlignBottom size={14} weight="regular" />
+          </button>
+        </Tooltip>
       </div>
     </div>
   );

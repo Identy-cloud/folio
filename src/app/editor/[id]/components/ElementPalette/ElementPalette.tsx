@@ -31,6 +31,7 @@ import { THEMES } from "@/lib/templates/themes";
 import { TransitionPicker } from "../SlidePanel/TransitionPicker";
 import { IconPicker } from "../IconPicker";
 import { useTranslation } from "@/lib/i18n/context";
+import { CollapsibleSection } from "@/components/ui/CollapsibleSection";
 
 export function ElementPalette() {
   const { t } = useTranslation();
@@ -61,43 +62,43 @@ export function ElementPalette() {
       </div>
       <div className="shrink-0 p-3 space-y-1.5">
         <button onClick={() => add({ id: nanoid(), type: "text", x: 100, y: 100, w: 400, h: 80, rotation: 0, opacity: 1, zIndex: zBase, locked: false, content: t.editor.writeHere, ...textDefaults(theme) } satisfies TextElement)} className={btn}>
-          <TextT size={16} weight="duotone" /> {t.editor.tools.text}
+          <TextT size={16} weight="regular" /> {t.editor.tools.text}
         </button>
         <button onClick={() => add({ id: nanoid(), type: "shape", x: 200, y: 200, w: 200, h: 200, rotation: 0, opacity: 1, zIndex: zBase, locked: false, shape: "rect", ...shapeDefaults(theme) } satisfies ShapeElement)} className={btn}>
-          <Rectangle size={16} weight="duotone" /> {t.editor.rectangle}
+          <Rectangle size={16} weight="regular" /> {t.editor.rectangle}
         </button>
         <button onClick={() => add({ id: nanoid(), type: "shape", x: 200, y: 200, w: 200, h: 200, rotation: 0, opacity: 1, zIndex: zBase, locked: false, shape: "circle", ...shapeDefaults(theme) } satisfies ShapeElement)} className={btn}>
-          <Circle size={16} weight="duotone" /> {t.editor.circle}
+          <Circle size={16} weight="regular" /> {t.editor.circle}
         </button>
         <button onClick={() => add({ id: nanoid(), type: "shape", x: 200, y: 200, w: 200, h: 200, rotation: 0, opacity: 1, zIndex: zBase, locked: false, shape: "diamond", ...shapeDefaults(theme) } satisfies ShapeElement)} className={btn}>
-          <Diamond size={16} weight="duotone" /> Diamond
+          <Diamond size={16} weight="regular" /> Diamond
         </button>
         <button onClick={() => add({ id: nanoid(), type: "shape", x: 200, y: 200, w: 200, h: 200, rotation: 0, opacity: 1, zIndex: zBase, locked: false, shape: "star", ...shapeDefaults(theme) } satisfies ShapeElement)} className={btn}>
-          <Star size={16} weight="duotone" /> Star
+          <Star size={16} weight="regular" /> Star
         </button>
         <button onClick={() => add({ id: nanoid(), type: "shape", x: 200, y: 200, w: 200, h: 200, rotation: 0, opacity: 1, zIndex: zBase, locked: false, shape: "pentagon", ...shapeDefaults(theme) } satisfies ShapeElement)} className={btn}>
-          <Pentagon size={16} weight="duotone" /> Pentagon
+          <Pentagon size={16} weight="regular" /> Pentagon
         </button>
         <button onClick={() => add({ id: nanoid(), type: "shape", x: 200, y: 200, w: 200, h: 200, rotation: 0, opacity: 1, zIndex: zBase, locked: false, shape: "hexagon", ...shapeDefaults(theme) } satisfies ShapeElement)} className={btn}>
-          <Hexagon size={16} weight="duotone" /> Hexagon
+          <Hexagon size={16} weight="regular" /> Hexagon
         </button>
         <button onClick={() => add({ id: nanoid(), type: "arrow", x: 200, y: 400, w: 300, h: 60, rotation: 0, opacity: 1, zIndex: zBase, locked: false, direction: "right", ...arrowDefaults(theme) } satisfies ArrowElement)} className={btn}>
-          <ArrowRight size={16} weight="duotone" /> {t.editor.arrow}
+          <ArrowRight size={16} weight="regular" /> {t.editor.arrow}
         </button>
         <button onClick={() => add({ id: nanoid(), type: "divider", x: 100, y: 500, w: 600, h: 10, rotation: 0, opacity: 1, zIndex: zBase, locked: false, ...dividerDefaults(theme) } satisfies DividerElement)} className={btn}>
-          <Minus size={16} weight="duotone" /> {t.editor.line}
+          <Minus size={16} weight="regular" /> {t.editor.line}
         </button>
         <button onClick={() => {
           const x1 = 0; const y1 = 0; const x2 = 300; const y2 = 200;
           add({ id: nanoid(), type: "line", x: 200, y: 300, w: 300, h: 200, rotation: 0, opacity: 1, zIndex: zBase, locked: false, x1, y1, x2, y2, ...lineDefaults(theme) } satisfies LineElement);
         }} className={btn}>
-          <LineSegment size={16} weight="duotone" /> Connector
+          <LineSegment size={16} weight="regular" /> Connector
         </button>
         <button onClick={() => add({ id: nanoid(), type: "table", x: 200, y: 200, w: 600, h: 300, rotation: 0, opacity: 1, zIndex: zBase, locked: false, ...tableDefaults(theme) } satisfies TableElement)} className={btn}>
-          <GridNine size={16} weight="duotone" /> Table
+          <GridNine size={16} weight="regular" /> Table
         </button>
         <button onClick={triggerUpload} disabled={uploading} className={`${btn} disabled:opacity-50`}>
-          <ImageIcon size={16} weight="duotone" /> {uploading ? t.editor.uploading : t.editor.image}
+          <ImageIcon size={16} weight="regular" /> {uploading ? t.editor.uploading : t.editor.image}
         </button>
         <button
           onClick={() => {
@@ -107,7 +108,7 @@ export function ElementPalette() {
           }}
           className={btn}
         >
-          <Code size={16} weight="duotone" /> Embed
+          <Code size={16} weight="regular" /> Embed
         </button>
         <button
           onClick={() => {
@@ -117,17 +118,17 @@ export function ElementPalette() {
           }}
           className={btn}
         >
-          <VideoCamera size={16} weight="duotone" /> Video
+          <VideoCamera size={16} weight="regular" /> Video
         </button>
         <button onClick={() => setShowIconPicker(true)} className={btn}>
-          <Smiley size={16} weight="duotone" /> Icon
+          <Smiley size={16} weight="regular" /> Icon
         </button>
       </div>
       {showIconPicker && <IconPicker onClose={() => setShowIconPicker(false)} />}
 
       {selectedIds.length > 1 ? (
         <div className="flex-1 overflow-y-auto border-t border-neutral-800 p-3 space-y-4">
-          <span className="text-[10px] font-medium text-neutral-400 uppercase tracking-wider">
+          <span className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">
             {selectedIds.length} elements selected
           </span>
           <MultiSelectControls elementIds={selectedIds} />
@@ -143,28 +144,40 @@ export function ElementPalette() {
         </div>
       ) : selectedElement ? (
         <div className="flex-1 overflow-y-auto border-t border-neutral-800 p-3 space-y-4">
-          <PositionFields element={selectedElement} />
-          {selectedElement.type === "text" && <TextProperties element={selectedElement} />}
-          {selectedElement.type === "shape" && <ShapeProperties element={selectedElement} />}
-          {selectedElement.type === "image" && <ImageProperties element={selectedElement as ImageElement} />}
-          {selectedElement.type === "arrow" && <ArrowProperties element={selectedElement as ArrowElement} />}
-          {selectedElement.type === "divider" && <DividerProperties element={selectedElement as DividerElement} />}
-          {selectedElement.type === "embed" && <EmbedProperties element={selectedElement as EmbedElement} />}
-          {selectedElement.type === "line" && <LineProperties element={selectedElement as LineElement} />}
-          {selectedElement.type === "table" && <TableProperties element={selectedElement as TableElement} />}
-          {selectedElement.type === "icon" && <IconProperties element={selectedElement as IconElement} />}
-          {selectedElement.type === "video" && <VideoProperties element={selectedElement as VideoElement} />}
-          <ShadowControls element={selectedElement} />
-          <AnimationProperties element={selectedElement} />
-          <AlignControls elementId={selectedElement.id} />
-          <LayerControls elementId={selectedElement.id} />
+          <CollapsibleSection title="Position" defaultOpen>
+            <PositionFields element={selectedElement} />
+          </CollapsibleSection>
+          <CollapsibleSection title={selectedElement.type} defaultOpen>
+            {selectedElement.type === "text" && <TextProperties element={selectedElement} />}
+            {selectedElement.type === "shape" && <ShapeProperties element={selectedElement} />}
+            {selectedElement.type === "image" && <ImageProperties element={selectedElement as ImageElement} />}
+            {selectedElement.type === "arrow" && <ArrowProperties element={selectedElement as ArrowElement} />}
+            {selectedElement.type === "divider" && <DividerProperties element={selectedElement as DividerElement} />}
+            {selectedElement.type === "embed" && <EmbedProperties element={selectedElement as EmbedElement} />}
+            {selectedElement.type === "line" && <LineProperties element={selectedElement as LineElement} />}
+            {selectedElement.type === "table" && <TableProperties element={selectedElement as TableElement} />}
+            {selectedElement.type === "icon" && <IconProperties element={selectedElement as IconElement} />}
+            {selectedElement.type === "video" && <VideoProperties element={selectedElement as VideoElement} />}
+          </CollapsibleSection>
+          <CollapsibleSection title="Shadow" defaultOpen={false}>
+            <ShadowControls element={selectedElement} />
+          </CollapsibleSection>
+          <CollapsibleSection title="Animation" defaultOpen={false}>
+            <AnimationProperties element={selectedElement} />
+          </CollapsibleSection>
+          <CollapsibleSection title="Align" defaultOpen={false}>
+            <AlignControls elementId={selectedElement.id} />
+          </CollapsibleSection>
+          <CollapsibleSection title="Layers" defaultOpen={false}>
+            <LayerControls elementId={selectedElement.id} />
+          </CollapsibleSection>
           <LockToggle element={selectedElement} />
           <DeleteButton elementId={selectedElement.id} />
         </div>
       ) : activeSlide && (
         <div className="flex-1 overflow-y-auto border-t border-neutral-800 p-3 space-y-4">
           <div className="space-y-2">
-            <span className="text-[10px] font-medium text-neutral-400 uppercase tracking-wider">{t.editor.slideBg}</span>
+            <span className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">{t.editor.slideBg}</span>
             <ColorPicker value={activeSlide.backgroundColor} onChange={updateSlideBackground} />
             {activeSlide.backgroundImage ? (
               <div className="space-y-1">

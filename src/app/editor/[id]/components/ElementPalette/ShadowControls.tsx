@@ -22,7 +22,7 @@ export function ShadowControls({ element }: { element: SlideElement }) {
 
   return (
     <div className="space-y-1.5">
-      <span className="text-[10px] font-medium text-neutral-400 uppercase tracking-wider">Shadow</span>
+      <span className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">Shadow</span>
       <div className="flex flex-wrap gap-1">
         {PRESETS.map((p, i) => (
           <button
@@ -54,7 +54,7 @@ export function ShadowControls({ element }: { element: SlideElement }) {
             }}
             className="flex-1 accent-white"
           />
-          <span className="text-[9px] text-neutral-600 w-5 text-right">{current.blur}</span>
+          <span className="text-[10px] text-neutral-600 w-5 text-right">{current.blur}</span>
         </label>
       )}
     </div>

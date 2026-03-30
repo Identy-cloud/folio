@@ -165,7 +165,7 @@ function SidebarFolder({
           onClick={() => setMenuOpen(!menuOpen)}
           className="rounded p-1 text-neutral-600 opacity-0 group-hover:opacity-100 hover:text-neutral-300 transition-all"
         >
-          <DotsThree size={16} weight="bold" />
+          <DotsThree size={16} weight="regular" />
         </button>
         {menuOpen && (
           <div className="absolute right-0 top-full z-50 mt-1 w-32 rounded border border-neutral-700 bg-[#242424] py-1 shadow-lg">

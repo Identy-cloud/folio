@@ -58,7 +58,7 @@ export function PositionFields({ element }: Props) {
 
   return (
     <div className="space-y-2">
-      <span className="text-[10px] font-medium text-neutral-400 uppercase tracking-wider">
+      <span className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">
         {t.editor.position}
       </span>
       <div className="grid grid-cols-2 gap-2">

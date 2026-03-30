@@ -40,8 +40,8 @@ export function ThemeCustomizer({ open, onClose }: Props) {
   return (
     <div className="fixed top-14 left-60 z-50 w-64 rounded border border-neutral-700 bg-[#1e1e1e] p-4 shadow-xl">
       <div className="flex items-center justify-between mb-3">
-        <span className="text-[10px] font-medium text-neutral-400 uppercase tracking-wider">Theme Colors</span>
-        <button onClick={onClose} className="text-neutral-500 hover:text-neutral-300"><X size={14} /></button>
+        <span className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">Theme Colors</span>
+        <button onClick={onClose} className="rounded p-1.5 text-neutral-500 hover:bg-neutral-700 hover:text-neutral-300 transition-colors"><X size={14} /></button>
       </div>
       <p className="text-[10px] text-neutral-600 mb-3">
         Current: {themeObj.label}
@@ -56,7 +56,7 @@ export function ThemeCustomizer({ open, onClose }: Props) {
           <ColorPicker value={themeObj.accent} onChange={applyAccentToAll} />
         </div>
       </div>
-      <p className="mt-3 text-[9px] text-neutral-700 leading-relaxed">
+      <p className="mt-3 text-[10px] text-neutral-500 leading-relaxed">
         Changes background of all slides and replaces accent-colored elements.
       </p>
     </div>

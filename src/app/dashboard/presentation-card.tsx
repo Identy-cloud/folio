@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { es } from "date-fns/locale";
 import { DotsThreeVertical, Star } from "@phosphor-icons/react";
@@ -100,11 +100,11 @@ export function PresentationCard({
             aria-label={t.dashboard.options}
             aria-expanded={menuOpen}
           >
-            <DotsThreeVertical size={18} weight="duotone" />
+            <DotsThreeVertical size={18} weight="regular" />
           </button>
 
           {menuOpen && (
-            <div className="absolute right-0 bottom-full mb-1 z-50 w-44 border border-neutral-700 bg-[#242424] py-1 shadow-lg rounded" role="menu">
+            <MenuContainer onClose={() => setMenuOpen(false)}>
               <MenuItem label={t.dashboard.rename} onClick={() => { setMenuOpen(false); onRename(); }} />
               <MenuItem label={t.dashboard.duplicate} onClick={() => { setMenuOpen(false); onDuplicate(); }} />
               <MenuItem label={t.dashboard.changeTheme} onClick={() => { setMenuOpen(false); onChangeTheme(); }} />
@@ -115,10 +115,37 @@ export function PresentationCard({
                 onClick={() => { setMenuOpen(false); onTogglePublic(); }}
               />
               <MenuItem label={t.common.delete} onClick={() => { setMenuOpen(false); onDelete(); }} destructive />
-            </div>
+            </MenuContainer>
           )}
         </div>
       </div>
+    </div>
+  );
+}
+
+function MenuContainer({ onClose, children }: { onClose: () => void; children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const items = el.querySelectorAll<HTMLElement>("[role='menuitem']");
+    if (items.length > 0) items[0].focus();
+    function handleKey(e: KeyboardEvent) {
+      const focusable = el!.querySelectorAll<HTMLElement>("[role='menuitem']");
+      const arr = Array.from(focusable);
+      const idx = arr.indexOf(document.activeElement as HTMLElement);
+      if (e.key === "ArrowDown") { e.preventDefault(); arr[(idx + 1) % arr.length]?.focus(); }
+      else if (e.key === "ArrowUp") { e.preventDefault(); arr[(idx - 1 + arr.length) % arr.length]?.focus(); }
+      else if (e.key === "Escape") onClose();
+    }
+    el.addEventListener("keydown", handleKey);
+    return () => el.removeEventListener("keydown", handleKey);
+  }, [onClose]);
+
+  return (
+    <div ref={ref} className="absolute right-0 bottom-full mb-1 z-50 w-44 border border-neutral-700 bg-[#242424] py-1 shadow-lg rounded" role="menu">
+      {children}
     </div>
   );
 }
@@ -134,8 +161,9 @@ function MenuItem({
 }) {
   return (
     <button
+      role="menuitem"
       onClick={onClick}
-      className={`block w-full px-4 py-2 text-left text-sm hover:bg-neutral-800 ${
+      className={`block w-full px-4 py-2 text-left text-sm hover:bg-neutral-800 focus:bg-neutral-800 focus:outline-none ${
         destructive ? "text-red-500" : "text-neutral-300"
       }`}
     >

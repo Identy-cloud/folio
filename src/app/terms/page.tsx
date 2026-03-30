@@ -119,7 +119,82 @@ export default function TermsPage() {
 
           <section>
             <h2 className="mb-3 font-display text-lg tracking-tight text-neutral-200">
-              8. Cambios en los Terminos
+              8. Suscripciones, Cancelacion y Reembolsos
+            </h2>
+            <p className="mb-3">
+              Folio ofrece planes de suscripcion de pago (Pro, Team) ademas del plan
+              gratuito. Al suscribirte:
+            </p>
+            <ul className="list-inside list-disc space-y-1 text-neutral-500">
+              <li>
+                <span className="text-neutral-300">Facturacion</span> — Los pagos se procesan
+                de forma recurrente (mensual o anual) a traves de Stripe.
+              </li>
+              <li>
+                <span className="text-neutral-300">Cancelacion</span> — Puedes cancelar tu
+                suscripcion en cualquier momento desde el portal de facturacion (accesible
+                desde tu perfil). La cancelacion sera efectiva al final del periodo de
+                facturacion actual y conservaras el acceso hasta esa fecha.
+              </li>
+              <li>
+                <span className="text-neutral-300">Reembolsos</span> — No ofrecemos reembolsos
+                proporcionales por periodos parciales. Si cancelas, no se te cobrara en el
+                siguiente ciclo de facturacion.
+              </li>
+              <li>
+                <span className="text-neutral-300">Cambio de plan</span> — Puedes cambiar de
+                plan en cualquier momento. El nuevo precio se aplicara en el siguiente ciclo.
+              </li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="mb-3 font-display text-lg tracking-tight text-neutral-200">
+              9. Edad Minima
+            </h2>
+            <p>
+              Debes tener al menos 13 anos para crear una cuenta en Folio. Si eres menor
+              de 16 anos y resides en el Espacio Economico Europeo, necesitas el
+              consentimiento de un padre o tutor legal. Al crear una cuenta, declaras que
+              cumples con este requisito de edad.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="mb-3 font-display text-lg tracking-tight text-neutral-200">
+              10. Ley Aplicable y Jurisdiccion
+            </h2>
+            <p>
+              Estos terminos se rigen por las leyes de Espana. Para cualquier controversia
+              derivada del uso de Folio, las partes se someten a la jurisdiccion de los
+              juzgados y tribunales de Madrid, Espana, salvo que la normativa de proteccion
+              al consumidor de tu pais de residencia establezca otra cosa.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="mb-3 font-display text-lg tracking-tight text-neutral-200">
+              11. Resolucion de Disputas
+            </h2>
+            <p>
+              Antes de iniciar cualquier procedimiento legal, te animamos a contactarnos
+              en legal@identy.cloud para intentar resolver la disputa de forma amistosa.
+              Si resides en la Union Europea, tambien puedes utilizar la plataforma de
+              resolucion de litigios en linea de la Comision Europea en{" "}
+              <a
+                href="https://ec.europa.eu/consumers/odr"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-neutral-200 underline underline-offset-4 hover:text-white transition-colors"
+              >
+                ec.europa.eu/consumers/odr
+              </a>
+            </p>
+          </section>
+
+          <section>
+            <h2 className="mb-3 font-display text-lg tracking-tight text-neutral-200">
+              12. Cambios en los Terminos
             </h2>
             <p>
               Nos reservamos el derecho de modificar estos terminos en cualquier momento.
@@ -131,7 +206,7 @@ export default function TermsPage() {
 
           <section>
             <h2 className="mb-3 font-display text-lg tracking-tight text-neutral-200">
-              9. Contacto
+              13. Contacto
             </h2>
             <p>
               Para cualquier consulta sobre estos terminos, puedes escribirnos a{" "}

@@ -26,7 +26,7 @@ export function LockToggle({ element }: { element: SlideElement }) {
           : "border-neutral-700 text-neutral-400 hover:bg-neutral-800"
       }`}
     >
-      {element.locked ? <Lock size={14} weight="duotone" /> : <LockOpen size={14} weight="duotone" />}
+      {element.locked ? <Lock size={14} weight="regular" /> : <LockOpen size={14} weight="regular" />}
       {element.locked ? t.editor.unlock : t.editor.lock}
     </button>
   );

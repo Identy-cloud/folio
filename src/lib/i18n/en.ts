@@ -93,6 +93,9 @@ export const en = {
     profileMember: "Member since",
     planLimitReached: "Plan limit reached. Upgrade to continue.",
     storageLimitReached: "Storage full. Upgrade to upload more files.",
+    exportData: "Export my data",
+    exportDataDesc: "Download a copy of all your data in JSON format (GDPR)",
+    exportAction: "Export",
   },
   editor: {
     loadError: "Could not load the presentation",

@@ -176,14 +176,14 @@ export function EditorLayout() {
           className="flex h-11 w-11 items-center justify-center rounded-full bg-neutral-900 text-white shadow-lg active:scale-95 transition-transform"
           aria-label={t.editor.slides}
         >
-          <StackSimple size={20} weight="duotone" />
+          <StackSimple size={20} weight="regular" />
         </button>
         <button
           onClick={() => setMobilePanel(mobilePanel === "insert" ? null : "insert")}
           className="flex h-11 w-11 items-center justify-center rounded-full bg-neutral-900 text-white shadow-lg active:scale-95 transition-transform"
           aria-label={t.editor.insertElement}
         >
-          <PlusCircle size={20} weight="duotone" />
+          <PlusCircle size={20} weight="regular" />
         </button>
         {hasSelection && (
           <button
@@ -191,7 +191,7 @@ export function EditorLayout() {
             className="flex h-11 w-11 items-center justify-center rounded-full bg-blue-600 text-white shadow-lg active:scale-95 transition-transform animate-[props-in_0.2s_ease-out]"
             aria-label={t.editor.properties}
           >
-            <SlidersHorizontal size={20} weight="duotone" />
+            <SlidersHorizontal size={20} weight="regular" />
           </button>
         )}
       </div>

@@ -79,19 +79,23 @@ export function LayerPanel({ onClose }: { onClose: () => void }) {
           return (
             <div
               key={el.id}
+              role="button"
+              tabIndex={0}
               onClick={() => selectElement(el.id)}
-              className={`flex items-center gap-2 rounded px-2 py-1.5 cursor-pointer transition-colors ${
+              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); selectElement(el.id); } }}
+              className={`flex w-full items-center gap-2 rounded px-2 py-1.5 transition-colors ${
                 isSelected ? "bg-white/10 text-white" : "text-neutral-400 hover:bg-neutral-800"
               }`}
             >
               <Icon size={12} className="shrink-0" />
-              <span className="flex-1 text-[11px] truncate">{getLabel(el)}</span>
+              <span className="flex-1 text-[11px] truncate text-left">{getLabel(el)}</span>
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   updateElement(el.id, { locked: !el.locked });
                   pushHistory();
                 }}
+                aria-label={el.locked ? "Desbloquear capa" : "Bloquear capa"}
                 className="p-0.5 text-neutral-600 hover:text-neutral-300"
               >
                 {el.locked ? <LockSimple size={10} /> : <LockSimpleOpen size={10} />}
@@ -102,6 +106,7 @@ export function LayerPanel({ onClose }: { onClose: () => void }) {
                   updateElement(el.id, { opacity: el.opacity > 0 ? 0 : 1 });
                   pushHistory();
                 }}
+                aria-label={el.opacity > 0 ? "Ocultar capa" : "Mostrar capa"}
                 className="p-0.5 text-neutral-600 hover:text-neutral-300"
               >
                 {el.opacity > 0 ? <Eye size={10} /> : <EyeSlash size={10} />}

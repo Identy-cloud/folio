@@ -87,7 +87,7 @@ export function VideoProperties({ element }: Props) {
           <span className="text-[10px]">{element.muted ? "ON" : "OFF"}</span>
         </button>
       </div>
-      <p className="text-[9px] leading-relaxed text-neutral-600">
+      <p className="text-[10px] leading-relaxed text-neutral-600">
         Video plays only in viewer mode. Editor shows poster or thumbnail.
       </p>
     </div>

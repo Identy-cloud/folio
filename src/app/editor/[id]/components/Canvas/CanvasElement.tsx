@@ -209,7 +209,7 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
               onClick={(e) => { e.stopPropagation(); window.dispatchEvent(new CustomEvent("folio:replace-image", { detail: element.id })); }}
             >
               <span style={{ color: "white", fontSize: 14, letterSpacing: "0.1em", display: "flex", alignItems: "center", gap: 6 }}>
-                <Camera size={18} weight="duotone" /> REPLACE
+                <Camera size={18} weight="regular" /> REPLACE
               </span>
             </div>
           )}

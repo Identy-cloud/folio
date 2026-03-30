@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { toast } from "sonner";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Camera } from "@phosphor-icons/react";
+import { ArrowLeft, Camera, DownloadSimple } from "@phosphor-icons/react";
 import { useTranslation } from "@/lib/i18n/context";
 
 interface Profile {
@@ -24,7 +24,28 @@ export default function ProfilePage() {
   const [saving, setSaving] = useState(false);
   const [name, setName] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [exporting, setExporting] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleExportData = useCallback(async () => {
+    setExporting(true);
+    try {
+      const res = await fetch("/api/account");
+      if (!res.ok) { toast.error(t.common.error); return; }
+      const data = await res.json();
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `folio-data-export-${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      toast.error(t.common.connectionError);
+    } finally {
+      setExporting(false);
+    }
+  }, [t]);
 
   useEffect(() => {
     fetch("/api/profile")
@@ -261,6 +282,28 @@ export default function ProfilePage() {
           <p className="mt-1 text-sm text-neutral-300">
             {new Date(profile.createdAt).toLocaleDateString()}
           </p>
+        </div>
+      </div>
+
+      {/* Data export */}
+      <div className="border border-neutral-800 p-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-500">
+              {t.dashboard.exportData ?? "Exportar mis datos"}
+            </p>
+            <p className="mt-1 text-xs text-neutral-500">
+              {t.dashboard.exportDataDesc ?? "Descarga una copia de todos tus datos en formato JSON (GDPR)"}
+            </p>
+          </div>
+          <button
+            onClick={handleExportData}
+            disabled={exporting}
+            className="flex shrink-0 items-center gap-2 border border-neutral-700 px-4 py-2 text-xs font-medium tracking-widest text-neutral-300 uppercase hover:border-white hover:text-white transition-colors disabled:opacity-30"
+          >
+            <DownloadSimple size={14} />
+            {exporting ? "..." : (t.dashboard.exportAction ?? "Exportar")}
+          </button>
         </div>
       </div>
     </div>

@@ -2,6 +2,7 @@
 
 import { useEditorStore } from "@/store/editorStore";
 import { CopySimple, Trash, LockSimple, LockSimpleOpen, ArrowUp, ArrowDown } from "@phosphor-icons/react";
+import { Tooltip } from "@/components/ui/Tooltip";
 import type { SlideElement } from "@/types/elements";
 
 interface Props {
@@ -30,26 +31,36 @@ export function QuickActions({ element, scale }: Props) {
       }}
       onPointerDown={(e) => e.stopPropagation()}
     >
-      <button onClick={() => duplicateElement(element.id)} className={btn} title="Duplicate">
-        <CopySimple size={14} />
-      </button>
-      <button onClick={() => bringForward(element.id)} className={btn} title="Bring forward">
-        <ArrowUp size={14} />
-      </button>
-      <button onClick={() => sendBackward(element.id)} className={btn} title="Send backward">
-        <ArrowDown size={14} />
-      </button>
-      <button
-        onClick={() => { updateElement(element.id, { locked: !element.locked }); pushHistory(); }}
-        className={btn}
-        title={element.locked ? "Unlock" : "Lock"}
-      >
-        {element.locked ? <LockSimpleOpen size={14} /> : <LockSimple size={14} />}
-      </button>
+      <Tooltip content="Duplicate" side="top">
+        <button onClick={() => duplicateElement(element.id)} className={btn} aria-label="Duplicar">
+          <CopySimple size={14} />
+        </button>
+      </Tooltip>
+      <Tooltip content="Bring forward" side="top">
+        <button onClick={() => bringForward(element.id)} className={btn} aria-label="Traer adelante">
+          <ArrowUp size={14} />
+        </button>
+      </Tooltip>
+      <Tooltip content="Send backward" side="top">
+        <button onClick={() => sendBackward(element.id)} className={btn} aria-label="Enviar atrás">
+          <ArrowDown size={14} />
+        </button>
+      </Tooltip>
+      <Tooltip content={element.locked ? "Unlock" : "Lock"} side="top">
+        <button
+          onClick={() => { updateElement(element.id, { locked: !element.locked }); pushHistory(); }}
+          className={btn}
+          aria-label={element.locked ? "Desbloquear" : "Bloquear"}
+        >
+          {element.locked ? <LockSimpleOpen size={14} /> : <LockSimple size={14} />}
+        </button>
+      </Tooltip>
       <div className="w-px bg-neutral-700" />
-      <button onClick={() => deleteElement(element.id)} className={`${btn} hover:text-red-400`} title="Delete">
-        <Trash size={14} />
-      </button>
+      <Tooltip content="Delete" side="top">
+        <button onClick={() => deleteElement(element.id)} className={`${btn} hover:text-red-400`} aria-label="Eliminar">
+          <Trash size={14} />
+        </button>
+      </Tooltip>
     </div>
   );
 }

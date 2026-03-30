@@ -91,6 +91,9 @@ export const es = {
     profileMember: "Miembro desde",
     planLimitReached: "Límite de tu plan alcanzado. Mejora tu plan para continuar.",
     storageLimitReached: "Almacenamiento lleno. Mejora tu plan para subir más archivos.",
+    exportData: "Exportar mis datos",
+    exportDataDesc: "Descarga una copia de todos tus datos en formato JSON (GDPR)",
+    exportAction: "Exportar",
   },
   editor: {
     loadError: "No se pudo cargar la presentación",

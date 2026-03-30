@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { ArrowCounterClockwise, ArrowClockwise, FilePdf, FilePpt, FileImage, Image as ImageIcon, Desktop, DeviceMobile, Play, ClockCounterClockwise, Stack, NotePencil, ChatCircle, UsersThree } from "@phosphor-icons/react";
+import { ArrowCounterClockwise, ArrowClockwise, FilePdf, FilePpt, FileImage, Image as ImageIcon, Desktop, DeviceMobile, Play, ClockCounterClockwise, Stack, NotePencil, ChatCircle, UsersThree, Export, CaretDown } from "@phosphor-icons/react";
 import { FolioLogo } from "@/components/FolioLogo";
 import { Tooltip } from "@/components/ui/Tooltip";
 
@@ -185,10 +185,11 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
           onChange={(e) => setTitle(e.target.value)}
           onBlur={saveTitle}
           onKeyDown={(e) => { if (e.key === "Enter") { saveTitle(); titleRef.current?.blur(); } }}
+          aria-label="Título de la presentación"
           className="hidden sm:block w-28 md:w-40 truncate bg-transparent text-xs text-neutral-400 outline-none hover:text-neutral-200 focus:text-white"
           placeholder="Untitled"
         />
-        <span className="hidden sm:inline text-[9px] text-neutral-600">{slides.length}s</span>
+        <span className="hidden sm:inline text-[10px] text-neutral-600">{slides.length}s</span>
         <Tooltip content="Settings">
           <button
             onClick={() => setSettingsOpen(true)}
@@ -274,50 +275,21 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
             disabled={uploading}
             className="hidden md:flex items-center gap-1 rounded px-3 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 disabled:opacity-50"
           >
-            <ImageIcon size={14} weight="duotone" />
+            <ImageIcon size={14} weight="regular" />
             {uploading ? <Spinner /> : t.editor.image}
           </button>
         </Tooltip>
-        <Tooltip content={limits.canExportPdf ? "Export PDF" : "Upgrade to export PDF"}>
-          <button
-            onClick={handleExport}
-            disabled={exporting || !limits.canExportPdf}
-            className="hidden md:flex items-center gap-1 rounded px-3 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 disabled:opacity-50"
-          >
-            <FilePdf size={14} weight="duotone" />
-            {exporting ? exportProgress : t.editor.pdf}
-          </button>
-        </Tooltip>
-        <Tooltip content="Export current slide as PNG">
-          <button
-            onClick={handleExportPng}
-            disabled={exporting}
-            className="hidden md:flex items-center gap-1 rounded px-3 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 disabled:opacity-50"
-          >
-            <FileImage size={14} weight="duotone" />
-            PNG
-          </button>
-        </Tooltip>
-        <Tooltip content="Export all slides as PNGs">
-          <button
-            onClick={handleExportAllPng}
-            disabled={exporting}
-            className="hidden md:flex items-center gap-1 rounded px-3 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 disabled:opacity-50"
-          >
-            <FileImage size={14} weight="duotone" />
-            {exporting && exportProgress ? exportProgress : "All PNG"}
-          </button>
-        </Tooltip>
-        <Tooltip content={limits.canExportPptx ? "Export PPTX" : "Upgrade to Studio to export PPTX"}>
-          <button
-            onClick={handleExportPptx}
-            disabled={exportingPptx || !limits.canExportPptx}
-            className="hidden md:flex items-center gap-1 rounded px-3 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 disabled:opacity-50"
-          >
-            <FilePpt size={14} weight="duotone" />
-            {exportingPptx ? "..." : "PPTX"}
-          </button>
-        </Tooltip>
+        <ExportDropdown
+          exporting={exporting}
+          exportProgress={exportProgress}
+          exportingPptx={exportingPptx}
+          canExportPdf={limits.canExportPdf}
+          canExportPptx={limits.canExportPptx}
+          onExportPdf={handleExport}
+          onExportPng={handleExportPng}
+          onExportAllPng={handleExportAllPng}
+          onExportPptx={handleExportPptx}
+        />
         <div className="hidden md:block h-5 w-px bg-neutral-700" />
         <div className="hidden md:flex gap-0.5 rounded border border-neutral-700 p-0.5" role="group" aria-label={t.editor.editMode}>
           <button
@@ -376,9 +348,13 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
             <span
               className={`inline-block h-2 w-2 rounded-full ${statusDot[saveStatus]}`}
               aria-live="polite"
-            />
+            >
+              <span className="sr-only">
+                {saveStatus === "saved" ? t.editor.saved : saveStatus === "saving" ? t.editor.saving : saveStatus === "error" ? t.editor.saveError : t.editor.unsaved}
+              </span>
+            </span>
             {saveStatus === "saved" && lastSaved && (
-              <span className="hidden lg:inline text-[9px] text-neutral-600">
+              <span className="hidden lg:inline text-[10px] text-neutral-600">
                 {new Date(lastSaved).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
               </span>
             )}
@@ -386,6 +362,55 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
         </Tooltip>
       </div>
       <PresentationSettings open={settingsOpen} onClose={() => setSettingsOpen(false)} />
+    </div>
+  );
+}
+
+function ExportDropdown({ exporting, exportProgress, exportingPptx, canExportPdf, canExportPptx, onExportPdf, onExportPng, onExportAllPng, onExportPptx }: {
+  exporting: boolean; exportProgress: string; exportingPptx: boolean;
+  canExportPdf: boolean; canExportPptx: boolean;
+  onExportPdf: () => void; onExportPng: () => void; onExportAllPng: () => void; onExportPptx: () => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    function close(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener("mousedown", close);
+    return () => document.removeEventListener("mousedown", close);
+  }, [open]);
+
+  const item = "flex w-full items-center gap-2 px-3 py-2 text-xs text-neutral-300 hover:bg-neutral-800 disabled:opacity-40 disabled:pointer-events-none transition-colors";
+
+  return (
+    <div ref={ref} className="relative hidden md:block">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="flex items-center gap-1 rounded px-3 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 transition-colors"
+      >
+        <Export size={14} weight="regular" />
+        {exporting ? exportProgress : "Export"}
+        <CaretDown size={10} />
+      </button>
+      {open && (
+        <div className="absolute left-0 top-full mt-1 z-50 w-44 rounded border border-neutral-700 bg-[#242424] py-1 shadow-lg">
+          <button onClick={() => { onExportPdf(); setOpen(false); }} disabled={exporting || !canExportPdf} className={item}>
+            <FilePdf size={14} weight="regular" /> {exporting ? exportProgress : "PDF"}
+          </button>
+          <button onClick={() => { onExportPng(); setOpen(false); }} disabled={exporting} className={item}>
+            <FileImage size={14} weight="regular" /> PNG (slide)
+          </button>
+          <button onClick={() => { onExportAllPng(); setOpen(false); }} disabled={exporting} className={item}>
+            <FileImage size={14} weight="regular" /> All PNG
+          </button>
+          <button onClick={() => { onExportPptx(); setOpen(false); }} disabled={exportingPptx || !canExportPptx} className={item}>
+            <FilePpt size={14} weight="regular" /> {exportingPptx ? "..." : "PPTX"}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

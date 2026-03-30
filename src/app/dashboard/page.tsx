@@ -295,6 +295,7 @@ export default function DashboardPage() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as "recent" | "name" | "oldest")}
+              aria-label="Ordenar por"
               className="rounded border border-neutral-700 bg-[#1e1e1e] px-2 py-1.5 text-xs text-neutral-300 outline-none"
             >
               <option value="recent">Recent</option>
@@ -308,6 +309,7 @@ export default function DashboardPage() {
             <select
               value={filterBy}
               onChange={(e) => setFilterBy(e.target.value as "all" | "public" | "private")}
+              aria-label="Filtrar por"
               className="rounded border border-neutral-700 bg-[#1e1e1e] px-2 py-1.5 text-xs text-neutral-300 outline-none"
             >
               <option value="all">All</option>
@@ -318,12 +320,16 @@ export default function DashboardPage() {
           <div className="flex rounded border border-neutral-700 p-0.5">
             <button
               onClick={() => setViewMode("grid")}
+              aria-label="Vista en cuadrícula"
+              aria-pressed={viewMode === "grid"}
               className={`rounded p-1.5 transition-colors ${viewMode === "grid" ? "bg-neutral-700 text-white" : "text-neutral-500 hover:text-neutral-300"}`}
             >
               <SquaresFour size={14} />
             </button>
             <button
               onClick={() => setViewMode("list")}
+              aria-label="Vista en lista"
+              aria-pressed={viewMode === "list"}
               className={`rounded p-1.5 transition-colors ${viewMode === "list" ? "bg-neutral-700 text-white" : "text-neutral-500 hover:text-neutral-300"}`}
             >
               <List size={14} />

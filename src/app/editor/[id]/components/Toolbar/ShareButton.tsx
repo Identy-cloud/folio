@@ -77,7 +77,7 @@ export function ShareButton() {
         aria-label={t.editor.share}
         aria-expanded={open}
       >
-        <ShareNetwork size={14} weight="duotone" />
+        <ShareNetwork size={14} weight="regular" />
         <span className="hidden md:inline">{t.editor.share}</span>
       </button>
 
@@ -152,7 +152,7 @@ export function ShareButton() {
                       className="flex-1 rounded border border-neutral-700 bg-[#111111] px-2 py-1.5 text-xs text-neutral-300 outline-none placeholder:text-neutral-600 focus:border-neutral-500"
                     />
                     {pw.trim().length > 0 && pw.trim().length < 6 && (
-                      <span className="absolute -bottom-4 left-0 text-[9px] text-amber-500">Weak password</span>
+                      <span className="absolute -bottom-4 left-0 text-xs text-amber-500">Weak password</span>
                     )}
                     <button
                       onClick={async () => {

@@ -1,8 +1,7 @@
 "use client";
 
-import { useRef } from "react";
 import { Folder, X } from "@phosphor-icons/react";
-import { useClickOutside } from "@/hooks/useClickOutside";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 import type { FolderItem } from "./folder-list";
 
 interface Props {
@@ -12,13 +11,12 @@ interface Props {
 }
 
 export function MoveToFolderDialog({ folders, onSelect, onCancel }: Props) {
-  const ref = useRef<HTMLDivElement>(null);
-  useClickOutside(ref, onCancel, true);
+  const trapRef = useFocusTrap<HTMLDivElement>(true);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" role="dialog" aria-modal="true" aria-label="Mover a carpeta">
       <div
-        ref={ref}
+        ref={trapRef}
         className="w-full max-w-xs rounded border border-neutral-700 bg-[#1e1e1e] p-4 shadow-xl"
       >
         <div className="mb-3 flex items-center justify-between">
@@ -27,6 +25,7 @@ export function MoveToFolderDialog({ folders, onSelect, onCancel }: Props) {
           </h3>
           <button
             onClick={onCancel}
+            aria-label="Cerrar"
             className="rounded p-1 text-neutral-500 hover:text-neutral-200"
           >
             <X size={16} />

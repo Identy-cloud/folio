@@ -16,6 +16,7 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   async function handleEmailAuth(e: React.FormEvent) {
     e.preventDefault();
@@ -110,6 +111,23 @@ export default function LoginPage() {
             className="w-full border-b border-neutral-700 bg-transparent px-2 py-3 text-sm text-white placeholder-neutral-500 outline-none focus:border-white transition-colors"
           />
 
+          {isSignUp && (
+            <label className="flex items-start gap-2 pt-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={termsAccepted}
+                onChange={(e) => setTermsAccepted(e.target.checked)}
+                className="mt-0.5 h-4 w-4 shrink-0 accent-white"
+              />
+              <span className="text-[11px] leading-relaxed text-neutral-500">
+                {t.auth.termsPrefix}{" "}
+                <Link href="/terms" className="text-neutral-300 underline underline-offset-2 hover:text-white transition-colors">{t.auth.termsLink}</Link>
+                {" "}{t.auth.termsAnd}{" "}
+                <Link href="/privacy" className="text-neutral-300 underline underline-offset-2 hover:text-white transition-colors">{t.auth.privacyLink}</Link>
+              </span>
+            </label>
+          )}
+
           {error && (
             <p className="pt-2 text-xs text-red-400" role="alert">{error}</p>
           )}
@@ -119,7 +137,7 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || (isSignUp && !termsAccepted)}
             className="mt-4 w-full bg-white py-3 text-xs font-semibold tracking-[0.25em] text-black uppercase hover:bg-neutral-200 disabled:opacity-50 transition-colors"
           >
             {loading
@@ -170,14 +188,6 @@ export default function LoginPage() {
           </button>
         </p>
 
-        {isSignUp && (
-          <p className="text-center text-[10px] text-neutral-600">
-            {t.auth.termsPrefix}{" "}
-            <Link href="/terms" className="underline underline-offset-2 hover:text-neutral-300 transition-colors">{t.auth.termsLink}</Link>
-            {" "}{t.auth.termsAnd}{" "}
-            <Link href="/privacy" className="underline underline-offset-2 hover:text-neutral-300 transition-colors">{t.auth.privacyLink}</Link>
-          </p>
-        )}
       </div>
     </div>
   );

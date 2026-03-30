@@ -51,14 +51,14 @@ export function FindReplace({ open, onClose, showReplace: initialReplace }: Prop
     <div className="fixed left-0 right-0 top-12 z-50 mx-auto w-full max-w-md px-3 md:left-auto md:right-4 md:mx-0 md:w-96 md:px-0">
       <div className="rounded-lg border border-neutral-700 bg-[#1e1e1e] p-3 shadow-2xl">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-[10px] font-medium text-neutral-400 uppercase tracking-wider">
+          <span className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">
             Find {replaceVisible ? "& Replace" : ""}
           </span>
           <div className="flex gap-1">
             <button onClick={() => setReplaceVisible((v) => !v)} className="rounded p-1 text-neutral-500 hover:bg-neutral-700 hover:text-neutral-300" title="Toggle replace">
               <ArrowsClockwise size={12} />
             </button>
-            <button onClick={onClose} className="rounded p-1 text-neutral-500 hover:bg-neutral-700 hover:text-neutral-300">
+            <button onClick={onClose} className="rounded p-1.5 text-neutral-500 hover:bg-neutral-700 hover:text-neutral-300 transition-colors">
               <X size={14} />
             </button>
           </div>

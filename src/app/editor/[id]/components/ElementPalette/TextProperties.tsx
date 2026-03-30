@@ -38,7 +38,7 @@ export function TextProperties({ element }: Props) {
 
   return (
     <div className="space-y-3">
-      <span className="text-[10px] font-medium text-neutral-400 uppercase tracking-wider">{t.editor.text}</span>
+      <span className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">{t.editor.text}</span>
 
       {/* Font family */}
       <select

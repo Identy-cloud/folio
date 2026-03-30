@@ -93,6 +93,9 @@ export const de = {
     profileMember: "Mitglied seit",
     planLimitReached: "Planlimit erreicht. Upgrade für mehr.",
     storageLimitReached: "Speicher voll. Upgrade für mehr Speicher.",
+    exportData: "Meine Daten exportieren",
+    exportDataDesc: "Lade eine Kopie aller deiner Daten im JSON-Format herunter (DSGVO)",
+    exportAction: "Exportieren",
   },
   editor: {
     loadError: "Die Präsentation konnte nicht geladen werden",

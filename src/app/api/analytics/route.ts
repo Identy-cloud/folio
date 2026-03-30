@@ -7,6 +7,15 @@ import { z } from "zod";
 import type { NextRequest } from "next/server";
 import { getUserPlan } from "@/lib/stripe";
 import { getPlanLimits } from "@/lib/plan-limits";
+import { createHash } from "crypto";
+
+function anonymizeIp(ip: string): string {
+  const dailySalt = new Date().toISOString().slice(0, 10);
+  return createHash("sha256")
+    .update(ip + dailySalt)
+    .digest("hex")
+    .slice(0, 16);
+}
 
 const postSchema = z.object({
   presentationId: z.string().uuid(),
@@ -35,7 +44,7 @@ export async function POST(request: NextRequest) {
     presentationId,
     slideIndex: slideIndex ?? null,
     duration: duration ?? null,
-    viewerIp: ip,
+    viewerIp: anonymizeIp(ip),
     userAgent: request.headers.get("user-agent")?.slice(0, 512) ?? null,
   });
 

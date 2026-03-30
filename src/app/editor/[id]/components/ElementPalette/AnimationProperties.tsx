@@ -46,7 +46,7 @@ export function AnimationProperties({ element }: Props) {
 
   return (
     <div className="space-y-2">
-      <span className="text-[10px] font-medium text-neutral-400 uppercase tracking-wider">
+      <span className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">
         {t.editor.transition}
       </span>
       <div className="flex gap-1">
@@ -106,7 +106,7 @@ export function AnimationProperties({ element }: Props) {
                 <button
                   key={e}
                   onClick={() => { updateElement(element.id, { animationEasing: e }); pushHistory(); }}
-                  className={`flex-1 rounded px-0.5 py-1 text-[9px] transition-colors ${
+                  className={`flex-1 rounded px-0.5 py-1 text-[10px] transition-colors ${
                     (element.animationEasing ?? "ease") === e
                       ? "bg-white text-[#161616]"
                       : "text-neutral-500 hover:bg-neutral-800"

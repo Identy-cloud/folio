@@ -293,7 +293,7 @@ export function CommandPalette({ open, onClose }: Props) {
   }
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[20vh]" onClick={onClose}>
+    <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[20vh]" role="dialog" aria-modal="true" onClick={onClose}>
       <div className="w-full max-w-md rounded border border-neutral-700 bg-[#1e1e1e] shadow-2xl" onClick={(e) => e.stopPropagation()}>
         <input
           ref={inputRef}
@@ -306,12 +306,15 @@ export function CommandPalette({ open, onClose }: Props) {
             if (e.key === "Enter" && filtered.length > 0) run(filtered[selectedIdx]);
           }}
           placeholder="Type to search commands..."
+          aria-label="Paleta de comandos"
           className="w-full border-b border-neutral-700 bg-transparent px-4 py-3 text-sm text-white outline-none placeholder:text-neutral-500"
         />
-        <div className="max-h-60 overflow-y-auto p-1">
+        <div className="max-h-60 overflow-y-auto p-1" role="listbox">
           {filtered.map((cmd, i) => (
             <button
               key={cmd.id}
+              role="option"
+              aria-selected={i === selectedIdx}
               onClick={() => run(cmd)}
               className={`flex w-full items-center justify-between rounded px-3 py-2 text-left text-sm transition-colors ${
                 i === selectedIdx ? "bg-neutral-800 text-white" : "text-neutral-300 hover:bg-neutral-800"

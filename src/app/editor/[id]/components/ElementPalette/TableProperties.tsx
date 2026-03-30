@@ -39,7 +39,7 @@ export function TableProperties({ element }: Props) {
 
   return (
     <div className="space-y-3">
-      <span className="text-[10px] font-medium text-neutral-400 uppercase tracking-wider">
+      <span className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">
         Table
       </span>
 

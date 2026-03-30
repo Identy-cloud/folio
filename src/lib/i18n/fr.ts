@@ -93,6 +93,9 @@ export const fr = {
     profileMember: "Membre depuis",
     planLimitReached: "Limite du plan atteinte. Passez à un plan supérieur.",
     storageLimitReached: "Stockage plein. Passez à un plan supérieur.",
+    exportData: "Exporter mes données",
+    exportDataDesc: "Téléchargez une copie de toutes vos données au format JSON (RGPD)",
+    exportAction: "Exporter",
   },
   editor: {
     loadError: "Impossible de charger la présentation",

@@ -89,7 +89,7 @@ export function CollaboratorsPanel({ open, onClose }: Props) {
             Collaborators ({collaborators.length}/{limitLabel})
           </span>
         </div>
-        <button onClick={onClose} className="text-neutral-500 hover:text-neutral-300">
+        <button onClick={onClose} className="rounded p-1.5 text-neutral-500 hover:bg-neutral-700 hover:text-neutral-300 transition-colors">
           <X size={14} />
         </button>
       </div>

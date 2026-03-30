@@ -1,4 +1,9 @@
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import {
+  S3Client,
+  PutObjectCommand,
+  ListObjectsV2Command,
+  DeleteObjectsCommand,
+} from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 function getR2Client() {
@@ -41,4 +46,40 @@ export async function uploadToR2(
   });
   await client.send(command);
   return `${process.env.R2_PUBLIC_URL}/${key}`;
+}
+
+export async function deleteUserR2Files(userId: string): Promise<void> {
+  const client = getR2Client();
+  const bucket = process.env.R2_BUCKET_NAME!;
+  const prefix = `uploads/${userId}/`;
+
+  let continuationToken: string | undefined;
+
+  do {
+    const listCommand = new ListObjectsV2Command({
+      Bucket: bucket,
+      Prefix: prefix,
+      ContinuationToken: continuationToken,
+    });
+
+    const listResult = await client.send(listCommand);
+
+    if (listResult.Contents && listResult.Contents.length > 0) {
+      const objects = listResult.Contents
+        .filter((obj) => obj.Key)
+        .map((obj) => ({ Key: obj.Key! }));
+
+      if (objects.length > 0) {
+        const deleteCommand = new DeleteObjectsCommand({
+          Bucket: bucket,
+          Delete: { Objects: objects },
+        });
+        await client.send(deleteCommand);
+      }
+    }
+
+    continuationToken = listResult.IsTruncated
+      ? listResult.NextContinuationToken
+      : undefined;
+  } while (continuationToken);
 }

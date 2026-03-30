@@ -157,7 +157,7 @@ export default function PricingPage() {
                       {f.included
                         ? <Check size={14} className="mt-0.5 shrink-0 text-green-500" />
                         : <XIcon size={14} className="mt-0.5 shrink-0 text-neutral-600" />}
-                      <span className={f.included ? "text-neutral-300" : "text-neutral-600"}>{f.text}</span>
+                      <span className={f.included ? "text-neutral-300" : "text-neutral-500"}>{f.text}</span>
                     </li>
                   ))}
                 </ul>

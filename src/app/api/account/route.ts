@@ -1,11 +1,20 @@
 import { db } from "@/db";
-import { users, presentations } from "@/db/schema";
+import {
+  users,
+  presentations,
+  slides,
+  comments,
+  presentationViews,
+  collaborators,
+  subscriptions,
+} from "@/db/schema";
 import { getAuthenticatedUser } from "@/lib/auth";
 import { checkRateLimit, rateLimitResponse } from "@/lib/rate-limit";
 import { createClient } from "@/lib/supabase/server";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { eq } from "drizzle-orm";
 import type { NextRequest } from "next/server";
+import { deleteUserR2Files } from "@/lib/r2";
 
 export async function DELETE(request: NextRequest) {
   const ip =
@@ -42,12 +51,12 @@ export async function DELETE(request: NextRequest) {
     );
   }
 
+  await deleteUserR2Files(user.id);
+
   await db.delete(presentations).where(eq(presentations.userId, user.id));
 
-  // Delete user from DB
   await db.delete(users).where(eq(users.id, user.id));
 
-  // Delete auth user from Supabase using admin API
   const adminClient = createSupabaseClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
@@ -65,26 +74,72 @@ export async function GET() {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // GDPR data export
   const userPresentations = await db
     .select()
     .from(presentations)
     .where(eq(presentations.userId, user.id));
+
+  const presentationIds = userPresentations.map((p) => p.id);
+
+  const allSlides = presentationIds.length > 0
+    ? await Promise.all(
+        presentationIds.map((pid) =>
+          db.select().from(slides).where(eq(slides.presentationId, pid))
+        )
+      ).then((results) => results.flat())
+    : [];
+
+  const allComments = presentationIds.length > 0
+    ? await Promise.all(
+        presentationIds.map((pid) =>
+          db.select().from(comments).where(eq(comments.presentationId, pid))
+        )
+      ).then((results) => results.flat())
+    : [];
+
+  const allViews = presentationIds.length > 0
+    ? await Promise.all(
+        presentationIds.map((pid) =>
+          db.select().from(presentationViews).where(eq(presentationViews.presentationId, pid))
+        )
+      ).then((results) => results.flat())
+    : [];
+
+  const userCollabs = await db
+    .select()
+    .from(collaborators)
+    .where(eq(collaborators.userId, user.id));
+
+  const [userSubscription] = await db
+    .select()
+    .from(subscriptions)
+    .where(eq(subscriptions.userId, user.id))
+    .limit(1);
 
   return Response.json({
     user: {
       id: user.id,
       email: user.email,
       name: user.name,
+      plan: user.plan,
+      storageUsed: user.storageUsed,
       createdAt: user.createdAt,
     },
     presentations: userPresentations.map((p) => ({
-      id: p.id,
-      title: p.title,
-      theme: p.theme,
-      isPublic: p.isPublic,
-      createdAt: p.createdAt,
+      ...p,
+      slides: allSlides.filter((s) => s.presentationId === p.id),
+      comments: allComments.filter((c) => c.presentationId === p.id),
+      views: allViews
+        .filter((v) => v.presentationId === p.id)
+        .map((v) => ({
+          id: v.id,
+          slideIndex: v.slideIndex,
+          duration: v.duration,
+          createdAt: v.createdAt,
+        })),
     })),
+    collaborations: userCollabs,
+    subscription: userSubscription ?? null,
     exportedAt: new Date().toISOString(),
   });
 }

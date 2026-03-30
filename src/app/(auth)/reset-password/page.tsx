@@ -70,6 +70,7 @@ export default function ResetPasswordPage() {
               required
               minLength={6}
               autoFocus
+              aria-label="Nueva contraseña"
               className="w-full border-b border-neutral-700 bg-transparent px-2 py-3 text-sm text-white placeholder-neutral-500 outline-none focus:border-white transition-colors"
             />
             <input
@@ -79,6 +80,7 @@ export default function ResetPasswordPage() {
               onChange={(e) => setConfirm(e.target.value)}
               required
               minLength={6}
+              aria-label="Confirmar contraseña"
               className="w-full border-b border-neutral-700 bg-transparent px-2 py-3 text-sm text-white placeholder-neutral-500 outline-none focus:border-white transition-colors"
             />
 

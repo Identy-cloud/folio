@@ -4,6 +4,7 @@ import { useEditorStore } from "@/store/editorStore";
 import { SlidePreview } from "@/components/SlidePreview";
 import { X, Trash } from "@phosphor-icons/react";
 import { useSlideDrag } from "@/hooks/useSlideDrag";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 interface Props {
   open: boolean;
@@ -20,16 +21,17 @@ export function SlideSorter({ open, onClose }: Props) {
 
   const { dragState, handleDragStart, handleDragOver, handleDrop, handleDragEnd } =
     useSlideDrag({ onReorder: reorderSlides });
+  const trapRef = useFocusTrap<HTMLDivElement>(open);
 
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-[#111]/95 backdrop-blur-sm">
+    <div ref={trapRef} role="dialog" aria-modal="true" aria-label="Organizador de slides" className="fixed inset-0 z-50 flex flex-col bg-[#111]/95 backdrop-blur-sm">
       <div className="flex items-center justify-between border-b border-neutral-800 px-6 py-3">
         <h2 className="font-display text-xl tracking-tight text-white">
           SLIDE SORTER — {slides.length} slides
         </h2>
-        <button onClick={onClose} className="rounded p-2 text-neutral-400 hover:text-white transition-colors">
+        <button onClick={onClose} aria-label="Cerrar" className="rounded p-2 text-neutral-400 hover:text-white transition-colors">
           <X size={20} />
         </button>
       </div>

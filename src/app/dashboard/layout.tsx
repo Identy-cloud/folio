@@ -56,8 +56,11 @@ export default async function DashboardLayout({
         </div>
       </header>
       <main id="main-content" className="flex-1 p-4 sm:p-6">{children}</main>
-      <footer className="flex items-center justify-center gap-4 border-t border-neutral-800 py-3">
+      <footer className="flex flex-wrap items-center justify-center gap-3 border-t border-neutral-800 px-4 py-3 sm:gap-4">
         <DeleteAccountButton />
+        <Link href="/privacy#ccpa" className="text-[10px] tracking-[0.15em] text-neutral-600 uppercase hover:text-neutral-400 transition-colors">
+          No vender mi informacion
+        </Link>
       </footer>
     </div>
   );

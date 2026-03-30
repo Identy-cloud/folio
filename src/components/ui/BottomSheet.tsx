@@ -3,6 +3,7 @@
 import { useEffect, useCallback, type ReactNode } from "react";
 import { X } from "@phosphor-icons/react";
 import { useTranslation } from "@/lib/i18n/context";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 interface Props {
   open: boolean;
@@ -13,6 +14,7 @@ interface Props {
 
 export function BottomSheet({ open, title, onClose, children }: Props) {
   const { t } = useTranslation();
+  const trapRef = useFocusTrap<HTMLDivElement>(open);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -33,6 +35,7 @@ export function BottomSheet({ open, title, onClose, children }: Props) {
     <div className="fixed inset-0 z-50 md:hidden">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
       <div
+        ref={trapRef}
         role="dialog"
         aria-modal="true"
         aria-label={title}

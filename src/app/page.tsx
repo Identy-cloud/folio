@@ -29,7 +29,7 @@ export default function LandingPage() {
       </header>
 
       {/* Hero */}
-      <main className="flex flex-1 flex-col items-center justify-center px-4 text-center sm:px-6">
+      <main id="main-content" className="flex flex-1 flex-col items-center justify-center px-4 text-center sm:px-6">
         <p className="text-[10px] tracking-[0.5em] text-neutral-500 uppercase">
           Editorial Slides
         </p>
@@ -69,7 +69,7 @@ export default function LandingPage() {
           {FEATURES.map((f) => (
             <div key={f.title} className="border border-neutral-800 p-6">
               <h3 className="font-display text-lg tracking-tight">{f.title}</h3>
-              <p className="mt-2 text-xs leading-relaxed text-neutral-500">{f.desc}</p>
+              <p className="mt-2 text-xs leading-relaxed text-neutral-400">{f.desc}</p>
             </div>
           ))}
         </div>
@@ -92,15 +92,21 @@ export default function LandingPage() {
       </section>
 
       <footer className="flex flex-col items-center gap-3 border-t border-neutral-800 py-8">
-        <div className="flex gap-6">
-          <Link href="/terms" className="text-[10px] tracking-[0.2em] text-neutral-600 uppercase hover:text-neutral-400 transition-colors">
-            Términos
+        <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
+          <Link href="/terms" className="text-[10px] tracking-[0.2em] text-neutral-400 uppercase hover:text-neutral-200 transition-colors">
+            Terminos
           </Link>
-          <Link href="/privacy" className="text-[10px] tracking-[0.2em] text-neutral-600 uppercase hover:text-neutral-400 transition-colors">
+          <Link href="/privacy" className="text-[10px] tracking-[0.2em] text-neutral-400 uppercase hover:text-neutral-200 transition-colors">
             Privacidad
           </Link>
-          <Link href="/pricing" className="text-[10px] tracking-[0.2em] text-neutral-600 uppercase hover:text-neutral-400 transition-colors">
+          <Link href="/cookies" className="text-[10px] tracking-[0.2em] text-neutral-400 uppercase hover:text-neutral-200 transition-colors">
+            Cookies
+          </Link>
+          <Link href="/pricing" className="text-[10px] tracking-[0.2em] text-neutral-400 uppercase hover:text-neutral-200 transition-colors">
             Pricing
+          </Link>
+          <Link href="/privacy#ccpa" className="text-[10px] tracking-[0.2em] text-neutral-400 uppercase hover:text-neutral-200 transition-colors">
+            No vender mi informacion
           </Link>
         </div>
         <p className="text-[10px] tracking-[0.3em] text-neutral-600 uppercase">
