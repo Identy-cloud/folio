@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { ArrowCounterClockwise, ArrowClockwise, FilePdf, FilePpt, FileImage, Image as ImageIcon, Desktop, DeviceMobile, Play, ClockCounterClockwise, Stack, NotePencil, ChatCircle, UsersThree, Export, CaretDown, Layout, Sparkle, ChartBar, GlobeSimple } from "@phosphor-icons/react";
+import { ArrowCounterClockwise, ArrowClockwise, FilePdf, FilePpt, FileImage, Image as ImageIcon, Desktop, DeviceMobile, Play, ClockCounterClockwise, Stack, NotePencil, ChatCircle, UsersThree, Export, CaretDown, Layout, Sparkle, ChartBar, GlobeSimple, BookmarkSimple } from "@phosphor-icons/react";
 import { FolioLogo } from "@/components/FolioLogo";
 import { Tooltip } from "@/components/ui/Tooltip";
 
@@ -17,6 +17,7 @@ import { NotificationBell } from "@/components/NotificationBell";
 import { useImageUpload } from "../../hooks/useImageUpload";
 import { useTranslation } from "@/lib/i18n/context";
 import { usePlanLimits } from "@/hooks/usePlanLimits";
+import { RecordingControls } from "../RecordingControls";
 
 interface ToolbarProps {
   connected?: boolean;
@@ -223,6 +224,11 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
             </button>
           </Tooltip>
         )}
+        <Tooltip content="Slide library">
+          <button onClick={() => window.dispatchEvent(new CustomEvent("folio:open-slide-library"))} className="hidden sm:flex rounded p-1.5 text-neutral-500 hover:bg-neutral-800 hover:text-neutral-300 transition-colors">
+            <BookmarkSimple size={14} />
+          </button>
+        </Tooltip>
         <div className="h-5 w-px bg-neutral-700" />
         <div className="flex gap-1">
           <Tooltip content={t.editor.undo} shortcut="Ctrl+Z">
@@ -331,6 +337,9 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
           onExportPptx={handleExportPptx}
         />
         <div className="hidden md:block h-5 w-px bg-neutral-700" />
+        <div className="hidden md:block">
+          <RecordingControls />
+        </div>
         <div className="hidden md:flex gap-0.5 rounded border border-neutral-700 p-0.5" role="group" aria-label={t.editor.editMode}>
           <button
             onClick={() => setEditingMode("desktop")}

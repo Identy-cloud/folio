@@ -151,5 +151,5 @@ export function useCollaboration(presentationId: string) {
     });
   }, []);
 
-  return { peers, connected, updateCursor, clearCursor };
+  return { peers, connected, updateCursor, clearCursor, ydocRef, providerRef };
 }

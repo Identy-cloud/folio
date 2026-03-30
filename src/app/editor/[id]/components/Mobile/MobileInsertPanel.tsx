@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { nanoid } from "nanoid";
-import { TextT, Rectangle, Circle, Triangle, Image as ImageIcon, Diamond, Star, ArrowRight, Minus, LineSegment, GridNine, Smiley, VideoCamera, ImageSquare } from "@phosphor-icons/react";
+import { TextT, Rectangle, Circle, Triangle, Image as ImageIcon, Diamond, Star, ArrowRight, Minus, LineSegment, GridNine, Smiley, VideoCamera, ImageSquare, Sparkle } from "@phosphor-icons/react";
 import { useEditorStore } from "@/store/editorStore";
 import { textDefaults, shapeDefaults } from "@/lib/templates/element-defaults";
 import { THEMES } from "@/lib/templates/themes";
@@ -108,6 +108,9 @@ export function MobileInsertPanel({ onClose }: { onClose: () => void }) {
       </button>
       <button onClick={() => setShowUnsplash(true)} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800">
         <ImageSquare size={18} weight="regular" /> Stock Images
+      </button>
+      <button onClick={() => { window.dispatchEvent(new CustomEvent("folio:open-ai-image")); onClose(); }} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800">
+        <Sparkle size={18} weight="fill" className="text-amber-400" /> AI Image
       </button>
       {showIconPicker && <IconPicker onClose={() => { setShowIconPicker(false); onClose(); }} />}
       {showUnsplash && <UnsplashPicker onClose={() => { setShowUnsplash(false); onClose(); }} />}

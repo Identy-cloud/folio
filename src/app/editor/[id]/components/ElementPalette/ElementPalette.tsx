@@ -4,7 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useEditorStore } from "@/store/editorStore";
 import { nanoid } from "nanoid";
-import { TextT, Rectangle, Circle, Triangle, Image as ImageIcon, ArrowRight, Minus, Diamond, Star, Pentagon, Hexagon, Code, LineSegment, GridNine, Smiley, VideoCamera, ImageSquare } from "@phosphor-icons/react";
+import { TextT, Rectangle, Circle, Triangle, Image as ImageIcon, ArrowRight, Minus, Diamond, Star, Pentagon, Hexagon, Code, LineSegment, GridNine, Smiley, VideoCamera, ImageSquare, Sparkle } from "@phosphor-icons/react";
 import { useImageUpload } from "../../hooks/useImageUpload";
 import { PositionFields } from "./PositionFields";
 import { TextProperties } from "./TextProperties";
@@ -130,6 +130,9 @@ export function ElementPalette() {
         </button>
         <button onClick={() => setShowUnsplash(true)} className={btn}>
           <ImageSquare size={16} weight="regular" /> Stock Images
+        </button>
+        <button onClick={() => window.dispatchEvent(new CustomEvent("folio:open-ai-image"))} className={btn}>
+          <Sparkle size={16} weight="fill" className="text-amber-400" /> AI Image
         </button>
       </div>
       {showIconPicker && <IconPicker onClose={() => setShowIconPicker(false)} />}

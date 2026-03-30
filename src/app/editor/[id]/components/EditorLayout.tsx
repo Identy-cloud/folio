@@ -31,10 +31,14 @@ import { CommandPalette } from "./CommandPalette";
 import { UnsplashPicker } from "./UnsplashPicker";
 import { LayoutPicker } from "./LayoutPicker";
 import { AnimationTimeline } from "./AnimationTimeline";
+import { SlideLibrary } from "./SlideLibrary";
 import { AIGenerateDialog } from "@/components/editor/AIGenerateDialog";
 import { AIGeneratePresentationDialog } from "@/components/editor/AIGeneratePresentationDialog";
 import { TranslateDialog } from "@/components/editor/TranslateDialog";
-import { ClockCounterClockwise, Stack, NotePencil } from "@phosphor-icons/react";
+import { AIImageDialog } from "@/components/editor/AIImageDialog";
+import { ClockCounterClockwise, Stack, NotePencil, ChatCircleDots } from "@phosphor-icons/react";
+import { ChatPanel } from "./ChatPanel";
+import { useChat } from "../hooks/useChat";
 import { MobileSlidePanel } from "./Mobile/MobileSlidePanel";
 import { MobileInsertPanel } from "./Mobile/MobileInsertPanel";
 import { MobilePropertiesPanel } from "./Mobile/MobilePropertiesPanel";
@@ -43,12 +47,16 @@ import { useTranslation } from "@/lib/i18n/context";
 export function EditorLayout() {
   const { t } = useTranslation();
   const presentationId = useEditorStore((s) => s.presentationId);
-  const { peers, connected, updateCursor, clearCursor } =
+  const { peers, connected, updateCursor, clearCursor, ydocRef, providerRef } =
     useCollaboration(presentationId);
 
   useKeyboard();
   useAutoSave();
   useSessionGuard();
+
+  const { messages, sendMessage, unreadCount, markAsRead, markAsClosed } =
+    useChat({ ydocRef, providerRef, presentationId });
+  const [chatOpen, setChatOpen] = useState(false);
 
   const [mobilePanel, setMobilePanel] = useState<"slides" | "insert" | "properties" | null>(null);
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
@@ -70,6 +78,8 @@ export function EditorLayout() {
   const [timelineOpen, setTimelineOpen] = useState(false);
   const [translateOpen, setTranslateOpen] = useState(false);
   const [aiPresentationOpen, setAIPresentationOpen] = useState(false);
+  const [aiImageOpen, setAIImageOpen] = useState(false);
+  const [slideLibraryOpen, setSlideLibraryOpen] = useState(false);
   const rightPanel = versionsOpen ? "versions" : historyOpen ? "history" : layersOpen ? "layers" : "palette";
   const selectedIds = useEditorStore((s) => s.selectedElementIds);
   const hasSelection = selectedIds.length > 0;
@@ -79,15 +89,21 @@ export function EditorLayout() {
     const onOpenAIGenerate = () => setAIGenerateOpen(true);
     const onOpenTranslate = () => setTranslateOpen(true);
     const onOpenAIPresentation = () => setAIPresentationOpen(true);
+    const onOpenAIImage = () => setAIImageOpen(true);
+    const onOpenSlideLibrary = () => setSlideLibraryOpen(true);
     window.addEventListener("folio:open-unsplash", onOpenUnsplash);
     window.addEventListener("folio:open-ai-generate", onOpenAIGenerate);
     window.addEventListener("folio:open-translate", onOpenTranslate);
     window.addEventListener("folio:open-ai-presentation", onOpenAIPresentation);
+    window.addEventListener("folio:open-ai-image", onOpenAIImage);
+    window.addEventListener("folio:open-slide-library", onOpenSlideLibrary);
     return () => {
       window.removeEventListener("folio:open-unsplash", onOpenUnsplash);
       window.removeEventListener("folio:open-ai-generate", onOpenAIGenerate);
       window.removeEventListener("folio:open-translate", onOpenTranslate);
       window.removeEventListener("folio:open-ai-presentation", onOpenAIPresentation);
+      window.removeEventListener("folio:open-ai-image", onOpenAIImage);
+      window.removeEventListener("folio:open-slide-library", onOpenSlideLibrary);
     };
   }, []);
 
@@ -257,6 +273,34 @@ export function EditorLayout() {
         )}
       </BottomSheet>
 
+      {/* Chat toggle – only when collaboration active */}
+      {connected && peers.length > 0 && (
+        <button
+          onClick={() => {
+            const next = !chatOpen;
+            setChatOpen(next);
+            if (next) markAsRead();
+            else markAsClosed();
+          }}
+          className="fixed bottom-14 right-4 z-40 flex h-10 w-10 items-center justify-center rounded-full bg-neutral-800/90 text-neutral-400 hover:text-white hover:bg-neutral-700 shadow-lg backdrop-blur-sm transition-colors md:bottom-14"
+          aria-label="Toggle chat"
+        >
+          <ChatCircleDots size={20} weight="bold" />
+          {unreadCount > 0 && !chatOpen && (
+            <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
+              {unreadCount > 99 ? "99+" : unreadCount}
+            </span>
+          )}
+        </button>
+      )}
+
+      <ChatPanel
+        open={chatOpen}
+        onClose={() => { setChatOpen(false); markAsClosed(); }}
+        messages={messages}
+        onSend={sendMessage}
+      />
+
       {/* Help button – bottom-right */}
       <button
         data-onboarding="help"
@@ -278,6 +322,8 @@ export function EditorLayout() {
       <AIGenerateDialog open={aiGenerateOpen} onClose={() => setAIGenerateOpen(false)} />
       <AIGeneratePresentationDialog open={aiPresentationOpen} onClose={() => setAIPresentationOpen(false)} />
       <TranslateDialog open={translateOpen} onClose={() => setTranslateOpen(false)} />
+      <AIImageDialog open={aiImageOpen} onClose={() => setAIImageOpen(false)} />
+      <SlideLibrary open={slideLibraryOpen} onClose={() => setSlideLibraryOpen(false)} />
       <Onboarding />
       <ShortcutsPanel
         open={shortcutsOpen}

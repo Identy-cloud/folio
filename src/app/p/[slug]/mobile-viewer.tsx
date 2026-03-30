@@ -11,6 +11,7 @@ import { ReportModal } from "@/components/ReportModal";
 import { gradientToCSS } from "@/lib/gradient-utils";
 import { textShadowCSS } from "@/lib/element-style-utils";
 import { usePinchZoom } from "@/hooks/usePinchZoom";
+import { RecordingPlayer } from "./recording-player";
 
 interface Slide {
   id: string;
@@ -23,12 +24,20 @@ interface Slide {
   mobileElements?: SlideElement[] | null;
 }
 
+interface TimelineEntry {
+  slideIndex: number;
+  startTime: number;
+}
+
 interface Props {
   title: string;
   slides: Slide[];
   showWatermark?: boolean;
   presentationId?: string;
   forkCount?: number;
+  recordingUrl?: string;
+  recordingTimeline?: TimelineEntry[];
+  recordingDuration?: number;
 }
 
 const DEFAULT_TRANSITION_MS = 350;
@@ -40,7 +49,7 @@ function mobileBg(slide: Slide): string {
   return slide.backgroundColor;
 }
 
-export function MobileViewer({ title, slides, showWatermark, presentationId, forkCount }: Props) {
+export function MobileViewer({ title, slides, showWatermark, presentationId, forkCount, recordingUrl, recordingTimeline, recordingDuration }: Props) {
   const { t } = useTranslation();
   const [current, setCurrent] = useState(0);
   const [forking, setForking] = useState(false);
@@ -281,6 +290,17 @@ export function MobileViewer({ title, slides, showWatermark, presentationId, for
           </div>
         )}
       </div>
+
+      {recordingUrl && recordingTimeline && recordingDuration && (
+        <div className="shrink-0 px-3 py-2 bg-black border-t border-white/10">
+          <RecordingPlayer
+            recordingUrl={recordingUrl}
+            timeline={recordingTimeline}
+            duration={recordingDuration}
+            onSlideChange={setCurrent}
+          />
+        </div>
+      )}
 
       {/* Fixed bottom bar */}
       <div className="shrink-0 border-t border-white/10 bg-black safe-b">

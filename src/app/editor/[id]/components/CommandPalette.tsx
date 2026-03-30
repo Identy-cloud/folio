@@ -306,6 +306,26 @@ export function CommandPalette({ open, onClose }: Props) {
     { id: "ai-translate", label: "Translate presentation", category: "AI", action: () => {
       window.dispatchEvent(new CustomEvent("folio:open-translate"));
     }},
+    { id: "ai-image", label: "Generate image with AI", category: "AI", action: () => {
+      window.dispatchEvent(new CustomEvent("folio:open-ai-image"));
+    }},
+    { id: "save-to-library", label: "Save slide to library", category: "Library", action: () => {
+      const s = useEditorStore.getState();
+      const slide = s.getActiveSlide();
+      if (!slide) return;
+      const textEl = slide.elements.find((e) => e.type === "text");
+      const name = textEl && "content" in textEl
+        ? textEl.content.replace(/<[^>]*>/g, "").trim().slice(0, 40) || `Slide ${s.activeSlideIndex + 1}`
+        : `Slide ${s.activeSlideIndex + 1}`;
+      fetch("/api/slides/library", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, elements: slide.elements, backgroundColor: slide.backgroundColor, backgroundImage: slide.backgroundImage, backgroundGradient: slide.backgroundGradient ?? null }),
+      });
+    }},
+    { id: "insert-from-library", label: "Insert from library", category: "Library", action: () => {
+      window.dispatchEvent(new CustomEvent("folio:open-slide-library"));
+    }},
     ...getRecentPresentations()
       .filter((entry) => entry.id !== useEditorStore.getState().presentationId)
       .slice(0, 5)

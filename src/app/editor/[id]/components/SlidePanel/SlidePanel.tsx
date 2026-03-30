@@ -24,6 +24,26 @@ export function SlidePanel() {
   const updateSlideTransition = useEditorStore((s) => s.updateSlideTransition);
   const parentRef = useRef<HTMLDivElement>(null);
   const [importOpen, setImportOpen] = useState(false);
+
+  function saveSlideToLibrary(slideId: string) {
+    const slide = slides.find((s) => s.id === slideId);
+    if (!slide) return;
+    const textEl = slide.elements.find((e) => e.type === "text");
+    const name = textEl && "content" in textEl
+      ? textEl.content.replace(/<[^>]*>/g, "").trim().slice(0, 40) || `Slide ${slides.indexOf(slide) + 1}`
+      : `Slide ${slides.indexOf(slide) + 1}`;
+    fetch("/api/slides/library", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name,
+        elements: slide.elements,
+        backgroundColor: slide.backgroundColor,
+        backgroundImage: slide.backgroundImage,
+        backgroundGradient: slide.backgroundGradient ?? null,
+      }),
+    });
+  }
   const [contextMenu, setContextMenu] = useState<{
     x: number; y: number; slideId: string;
   } | null>(null);
@@ -95,6 +115,7 @@ export function SlidePanel() {
           onAddSlide={addSlide}
           onDelete={deleteSlide}
           onTransition={updateSlideTransition}
+          onSaveToLibrary={saveSlideToLibrary}
           onClose={() => setContextMenu(null)}
           labels={{
             duplicate: t.editor.duplicateSlide,

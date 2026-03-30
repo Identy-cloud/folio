@@ -44,6 +44,11 @@ interface Slide {
   mobileElements: SlideElement[] | null;
 }
 
+interface TimelineEntry {
+  slideIndex: number;
+  startTime: number;
+}
+
 interface Props {
   title: string;
   slug: string;
@@ -52,9 +57,12 @@ interface Props {
   presentationId?: string;
   hasPassword?: boolean;
   forkCount?: number;
+  recordingUrl?: string;
+  recordingTimeline?: TimelineEntry[];
+  recordingDuration?: number;
 }
 
-export function ViewerWrapper({ title, slug, slides, showWatermark, presentationId, hasPassword, forkCount }: Props) {
+export function ViewerWrapper({ title, slug, slides, showWatermark, presentationId, hasPassword, forkCount, recordingUrl, recordingTimeline, recordingDuration }: Props) {
   const searchParams = useSearchParams();
   const isPresenterMode = searchParams.get("presenter") === "true";
   const initialSlide = parseInt(searchParams.get("slide") ?? "0", 10);
@@ -69,5 +77,5 @@ export function ViewerWrapper({ title, slug, slides, showWatermark, presentation
     );
   }
 
-  return <ViewerClient title={title} slides={slides} showWatermark={showWatermark} presentationId={presentationId} hasPassword={hasPassword} forkCount={forkCount} />;
+  return <ViewerClient title={title} slides={slides} showWatermark={showWatermark} presentationId={presentationId} hasPassword={hasPassword} forkCount={forkCount} recordingUrl={recordingUrl} recordingTimeline={recordingTimeline} recordingDuration={recordingDuration} />;
 }

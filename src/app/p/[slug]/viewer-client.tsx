@@ -13,6 +13,7 @@ import { MobileViewer } from "./mobile-viewer";
 import { CommentsPanel } from "./comments-panel";
 import { ReportModal } from "@/components/ReportModal";
 import { PrintSlides } from "./print-slides";
+import { RecordingPlayer } from "./recording-player";
 
 const SLIDE_W = 1920;
 const SLIDE_H = 1080;
@@ -31,6 +32,11 @@ interface Slide {
   mobileElements?: SlideElement[] | null;
 }
 
+interface TimelineEntry {
+  slideIndex: number;
+  startTime: number;
+}
+
 interface Props {
   title: string;
   slides: Slide[];
@@ -38,9 +44,12 @@ interface Props {
   presentationId?: string;
   hasPassword?: boolean;
   forkCount?: number;
+  recordingUrl?: string;
+  recordingTimeline?: TimelineEntry[];
+  recordingDuration?: number;
 }
 
-export function ViewerClient({ title, slides, showWatermark, presentationId, hasPassword, forkCount }: Props) {
+export function ViewerClient({ title, slides, showWatermark, presentationId, hasPassword, forkCount, recordingUrl, recordingTimeline, recordingDuration }: Props) {
   useViewerFonts(presentationId);
   const [unlocked, setUnlocked] = useState(!hasPassword);
   const [pwInput, setPwInput] = useState("");
@@ -307,7 +316,7 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
   if (isMobile) {
     return (
       <>
-        <MobileViewer title={title} slides={slides} showWatermark={showWatermark} presentationId={presentationId} forkCount={forkCount} />
+        <MobileViewer title={title} slides={slides} showWatermark={showWatermark} presentationId={presentationId} forkCount={forkCount} recordingUrl={recordingUrl} recordingTimeline={recordingTimeline} recordingDuration={recordingDuration} />
         <PrintSlides slides={slides} title={title} />
       </>
     );
@@ -501,6 +510,17 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
       {hoverZone === "right" && (
         <div className="pointer-events-none absolute right-4 top-1/2 z-10 -translate-y-1/2 text-white/30 transition-opacity">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+        </div>
+      )}
+
+      {recordingUrl && recordingTimeline && recordingDuration && (
+        <div className={`fixed bottom-14 left-1/2 z-20 -translate-x-1/2 transition-opacity duration-500 ${controlsVisible ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
+          <RecordingPlayer
+            recordingUrl={recordingUrl}
+            timeline={recordingTimeline}
+            duration={recordingDuration}
+            onSlideChange={setCurrent}
+          />
         </div>
       )}
 

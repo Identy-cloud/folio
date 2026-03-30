@@ -149,6 +149,9 @@ export default async function ViewerPage({
         presentationId={data.presentation.id}
         hasPassword={!!data.presentation.password}
         forkCount={data.presentation.forkCount}
+        recordingUrl={data.presentation.recordingUrl ?? undefined}
+        recordingTimeline={data.presentation.recordingTimeline as { slideIndex: number; startTime: number }[] | undefined}
+        recordingDuration={data.presentation.recordingDuration ?? undefined}
       />
     </>
   );

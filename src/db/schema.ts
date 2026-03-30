@@ -89,6 +89,9 @@ export const presentations = pgTable("presentations", {
   shareToken: text("share_token").unique(),
   forkCount: integer("fork_count").default(0).notNull(),
   publishAt: timestamp("publish_at", { withTimezone: true }),
+  recordingUrl: text("recording_url"),
+  recordingTimeline: jsonb("recording_timeline"),
+  recordingDuration: integer("recording_duration"),
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
     .notNull(),
@@ -236,6 +239,25 @@ export const presentationVersions = pgTable("presentation_versions", {
     .notNull(),
 }, (table) => [
   index("pv_presentation_version_idx").on(table.presentationId, table.version),
+]);
+
+export const savedSlides = pgTable("saved_slides", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id")
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull(),
+  name: text("name").notNull(),
+  category: text("category"),
+  elements: jsonb("elements").default([]).notNull(),
+  backgroundColor: text("background_color").default("#ffffff").notNull(),
+  backgroundImage: text("background_image"),
+  backgroundGradient: jsonb("background_gradient"),
+  thumbnailUrl: text("thumbnail_url"),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+}, (table) => [
+  index("saved_slides_user_id_idx").on(table.userId),
 ]);
 
 export const comments = pgTable("comments", {
