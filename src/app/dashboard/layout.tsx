@@ -7,6 +7,8 @@ import { DeleteAccountButton } from "./delete-account-button";
 import { LocaleSelector } from "@/components/LocaleSelector";
 import { FolioLogo } from "@/components/FolioLogo";
 import { NotificationBell } from "@/components/NotificationBell";
+import { WorkspaceSwitcherWrapper } from "./workspace-switcher-wrapper";
+import { WorkspaceProvider } from "./workspace-context";
 
 export default async function DashboardLayout({
   children,
@@ -28,11 +30,15 @@ export default async function DashboardLayout({
     .toUpperCase();
 
   return (
+    <WorkspaceProvider>
     <div className="flex min-h-screen flex-col bg-[#161616] text-neutral-200">
       <header className="flex h-14 items-center justify-between border-b border-neutral-800 px-4 sm:h-16 sm:px-6">
-        <h1 className="text-xl text-white sm:text-2xl">
-          <FolioLogo size={22} />
-        </h1>
+        <div className="flex items-center gap-3">
+          <h1 className="text-xl text-white sm:text-2xl">
+            <FolioLogo size={22} />
+          </h1>
+          <WorkspaceSwitcherWrapper />
+        </div>
         <div className="flex items-center gap-2 sm:gap-4">
           <Link href="/dashboard/profile" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <span className="hidden text-sm text-neutral-400 sm:block">
@@ -82,5 +88,6 @@ export default async function DashboardLayout({
         </div>
       </footer>
     </div>
+    </WorkspaceProvider>
   );
 }

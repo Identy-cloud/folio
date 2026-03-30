@@ -8,6 +8,7 @@ import {
   bigint,
   jsonb,
   index,
+  unique,
 } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
@@ -21,6 +22,38 @@ export const users = pgTable("users", {
     .defaultNow()
     .notNull(),
 });
+
+export const workspaces = pgTable("workspaces", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: text("name").notNull(),
+  ownerId: uuid("owner_id")
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull(),
+  logoUrl: text("logo_url"),
+  plan: text("plan").default("free").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+}, (table) => [
+  index("workspaces_owner_id_idx").on(table.ownerId),
+]);
+
+export const workspaceMembers = pgTable("workspace_members", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  workspaceId: uuid("workspace_id")
+    .references(() => workspaces.id, { onDelete: "cascade" })
+    .notNull(),
+  userId: uuid("user_id")
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull(),
+  role: text("role").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+}, (table) => [
+  unique("workspace_members_ws_user_uniq").on(table.workspaceId, table.userId),
+  index("workspace_members_user_id_idx").on(table.userId),
+]);
 
 export const folders = pgTable("folders", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -43,6 +76,8 @@ export const presentations = pgTable("presentations", {
     .notNull(),
   folderId: uuid("folder_id")
     .references(() => folders.id, { onDelete: "set null" }),
+  workspaceId: uuid("workspace_id")
+    .references(() => workspaces.id, { onDelete: "set null" }),
   title: text("title").default("Sin título").notNull(),
   slug: text("slug").unique().notNull(),
   theme: text("theme").default("editorial-blue").notNull(),
@@ -52,6 +87,7 @@ export const presentations = pgTable("presentations", {
   customThemes: jsonb("custom_themes").default({}).notNull(),
   shareExpiresAt: timestamp("share_expires_at", { withTimezone: true }),
   shareToken: text("share_token").unique(),
+  publishAt: timestamp("publish_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
     .notNull(),
@@ -60,6 +96,7 @@ export const presentations = pgTable("presentations", {
     .notNull(),
 }, (table) => [
   index("presentations_user_id_idx").on(table.userId),
+  index("presentations_publish_at_idx").on(table.publishAt),
 ]);
 
 export const slides = pgTable("slides", {

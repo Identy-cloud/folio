@@ -30,6 +30,7 @@ import { CollaboratorsPanel } from "./CollaboratorsPanel";
 import { CommandPalette } from "./CommandPalette";
 import { UnsplashPicker } from "./UnsplashPicker";
 import { LayoutPicker } from "./LayoutPicker";
+import { AnimationTimeline } from "./AnimationTimeline";
 import { ClockCounterClockwise, Stack, NotePencil } from "@phosphor-icons/react";
 import { MobileSlidePanel } from "./Mobile/MobileSlidePanel";
 import { MobileInsertPanel } from "./Mobile/MobileInsertPanel";
@@ -62,6 +63,7 @@ export function EditorLayout() {
   const [unsplashOpen, setUnsplashOpen] = useState(false);
   const [layoutPickerOpen, setLayoutPickerOpen] = useState(false);
   const [versionsOpen, setVersionsOpen] = useState(false);
+  const [timelineOpen, setTimelineOpen] = useState(false);
   const rightPanel = versionsOpen ? "versions" : historyOpen ? "history" : layersOpen ? "layers" : "palette";
   const selectedIds = useEditorStore((s) => s.selectedElementIds);
   const hasSelection = selectedIds.length > 0;
@@ -84,6 +86,11 @@ export function EditorLayout() {
         e.preventDefault();
         setFindShowReplace(true);
         setFindOpen(true);
+        return;
+      }
+      if (e.key === "A" && e.shiftKey && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setTimelineOpen((v) => !v);
         return;
       }
       if ((e.target as HTMLElement).tagName === "INPUT" || (e.target as HTMLElement).isContentEditable) return;
@@ -149,6 +156,7 @@ export function EditorLayout() {
             />
           </div>
           {notesOpen && <SlideNotes />}
+          {timelineOpen && <AnimationTimeline onClose={() => setTimelineOpen(false)} />}
         </div>
 
         <div data-panel="palette" className={`hidden h-full md:block ${compact ? "md:hidden" : ""}`}>

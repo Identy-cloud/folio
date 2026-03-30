@@ -18,6 +18,7 @@ import { MoveToFolderDialog } from "./move-folder-dialog";
 import { BulkActionBar } from "./bulk-action-bar";
 import { useBulkSelection } from "./use-bulk-selection";
 import { AnalyticsOverview } from "./analytics-overview";
+import { useWorkspace } from "./workspace-context";
 
 interface Presentation {
   id: string;
@@ -49,6 +50,7 @@ type Dialog =
 
 export default function DashboardPage() {
   const { t } = useTranslation();
+  const { activeWorkspaceId } = useWorkspace();
   const [presentations, setPresentations] = useState<Presentation[]>([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState(false);
@@ -81,8 +83,11 @@ export default function DashboardPage() {
   useEffect(() => {
     const load = async () => {
       try {
+        const presUrl = activeWorkspaceId
+          ? `/api/presentations?workspaceId=${activeWorkspaceId}`
+          : "/api/presentations";
         const [presRes, foldersRes] = await Promise.all([
-          fetch("/api/presentations"),
+          fetch(presUrl),
           fetch("/api/folders"),
         ]);
         if (presRes.ok) {
@@ -100,10 +105,13 @@ export default function DashboardPage() {
       setLoading(false);
     };
     load();
-  }, []);
+  }, [activeWorkspaceId]);
 
   async function refreshPresentations() {
-    const res = await fetch("/api/presentations");
+    const presUrl = activeWorkspaceId
+      ? `/api/presentations?workspaceId=${activeWorkspaceId}`
+      : "/api/presentations";
+    const res = await fetch(presUrl);
     if (res.ok) setPresentations(await res.json());
   }
 

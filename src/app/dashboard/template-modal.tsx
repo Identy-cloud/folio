@@ -12,6 +12,7 @@ import { useFocusTrap } from "@/hooks/useFocusTrap";
 import { TemplateGrid } from "./template-grid";
 import { TemplatePreview } from "./template-preview";
 import { ThemeGrid } from "./theme-grid";
+import { useWorkspace } from "./workspace-context";
 
 interface Props {
   open: boolean;

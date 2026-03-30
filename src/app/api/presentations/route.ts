@@ -1,8 +1,8 @@
 import { db } from "@/db";
-import { presentations, slides } from "@/db/schema";
+import { presentations, slides, workspaceMembers } from "@/db/schema";
 import { getAuthenticatedUser } from "@/lib/auth";
 import { checkRateLimit, rateLimitResponse } from "@/lib/rate-limit";
-import { eq, desc, and, inArray, count } from "drizzle-orm";
+import { eq, desc, and, inArray, count, isNull } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { z } from "zod";
 import { generateTemplate } from "@/lib/templates/generator";
@@ -16,18 +16,46 @@ const createSchema = z.object({
   theme: z.enum(Object.keys(THEMES) as [string, ...string[]]).optional(),
   templateId: z.string().max(50).optional(),
   useTemplate: z.boolean().optional(),
+  workspaceId: z.string().uuid().nullable().optional(),
 });
 
-export async function GET() {
+export async function GET(request: Request) {
   const user = await getAuthenticatedUser();
   if (!user) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const { searchParams } = new URL(request.url);
+  const workspaceId = searchParams.get("workspaceId");
+
+  let whereClause;
+  if (workspaceId) {
+    const [membership] = await db
+      .select({ role: workspaceMembers.role })
+      .from(workspaceMembers)
+      .where(
+        and(
+          eq(workspaceMembers.workspaceId, workspaceId),
+          eq(workspaceMembers.userId, user.id)
+        )
+      )
+      .limit(1);
+
+    if (!membership) {
+      return Response.json({ error: "Forbidden" }, { status: 403 });
+    }
+    whereClause = eq(presentations.workspaceId, workspaceId);
+  } else {
+    whereClause = and(
+      eq(presentations.userId, user.id),
+      isNull(presentations.workspaceId)
+    );
+  }
+
   const rows = await db
     .select()
     .from(presentations)
-    .where(eq(presentations.userId, user.id))
+    .where(whereClause)
     .orderBy(desc(presentations.updatedAt));
 
   // Fetch first slide for each presentation (for thumbnail preview)
@@ -97,6 +125,7 @@ export async function POST(request: Request) {
   const theme = parsed.data.theme ?? "editorial-blue";
   const templateId = parsed.data.templateId;
   const useTemplate = parsed.data.useTemplate !== false;
+  const workspaceId = parsed.data.workspaceId ?? null;
 
   if (!limits.canUseAllTemplates && !(FREE_THEMES as readonly string[]).includes(theme)) {
     return Response.json(
@@ -112,6 +141,7 @@ export async function POST(request: Request) {
       title,
       slug: nanoid(10),
       theme,
+      workspaceId,
     })
     .returning();
 

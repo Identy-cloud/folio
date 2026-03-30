@@ -53,6 +53,7 @@ const patchSchema = z.object({
   shareExpiresAt: z.string().datetime().nullable().optional(),
   generateShareToken: z.boolean().optional(),
   revokeShareToken: z.boolean().optional(),
+  publishAt: z.string().datetime().nullable().optional(),
 });
 
 export async function PATCH(
@@ -93,6 +94,11 @@ export async function PATCH(
   }
   if (parsed.data.revokeShareToken) {
     updates.shareToken = null;
+  }
+  if (parsed.data.publishAt !== undefined) {
+    updates.publishAt = parsed.data.publishAt
+      ? new Date(parsed.data.publishAt)
+      : null;
   }
 
   const [updated] = await db
