@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { es } from "date-fns/locale";
-import { DotsThreeVertical, Star } from "@phosphor-icons/react";
+import { DotsThreeVertical, Star, Clock } from "@phosphor-icons/react";
 import { SlidePreview } from "@/components/SlidePreview";
 import type { SlideElement, GradientDef } from "@/types/elements";
 import { useTranslation } from "@/lib/i18n/context";
@@ -20,6 +20,7 @@ interface Props {
     isPublic: boolean;
     thumbnailUrl: string | null;
     updatedAt: string;
+    publishAt?: string | null;
     coverSlide?: {
       backgroundColor: string;
       backgroundGradient?: GradientDef;
@@ -127,6 +128,23 @@ export function PresentationCard({
           </div>
         )}
       </Link>
+
+      {presentation.publishAt && !presentation.isPublic && (
+        <div className="flex items-center gap-1 px-4 pt-2">
+          <Clock size={12} className="text-amber-400" />
+          <span className="text-[10px] text-amber-400">
+            {t.editor.scheduledFor}{" "}
+            {new Date(presentation.publishAt).toLocaleDateString(undefined, {
+              month: "short",
+              day: "numeric",
+            })}{" "}
+            {new Date(presentation.publishAt).toLocaleTimeString(undefined, {
+              hour: "numeric",
+              minute: "2-digit",
+            })}
+          </span>
+        </div>
+      )}
 
       <div className="flex items-center justify-between px-4 py-3">
         <div className="min-w-0 flex-1">

@@ -15,6 +15,7 @@ interface PresentationMeta {
   password: string | null;
   shareExpiresAt: string | null;
   shareToken: string | null;
+  publishAt: string | null;
 }
 
 type ExpirationOption = "none" | "1h" | "24h" | "7d" | "30d" | "custom";
@@ -56,6 +57,8 @@ export function ShareButton() {
   const [qrUrl, setQrUrl] = useState<string | null>(null);
   const [showCustomDate, setShowCustomDate] = useState(false);
   const [customDate, setCustomDate] = useState("");
+  const [scheduleDate, setScheduleDate] = useState("");
+  const [scheduling, setScheduling] = useState(false);
   const popRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -69,6 +72,7 @@ export function ShareButton() {
           password: d.password ?? null,
           shareExpiresAt: d.shareExpiresAt ?? null,
           shareToken: d.shareToken ?? null,
+          publishAt: d.publishAt ?? null,
         });
         setPw(d.password ?? "");
       })
@@ -179,6 +183,47 @@ export function ShareButton() {
       setMeta({ ...meta, shareToken: null });
       toast.success(t.editor.tokenRevoked);
     }
+  }
+
+  async function schedulePublish() {
+    if (!meta || !scheduleDate) return;
+    setScheduling(true);
+    const publishAt = new Date(scheduleDate).toISOString();
+    const res = await fetch(`/api/presentations/${presentationId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ publishAt }),
+    });
+    if (res.ok) {
+      setMeta({ ...meta, publishAt });
+      setScheduleDate("");
+      toast.success(t.editor.scheduleSet);
+    }
+    setScheduling(false);
+  }
+
+  async function cancelSchedule() {
+    if (!meta) return;
+    const res = await fetch(`/api/presentations/${presentationId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ publishAt: null }),
+    });
+    if (res.ok) {
+      setMeta({ ...meta, publishAt: null });
+      toast.success(t.editor.scheduleCancelled);
+    }
+  }
+
+  function formatScheduledDate(iso: string): string {
+    const d = new Date(iso);
+    return d.toLocaleDateString(undefined, {
+      month: "short",
+      day: "numeric",
+    }) + " " + d.toLocaleTimeString(undefined, {
+      hour: "numeric",
+      minute: "2-digit",
+    });
   }
 
   const expirationOptions: { label: string; value: ExpirationOption }[] = [
@@ -407,9 +452,55 @@ export function ShareButton() {
                   </div>
                 </>
               ) : (
-                <p className="text-xs text-neutral-500">
-                  {t.editor.privateDesc}
-                </p>
+                <>
+                  <p className="text-xs text-neutral-500">
+                    {t.editor.privateDesc}
+                  </p>
+
+                  {/* Schedule publish */}
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-1.5">
+                      <Clock size={14} className="text-neutral-500" />
+                      <span className="text-xs font-medium text-neutral-300">
+                        {t.editor.schedulePublish}
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-neutral-600">
+                      {t.editor.schedulePublishDesc}
+                    </p>
+
+                    {meta.publishAt ? (
+                      <div className="space-y-1.5">
+                        <p className="text-xs text-amber-400">
+                          {t.editor.scheduledFor} {formatScheduledDate(meta.publishAt)}
+                        </p>
+                        <button
+                          onClick={cancelSchedule}
+                          className="w-full rounded border border-red-900/50 py-1.5 text-[10px] text-red-400 hover:bg-red-900/20 transition-colors"
+                        >
+                          {t.editor.cancelSchedule}
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-1.5">
+                        <input
+                          type="datetime-local"
+                          value={scheduleDate}
+                          onChange={(e) => setScheduleDate(e.target.value)}
+                          min={new Date().toISOString().slice(0, 16)}
+                          className="flex-1 rounded border border-neutral-700 bg-[#111111] px-2 py-1.5 text-xs text-neutral-300 outline-none focus:border-neutral-500"
+                        />
+                        <button
+                          onClick={schedulePublish}
+                          disabled={!scheduleDate || scheduling}
+                          className="shrink-0 rounded bg-white px-3 py-1.5 text-[10px] font-medium text-[#161616] hover:bg-neutral-200 transition-colors disabled:opacity-40"
+                        >
+                          {t.editor.schedulePublish}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </>
               )}
             </div>
           )}

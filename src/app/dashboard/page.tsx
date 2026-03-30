@@ -28,6 +28,7 @@ interface Presentation {
   isPublic: boolean;
   thumbnailUrl: string | null;
   updatedAt: string;
+  publishAt: string | null;
   folderId: string | null;
   coverSlide?: {
     backgroundColor: string;
