@@ -17,6 +17,8 @@ import { NotificationBell } from "@/components/NotificationBell";
 import { useImageUpload } from "../../hooks/useImageUpload";
 import { useTranslation } from "@/lib/i18n/context";
 import { usePlanLimits } from "@/hooks/usePlanLimits";
+import { requiredPlanFor } from "@/lib/plan-limits";
+import { UpgradeModal } from "@/components/UpgradeModal";
 import { RecordingControls } from "../RecordingControls";
 
 interface ToolbarProps {
@@ -77,6 +79,7 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
     }).catch(() => {});
   }
   const { limits } = usePlanLimits();
+  const [upgradeFeature, setUpgradeFeature] = useState<{ feature: string; key: "canExportPdf" | "canExportPptx" | "canUseAI" | "canUseAnalytics" | "canCollaborate" } | null>(null);
   const [exporting, setExporting] = useState(false);
   const [exportProgress, setExportProgress] = useState("");
 
@@ -310,7 +313,10 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
         </Tooltip>
         <Tooltip content="Generate with AI">
           <button
-            onClick={() => window.dispatchEvent(new CustomEvent("folio:open-ai-generate"))}
+            onClick={() => {
+              if (!limits.canUseAI) { setUpgradeFeature({ feature: "AI Slide Generation", key: "canUseAI" }); return; }
+              window.dispatchEvent(new CustomEvent("folio:open-ai-generate"));
+            }}
             className="hidden md:flex items-center gap-1 rounded px-3 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 transition-colors"
           >
             <Sparkle size={14} weight="fill" className="text-amber-400" />
@@ -319,7 +325,10 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
         </Tooltip>
         <Tooltip content="Translate presentation">
           <button
-            onClick={() => window.dispatchEvent(new CustomEvent("folio:open-translate"))}
+            onClick={() => {
+              if (!limits.canUseAI) { setUpgradeFeature({ feature: "AI Translate", key: "canUseAI" }); return; }
+              window.dispatchEvent(new CustomEvent("folio:open-translate"));
+            }}
             className="hidden md:flex items-center gap-1 rounded px-3 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 transition-colors"
           >
             <GlobeSimple size={14} weight="bold" className="text-blue-400" />
@@ -365,13 +374,23 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
       </div>
       <div className="flex items-center gap-2 md:gap-4">
         <Tooltip content="Analytics">
-          <Link
-            href={`/dashboard/analytics/${presentationId}`}
-            className="hidden md:flex items-center gap-1 rounded px-2.5 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 transition-colors"
-          >
-            <ChartBar size={14} />
-            <span className="hidden lg:inline">Analytics</span>
-          </Link>
+          {limits.canUseAnalytics ? (
+            <Link
+              href={`/dashboard/analytics/${presentationId}`}
+              className="hidden md:flex items-center gap-1 rounded px-2.5 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 transition-colors"
+            >
+              <ChartBar size={14} />
+              <span className="hidden lg:inline">Analytics</span>
+            </Link>
+          ) : (
+            <button
+              onClick={() => setUpgradeFeature({ feature: "Analytics", key: "canUseAnalytics" })}
+              className="hidden md:flex items-center gap-1 rounded px-2.5 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 transition-colors"
+            >
+              <ChartBar size={14} />
+              <span className="hidden lg:inline">Analytics</span>
+            </button>
+          )}
         </Tooltip>
         <Tooltip content="Preview">
           <Link
@@ -388,7 +407,10 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
         {onToggleCollaborators && (
           <Tooltip content="Collaborators">
             <button
-              onClick={onToggleCollaborators}
+              onClick={() => {
+                if (!limits.canCollaborate) { setUpgradeFeature({ feature: "Collaboration", key: "canCollaborate" }); return; }
+                onToggleCollaborators();
+              }}
               className={`hidden md:flex rounded p-2 transition-colors ${collaboratorsOpen ? "bg-neutral-700 text-white" : "text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200"}`}
               aria-label="Collaborators"
               aria-pressed={collaboratorsOpen}
@@ -421,6 +443,12 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
         </Tooltip>
       </div>
       <PresentationSettings open={settingsOpen} onClose={() => setSettingsOpen(false)} />
+      <UpgradeModal
+        open={upgradeFeature !== null}
+        onClose={() => setUpgradeFeature(null)}
+        feature={upgradeFeature?.feature ?? ""}
+        requiredPlan={upgradeFeature ? requiredPlanFor(upgradeFeature.key) : "free"}
+      />
     </div>
   );
 }
@@ -431,6 +459,7 @@ function ExportDropdown({ exporting, exportProgress, exportingPptx, canExportPdf
   onExportPdf: () => void; onExportPng: () => void; onExportAllPng: () => void; onExportPptx: () => void;
 }) {
   const [open, setOpen] = useState(false);
+  const [upgradeFor, setUpgradeFor] = useState<"canExportPdf" | "canExportPptx" | null>(null);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -456,8 +485,12 @@ function ExportDropdown({ exporting, exportProgress, exportingPptx, canExportPdf
       </button>
       {open && (
         <div className="absolute left-0 top-full mt-1 z-50 w-44 rounded border border-neutral-700 bg-[#242424] py-1 shadow-lg">
-          <button onClick={() => { onExportPdf(); setOpen(false); }} disabled={exporting || !canExportPdf} className={item}>
+          <button onClick={() => {
+            if (!canExportPdf) { setUpgradeFor("canExportPdf"); setOpen(false); return; }
+            onExportPdf(); setOpen(false);
+          }} disabled={exporting} className={item}>
             <FilePdf size={14} weight="regular" /> {exporting ? exportProgress : "PDF"}
+            {!canExportPdf && <span className="ml-auto text-[9px] text-amber-400">PRO</span>}
           </button>
           <button onClick={() => { onExportPng(); setOpen(false); }} disabled={exporting} className={item}>
             <FileImage size={14} weight="regular" /> PNG (slide)
@@ -465,11 +498,21 @@ function ExportDropdown({ exporting, exportProgress, exportingPptx, canExportPdf
           <button onClick={() => { onExportAllPng(); setOpen(false); }} disabled={exporting} className={item}>
             <FileImage size={14} weight="regular" /> All PNG
           </button>
-          <button onClick={() => { onExportPptx(); setOpen(false); }} disabled={exportingPptx || !canExportPptx} className={item}>
+          <button onClick={() => {
+            if (!canExportPptx) { setUpgradeFor("canExportPptx"); setOpen(false); return; }
+            onExportPptx(); setOpen(false);
+          }} disabled={exportingPptx} className={item}>
             <FilePpt size={14} weight="regular" /> {exportingPptx ? "..." : "PPTX"}
+            {!canExportPptx && <span className="ml-auto text-[9px] text-amber-400">PRO</span>}
           </button>
         </div>
       )}
+      <UpgradeModal
+        open={upgradeFor !== null}
+        onClose={() => setUpgradeFor(null)}
+        feature={upgradeFor === "canExportPdf" ? "PDF Export" : "PPTX Export"}
+        requiredPlan={upgradeFor ? requiredPlanFor(upgradeFor) : "free"}
+      />
     </div>
   );
 }

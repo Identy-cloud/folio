@@ -6,6 +6,8 @@ import { toast } from "sonner";
 import { X } from "@phosphor-icons/react";
 import { useEditorStore } from "@/store/editorStore";
 import { usePlanLimits } from "@/hooks/usePlanLimits";
+import { requiredPlanFor } from "@/lib/plan-limits";
+import { UpgradeModal } from "@/components/UpgradeModal";
 import { ColorPicker } from "@/components/editor/ColorPicker";
 import { ThemeBuilderPreview } from "./ThemeBuilderPreview";
 import { ThemeBuilderFonts } from "./ThemeBuilderFonts";
@@ -33,6 +35,7 @@ export function ThemeBuilder({ open, onClose }: Props) {
   const addCustomTheme = useEditorStore((s) => s.addCustomTheme);
   const [draft, setDraft] = useState<Theme>({ ...DEFAULT_THEME });
   const [saving, setSaving] = useState(false);
+  const [showUpgrade, setShowUpgrade] = useState(false);
 
   function update(field: keyof Theme, value: string) {
     setDraft((prev) => ({ ...prev, [field]: value }));
@@ -44,7 +47,7 @@ export function ThemeBuilder({ open, onClose }: Props) {
       return;
     }
     if (!limits.canUseBrandKit) {
-      toast.error("Upgrade to Studio or Agency to create custom themes");
+      setShowUpgrade(true);
       return;
     }
     setSaving(true);
@@ -130,6 +133,12 @@ export function ThemeBuilder({ open, onClose }: Props) {
           </button>
         </div>
       </div>
+      <UpgradeModal
+        open={showUpgrade}
+        onClose={() => setShowUpgrade(false)}
+        feature="Custom Themes"
+        requiredPlan={requiredPlanFor("canUseBrandKit")}
+      />
     </DialogShell>
   );
 }

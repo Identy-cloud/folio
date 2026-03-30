@@ -21,6 +21,13 @@ import { AnalyticsOverview } from "./analytics-overview";
 import { RecentSection } from "./recent-section";
 import { useWorkspace } from "./workspace-context";
 import { AIGeneratePresentationDialog } from "@/components/editor/AIGeneratePresentationDialog";
+import { usePlanLimits } from "@/hooks/usePlanLimits";
+import { UpgradeModal } from "@/components/UpgradeModal";
+import { requiredPlanFor } from "@/lib/plan-limits";
+import { EmptyState } from "./empty-state";
+import { UpgradeCelebration } from "./upgrade-celebration";
+import { UsageIndicators } from "./usage-indicators";
+import { GettingStarted } from "./getting-started";
 
 interface Presentation {
   id: string;
@@ -67,12 +74,17 @@ export default function DashboardPage() {
   const [folders, setFolders] = useState<FolderItem[]>([]);
   const [activeFolderId, setActiveFolderId] = useState<string | null>(null);
   const [aiDialogOpen, setAiDialogOpen] = useState(false);
+  const { limits } = usePlanLimits();
+  const [upgradeFeature, setUpgradeFeature] = useState<string | null>(null);
 
   useEffect(() => {
-    const handler = () => setAiDialogOpen(true);
+    const handler = () => {
+      if (!limits.canUseAI) { setUpgradeFeature("AI Presentation Generator"); return; }
+      setAiDialogOpen(true);
+    };
     window.addEventListener("folio:open-ai-presentation", handler);
     return () => window.removeEventListener("folio:open-ai-presentation", handler);
-  }, []);
+  }, [limits.canUseAI]);
 
   useEffect(() => {
     try {
@@ -348,6 +360,11 @@ export default function DashboardPage() {
       </div>
 
       <div className="min-w-0 flex-1">
+      <UpgradeCelebration />
+      <UsageIndicators />
+      {presentations.length > 0 && presentations.length < 3 && (
+        <GettingStarted presentationCount={presentations.length} />
+      )}
       <AnalyticsOverview />
       {presentations.length >= 5 && !activeFolderId && filterBy === "all" && !search && (
         <RecentSection
@@ -435,19 +452,10 @@ export default function DashboardPage() {
       </div>
 
       {presentations.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 text-center sm:py-32">
-          <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-neutral-800">
-            <Plus size={32} className="text-neutral-600" />
-          </div>
-          <p className="font-display text-3xl tracking-tight text-neutral-700 sm:text-5xl">{t.dashboard.empty}</p>
-          <p className="mt-3 max-w-sm text-sm leading-relaxed text-neutral-400">{t.dashboard.emptyDesc}</p>
-          <button onClick={() => setModalOpen(true)} className="mt-8 bg-white px-8 py-3 text-sm font-medium tracking-widest text-[#161616] uppercase hover:bg-neutral-200 transition-colors">
-            {t.dashboard.create}
-          </button>
-          <p className="mt-4 text-[10px] text-neutral-600">
-            Choose from 5 templates × 5 themes
-          </p>
-        </div>
+        <EmptyState
+          onOpenTemplates={() => setModalOpen(true)}
+          onOpenAI={() => setAiDialogOpen(true)}
+        />
       ) : filtered.length === 0 ? (
         <p className="py-12 text-center text-sm text-neutral-500">
           {t.dashboard.noResults} &ldquo;{search}&rdquo;
@@ -602,6 +610,12 @@ export default function DashboardPage() {
       )}
 
       <AIGeneratePresentationDialog open={aiDialogOpen} onClose={() => setAiDialogOpen(false)} />
+      <UpgradeModal
+        open={upgradeFeature !== null}
+        onClose={() => setUpgradeFeature(null)}
+        feature={upgradeFeature ?? ""}
+        requiredPlan={requiredPlanFor("canUseAI")}
+      />
     </div>
   );
 }

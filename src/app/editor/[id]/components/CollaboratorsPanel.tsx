@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { useEditorStore } from "@/store/editorStore";
 import { UsersThree, X, Trash, UserPlus } from "@phosphor-icons/react";
 import { toast } from "sonner";
+import { UpgradeModal } from "@/components/UpgradeModal";
+import { requiredPlanFor } from "@/lib/plan-limits";
 
 interface Collaborator {
   id: string;
@@ -26,6 +28,7 @@ export function CollaboratorsPanel({ open, onClose }: Props) {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [adding, setAdding] = useState(false);
+  const [showUpgrade, setShowUpgrade] = useState(false);
 
   useEffect(() => {
     if (!open || !presentationId) return;
@@ -98,9 +101,17 @@ export function CollaboratorsPanel({ open, onClose }: Props) {
         {loading && <p className="py-4 text-center text-xs text-neutral-600">Loading...</p>}
 
         {!loading && !canCollaborate && (
-          <p className="py-4 text-center text-xs text-neutral-500">
-            Collaboration requires a Studio or Agency plan.
-          </p>
+          <div className="py-4 text-center">
+            <p className="text-xs text-neutral-500 mb-3">
+              Collaboration requires a Studio or Agency plan.
+            </p>
+            <button
+              onClick={() => setShowUpgrade(true)}
+              className="rounded bg-white px-4 py-2 text-xs font-medium text-[#161616] hover:bg-neutral-200 transition-colors"
+            >
+              Upgrade
+            </button>
+          </div>
         )}
 
         {!loading && canCollaborate && collaborators.length === 0 && (
@@ -151,6 +162,12 @@ export function CollaboratorsPanel({ open, onClose }: Props) {
           </form>
         </div>
       )}
+      <UpgradeModal
+        open={showUpgrade}
+        onClose={() => setShowUpgrade(false)}
+        feature="Collaboration"
+        requiredPlan={requiredPlanFor("canCollaborate")}
+      />
     </div>
   );
 }

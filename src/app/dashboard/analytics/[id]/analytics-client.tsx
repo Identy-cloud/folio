@@ -12,6 +12,8 @@ import {
   PencilSimple,
 } from "@phosphor-icons/react";
 import { FolioLogo } from "@/components/FolioLogo";
+import { UpgradeModal } from "@/components/UpgradeModal";
+import { requiredPlanFor } from "@/lib/plan-limits";
 import { ViewsOverTimeChart, ViewsBySlideChart } from "./analytics-charts";
 
 interface Analytics {
@@ -28,6 +30,7 @@ export function AnalyticsClient({ presentationId }: { presentationId: string }) 
   const [title, setTitle] = useState("Presentation");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showUpgrade, setShowUpgrade] = useState(false);
 
   useEffect(() => {
     Promise.all([
@@ -78,7 +81,25 @@ export function AnalyticsClient({ presentationId }: { presentationId: string }) 
         </div>
 
         {loading && <p className="py-12 text-center text-neutral-500">Loading analytics...</p>}
-        {error && <p className="py-12 text-center text-neutral-500">{error}</p>}
+        {error && (
+          <div className="py-12 text-center">
+            <p className="text-neutral-500">{error}</p>
+            {error.includes("Upgrade") && (
+              <button
+                onClick={() => setShowUpgrade(true)}
+                className="mt-4 rounded bg-white px-6 py-2 text-xs font-medium text-[#161616] hover:bg-neutral-200 transition-colors"
+              >
+                Upgrade
+              </button>
+            )}
+            <UpgradeModal
+              open={showUpgrade}
+              onClose={() => setShowUpgrade(false)}
+              feature="Analytics"
+              requiredPlan={requiredPlanFor("canUseAnalytics")}
+            />
+          </div>
+        )}
 
         {data && (
           <div className="space-y-8">

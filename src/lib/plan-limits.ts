@@ -16,6 +16,8 @@ export interface PlanLimits {
   canUseAllTemplates: boolean;
   canUseAnalytics: boolean;
   canUseAdvancedAnalytics: boolean;
+  canUseAI: boolean;
+  canRecord: boolean;
   maxVersions: number;
 }
 
@@ -38,6 +40,8 @@ const LIMITS: Record<Plan, PlanLimits> = {
     canUseAllTemplates: false,
     canUseAnalytics: false,
     canUseAdvancedAnalytics: false,
+    canUseAI: false,
+    canRecord: false,
     maxVersions: 5,
   },
   creator: {
@@ -56,6 +60,8 @@ const LIMITS: Record<Plan, PlanLimits> = {
     canUseAllTemplates: true,
     canUseAnalytics: true,
     canUseAdvancedAnalytics: false,
+    canUseAI: true,
+    canRecord: true,
     maxVersions: 50,
   },
   studio: {
@@ -74,6 +80,8 @@ const LIMITS: Record<Plan, PlanLimits> = {
     canUseAllTemplates: true,
     canUseAnalytics: true,
     canUseAdvancedAnalytics: false,
+    canUseAI: true,
+    canRecord: true,
     maxVersions: 50,
   },
   agency: {
@@ -92,6 +100,8 @@ const LIMITS: Record<Plan, PlanLimits> = {
     canUseAllTemplates: true,
     canUseAnalytics: true,
     canUseAdvancedAnalytics: true,
+    canUseAI: true,
+    canRecord: true,
     maxVersions: 50,
   },
 };

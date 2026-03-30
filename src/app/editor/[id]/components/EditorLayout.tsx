@@ -37,6 +37,9 @@ import { AIGeneratePresentationDialog } from "@/components/editor/AIGeneratePres
 import { TranslateDialog } from "@/components/editor/TranslateDialog";
 import { AIImageDialog } from "@/components/editor/AIImageDialog";
 import { ImportSlideModal } from "./ImportSlideModal";
+import { UpgradeModal } from "@/components/UpgradeModal";
+import { usePlanLimits } from "@/hooks/usePlanLimits";
+import { requiredPlanFor } from "@/lib/plan-limits";
 import { ClockCounterClockwise, Stack, NotePencil, ChatCircleDots } from "@phosphor-icons/react";
 import { ChatPanel } from "./ChatPanel";
 import { useChat } from "../hooks/useChat";
@@ -82,16 +85,30 @@ export function EditorLayout() {
   const [aiImageOpen, setAIImageOpen] = useState(false);
   const [slideLibraryOpen, setSlideLibraryOpen] = useState(false);
   const [importSlideOpen, setImportSlideOpen] = useState(false);
+  const { limits } = usePlanLimits();
+  const [upgradeFeature, setUpgradeFeature] = useState<string | null>(null);
   const rightPanel = versionsOpen ? "versions" : historyOpen ? "history" : layersOpen ? "layers" : "palette";
   const selectedIds = useEditorStore((s) => s.selectedElementIds);
   const hasSelection = selectedIds.length > 0;
 
   useEffect(() => {
     const onOpenUnsplash = () => setUnsplashOpen(true);
-    const onOpenAIGenerate = () => setAIGenerateOpen(true);
-    const onOpenTranslate = () => setTranslateOpen(true);
-    const onOpenAIPresentation = () => setAIPresentationOpen(true);
-    const onOpenAIImage = () => setAIImageOpen(true);
+    const onOpenAIGenerate = () => {
+      if (!limits.canUseAI) { setUpgradeFeature("AI Slide Generation"); return; }
+      setAIGenerateOpen(true);
+    };
+    const onOpenTranslate = () => {
+      if (!limits.canUseAI) { setUpgradeFeature("AI Translate"); return; }
+      setTranslateOpen(true);
+    };
+    const onOpenAIPresentation = () => {
+      if (!limits.canUseAI) { setUpgradeFeature("AI Presentation Generator"); return; }
+      setAIPresentationOpen(true);
+    };
+    const onOpenAIImage = () => {
+      if (!limits.canUseAI) { setUpgradeFeature("AI Image Generation"); return; }
+      setAIImageOpen(true);
+    };
     const onOpenSlideLibrary = () => setSlideLibraryOpen(true);
     const onOpenImportSlide = () => setImportSlideOpen(true);
     window.addEventListener("folio:open-unsplash", onOpenUnsplash);
@@ -110,7 +127,7 @@ export function EditorLayout() {
       window.removeEventListener("folio:open-slide-library", onOpenSlideLibrary);
       window.removeEventListener("folio:open-import-slide", onOpenImportSlide);
     };
-  }, []);
+  }, [limits.canUseAI]);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -330,6 +347,12 @@ export function EditorLayout() {
       <AIImageDialog open={aiImageOpen} onClose={() => setAIImageOpen(false)} />
       <SlideLibrary open={slideLibraryOpen} onClose={() => setSlideLibraryOpen(false)} />
       <ImportSlideModal open={importSlideOpen} onClose={() => setImportSlideOpen(false)} />
+      <UpgradeModal
+        open={upgradeFeature !== null}
+        onClose={() => setUpgradeFeature(null)}
+        feature={upgradeFeature ?? ""}
+        requiredPlan={requiredPlanFor("canUseAI")}
+      />
       <Onboarding />
       <ShortcutsPanel
         open={shortcutsOpen}

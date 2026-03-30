@@ -5,6 +5,10 @@ import { FolioLogo } from "@/components/FolioLogo";
 import { LocaleSelector } from "@/components/LocaleSelector";
 import { useTranslation } from "@/lib/i18n/context";
 import { LandingFeatures } from "./LandingFeatures";
+import { LandingStats } from "./LandingStats";
+import { LandingTestimonials } from "./LandingTestimonials";
+import { LandingTrustedBy } from "./LandingTrustedBy";
+import { LandingComparison } from "./LandingComparison";
 
 export function LandingClient() {
   const { t } = useTranslation();
@@ -28,19 +32,20 @@ export function LandingClient() {
         </div>
       </header>
 
-      <main id="main-content" className="flex flex-1 flex-col items-center justify-center px-4 text-center sm:px-6">
-        <p className="text-[10px] tracking-[0.5em] text-neutral-500 uppercase">
+      <main id="main-content" className="relative flex flex-1 flex-col items-center justify-center overflow-hidden px-4 text-center sm:px-6">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(120,119,198,0.15),transparent)]" />
+        <p className="relative text-[10px] tracking-[0.5em] text-neutral-500 uppercase">
           {l.subtitle}
         </p>
-        <h1 className="mt-4 font-display text-5xl leading-none tracking-tight sm:text-7xl lg:text-9xl">
+        <h1 className="relative mt-4 font-display text-5xl leading-none tracking-tight sm:text-7xl lg:text-9xl">
           {l.heading1}
           <br />
           <span className="text-neutral-500">{l.heading2}</span>
         </h1>
-        <p className="mt-6 max-w-md text-sm leading-relaxed text-neutral-400">
+        <p className="relative mt-6 max-w-md text-sm leading-relaxed text-neutral-400">
           {l.description}
         </p>
-        <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:gap-4">
+        <div className="relative mt-10 flex flex-col gap-3 sm:flex-row sm:gap-4">
           <Link
             href="/login"
             className="bg-white px-6 py-3 text-xs font-semibold tracking-[0.25em] text-black uppercase hover:bg-neutral-200 transition-colors sm:px-8"
@@ -54,9 +59,16 @@ export function LandingClient() {
             {l.demo}
           </Link>
         </div>
+        <p className="relative mt-4 text-[10px] tracking-[0.3em] text-neutral-600 uppercase">
+          {l.noCreditCard}
+        </p>
       </main>
 
       <LandingFeatures />
+      <LandingStats />
+      <LandingTestimonials />
+      <LandingTrustedBy />
+      <LandingComparison />
 
       <section className="border-t border-neutral-800 px-4 py-16 text-center sm:px-8 sm:py-24">
         <h2 className="font-display text-3xl tracking-tight sm:text-5xl">

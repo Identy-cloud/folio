@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { db } from "@/db";
 import { users, subscriptions } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { sendWelcomeEmail } from "@/lib/email";
 
 export async function getAuthenticatedUser() {
   const supabase = await createClient();
@@ -40,6 +41,11 @@ export async function getAuthenticatedUser() {
       .insert(subscriptions)
       .values({ userId: user.id, plan: "free", status: "active" })
       .onConflictDoNothing();
+
+    sendWelcomeEmail(
+      newUser.email,
+      newUser.name ?? newUser.email.split("@")[0],
+    ).catch(() => {});
 
     return newUser;
   }

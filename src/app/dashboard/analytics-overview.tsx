@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { Eye, Users, Crown, TrendUp, Lock } from "@phosphor-icons/react";
+import { UpgradeModal } from "@/components/UpgradeModal";
+import { requiredPlanFor } from "@/lib/plan-limits";
 
 interface OverviewData {
   totalViews: number;
@@ -13,6 +15,7 @@ interface OverviewData {
 export function AnalyticsOverview() {
   const [data, setData] = useState<OverviewData | null>(null);
   const [gated, setGated] = useState(false);
+  const [showUpgrade, setShowUpgrade] = useState(false);
 
   useEffect(() => {
     fetch("/api/analytics/overview")
@@ -38,13 +41,19 @@ export function AnalyticsOverview() {
               Upgrade to Creator plan to see views, unique visitors, and trends.
             </p>
           </div>
-          <a
-            href="/dashboard/profile"
+          <button
+            onClick={() => setShowUpgrade(true)}
             className="ml-auto shrink-0 rounded bg-white px-4 py-2 text-xs font-medium text-[#161616] transition-colors hover:bg-neutral-200"
           >
             Upgrade
-          </a>
+          </button>
         </div>
+        <UpgradeModal
+          open={showUpgrade}
+          onClose={() => setShowUpgrade(false)}
+          feature="Analytics"
+          requiredPlan={requiredPlanFor("canUseAnalytics")}
+        />
       </div>
     );
   }

@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { DialogShell } from "@/components/ui/DialogShell";
+import { UpgradeModal } from "@/components/UpgradeModal";
+import { requiredPlanFor } from "@/lib/plan-limits";
 import { ChartBar, Eye, Users, Timer } from "@phosphor-icons/react";
 
 interface Analytics {
@@ -22,6 +24,7 @@ export function AnalyticsDialog({ open, presentationId, title, onClose }: Props)
   const [data, setData] = useState<Analytics | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [showUpgrade, setShowUpgrade] = useState(false);
 
   useEffect(() => {
     if (!open || !presentationId) return;
@@ -57,9 +60,23 @@ export function AnalyticsDialog({ open, presentationId, title, onClose }: Props)
       {loading && <p className="py-8 text-center text-xs text-neutral-500">Loading...</p>}
 
       {error && !data && (
-        <p className="py-8 text-center text-xs text-neutral-500">
-          Upgrade to Creator plan to access analytics.
-        </p>
+        <div className="py-8 text-center">
+          <p className="text-xs text-neutral-500 mb-3">
+            Upgrade to Creator plan to access analytics.
+          </p>
+          <button
+            onClick={() => setShowUpgrade(true)}
+            className="rounded bg-white px-4 py-2 text-xs font-medium text-[#161616] hover:bg-neutral-200 transition-colors"
+          >
+            Upgrade
+          </button>
+          <UpgradeModal
+            open={showUpgrade}
+            onClose={() => setShowUpgrade(false)}
+            feature="Analytics"
+            requiredPlan={requiredPlanFor("canUseAnalytics")}
+          />
+        </div>
       )}
 
       {data && (

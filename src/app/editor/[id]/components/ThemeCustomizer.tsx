@@ -6,7 +6,8 @@ import { THEMES } from "@/lib/templates/themes";
 import { ColorPicker } from "@/components/editor/ColorPicker";
 import { X, Plus, Trash } from "@phosphor-icons/react";
 import { usePlanLimits } from "@/hooks/usePlanLimits";
-import { FREE_THEMES } from "@/lib/plan-limits";
+import { FREE_THEMES, requiredPlanFor } from "@/lib/plan-limits";
+import { UpgradeModal } from "@/components/UpgradeModal";
 import { toast } from "sonner";
 import { ThemeBuilder } from "./ThemeBuilder";
 
@@ -24,6 +25,7 @@ export function ThemeCustomizer({ open, onClose }: Props) {
   const presentationId = useEditorStore((s) => s.presentationId);
   const { limits } = usePlanLimits();
   const [builderOpen, setBuilderOpen] = useState(false);
+  const [showUpgrade, setShowUpgrade] = useState(false);
 
   const allThemes = { ...THEMES, ...customThemes };
   const themeObj = allThemes[theme] ?? THEMES["editorial-blue"];
@@ -127,10 +129,14 @@ export function ThemeCustomizer({ open, onClose }: Props) {
           </>
         )}
         <button
-          onClick={() => setBuilderOpen(true)}
+          onClick={() => {
+            if (!limits.canUseBrandKit) { setShowUpgrade(true); return; }
+            setBuilderOpen(true);
+          }}
           className="mt-3 flex w-full items-center justify-center gap-1.5 rounded border border-dashed border-neutral-600 px-3 py-2 text-[11px] text-neutral-400 hover:border-neutral-400 hover:text-neutral-200 transition-colors"
         >
           <Plus size={12} /> Create Theme
+          {!limits.canUseBrandKit && <span className="text-[9px] text-amber-400 ml-1">PRO</span>}
         </button>
         <div className="mt-3 space-y-2 border-t border-neutral-700 pt-3">
           <div>
@@ -144,6 +150,12 @@ export function ThemeCustomizer({ open, onClose }: Props) {
         </div>
       </div>
       <ThemeBuilder open={builderOpen} onClose={() => setBuilderOpen(false)} />
+      <UpgradeModal
+        open={showUpgrade}
+        onClose={() => setShowUpgrade(false)}
+        feature="Custom Themes"
+        requiredPlan={requiredPlanFor("canUseBrandKit")}
+      />
     </>
   );
 }

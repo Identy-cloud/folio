@@ -7,6 +7,7 @@ import { DeleteAccountButton } from "./delete-account-button";
 import { LocaleSelector } from "@/components/LocaleSelector";
 import { FolioLogo } from "@/components/FolioLogo";
 import { NotificationBell } from "@/components/NotificationBell";
+import { UpgradeButton } from "@/components/UpgradeButton";
 import { WorkspaceSwitcherWrapper } from "./workspace-switcher-wrapper";
 import { WorkspaceProvider } from "./workspace-context";
 
@@ -58,6 +59,7 @@ export default async function DashboardLayout({
               </div>
             )}
           </Link>
+          <UpgradeButton />
           <NotificationBell />
           <LocaleSelector />
           <LogoutButton />

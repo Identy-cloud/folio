@@ -5,6 +5,9 @@ import { Microphone, Stop, Pause, Play, Trash, FloppyDisk, Circle } from "@phosp
 import { useRecording } from "@/hooks/useRecording";
 import { useEditorStore } from "@/store/editorStore";
 import { Tooltip } from "@/components/ui/Tooltip";
+import { usePlanLimits } from "@/hooks/usePlanLimits";
+import { requiredPlanFor } from "@/lib/plan-limits";
+import { UpgradeModal } from "@/components/UpgradeModal";
 
 function formatTime(ms: number) {
   const s = Math.floor(ms / 1000);
@@ -24,6 +27,8 @@ export function RecordingControls() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const { limits } = usePlanLimits();
+  const [showUpgrade, setShowUpgrade] = useState(false);
 
   useEffect(() => {
     if (!presentationId) return;
@@ -111,7 +116,10 @@ export function RecordingControls() {
     <div className="flex items-center gap-2">
       {error && <span className="text-[10px] text-red-400">{error}</span>}
       <Tooltip content="Record narration">
-        <button onClick={startRecording} className="flex h-8 items-center gap-1.5 rounded px-2 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 transition-colors">
+        <button onClick={() => {
+          if (!limits.canRecord) { setShowUpgrade(true); return; }
+          startRecording();
+        }} className="flex h-8 items-center gap-1.5 rounded px-2 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 transition-colors">
           <Microphone size={14} weight={saved ? "fill" : "regular"} className={saved ? "text-red-400" : ""} />
           <span className="hidden md:inline text-xs">{saved ? "Re-record" : "Record"}</span>
         </button>
@@ -123,6 +131,12 @@ export function RecordingControls() {
           </button>
         </Tooltip>
       )}
+      <UpgradeModal
+        open={showUpgrade}
+        onClose={() => setShowUpgrade(false)}
+        feature="Recording"
+        requiredPlan={requiredPlanFor("canRecord")}
+      />
     </div>
   );
 }
