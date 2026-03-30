@@ -3,6 +3,7 @@
 import { useEditorStore } from "@/store/editorStore";
 import { SlidePreview } from "@/components/SlidePreview";
 import { X, Trash } from "@phosphor-icons/react";
+import { useSlideDrag } from "@/hooks/useSlideDrag";
 
 interface Props {
   open: boolean;
@@ -16,6 +17,9 @@ export function SlideSorter({ open, onClose }: Props) {
   const deleteSlide = useEditorStore((s) => s.deleteSlide);
   const duplicateSlide = useEditorStore((s) => s.duplicateSlide);
   const reorderSlides = useEditorStore((s) => s.reorderSlides);
+
+  const { dragState, handleDragStart, handleDragOver, handleDrop, handleDragEnd } =
+    useSlideDrag({ onReorder: reorderSlides });
 
   if (!open) return null;
 
@@ -35,9 +39,20 @@ export function SlideSorter({ open, onClose }: Props) {
           {slides.map((slide, i) => (
             <div
               key={slide.id}
+              draggable
+              onDragStart={handleDragStart(i)}
+              onDragOver={handleDragOver(i)}
+              onDrop={handleDrop(i)}
+              onDragEnd={handleDragEnd}
               onClick={() => { setActiveSlide(i); onClose(); }}
-              className={`group relative cursor-pointer rounded border-2 transition-all hover:scale-[1.02] ${
-                i === activeSlideIndex ? "border-blue-500 ring-2 ring-blue-500/30" : "border-neutral-700 hover:border-neutral-500"
+              className={`group relative cursor-grab rounded border-2 transition-all active:cursor-grabbing ${
+                dragState.dragIndex === i ? "opacity-40 scale-95" : "opacity-100 hover:scale-[1.02]"
+              } ${
+                dragState.overIndex === i && dragState.dragIndex !== i
+                  ? "ring-2 ring-blue-500 border-blue-500"
+                  : i === activeSlideIndex
+                    ? "border-blue-500 ring-2 ring-blue-500/30"
+                    : "border-neutral-700 hover:border-neutral-500"
               }`}
             >
               <SlidePreview slide={slide} className="w-full" />

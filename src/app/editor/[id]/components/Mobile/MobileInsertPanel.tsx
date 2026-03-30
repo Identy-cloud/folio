@@ -1,14 +1,16 @@
 "use client";
 
+import { useState } from "react";
 import { nanoid } from "nanoid";
-import { TextT, Rectangle, Circle, Triangle, Image as ImageIcon, Diamond, Star, ArrowRight, Minus, LineSegment, GridNine } from "@phosphor-icons/react";
+import { TextT, Rectangle, Circle, Triangle, Image as ImageIcon, Diamond, Star, ArrowRight, Minus, LineSegment, GridNine, Smiley, VideoCamera } from "@phosphor-icons/react";
 import { useEditorStore } from "@/store/editorStore";
 import { textDefaults, shapeDefaults } from "@/lib/templates/element-defaults";
 import { THEMES } from "@/lib/templates/themes";
 import { useImageUpload } from "../../hooks/useImageUpload";
 import { useTranslation } from "@/lib/i18n/context";
-import type { TextElement, ShapeElement, ArrowElement, DividerElement, LineElement, TableElement } from "@/types/elements";
-import { arrowDefaults, dividerDefaults, lineDefaults, tableDefaults } from "@/lib/templates/element-defaults";
+import { IconPicker } from "../IconPicker";
+import type { TextElement, ShapeElement, ArrowElement, DividerElement, LineElement, TableElement, VideoElement } from "@/types/elements";
+import { arrowDefaults, dividerDefaults, lineDefaults, tableDefaults, videoDefaults } from "@/lib/templates/element-defaults";
 
 export function MobileInsertPanel({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
@@ -16,6 +18,7 @@ export function MobileInsertPanel({ onClose }: { onClose: () => void }) {
   const activeSlide = useEditorStore((s) => s.getActiveSlide());
   const theme = useEditorStore((s) => THEMES[s.theme] ?? THEMES["editorial-blue"]);
   const { trigger: triggerUpload, uploading } = useImageUpload();
+  const [showIconPicker, setShowIconPicker] = useState(false);
 
   function addText() {
     const el: TextElement = {
@@ -87,9 +90,21 @@ export function MobileInsertPanel({ onClose }: { onClose: () => void }) {
       }} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800">
         <GridNine size={18} weight="duotone" /> Table
       </button>
+      <button onClick={() => {
+        const url = prompt("Paste video URL (.mp4, .webm, etc.):");
+        if (!url) return;
+        addElement({ id: nanoid(), type: "video", x: 200, y: 200, w: 640, h: 360, rotation: 0, opacity: 1, zIndex: (activeSlide?.elements.length ?? 0) + 1, locked: false, src: url, ...videoDefaults() } satisfies VideoElement);
+        onClose();
+      }} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800">
+        <VideoCamera size={18} weight="duotone" /> Video
+      </button>
+      <button onClick={() => setShowIconPicker(true)} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800">
+        <Smiley size={18} weight="duotone" /> Icon
+      </button>
       <button onClick={() => { triggerUpload(); onClose(); }} disabled={uploading} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800 disabled:opacity-50">
         <ImageIcon size={18} weight="duotone" /> {uploading ? t.editor.uploading : t.editor.image}
       </button>
+      {showIconPicker && <IconPicker onClose={() => { setShowIconPicker(false); onClose(); }} />}
     </div>
   );
 }

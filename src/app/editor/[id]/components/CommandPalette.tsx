@@ -3,9 +3,9 @@
 import { useState, useEffect, useRef } from "react";
 import { nanoid } from "nanoid";
 import { useEditorStore } from "@/store/editorStore";
-import { textDefaults, shapeDefaults, arrowDefaults, dividerDefaults, lineDefaults, tableDefaults } from "@/lib/templates/element-defaults";
+import { textDefaults, shapeDefaults, arrowDefaults, dividerDefaults, lineDefaults, tableDefaults, videoDefaults, iconDefaults } from "@/lib/templates/element-defaults";
 import { THEMES } from "@/lib/templates/themes";
-import type { TextElement, ShapeElement, ArrowElement, DividerElement, EmbedElement, LineElement, TableElement } from "@/types/elements";
+import type { TextElement, ShapeElement, ArrowElement, DividerElement, EmbedElement, LineElement, TableElement, VideoElement, IconElement } from "@/types/elements";
 
 interface Command {
   id: string;
@@ -47,7 +47,9 @@ export function CommandPalette({ open, onClose }: Props) {
     { id: "line", label: "Line / Divider", category: "Insert", action: () => addElement({ id: nanoid(), type: "divider", x: 100, y: 500, w: 600, h: 10, rotation: 0, opacity: 1, zIndex: zBase, locked: false, ...dividerDefaults(theme) } satisfies DividerElement) },
     { id: "connector", label: "Connector / Line", category: "Insert", action: () => addElement({ id: nanoid(), type: "line", x: 200, y: 300, w: 300, h: 200, rotation: 0, opacity: 1, zIndex: zBase, locked: false, x1: 0, y1: 0, x2: 300, y2: 200, ...lineDefaults(theme) } satisfies LineElement) },
     { id: "embed", label: "Embed (YouTube, Vimeo)", category: "Insert", action: () => { const url = prompt("Paste video URL:"); if (url) addElement({ id: nanoid(), type: "embed", x: 200, y: 200, w: 640, h: 360, rotation: 0, opacity: 1, zIndex: zBase, locked: false, url } as EmbedElement); } },
+    { id: "video", label: "Video", category: "Insert", action: () => { const url = prompt("Paste video URL (.mp4, .webm):"); if (url) addElement({ id: nanoid(), type: "video", x: 200, y: 200, w: 640, h: 360, rotation: 0, opacity: 1, zIndex: zBase, locked: false, src: url, ...videoDefaults() } satisfies VideoElement); } },
     { id: "table", label: "Table", category: "Insert", action: () => addElement({ id: nanoid(), type: "table", x: 200, y: 200, w: 600, h: 300, rotation: 0, opacity: 1, zIndex: zBase, locked: false, ...tableDefaults(theme) } satisfies TableElement) },
+    { id: "icon", label: "Icon (Star)", category: "Insert", action: () => addElement({ id: nanoid(), type: "icon", x: 200, y: 200, w: 120, h: 120, rotation: 0, opacity: 1, zIndex: zBase, locked: false, iconName: "Star", ...iconDefaults(theme) } satisfies IconElement) },
     { id: "slide", label: "New slide", category: "Slide", action: () => addSlide() },
     { id: "select-all", label: "Select all elements", category: "Edit", action: () => { const s = useEditorStore.getState().getActiveSlide(); if (s) useEditorStore.setState({ selectedElementIds: s.elements.map((e) => e.id) }); } },
     { id: "deselect", label: "Deselect all", category: "Edit", action: () => useEditorStore.setState({ selectedElementIds: [] }) },

@@ -5,6 +5,7 @@ import { useEditorStore } from "@/store/editorStore";
 import { SlidePreview } from "@/components/SlidePreview";
 import { TransitionIcon, TRANSITION_LIST } from "@/components/editor/TransitionIcons";
 import { useTranslation } from "@/lib/i18n/context";
+import { useTouchDrag } from "@/hooks/useSlideDrag";
 
 export function MobileSlidePanel({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
@@ -14,14 +15,27 @@ export function MobileSlidePanel({ onClose }: { onClose: () => void }) {
   const addSlide = useEditorStore((s) => s.addSlide);
   const deleteSlide = useEditorStore((s) => s.deleteSlide);
   const updateSlideTransition = useEditorStore((s) => s.updateSlideTransition);
+  const reorderSlides = useEditorStore((s) => s.reorderSlides);
   const [expandedTr, setExpandedTr] = useState<number | null>(null);
+
+  const { touchDragIndex, touchOverIndex, registerRef, handleTouchStart, handleTouchMove, handleTouchEnd } =
+    useTouchDrag({ onReorder: reorderSlides });
 
   return (
     <div className="p-4 space-y-2">
       {slides.map((slide, i) => (
-        <div key={slide.id}>
+        <div key={slide.id} className="relative">
+          {touchOverIndex === i && touchDragIndex !== i && (
+            <div className="absolute inset-x-2 -top-1 z-10 h-1 rounded-full bg-blue-500" />
+          )}
           <div
-            className={`relative overflow-hidden rounded border-2 transition-colors ${
+            ref={registerRef(i)}
+            onTouchStart={handleTouchStart(i)}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            className={`relative overflow-hidden rounded border-2 transition-all ${
+              touchDragIndex === i ? "opacity-40 scale-95" : ""
+            } ${
               i === activeSlideIndex ? "border-blue-500" : "border-neutral-700"
             }`}
           >

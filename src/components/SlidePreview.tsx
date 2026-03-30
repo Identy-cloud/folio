@@ -2,7 +2,7 @@
 
 import { memo, useRef, useEffect, useCallback } from "react";
 import type { Slide, SlideElement, TextElement, TableElement } from "@/types/elements";
-import { ShapeRenderer, ArrowRenderer, DividerRenderer, LineRenderer, TableRenderer } from "@/components/elements";
+import { ShapeRenderer, ArrowRenderer, DividerRenderer, LineRenderer, TableRenderer, VideoRenderer, IconRenderer } from "@/components/elements";
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/image-utils";
 
 const W = 1920;
@@ -95,6 +95,8 @@ const PreviewElement = memo(function PreviewElement({ element }: { element: Slid
       {element.type === "divider" && <DividerRenderer element={element} />}
       {element.type === "line" && <LineRenderer element={element} />}
       {element.type === "table" && <TableRenderer element={element as TableElement} />}
+      {element.type === "video" && <VideoRenderer element={element} mode="preview" />}
+      {element.type === "icon" && <IconRenderer element={element} />}
       {element.type === "image" && (
         <div style={{
           width: "100%",

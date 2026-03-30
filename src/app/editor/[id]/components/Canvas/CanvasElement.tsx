@@ -5,7 +5,7 @@ import { nanoid } from "nanoid";
 import { Camera } from "@phosphor-icons/react";
 import { useEditorStore } from "@/store/editorStore";
 import type { SlideElement, TextElement } from "@/types/elements";
-import { ShapeRenderer, ArrowRenderer, DividerRenderer, EmbedRenderer, LineRenderer, TableRenderer } from "@/components/elements";
+import { ShapeRenderer, ArrowRenderer, DividerRenderer, EmbedRenderer, LineRenderer, TableRenderer, VideoRenderer, IconRenderer } from "@/components/elements";
 import { TextRenderer } from "./TextRenderer";
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/image-utils";
 
@@ -166,6 +166,8 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
       {element.type === "embed" && <EmbedRenderer element={element} />}
       {element.type === "line" && <LineRenderer element={element} />}
       {element.type === "table" && <TableRenderer element={element} editable={editing} />}
+      {element.type === "video" && <VideoRenderer element={element} mode="editor" />}
+      {element.type === "icon" && <IconRenderer element={element} />}
       {element.type === "image" && (
         <div style={{
           width: "100%",

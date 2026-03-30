@@ -46,6 +46,7 @@ export function EditorLayout() {
   const [mobilePanel, setMobilePanel] = useState<"slides" | "insert" | "properties" | null>(null);
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
   const [findOpen, setFindOpen] = useState(false);
+  const [findShowReplace, setFindShowReplace] = useState(false);
   const [sorterOpen, setSorterOpen] = useState(false);
   const [themeCustomizerOpen, setThemeCustomizerOpen] = useState(false);
   const [commentsOpen, setCommentsOpen] = useState(false);
@@ -61,6 +62,18 @@ export function EditorLayout() {
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
+      if (e.key === "f" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setFindShowReplace(false);
+        setFindOpen(true);
+        return;
+      }
+      if (e.key === "h" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setFindShowReplace(true);
+        setFindOpen(true);
+        return;
+      }
       if ((e.target as HTMLElement).tagName === "INPUT" || (e.target as HTMLElement).isContentEditable) return;
       if (e.key === "?" || (e.key === "/" && e.shiftKey)) {
         e.preventDefault();
@@ -69,10 +82,6 @@ export function EditorLayout() {
       if (e.key === "/" && !e.shiftKey && !e.metaKey && !e.ctrlKey) {
         e.preventDefault();
         setCommandOpen(true);
-      }
-      if (e.key === "h" && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
-        setFindOpen((v) => !v);
       }
       if (e.key === "F2") {
         e.preventDefault();
@@ -204,7 +213,7 @@ export function EditorLayout() {
         )}
       </BottomSheet>
 
-      <FindReplace open={findOpen} onClose={() => setFindOpen(false)} />
+      <FindReplace open={findOpen} onClose={() => setFindOpen(false)} showReplace={findShowReplace} />
       <SlideSorter open={sorterOpen} onClose={() => setSorterOpen(false)} />
       <ThemeCustomizer open={themeCustomizerOpen} onClose={() => setThemeCustomizerOpen(false)} />
       <EditorComments open={commentsOpen} onClose={() => setCommentsOpen(false)} />

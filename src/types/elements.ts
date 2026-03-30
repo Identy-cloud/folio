@@ -1,4 +1,6 @@
-export type ElementType = "text" | "image" | "shape" | "arrow" | "divider" | "embed" | "line" | "table";
+export type ElementType = "text" | "image" | "shape" | "arrow" | "divider" | "embed" | "line" | "table" | "icon" | "video";
+
+export type IconWeight = "thin" | "light" | "regular" | "bold" | "fill" | "duotone";
 
 export type ElementAnimation = "none" | "fade-up" | "fade-down" | "fade-left" | "fade-right" | "zoom-in" | "zoom-out" | "rotate-in" | "bounce-in";
 
@@ -117,6 +119,22 @@ export interface TableElement extends BaseElement {
   fontSize: number;
 }
 
+export interface IconElement extends BaseElement {
+  type: "icon";
+  iconName: string;
+  iconWeight: IconWeight;
+  color: string;
+}
+
+export interface VideoElement extends BaseElement {
+  type: "video";
+  src: string;
+  poster?: string;
+  autoplay: boolean;
+  loop: boolean;
+  muted: boolean;
+}
+
 export type SlideElement =
   | TextElement
   | ImageElement
@@ -125,7 +143,9 @@ export type SlideElement =
   | DividerElement
   | EmbedElement
   | LineElement
-  | TableElement;
+  | TableElement
+  | IconElement
+  | VideoElement;
 
 export type SlideTransition = "fade" | "slide-left" | "slide-up" | "slide-right" | "zoom" | "blur" | "none";
 

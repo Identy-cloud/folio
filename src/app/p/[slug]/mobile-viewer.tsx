@@ -2,8 +2,10 @@
 
 import { useState, useRef, useMemo, useCallback, useEffect } from "react";
 import DOMPurify from "dompurify";
-import type { SlideElement, TextElement, ShapeElement, TableElement, SlideTransition } from "@/types/elements";
+import type { SlideElement, TextElement, ShapeElement, TableElement, VideoElement, IconElement, SlideTransition } from "@/types/elements";
 import { getElementAnimationStyle } from "@/lib/element-animation";
+import { VideoRenderer } from "@/components/elements/VideoRenderer";
+import { IconRenderer } from "@/components/elements/IconRenderer";
 import { useTranslation } from "@/lib/i18n/context";
 
 interface Slide {
@@ -310,6 +312,22 @@ function MobileElement({ element, delay = 0, animate = true }: { element: SlideE
 
   if (element.type === "table") {
     return <div style={animStyle} className="w-full overflow-x-auto"><MobileTable element={element} /></div>;
+  }
+
+  if (element.type === "icon") {
+    return (
+      <div style={{ ...animStyle, width: 48, height: 48 }} className="mx-auto">
+        <IconRenderer element={element} />
+      </div>
+    );
+  }
+
+  if (element.type === "video") {
+    return (
+      <div style={{ ...animStyle, aspectRatio: `${element.w} / ${element.h}` }} className="w-full rounded overflow-hidden">
+        <VideoRenderer element={element} mode="viewer" />
+      </div>
+    );
   }
 
   return null;

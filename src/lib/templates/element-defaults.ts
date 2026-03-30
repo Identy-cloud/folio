@@ -1,5 +1,5 @@
 import type { Theme } from "./themes";
-import type { TextElement, ShapeElement, ArrowElement, DividerElement, LineElement, TableElement } from "@/types/elements";
+import type { TextElement, ShapeElement, ArrowElement, DividerElement, LineElement, TableElement, VideoElement, IconElement } from "@/types/elements";
 
 type TextDefaults = Pick<TextElement, "fontFamily" | "fontSize" | "fontWeight" | "lineHeight" | "letterSpacing" | "color" | "textAlign" | "verticalAlign">;
 type ShapeDefaults = Pick<ShapeElement, "fill" | "stroke" | "strokeWidth" | "borderRadius">;
@@ -59,6 +59,25 @@ export function tableDefaults(theme: Theme): TableDefaults {
     headerBgColor: theme.primary,
     cellPadding: 8,
     fontSize: 16,
+  };
+}
+
+type VideoDefaults = Pick<VideoElement, "autoplay" | "loop" | "muted">;
+
+export function videoDefaults(): VideoDefaults {
+  return {
+    autoplay: false,
+    loop: false,
+    muted: true,
+  };
+}
+
+type IconDefaults = Pick<IconElement, "iconWeight" | "color">;
+
+export function iconDefaults(theme: Theme): IconDefaults {
+  return {
+    iconWeight: "duotone",
+    color: theme.text,
   };
 }
 

@@ -16,7 +16,8 @@ import { DeleteButton } from "../ElementPalette/DeleteButton";
 import { EmbedProperties } from "../ElementPalette/EmbedProperties";
 import { LineProperties } from "../ElementPalette/LineProperties";
 import { TableProperties } from "../ElementPalette/TableProperties";
-import type { ImageElement, ArrowElement, DividerElement, EmbedElement, LineElement, TableElement } from "@/types/elements";
+import { VideoProperties } from "../ElementPalette/VideoProperties";
+import type { ImageElement, ArrowElement, DividerElement, EmbedElement, LineElement, TableElement, VideoElement } from "@/types/elements";
 
 export function MobilePropertiesPanel({ onClose }: { onClose: () => void }) {
   const activeSlide = useEditorStore((s) => s.getActiveSlide());
@@ -45,6 +46,7 @@ export function MobilePropertiesPanel({ onClose }: { onClose: () => void }) {
       {el.type === "embed" && <EmbedProperties element={el as EmbedElement} />}
       {el.type === "line" && <LineProperties element={el as LineElement} />}
       {el.type === "table" && <TableProperties element={el as TableElement} />}
+      {el.type === "video" && <VideoProperties element={el as VideoElement} />}
       <AnimationProperties element={el} />
       <AlignControls elementId={el.id} />
       <LayerControls elementId={el.id} />

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useEditorStore } from "@/store/editorStore";
 import { nanoid } from "nanoid";
-import { TextT, Rectangle, Circle, Triangle, Image as ImageIcon, ArrowRight, Minus, Diamond, Star, Pentagon, Hexagon, Code, LineSegment, GridNine } from "@phosphor-icons/react";
+import { TextT, Rectangle, Circle, Triangle, Image as ImageIcon, ArrowRight, Minus, Diamond, Star, Pentagon, Hexagon, Code, LineSegment, GridNine, Smiley, VideoCamera } from "@phosphor-icons/react";
 import { useImageUpload } from "../../hooks/useImageUpload";
 import { PositionFields } from "./PositionFields";
 import { TextProperties } from "./TextProperties";
@@ -22,11 +22,14 @@ import { ShadowControls } from "./ShadowControls";
 import { EmbedProperties } from "./EmbedProperties";
 import { LineProperties } from "./LineProperties";
 import { TableProperties } from "./TableProperties";
+import { IconProperties } from "./IconProperties";
+import { VideoProperties } from "./VideoProperties";
 import { ColorPicker } from "@/components/editor/ColorPicker";
-import type { TextElement, ShapeElement, ArrowElement, DividerElement, ImageElement, EmbedElement, LineElement, TableElement, SlideElement } from "@/types/elements";
-import { textDefaults, shapeDefaults, arrowDefaults, dividerDefaults, lineDefaults, tableDefaults } from "@/lib/templates/element-defaults";
+import type { TextElement, ShapeElement, ArrowElement, DividerElement, ImageElement, EmbedElement, LineElement, TableElement, IconElement, VideoElement, SlideElement } from "@/types/elements";
+import { textDefaults, shapeDefaults, arrowDefaults, dividerDefaults, lineDefaults, tableDefaults, videoDefaults } from "@/lib/templates/element-defaults";
 import { THEMES } from "@/lib/templates/themes";
 import { TransitionPicker } from "../SlidePanel/TransitionPicker";
+import { IconPicker } from "../IconPicker";
 import { useTranslation } from "@/lib/i18n/context";
 
 export function ElementPalette() {
@@ -41,6 +44,7 @@ export function ElementPalette() {
   const updateSlideTransition = useEditorStore((s) => s.updateSlideTransition);
   const { trigger: triggerUpload, uploading } = useImageUpload();
   const { trigger: triggerBgUpload, uploading: bgUploading } = useBgImageUpload();
+  const [showIconPicker, setShowIconPicker] = useState(false);
 
   const elements = editingMode === "mobile" && activeSlide?.mobileElements ? activeSlide.mobileElements : activeSlide?.elements;
   const selectedElement = elements?.find((el) => selectedIds.includes(el.id));
@@ -105,7 +109,21 @@ export function ElementPalette() {
         >
           <Code size={16} weight="duotone" /> Embed
         </button>
+        <button
+          onClick={() => {
+            const url = prompt("Paste video URL (.mp4, .webm, etc.):");
+            if (!url) return;
+            add({ id: nanoid(), type: "video", x: 200, y: 200, w: 640, h: 360, rotation: 0, opacity: 1, zIndex: zBase, locked: false, src: url, ...videoDefaults() } satisfies VideoElement);
+          }}
+          className={btn}
+        >
+          <VideoCamera size={16} weight="duotone" /> Video
+        </button>
+        <button onClick={() => setShowIconPicker(true)} className={btn}>
+          <Smiley size={16} weight="duotone" /> Icon
+        </button>
       </div>
+      {showIconPicker && <IconPicker onClose={() => setShowIconPicker(false)} />}
 
       {selectedIds.length > 1 ? (
         <div className="flex-1 overflow-y-auto border-t border-neutral-800 p-3 space-y-4">
@@ -134,6 +152,8 @@ export function ElementPalette() {
           {selectedElement.type === "embed" && <EmbedProperties element={selectedElement as EmbedElement} />}
           {selectedElement.type === "line" && <LineProperties element={selectedElement as LineElement} />}
           {selectedElement.type === "table" && <TableProperties element={selectedElement as TableElement} />}
+          {selectedElement.type === "icon" && <IconProperties element={selectedElement as IconElement} />}
+          {selectedElement.type === "video" && <VideoProperties element={selectedElement as VideoElement} />}
           <ShadowControls element={selectedElement} />
           <AnimationProperties element={selectedElement} />
           <AlignControls elementId={selectedElement.id} />

@@ -62,6 +62,7 @@ const GROUPS = [
       { keys: "Drag on empty area", label: "Rubber band select" },
       { keys: `${mod} + ↑ / ↓`, label: "Reorder slide up / down" },
       { keys: `${mod} + Enter`, label: "Add new slide" },
+      { keys: `${mod} + F`, label: "Find" },
       { keys: `${mod} + H`, label: "Find & Replace" },
       { keys: "Space + drag", label: "Pan canvas" },
       { keys: `${mod} + 0`, label: "Reset zoom to fit" },

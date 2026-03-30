@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import DOMPurify from "dompurify";
 import type { SlideElement, TextElement, TableElement, SlideTransition } from "@/types/elements";
 import { getElementAnimationStyle } from "@/lib/element-animation";
-import { ShapeRenderer, ArrowRenderer, DividerRenderer, EmbedRenderer, LineRenderer, TableRenderer } from "@/components/elements";
+import { ShapeRenderer, ArrowRenderer, DividerRenderer, EmbedRenderer, LineRenderer, TableRenderer, VideoRenderer, IconRenderer } from "@/components/elements";
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/image-utils";
 import { MobileViewer } from "./mobile-viewer";
 import { CommentsPanel } from "./comments-panel";
@@ -632,6 +632,8 @@ function ViewerElement({ element, delay, animate }: { element: SlideElement; del
       {element.type === "embed" && <EmbedRenderer element={element} />}
       {element.type === "line" && <LineRenderer element={element} />}
       {element.type === "table" && <TableRenderer element={element as TableElement} />}
+      {element.type === "video" && <VideoRenderer element={element} mode="viewer" />}
+      {element.type === "icon" && <IconRenderer element={element} />}
       {element.type === "image" && (
         <div style={{
           width: "100%",
