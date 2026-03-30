@@ -64,6 +64,13 @@
       "when": 1774867001469,
       "tag": "0008_flippant_doctor_octopus",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1774868609636,
+      "tag": "0009_tranquil_captain_cross",
+      "breakpoints": true
     }
   ]
 }

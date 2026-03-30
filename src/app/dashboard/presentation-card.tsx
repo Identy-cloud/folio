@@ -6,7 +6,7 @@ import { formatDistanceToNow } from "date-fns";
 import { es } from "date-fns/locale";
 import { DotsThreeVertical, Star } from "@phosphor-icons/react";
 import { SlidePreview } from "@/components/SlidePreview";
-import type { SlideElement } from "@/types/elements";
+import type { SlideElement, GradientDef } from "@/types/elements";
 import { useTranslation } from "@/lib/i18n/context";
 import { useClickOutside } from "@/hooks/useClickOutside";
 import { SelectionCheckbox } from "./selection-checkbox";
@@ -22,6 +22,7 @@ interface Props {
     updatedAt: string;
     coverSlide?: {
       backgroundColor: string;
+      backgroundGradient?: GradientDef;
       backgroundImage: string | null;
       elements: SlideElement[];
     } | null;

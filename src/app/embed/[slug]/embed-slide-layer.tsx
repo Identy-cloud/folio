@@ -2,9 +2,10 @@
 
 import { useMemo } from "react";
 import DOMPurify from "dompurify";
-import type { SlideElement, TextElement, TableElement, SlideTransition } from "@/types/elements";
+import type { SlideElement, TextElement, TableElement, SlideTransition, GradientDef } from "@/types/elements";
 import { ShapeRenderer, ArrowRenderer, DividerRenderer, EmbedRenderer, LineRenderer, TableRenderer, VideoRenderer, IconRenderer } from "@/components/elements";
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/image-utils";
+import { slideBackground } from "@/lib/gradient-utils";
 
 const SLIDE_W = 1920;
 const SLIDE_H = 1080;
@@ -14,6 +15,7 @@ interface Slide {
   order: number;
   transition: SlideTransition;
   backgroundColor: string;
+  backgroundGradient?: GradientDef;
   backgroundImage: string | null;
   elements: SlideElement[];
 }
@@ -37,10 +39,7 @@ export function EmbedSlideLayer({ slide, scale }: Props) {
         transform: `scale(${scale})`,
         transformOrigin: "center center",
         position: "absolute",
-        background: slide.backgroundColor,
-        backgroundImage: slide.backgroundImage?.startsWith("https://") ? `url("${slide.backgroundImage}")` : undefined,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
+        ...slideBackground(slide.backgroundColor, slide.backgroundGradient, slide.backgroundImage),
       }}
     >
       {sorted.map((el) => (

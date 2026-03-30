@@ -42,6 +42,7 @@ export function ElementPalette() {
   const selectedIds = useEditorStore((s) => s.selectedElementIds);
   const editingMode = useEditorStore((s) => s.editingMode);
   const updateSlideBackground = useEditorStore((s) => s.updateSlideBackground);
+  const updateSlideBackgroundGradient = useEditorStore((s) => s.updateSlideBackgroundGradient);
   const updateSlideBackgroundImage = useEditorStore((s) => s.updateSlideBackgroundImage);
   const updateSlideTransition = useEditorStore((s) => s.updateSlideTransition);
   const updateSlideTransitionDuration = useEditorStore((s) => s.updateSlideTransitionDuration);
@@ -186,7 +187,12 @@ export function ElementPalette() {
         <div className="flex-1 overflow-y-auto border-t border-neutral-800 p-3 space-y-4">
           <div className="space-y-2">
             <span className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">{t.editor.slideBg}</span>
-            <ColorPicker value={activeSlide.backgroundColor} onChange={updateSlideBackground} />
+            <ColorPicker
+              value={activeSlide.backgroundColor}
+              onChange={updateSlideBackground}
+              gradient={activeSlide.backgroundGradient}
+              onGradientChange={updateSlideBackgroundGradient}
+            />
             {activeSlide.backgroundImage ? (
               <div className="space-y-1">
                 <img src={activeSlide.backgroundImage} alt="" className="w-full rounded border border-neutral-700 aspect-video object-cover" />

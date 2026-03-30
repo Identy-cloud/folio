@@ -6,6 +6,7 @@ import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 import { THEMES } from "@/lib/templates/themes";
 import { hash } from "bcryptjs";
+import { randomBytes } from "crypto";
 import type { NextRequest } from "next/server";
 
 export async function GET(
@@ -49,6 +50,9 @@ const patchSchema = z.object({
   password: z.string().max(100).nullable().optional(),
   folderId: z.string().uuid().nullable().optional(),
   customThemes: z.record(z.string().max(64), themeValueSchema).optional(),
+  shareExpiresAt: z.string().datetime().nullable().optional(),
+  generateShareToken: z.boolean().optional(),
+  revokeShareToken: z.boolean().optional(),
 });
 
 export async function PATCH(
@@ -78,6 +82,17 @@ export async function PATCH(
     updates.password = parsed.data.password
       ? await hash(parsed.data.password, 10)
       : null;
+  }
+  if (parsed.data.shareExpiresAt !== undefined) {
+    updates.shareExpiresAt = parsed.data.shareExpiresAt
+      ? new Date(parsed.data.shareExpiresAt)
+      : null;
+  }
+  if (parsed.data.generateShareToken) {
+    updates.shareToken = randomBytes(32).toString("hex");
+  }
+  if (parsed.data.revokeShareToken) {
+    updates.shareToken = null;
   }
 
   const [updated] = await db

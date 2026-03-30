@@ -2,12 +2,15 @@
 
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import DOMPurify from "dompurify";
-import type { SlideElement, TextElement, TableElement, SlideTransition, TransitionEasing } from "@/types/elements";
+import type { SlideElement, TextElement, TableElement, SlideTransition, TransitionEasing, GradientDef } from "@/types/elements";
 import { getElementAnimationStyle } from "@/lib/element-animation";
 import { ShapeRenderer, ArrowRenderer, DividerRenderer, EmbedRenderer, LineRenderer, TableRenderer, VideoRenderer, IconRenderer } from "@/components/elements";
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/image-utils";
+import { slideBackground } from "@/lib/gradient-utils";
+import { useViewerFonts } from "@/hooks/useViewerFonts";
 import { MobileViewer } from "./mobile-viewer";
 import { CommentsPanel } from "./comments-panel";
+import { ReportModal } from "@/components/ReportModal";
 
 const SLIDE_W = 1920;
 const SLIDE_H = 1080;
@@ -20,6 +23,7 @@ interface Slide {
   transitionDuration?: number;
   transitionEasing?: TransitionEasing;
   backgroundColor: string;
+  backgroundGradient?: GradientDef;
   backgroundImage: string | null;
   elements: SlideElement[];
   mobileElements?: SlideElement[] | null;
@@ -34,6 +38,7 @@ interface Props {
 }
 
 export function ViewerClient({ title, slides, showWatermark, presentationId, hasPassword }: Props) {
+  useViewerFonts(presentationId);
   const [unlocked, setUnlocked] = useState(!hasPassword);
   const [pwInput, setPwInput] = useState("");
   const [pwError, setPwError] = useState(false);
@@ -41,6 +46,7 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
   const [loop, setLoop] = useState(true);
   const autoplayRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [showHelp, setShowHelp] = useState(true);
+  const [showReport, setShowReport] = useState(false);
 
   useEffect(() => {
     if (!showHelp) return;
@@ -258,7 +264,7 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
   }
 
   if (isMobile) {
-    return <MobileViewer title={title} slides={slides} showWatermark={showWatermark} />;
+    return <MobileViewer title={title} slides={slides} showWatermark={showWatermark} presentationId={presentationId} />;
   }
 
   const outgoing = slides[displayed];
@@ -554,6 +560,27 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
           totalSlides={slides.length}
         />
       )}
+
+      {presentationId && (
+        <button
+          onClick={(e) => { e.stopPropagation(); setShowReport(true); }}
+          className="fixed bottom-20 right-4 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white/40 backdrop-blur-sm hover:bg-white/20 hover:text-white/70 transition-colors"
+          aria-label="Report content"
+          title="Report content"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
+            <line x1="4" y1="22" x2="4" y2="15" />
+          </svg>
+        </button>
+      )}
+
+      {showReport && presentationId && (
+        <ReportModal
+          presentationId={presentationId}
+          onClose={() => setShowReport(false)}
+        />
+      )}
     </div>
   );
 }
@@ -584,10 +611,7 @@ function SlideLayer({
         transform: `scale(${scale})`,
         transformOrigin: "center center",
         position: "absolute",
-        background: slide.backgroundColor,
-        backgroundImage: slide.backgroundImage?.startsWith("https://") ? `url("${slide.backgroundImage}")` : undefined,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
+        ...slideBackground(slide.backgroundColor, slide.backgroundGradient, slide.backgroundImage),
         ...transitionStyle,
       }}
     >

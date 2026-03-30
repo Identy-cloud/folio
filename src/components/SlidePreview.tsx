@@ -4,12 +4,13 @@ import { memo, useRef, useEffect, useCallback } from "react";
 import type { Slide, SlideElement, TextElement, TableElement } from "@/types/elements";
 import { ShapeRenderer, ArrowRenderer, DividerRenderer, LineRenderer, TableRenderer, VideoRenderer, IconRenderer } from "@/components/elements";
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/image-utils";
+import { slideBackground } from "@/lib/gradient-utils";
 
 const W = 1920;
 const H = 1080;
 
 interface Props {
-  slide: Pick<Slide, "backgroundColor" | "backgroundImage" | "elements">;
+  slide: Pick<Slide, "backgroundColor" | "backgroundGradient" | "backgroundImage" | "elements">;
   className?: string;
 }
 
@@ -40,9 +41,7 @@ export const SlidePreview = memo(function SlidePreview({ slide, className }: Pro
         style={{
           position: "absolute",
           inset: 0,
-          background: slide.backgroundColor || "#ffffff",
-          backgroundImage: slide.backgroundImage?.startsWith("https://") ? `url("${slide.backgroundImage}")` : undefined,
-          backgroundSize: "cover",
+          ...slideBackground(slide.backgroundColor || "#ffffff", slide.backgroundGradient, slide.backgroundImage),
         }}
       >
         {/* Inner 1920x1080 canvas scaled to fill the container */}

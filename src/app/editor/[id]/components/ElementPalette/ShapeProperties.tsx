@@ -27,7 +27,13 @@ export function ShapeProperties({ element }: Props) {
     <div className="space-y-3">
       <span className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">{t.editor.shape}</span>
 
-      <ColorPicker label={t.editor.fill} value={element.fill} onChange={(c) => update({ fill: c })} />
+      <ColorPicker
+        label={t.editor.fill}
+        value={element.fill}
+        onChange={(c) => update({ fill: c })}
+        gradient={element.fillGradient}
+        onGradientChange={(g) => update({ fillGradient: g ?? undefined })}
+      />
       <ColorPicker label={t.editor.stroke} value={element.stroke} onChange={(c) => update({ stroke: c })} />
 
       <div className="grid grid-cols-2 gap-2">

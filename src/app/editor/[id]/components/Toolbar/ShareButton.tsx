@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import QRCode from "qrcode";
-import { ShareNetwork, Link as LinkIcon, Check, Globe, Lock } from "@phosphor-icons/react";
+import { ShareNetwork, Link as LinkIcon, Check, Globe, Lock, Clock, Key } from "@phosphor-icons/react";
 import { useEditorStore } from "@/store/editorStore";
 import { toast } from "sonner";
 import { useTranslation } from "@/lib/i18n/context";
@@ -13,6 +13,35 @@ interface PresentationMeta {
   slug: string;
   isPublic: boolean;
   password: string | null;
+  shareExpiresAt: string | null;
+  shareToken: string | null;
+}
+
+type ExpirationOption = "none" | "1h" | "24h" | "7d" | "30d" | "custom";
+
+function getExpirationDate(option: ExpirationOption): string | null {
+  if (option === "none" || option === "custom") return null;
+  const now = new Date();
+  const ms: Record<string, number> = {
+    "1h": 60 * 60 * 1000,
+    "24h": 24 * 60 * 60 * 1000,
+    "7d": 7 * 24 * 60 * 60 * 1000,
+    "30d": 30 * 24 * 60 * 60 * 1000,
+  };
+  return new Date(now.getTime() + ms[option]).toISOString();
+}
+
+function formatTimeRemaining(expiresAt: string): string {
+  const diff = new Date(expiresAt).getTime() - Date.now();
+  if (diff <= 0) return "Expired";
+  const hours = Math.floor(diff / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  if (hours >= 24) {
+    const days = Math.floor(hours / 24);
+    return `${days}d ${hours % 24}h remaining`;
+  }
+  if (hours > 0) return `${hours}h ${minutes}m remaining`;
+  return `${minutes}m remaining`;
 }
 
 export function ShareButton() {
@@ -22,15 +51,27 @@ export function ShareButton() {
   const [meta, setMeta] = useState<PresentationMeta | null>(null);
   const [toggling, setToggling] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [copiedToken, setCopiedToken] = useState(false);
   const [pw, setPw] = useState("");
   const [qrUrl, setQrUrl] = useState<string | null>(null);
+  const [showCustomDate, setShowCustomDate] = useState(false);
+  const [customDate, setCustomDate] = useState("");
   const popRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!open || !presentationId) return;
     fetch(`/api/presentations/${presentationId}`)
       .then((r) => r.json())
-      .then((d) => { setMeta({ slug: d.slug, isPublic: d.isPublic, password: d.password ?? null }); setPw(d.password ?? ""); })
+      .then((d) => {
+        setMeta({
+          slug: d.slug,
+          isPublic: d.isPublic,
+          password: d.password ?? null,
+          shareExpiresAt: d.shareExpiresAt ?? null,
+          shareToken: d.shareToken ?? null,
+        });
+        setPw(d.password ?? "");
+      })
       .catch(() => {});
   }, [open, presentationId]);
 
@@ -70,6 +111,85 @@ export function ShareButton() {
     setTimeout(() => setCopied(false), 2000);
   }
 
+  function copyTokenLink() {
+    if (!meta?.shareToken) return;
+    const url = `${window.location.origin}/p/${meta.slug}?token=${meta.shareToken}`;
+    navigator.clipboard.writeText(url);
+    setCopiedToken(true);
+    toast.success(t.editor.linkCopied);
+    setTimeout(() => setCopiedToken(false), 2000);
+  }
+
+  async function setExpiration(option: ExpirationOption) {
+    if (!meta) return;
+    if (option === "custom") {
+      setShowCustomDate(true);
+      return;
+    }
+    setShowCustomDate(false);
+    const shareExpiresAt = getExpirationDate(option);
+    const res = await fetch(`/api/presentations/${presentationId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ shareExpiresAt }),
+    });
+    if (res.ok) {
+      setMeta({ ...meta, shareExpiresAt });
+      toast.success(shareExpiresAt ? t.editor.expirationSet : t.editor.expirationRemoved);
+    }
+  }
+
+  async function setCustomExpiration() {
+    if (!meta || !customDate) return;
+    const shareExpiresAt = new Date(customDate).toISOString();
+    const res = await fetch(`/api/presentations/${presentationId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ shareExpiresAt }),
+    });
+    if (res.ok) {
+      setMeta({ ...meta, shareExpiresAt });
+      setShowCustomDate(false);
+      toast.success(t.editor.expirationSet);
+    }
+  }
+
+  async function generateToken() {
+    if (!meta) return;
+    const res = await fetch(`/api/presentations/${presentationId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ generateShareToken: true }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setMeta({ ...meta, shareToken: data.shareToken });
+      toast.success(t.editor.tokenGenerated);
+    }
+  }
+
+  async function revokeToken() {
+    if (!meta) return;
+    const res = await fetch(`/api/presentations/${presentationId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ revokeShareToken: true }),
+    });
+    if (res.ok) {
+      setMeta({ ...meta, shareToken: null });
+      toast.success(t.editor.tokenRevoked);
+    }
+  }
+
+  const expirationOptions: { label: string; value: ExpirationOption }[] = [
+    { label: t.editor.noExpiration, value: "none" },
+    { label: t.editor.expire1h, value: "1h" },
+    { label: t.editor.expire24h, value: "24h" },
+    { label: t.editor.expire7d, value: "7d" },
+    { label: t.editor.expire30d, value: "30d" },
+    { label: t.editor.expireCustom, value: "custom" },
+  ];
+
   return (
     <div ref={popRef} className="relative">
       <button
@@ -83,7 +203,7 @@ export function ShareButton() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-2 z-50 w-[calc(100vw-2rem)] max-w-72 rounded border border-neutral-700 bg-[#1e1e1e] p-4 shadow-xl sm:max-w-80">
+        <div className="absolute right-0 top-full mt-2 z-50 w-[calc(100vw-2rem)] max-w-72 rounded border border-neutral-700 bg-[#1e1e1e] p-4 shadow-xl sm:max-w-80 max-h-[80vh] overflow-y-auto">
           {!meta ? (
             <p className="text-xs text-neutral-500">{t.common.loading}</p>
           ) : (
@@ -136,6 +256,53 @@ export function ShareButton() {
                     </button>
                   </div>
 
+                  {/* Expiration */}
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-1.5">
+                      <Clock size={14} className="text-neutral-500" />
+                      <span className="text-xs font-medium text-neutral-300">
+                        {t.editor.linkExpiration}
+                      </span>
+                    </div>
+
+                    {meta.shareExpiresAt && (
+                      <p className="text-xs text-amber-400">
+                        {formatTimeRemaining(meta.shareExpiresAt)}
+                      </p>
+                    )}
+
+                    <div className="grid grid-cols-3 gap-1">
+                      {expirationOptions.map((opt) => (
+                        <button
+                          key={opt.value}
+                          onClick={() => setExpiration(opt.value)}
+                          className="rounded border border-neutral-700 px-1.5 py-1 text-[10px] text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 transition-colors"
+                        >
+                          {opt.label}
+                        </button>
+                      ))}
+                    </div>
+
+                    {showCustomDate && (
+                      <div className="flex items-center gap-1.5">
+                        <input
+                          type="datetime-local"
+                          value={customDate}
+                          onChange={(e) => setCustomDate(e.target.value)}
+                          min={new Date().toISOString().slice(0, 16)}
+                          className="flex-1 rounded border border-neutral-700 bg-[#111111] px-2 py-1 text-xs text-neutral-300 outline-none focus:border-neutral-500"
+                        />
+                        <button
+                          onClick={setCustomExpiration}
+                          disabled={!customDate}
+                          className="shrink-0 rounded bg-neutral-800 px-2 py-1 text-[10px] text-neutral-300 hover:bg-neutral-700 transition-colors disabled:opacity-40"
+                        >
+                          {t.common.save}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
                   {/* QR Code */}
                   {qrUrl && (
                     <div className="flex justify-center">
@@ -174,6 +341,47 @@ export function ShareButton() {
                     >
                       {pw.trim() ? "Set" : "Clear"}
                     </button>
+                  </div>
+
+                  {/* Private token link */}
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-1.5">
+                      <Key size={14} className="text-neutral-500" />
+                      <span className="text-xs font-medium text-neutral-300">
+                        {t.editor.privateLink}
+                      </span>
+                    </div>
+                    {meta.shareToken ? (
+                      <div className="space-y-1.5">
+                        <div className="flex items-center gap-2">
+                          <div className="flex-1 truncate rounded bg-[#111111] px-2 py-1.5 text-[10px] text-neutral-500">
+                            ...?token={meta.shareToken.slice(0, 12)}...
+                          </div>
+                          <button
+                            onClick={copyTokenLink}
+                            className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded bg-neutral-800 text-neutral-300 hover:bg-neutral-700 transition-colors"
+                          >
+                            {copiedToken ? <Check size={12} /> : <LinkIcon size={12} />}
+                          </button>
+                        </div>
+                        <button
+                          onClick={revokeToken}
+                          className="w-full rounded border border-red-900/50 py-1 text-[10px] text-red-400 hover:bg-red-900/20 transition-colors"
+                        >
+                          {t.editor.revokeToken}
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={generateToken}
+                        className="w-full rounded border border-neutral-700 py-1.5 text-[10px] text-neutral-400 hover:bg-neutral-800 transition-colors"
+                      >
+                        {t.editor.generatePrivateLink}
+                      </button>
+                    )}
+                    <p className="text-[10px] text-neutral-600">
+                      {t.editor.privateLinkDesc}
+                    </p>
                   </div>
 
                   {/* Embed */}

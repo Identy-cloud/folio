@@ -41,7 +41,12 @@ const imageElementSchema = baseElementSchema.extend({
 const shapeElementSchema = baseElementSchema.extend({
   type: z.literal("shape"),
   shape: z.enum(["rect", "circle", "triangle"]),
-  fill: z.string().max(50),
+  fill: z.string().max(200),
+  fillGradient: z.object({
+    type: z.enum(["linear", "radial"]),
+    angle: z.number().min(0).max(360).optional(),
+    stops: z.array(z.object({ color: z.string().max(50), position: z.number().min(0).max(100) })).min(2).max(4),
+  }).optional(),
   stroke: z.string().max(50),
   strokeWidth: z.number().min(0),
   borderRadius: z.number().min(0),
@@ -72,6 +77,11 @@ const slideSchema = z.object({
   transitionDuration: z.number().int().min(200).max(2000).nullable().optional(),
   transitionEasing: z.enum(["ease", "ease-in", "ease-out", "ease-in-out", "linear"]).nullable().optional(),
   backgroundColor: z.string().max(50),
+  backgroundGradient: z.object({
+    type: z.enum(["linear", "radial"]),
+    angle: z.number().min(0).max(360).optional(),
+    stops: z.array(z.object({ color: z.string().max(50), position: z.number().min(0).max(100) })).min(2).max(4),
+  }).nullable().optional(),
   backgroundImage: z.string().url().nullable().or(z.literal("")),
   elements: z.array(elementSchema).max(500),
   mobileElements: z.array(elementSchema).max(500).nullable().default(null),
@@ -142,6 +152,7 @@ export async function PUT(
           transitionDuration: s.transitionDuration ?? null,
           transitionEasing: s.transitionEasing ?? null,
           backgroundColor: s.backgroundColor,
+          backgroundGradient: s.backgroundGradient ?? null,
           backgroundImage: s.backgroundImage || null,
           elements: s.elements,
           mobileElements: s.mobileElements,

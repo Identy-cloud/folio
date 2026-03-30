@@ -1,6 +1,7 @@
 "use client";
 
 import { ALL_FONTS } from "@/lib/templates/themes";
+import { useCustomFonts } from "@/hooks/useCustomFonts";
 
 interface Props {
   fontDisplay: string;
@@ -10,6 +11,8 @@ interface Props {
 }
 
 export function ThemeBuilderFonts({ fontDisplay, fontBody, onChangeDisplay, onChangeBody }: Props) {
+  const { fonts: customFonts } = useCustomFonts();
+
   return (
     <div className="space-y-2">
       <div>
@@ -26,6 +29,13 @@ export function ThemeBuilderFonts({ fontDisplay, fontBody, onChangeDisplay, onCh
               {f.label}
             </option>
           ))}
+          {customFonts.length > 0 && (
+            <optgroup label="Custom Fonts">
+              {customFonts.map((f) => (
+                <option key={f.id} value={f.family}>{f.name}</option>
+              ))}
+            </optgroup>
+          )}
         </select>
       </div>
       <div>
@@ -42,6 +52,13 @@ export function ThemeBuilderFonts({ fontDisplay, fontBody, onChangeDisplay, onCh
               {f.label}
             </option>
           ))}
+          {customFonts.length > 0 && (
+            <optgroup label="Custom Fonts">
+              {customFonts.map((f) => (
+                <option key={f.id} value={f.family}>{f.name}</option>
+              ))}
+            </optgroup>
+          )}
         </select>
       </div>
     </div>

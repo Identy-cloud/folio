@@ -6,12 +6,13 @@ import { DialogShell } from "@/components/ui/DialogShell";
 import { SlidePreview } from "@/components/SlidePreview";
 import { useEditorStore } from "@/store/editorStore";
 import { useTranslation } from "@/lib/i18n/context";
-import type { SlideElement } from "@/types/elements";
+import type { SlideElement, GradientDef } from "@/types/elements";
 
 interface RemoteSlide {
   id: string;
   order: number;
   backgroundColor: string;
+  backgroundGradient?: GradientDef;
   elements: SlideElement[];
 }
 
@@ -106,7 +107,7 @@ export function ImportSlideModal({ open, onClose }: Props) {
                     className="group relative overflow-hidden rounded border border-neutral-700 hover:border-neutral-500 transition-colors"
                   >
                     <SlidePreview
-                      slide={{ backgroundColor: slide.backgroundColor, backgroundImage: null, elements: slide.elements as SlideElement[] }}
+                      slide={{ backgroundColor: slide.backgroundColor, backgroundGradient: slide.backgroundGradient, backgroundImage: null, elements: slide.elements as SlideElement[] }}
                       className="w-full"
                     />
                     <span className="absolute bottom-0.5 right-0.5 rounded bg-black/60 px-1 text-[8px] text-white opacity-0 group-hover:opacity-100 transition-opacity">

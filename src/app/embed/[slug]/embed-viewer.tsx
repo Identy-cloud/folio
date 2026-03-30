@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import type { SlideElement, SlideTransition } from "@/types/elements";
+import type { SlideElement, SlideTransition, GradientDef } from "@/types/elements";
+import { useViewerFonts } from "@/hooks/useViewerFonts";
 import { EmbedSlideLayer } from "./embed-slide-layer";
 import { EmbedPasswordGate } from "./embed-password-gate";
 
@@ -13,6 +14,7 @@ interface Slide {
   order: number;
   transition: SlideTransition;
   backgroundColor: string;
+  backgroundGradient?: GradientDef;
   backgroundImage: string | null;
   elements: SlideElement[];
   mobileElements?: SlideElement[] | null;
@@ -28,6 +30,7 @@ interface Props {
 }
 
 export function EmbedViewer({ title, slides, showWatermark, presentationId, hasPassword, autoplay: initialAutoplay }: Props) {
+  useViewerFonts(presentationId);
   const [unlocked, setUnlocked] = useState(!hasPassword);
   const [current, setCurrent] = useState(0);
   const [scale, setScale] = useState(1);

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useEditorStore } from "@/store/editorStore";
 import { ColorPicker } from "@/components/editor/ColorPicker";
 import { ALL_FONTS } from "@/lib/templates/themes";
+import { useCustomFonts } from "@/hooks/useCustomFonts";
 import { TextAlignLeft, TextAlignCenter, TextAlignRight, TextItalic, TextUnderline, TextStrikethrough, ArrowLineUp, ArrowsVertical, ArrowLineDown } from "@phosphor-icons/react";
 import type { TextElement } from "@/types/elements";
 import { useTranslation } from "@/lib/i18n/context";
@@ -17,6 +18,7 @@ export function TextProperties({ element }: Props) {
   const updateElement = useEditorStore((s) => s.updateElement);
   const pushHistory = useEditorStore((s) => s.pushHistory);
   const [sizeInput, setSizeInput] = useState(String(element.fontSize));
+  const { fonts: customFonts } = useCustomFonts();
 
   const WEIGHTS = [
     { value: 400, label: t.editor.fontWeight.regular },
@@ -50,6 +52,13 @@ export function TextProperties({ element }: Props) {
         {ALL_FONTS.map((f) => (
           <option key={f.value} value={f.value} style={{ fontFamily: f.value }}>{f.label}</option>
         ))}
+        {customFonts.length > 0 && (
+          <optgroup label="Custom Fonts">
+            {customFonts.map((f) => (
+              <option key={f.id} value={f.family} style={{ fontFamily: f.family }}>{f.name}</option>
+            ))}
+          </optgroup>
+        )}
       </select>
 
       {/* Font size */}

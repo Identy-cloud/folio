@@ -50,6 +50,8 @@ export const presentations = pgTable("presentations", {
   password: text("password"),
   thumbnailUrl: text("thumbnail_url"),
   customThemes: jsonb("custom_themes").default({}).notNull(),
+  shareExpiresAt: timestamp("share_expires_at", { withTimezone: true }),
+  shareToken: text("share_token").unique(),
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
     .notNull(),
@@ -67,6 +69,7 @@ export const slides = pgTable("slides", {
     .notNull(),
   order: integer("order").notNull(),
   backgroundColor: text("background_color").default("#ffffff").notNull(),
+  backgroundGradient: jsonb("background_gradient"),
   backgroundImage: text("background_image"),
   transition: text("transition").default("fade").notNull(),
   transitionDuration: integer("transition_duration"),
@@ -147,6 +150,39 @@ export const notifications = pgTable("notifications", {
     .notNull(),
 }, (table) => [
   index("notifications_user_id_idx").on(table.userId),
+]);
+
+export const reports = pgTable("reports", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  presentationId: uuid("presentation_id")
+    .references(() => presentations.id, { onDelete: "cascade" })
+    .notNull(),
+  reporterEmail: text("reporter_email"),
+  reason: text("reason").notNull(),
+  description: text("description").notNull(),
+  status: text("status").default("pending").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+}, (table) => [
+  index("reports_presentation_id_idx").on(table.presentationId),
+  index("reports_status_idx").on(table.status),
+]);
+
+export const fonts = pgTable("fonts", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id")
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull(),
+  name: text("name").notNull(),
+  family: text("family").notNull(),
+  url: text("url").notNull(),
+  format: text("format").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+}, (table) => [
+  index("fonts_user_id_idx").on(table.userId),
 ]);
 
 export const comments = pgTable("comments", {

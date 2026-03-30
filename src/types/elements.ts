@@ -4,6 +4,12 @@ export type IconWeight = "thin" | "light" | "regular" | "bold" | "fill" | "duoto
 
 export type ElementAnimation = "none" | "fade-up" | "fade-down" | "fade-left" | "fade-right" | "zoom-in" | "zoom-out" | "rotate-in" | "bounce-in";
 
+export interface GradientDef {
+  type: "linear" | "radial";
+  angle?: number;
+  stops: Array<{ color: string; position: number }>;
+}
+
 export interface ElementShadow {
   offsetX: number;
   offsetY: number;
@@ -68,6 +74,7 @@ export interface ShapeElement extends BaseElement {
   type: "shape";
   shape: "rect" | "circle" | "triangle" | "diamond" | "star" | "pentagon" | "hexagon";
   fill: string;
+  fillGradient?: GradientDef;
   stroke: string;
   strokeWidth: number;
   borderRadius: number;
@@ -159,6 +166,7 @@ export interface Slide {
   transitionDuration?: number;
   transitionEasing?: TransitionEasing;
   backgroundColor: string;
+  backgroundGradient?: GradientDef;
   backgroundImage: string | null;
   elements: SlideElement[];
   mobileElements: SlideElement[] | null;

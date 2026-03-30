@@ -2,11 +2,13 @@
 
 import { useState, useRef, useMemo, useCallback, useEffect } from "react";
 import DOMPurify from "dompurify";
-import type { SlideElement, TextElement, ShapeElement, TableElement, VideoElement, IconElement, SlideTransition, TransitionEasing } from "@/types/elements";
+import type { SlideElement, TextElement, ShapeElement, TableElement, VideoElement, IconElement, SlideTransition, TransitionEasing, GradientDef } from "@/types/elements";
 import { getElementAnimationStyle } from "@/lib/element-animation";
 import { VideoRenderer } from "@/components/elements/VideoRenderer";
 import { IconRenderer } from "@/components/elements/IconRenderer";
 import { useTranslation } from "@/lib/i18n/context";
+import { ReportModal } from "@/components/ReportModal";
+import { gradientToCSS } from "@/lib/gradient-utils";
 
 interface Slide {
   id: string;
@@ -14,6 +16,7 @@ interface Slide {
   transitionDuration?: number;
   transitionEasing?: TransitionEasing;
   backgroundColor: string;
+  backgroundGradient?: GradientDef;
   elements: SlideElement[];
   mobileElements?: SlideElement[] | null;
 }
@@ -22,17 +25,26 @@ interface Props {
   title: string;
   slides: Slide[];
   showWatermark?: boolean;
+  presentationId?: string;
 }
 
 const DEFAULT_TRANSITION_MS = 350;
 
-export function MobileViewer({ title, slides, showWatermark }: Props) {
+function mobileBg(slide: Slide): string {
+  if (slide.backgroundGradient && slide.backgroundGradient.stops.length >= 2) {
+    return gradientToCSS(slide.backgroundGradient);
+  }
+  return slide.backgroundColor;
+}
+
+export function MobileViewer({ title, slides, showWatermark, presentationId }: Props) {
   const { t } = useTranslation();
   const [current, setCurrent] = useState(0);
   const [displayed, setDisplayed] = useState(0);
   const [animating, setAnimating] = useState(false);
   const touchRef = useRef<{ x: number; y: number; t: number } | null>(null);
   const scrollingRef = useRef(false);
+  const [showReport, setShowReport] = useState(false);
   const total = slides.length;
 
   const goNext = useCallback(() => {
@@ -177,9 +189,9 @@ export function MobileViewer({ title, slides, showWatermark }: Props) {
           <div className="absolute inset-0" style={getStyle("out")}>
             <div
               className="h-full overflow-y-auto overscroll-contain pb-14"
-              style={{ backgroundColor: outgoing.backgroundColor }}
+              style={{ background: mobileBg(outgoing) }}
             >
-              <MobileSlideContent elements={outgoing.mobileElements ?? outgoing.elements} bg={outgoing.backgroundColor} />
+              <MobileSlideContent elements={outgoing.mobileElements ?? outgoing.elements} bg={mobileBg(outgoing)} />
             </div>
           </div>
         )}
@@ -187,9 +199,9 @@ export function MobileViewer({ title, slides, showWatermark }: Props) {
         <div className="absolute inset-0" style={getStyle("in")}>
           <div
             className="h-full overflow-y-auto overscroll-contain pb-14"
-            style={{ backgroundColor: activeSlide.backgroundColor }}
+            style={{ background: mobileBg(activeSlide) }}
           >
-            <MobileSlideContent animateKey={animating ? -1 : current} elements={inElements} bg={activeSlide.backgroundColor} />
+            <MobileSlideContent animateKey={animating ? -1 : current} elements={inElements} bg={mobileBg(activeSlide)} />
           </div>
         </div>
       </div>
@@ -216,6 +228,26 @@ export function MobileViewer({ title, slides, showWatermark }: Props) {
           {t.viewer.createOwn}
         </a>
       </div>
+
+      {presentationId && (
+        <button
+          onClick={() => setShowReport(true)}
+          className="absolute top-3 left-3 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white/40 active:bg-white/20"
+          aria-label="Report content"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
+            <line x1="4" y1="22" x2="4" y2="15" />
+          </svg>
+        </button>
+      )}
+
+      {showReport && presentationId && (
+        <ReportModal
+          presentationId={presentationId}
+          onClose={() => setShowReport(false)}
+        />
+      )}
 
       {/* Swipe hint */}
       {current === 0 && total > 1 && (
@@ -256,7 +288,7 @@ function MobileSlideContent({ elements, bg, animateKey }: { elements: SlideEleme
   const shouldAnimate = animateKey !== undefined && animateKey >= 0;
 
   return (
-    <div className="min-h-full px-5 py-8 space-y-4" style={{ backgroundColor: bg }}>
+    <div className="min-h-full px-5 py-8 space-y-4" style={{ background: bg }}>
       {sorted.map((el, i) => (
         <MobileElement
           key={shouldAnimate ? `${el.id}-${animateKey}` : el.id}
@@ -339,17 +371,24 @@ function MobileElement({ element, delay = 0, animate = true }: { element: SlideE
   return null;
 }
 
+function shapeFillBg(element: ShapeElement): React.CSSProperties {
+  if (element.fillGradient && element.fillGradient.stops.length >= 2) {
+    return { background: gradientToCSS(element.fillGradient) };
+  }
+  return { backgroundColor: element.fill };
+}
+
 function MobileShape({ element }: { element: ShapeElement }) {
   if (element.shape === "circle") {
     return (
       <div className="flex justify-center py-2">
-        <div style={{ width: 48, height: 48, borderRadius: "50%", backgroundColor: element.fill, opacity: element.opacity }} />
+        <div style={{ width: 48, height: 48, borderRadius: "50%", ...shapeFillBg(element), opacity: element.opacity }} />
       </div>
     );
   }
   return (
     <div className="py-1">
-      <div style={{ height: 4, borderRadius: element.borderRadius, backgroundColor: element.fill, opacity: element.opacity }} />
+      <div style={{ height: 4, borderRadius: element.borderRadius, ...shapeFillBg(element), opacity: element.opacity }} />
     </div>
   );
 }

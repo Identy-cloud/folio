@@ -8,6 +8,7 @@ import { textDefaults, shapeDefaults } from "@/lib/templates/element-defaults";
 import { THEMES } from "@/lib/templates/themes";
 import { toast } from "sonner";
 import type { ImageElement } from "@/types/elements";
+import { slideBackground } from "@/lib/gradient-utils";
 import { CanvasElement } from "./CanvasElement";
 import { SelectionBox } from "./SelectionBox";
 import { SnapGuides } from "./SnapGuides";
@@ -368,7 +369,7 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
           left: "50%",
           transform: `translate(calc(-50% + ${panOffset.x}px), calc(-50% + ${panOffset.y}px)) scale(${scale})`,
           transformOrigin: "center center",
-          background: slide.backgroundColor,
+          ...slideBackground(slide.backgroundColor, slide.backgroundGradient),
           boxShadow: "0 4px 30px rgba(0,0,0,0.3)",
         }}
         onPointerDown={handleCanvasClick}

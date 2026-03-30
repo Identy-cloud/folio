@@ -1,0 +1,124 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { THEMES } from "@/lib/templates/themes";
+
+const RECENT_KEY = "folio-recent-colors";
+const MAX_RECENT = 8;
+
+export function getRecentColors(): string[] {
+  try { return JSON.parse(localStorage.getItem(RECENT_KEY) ?? "[]"); }
+  catch { return []; }
+}
+
+export function addRecentColor(color: string) {
+  if (color.startsWith("linear-gradient") || color.startsWith("radial-gradient")) return;
+  const recent = getRecentColors().filter((c) => c !== color);
+  recent.unshift(color);
+  localStorage.setItem(RECENT_KEY, JSON.stringify(recent.slice(0, MAX_RECENT)));
+}
+
+const PRESETS = [
+  "#ffffff", "#e5e5e5", "#a3a3a3", "#737373",
+  "#404040", "#171717", "#0a0a0a", "#000000",
+  "#1a1aff", "#3b82f6", "#06b6d4", "#10b981",
+  "#eab308", "#f97316", "#ef4444", "#ec4899",
+];
+
+interface Props {
+  value: string;
+  hex: string;
+  setHex: (v: string) => void;
+  applyColor: (c: string) => void;
+  commitHex: () => void;
+  hasGradient: boolean;
+}
+
+export function SolidColorPanel({ value, hex, setHex, applyColor, commitHex, hasGradient }: Props) {
+  const [recentColors, setRecentColors] = useState<string[]>([]);
+  const [themeColors, setThemeColors] = useState<string[]>([]);
+
+  useEffect(() => {
+    setRecentColors(getRecentColors());
+    import("@/store/editorStore").then(({ useEditorStore }) => {
+      const state = useEditorStore.getState();
+      const t = state.customThemes[state.theme] ?? THEMES[state.theme];
+      if (t) setThemeColors([t.background, t.text, t.accent, t.primary].filter((v, i, a) => a.indexOf(v) === i));
+    }).catch(() => {});
+  }, []);
+
+  const active = !hasGradient;
+
+  return (
+    <>
+      {themeColors.length > 0 && (
+        <div className="mb-1.5">
+          <span className="text-[9px] text-neutral-600 uppercase tracking-wider">Theme</span>
+          <div className="mt-0.5 flex gap-1">
+            {themeColors.map((c) => (
+              <button key={c} onClick={() => applyColor(c)}
+                className={`h-5 w-5 rounded-sm border transition-transform hover:scale-110 ${value === c && active ? "border-white ring-1 ring-white" : "border-neutral-600"}`}
+                style={{ backgroundColor: c }} title={c} />
+            ))}
+          </div>
+        </div>
+      )}
+      {recentColors.length > 0 && (
+        <div className="mb-1.5">
+          <span className="text-[9px] text-neutral-600 uppercase tracking-wider">Recent</span>
+          <div className="mt-0.5 flex gap-1">
+            {recentColors.map((c) => (
+              <button key={c} onClick={() => applyColor(c)}
+                className={`h-5 w-5 rounded-sm border transition-transform hover:scale-110 ${value === c && active ? "border-white ring-1 ring-white" : "border-neutral-600"}`}
+                style={{ backgroundColor: c }} />
+            ))}
+          </div>
+        </div>
+      )}
+      <div className="grid grid-cols-8 gap-1 rounded bg-[#2a2a2a] p-1">
+        {PRESETS.map((c) => (
+          <button key={c} onClick={() => applyColor(c)} aria-label={c}
+            className={`h-6 w-6 rounded-sm border transition-transform hover:scale-110 ${value === c && active ? "border-white ring-1 ring-white" : "border-neutral-500"}`}
+            style={{ backgroundColor: c }} />
+        ))}
+      </div>
+      <div className="mt-2 flex gap-1">
+        <input value={hex} onChange={(e) => setHex(e.target.value)} onBlur={commitHex}
+          onKeyDown={(e) => e.key === "Enter" && commitHex()}
+          className="flex-1 rounded border border-neutral-700 bg-[#161616] px-2 py-1 text-[11px] text-neutral-200 outline-none focus:border-neutral-500"
+          placeholder="#000000" />
+        {"EyeDropper" in window && (
+          <button
+            onClick={async () => {
+              try {
+                const ed = new (window as unknown as { EyeDropper: new () => { open: () => Promise<{ sRGBHex: string }> } }).EyeDropper();
+                const result = await ed.open();
+                applyColor(result.sRGBHex);
+              } catch { /* user cancelled */ }
+            }}
+            className="rounded border border-neutral-700 px-2 py-1 text-[11px] text-neutral-400 hover:bg-neutral-800 hover:text-white transition-colors"
+            title="Pick color from screen">
+            💧
+          </button>
+        )}
+      </div>
+      {!value.startsWith("linear-gradient") && !value.startsWith("radial-gradient") && (
+        <div className="mt-1.5 flex items-center gap-1.5">
+          <span className="text-[9px] text-neutral-600">Alpha</span>
+          <input type="range" min={0} max={100}
+            value={(() => { const m = value.match(/rgba?\([^)]+,\s*([\d.]+)\)/); return m ? Math.round(parseFloat(m[1]) * 100) : 100; })()}
+            onChange={(e) => {
+              const alpha = parseInt(e.target.value) / 100;
+              const hex6 = value.replace(/^#/, "").replace(/^(.{3})$/, "$1$3");
+              const r = parseInt(hex6.slice(0, 2), 16) || 0;
+              const g = parseInt(hex6.slice(2, 4), 16) || 0;
+              const b = parseInt(hex6.slice(4, 6), 16) || 0;
+              if (alpha >= 1) applyColor(`#${hex6.slice(0, 6)}`);
+              else applyColor(`rgba(${r},${g},${b},${alpha.toFixed(2)})`);
+            }}
+            className="flex-1 accent-white" />
+        </div>
+      )}
+    </>
+  );
+}

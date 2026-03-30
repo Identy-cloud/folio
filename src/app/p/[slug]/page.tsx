@@ -5,29 +5,43 @@ import { getUserPlan } from "@/lib/stripe";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { ViewerWrapper } from "./viewer-wrapper";
+import { ExpiredLink } from "./expired-link";
 import type { SlideElement, SlideTransition, TransitionEasing } from "@/types/elements";
 
-interface SlideRow {
+interface MappedSlide {
   id: string;
   presentationId: string;
   order: number;
   transition: SlideTransition;
-  transitionDuration?: number | null;
-  transitionEasing?: TransitionEasing | null;
+  transitionDuration?: number;
+  transitionEasing?: TransitionEasing;
   backgroundColor: string;
   backgroundImage: string | null;
   elements: SlideElement[];
   mobileElements: SlideElement[] | null;
 }
 
-async function getPresentation(slug: string) {
+type PresentationResult =
+  | { status: "ok"; presentation: typeof presentations.$inferSelect; ownerPlan: string; slides: MappedSlide[] }
+  | { status: "expired" }
+  | { status: "not_found" };
+
+async function getPresentation(slug: string, token?: string): Promise<PresentationResult> {
   const [pres] = await db
     .select()
     .from(presentations)
     .where(eq(presentations.slug, slug))
     .limit(1);
 
-  if (!pres || !pres.isPublic) return null;
+  if (!pres) return { status: "not_found" };
+
+  const hasTokenAccess = !!token && !!pres.shareToken && token === pres.shareToken;
+
+  if (!pres.isPublic && !hasTokenAccess) return { status: "not_found" };
+
+  if (pres.shareExpiresAt && new Date(pres.shareExpiresAt) < new Date()) {
+    return { status: "expired" };
+  }
 
   const slideRows = await db
     .select()
@@ -38,6 +52,7 @@ async function getPresentation(slug: string) {
   const ownerPlan = await getUserPlan(pres.userId);
 
   return {
+    status: "ok",
     presentation: pres,
     ownerPlan,
     slides: slideRows.map((s) => ({
@@ -62,7 +77,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const data = await getPresentation(slug);
-  if (!data) return { title: "No encontrado" };
+  if (data.status !== "ok") return { title: "No encontrado" };
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "";
 
@@ -88,12 +103,21 @@ export async function generateMetadata({
 
 export default async function ViewerPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const { slug } = await params;
-  const data = await getPresentation(slug);
-  if (!data) notFound();
+  const sp = await searchParams;
+  const token = typeof sp.token === "string" ? sp.token : undefined;
+  const data = await getPresentation(slug, token);
+
+  if (data.status === "expired") {
+    return <ExpiredLink />;
+  }
+
+  if (data.status !== "ok") notFound();
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "";
   const jsonLd = {

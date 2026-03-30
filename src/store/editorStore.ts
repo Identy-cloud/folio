@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { nanoid } from "nanoid";
-import type { Slide, SlideElement, SlideTransition, TransitionEasing } from "@/types/elements";
+import type { Slide, SlideElement, SlideTransition, TransitionEasing, GradientDef } from "@/types/elements";
 import { generateMobileElements } from "@/lib/mobile-layout";
 import { THEMES, type Theme, type CustomThemeMap } from "@/lib/templates/themes";
 import type { SnapLine, SpacingIndicator } from "@/lib/snap-utils";
@@ -44,6 +44,7 @@ interface EditorState {
   moveSlideToEnd: (id: string) => void;
 
   updateSlideBackground: (color: string) => void;
+  updateSlideBackgroundGradient: (gradient: GradientDef | null) => void;
   updateSlideBackgroundImage: (url: string | null) => void;
   updateSlideTransition: (slideId: string, transition: SlideTransition) => void;
   updateSlideTransitionDuration: (slideId: string, duration: number) => void;
@@ -308,6 +309,15 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     const { slides, activeSlideIndex } = get();
     const updated = slides.map((s, i) =>
       i === activeSlideIndex ? { ...s, backgroundColor: color } : s
+    );
+    set({ slides: updated, dirty: true, saveStatus: "unsaved" });
+    get().pushHistory();
+  },
+
+  updateSlideBackgroundGradient: (gradient) => {
+    const { slides, activeSlideIndex } = get();
+    const updated = slides.map((s, i) =>
+      i === activeSlideIndex ? { ...s, backgroundGradient: gradient ?? undefined } : s
     );
     set({ slides: updated, dirty: true, saveStatus: "unsaved" });
     get().pushHistory();

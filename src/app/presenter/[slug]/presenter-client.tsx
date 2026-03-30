@@ -2,12 +2,13 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { SlidePreview } from "@/components/SlidePreview";
-import type { SlideElement } from "@/types/elements";
+import type { SlideElement, GradientDef } from "@/types/elements";
 
 interface Slide {
   id: string;
   order: number;
   backgroundColor: string;
+  backgroundGradient?: GradientDef;
   backgroundImage: string | null;
   elements: SlideElement[];
   notes: string;

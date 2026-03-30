@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import type { SlideElement, SlideTransition, TransitionEasing } from "@/types/elements";
+import type { SlideElement, SlideTransition, TransitionEasing, GradientDef } from "@/types/elements";
 
 const ViewerClient = dynamic(
   () => import("./viewer-client").then((m) => m.ViewerClient),
@@ -24,6 +24,7 @@ interface Slide {
   transitionDuration?: number;
   transitionEasing?: TransitionEasing;
   backgroundColor: string;
+  backgroundGradient?: GradientDef;
   backgroundImage: string | null;
   elements: SlideElement[];
   mobileElements: SlideElement[] | null;

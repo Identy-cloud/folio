@@ -1,6 +1,7 @@
 import {
   S3Client,
   PutObjectCommand,
+  DeleteObjectCommand,
   ListObjectsV2Command,
   DeleteObjectsCommand,
 } from "@aws-sdk/client-s3";
@@ -46,6 +47,16 @@ export async function uploadToR2(
   });
   await client.send(command);
   return `${process.env.R2_PUBLIC_URL}/${key}`;
+}
+
+export async function deleteFromR2(key: string): Promise<void> {
+  const client = getR2Client();
+  await client.send(
+    new DeleteObjectCommand({
+      Bucket: process.env.R2_BUCKET_NAME!,
+      Key: key,
+    }),
+  );
 }
 
 export async function deleteUserR2Files(userId: string): Promise<void> {
