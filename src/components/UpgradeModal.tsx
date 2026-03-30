@@ -37,10 +37,19 @@ export function UpgradeModal({ open, onClose, feature, requiredPlan }: Props) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ plan: requiredPlan, period: "monthly" }),
       });
-      const data = await res.json();
-      if (data.url) window.location.href = data.url;
-      else if (res.status === 401) router.push("/login");
-    } catch {
+      if (res.status === 401) {
+        router.push("/login");
+        return;
+      }
+      const data = await res.json() as { url?: string; error?: string };
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        console.error("Stripe checkout error:", data.error);
+        setLoading(false);
+      }
+    } catch (err) {
+      console.error("Checkout failed:", err);
       setLoading(false);
     }
   }

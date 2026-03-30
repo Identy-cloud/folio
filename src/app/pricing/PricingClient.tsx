@@ -74,10 +74,21 @@ export function PricingClient() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ plan, period: annual ? "annual" : "monthly" }),
       });
-      const data: { url?: string } = await res.json();
-      if (data.url) window.location.href = data.url;
-      else if (res.status === 401) router.push("/login");
-    } catch {
+      if (res.status === 401) {
+        router.push(`/login?redirect=/pricing`);
+        return;
+      }
+      const data = await res.json() as { url?: string; error?: string };
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        console.error("Stripe checkout error:", data.error);
+        alert(data.error ?? "Error creating checkout session");
+        setLoading(null);
+      }
+    } catch (err) {
+      console.error("Checkout failed:", err);
+      alert("Connection error. Please try again.");
       setLoading(null);
     }
   }
