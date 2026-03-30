@@ -5,6 +5,7 @@ import type { SlideElement, SlideTransition, GradientDef } from "@/types/element
 import { useViewerFonts } from "@/hooks/useViewerFonts";
 import { EmbedSlideLayer } from "./embed-slide-layer";
 import { EmbedPasswordGate } from "./embed-password-gate";
+import { RecordingPlayer } from "@/app/p/[slug]/recording-player";
 
 const SLIDE_W = 1920;
 const SLIDE_H = 1080;
@@ -20,6 +21,11 @@ interface Slide {
   mobileElements?: SlideElement[] | null;
 }
 
+interface TimelineEntry {
+  slideIndex: number;
+  startTime: number;
+}
+
 interface Props {
   title: string;
   slides: Slide[];
@@ -27,9 +33,12 @@ interface Props {
   presentationId: string;
   hasPassword: boolean;
   autoplay: boolean;
+  recordingUrl?: string | null;
+  recordingTimeline?: TimelineEntry[] | null;
+  recordingDuration?: number | null;
 }
 
-export function EmbedViewer({ title, slides, showWatermark, presentationId, hasPassword, autoplay: initialAutoplay }: Props) {
+export function EmbedViewer({ title, slides, showWatermark, presentationId, hasPassword, autoplay: initialAutoplay, recordingUrl, recordingTimeline, recordingDuration }: Props) {
   useViewerFonts(presentationId);
   const [unlocked, setUnlocked] = useState(!hasPassword);
   const [current, setCurrent] = useState(0);
@@ -146,6 +155,16 @@ export function EmbedViewer({ title, slides, showWatermark, presentationId, hasP
       >
         {playing ? "⏸" : "▶"}
       </button>
+
+      {/* Recording player */}
+      {recordingUrl && recordingTimeline && (
+        <RecordingPlayer
+          recordingUrl={recordingUrl}
+          timeline={recordingTimeline}
+          duration={recordingDuration ?? 0}
+          onSlideChange={setCurrent}
+        />
+      )}
 
       {/* Watermark */}
       {showWatermark && (

@@ -12,6 +12,7 @@ import { gradientToCSS } from "@/lib/gradient-utils";
 import { textShadowCSS } from "@/lib/element-style-utils";
 import { usePinchZoom } from "@/hooks/usePinchZoom";
 import { RecordingPlayer } from "./recording-player";
+import { QaPanel } from "./qa-panel";
 
 interface Slide {
   id: string;
@@ -397,6 +398,10 @@ export function MobileViewer({ title, slides, showWatermark, presentationId, for
         />
       )}
 
+      {presentationId && (
+        <QaPanel presentationId={presentationId} />
+      )}
+
       {toast && (
         <div className={`absolute top-4 left-1/2 z-50 -translate-x-1/2 rounded-lg px-3 py-1.5 text-[10px] font-medium backdrop-blur-sm ${
           toast.type === "success" ? "bg-green-900/80 text-green-200" : "bg-red-900/80 text-red-200"
@@ -536,6 +541,20 @@ function MobileElement({ element, delay = 0, animate = true, onSlideJump }: { el
     return wrapLink(
       <div style={{ ...animStyle, aspectRatio: `${element.w} / ${element.h}` }} className="w-full rounded overflow-hidden">
         <VideoRenderer element={element} mode="viewer" />
+      </div>
+    );
+  }
+
+  if (element.type === "embed") {
+    return wrapLink(
+      <div style={{ ...animStyle, aspectRatio: `${element.w} / ${element.h}` }} className="w-full rounded overflow-hidden">
+        <iframe
+          src={element.url}
+          className="h-full w-full border-0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          loading="lazy"
+        />
       </div>
     );
   }
