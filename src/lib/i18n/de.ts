@@ -97,6 +97,13 @@ export const de = {
     exportData: "Meine Daten exportieren",
     exportDataDesc: "Lade eine Kopie aller deiner Daten im JSON-Format herunter (DSGVO)",
     exportAction: "Exportieren",
+    bulkSelected: "ausgewahlt",
+    bulkSelectAll: "Alle auswahlen",
+    bulkMove: "Verschieben",
+    bulkMakePublic: "Offentlich machen",
+    bulkMakePrivate: "Privat machen",
+    bulkDeleteTitle: "AUSWAHL LOSCHEN",
+    bulkDeleteConfirm: "Mochtest du wirklich {count} Prasentationen loschen? Diese Aktion kann nicht ruckgangig gemacht werden.",
   },
   editor: {
     loadError: "Die Präsentation konnte nicht geladen werden",

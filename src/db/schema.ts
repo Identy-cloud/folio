@@ -159,9 +159,11 @@ export const comments = pgTable("comments", {
   authorEmail: text("author_email"),
   content: text("content").notNull(),
   resolved: boolean("resolved").default(false).notNull(),
+  parentId: uuid("parent_id"),
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
     .notNull(),
 }, (table) => [
   index("comments_presentation_id_idx").on(table.presentationId),
+  index("comments_parent_id_idx").on(table.parentId),
 ]);

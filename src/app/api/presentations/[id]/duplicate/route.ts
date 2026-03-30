@@ -56,9 +56,13 @@ export async function POST(
     .insert(presentations)
     .values({
       userId: user.id,
-      title: `${original.title} (copia)`,
+      title: `${original.title} (copy)`,
       slug: nanoid(10),
       theme: original.theme,
+      isPublic: false,
+      customThemes: original.customThemes,
+      thumbnailUrl: original.thumbnailUrl,
+      folderId: original.folderId,
     })
     .returning();
 
@@ -75,6 +79,7 @@ export async function POST(
         backgroundImage: s.backgroundImage,
         elements: s.elements,
         mobileElements: s.mobileElements,
+        notes: s.notes,
       }))
     );
   }

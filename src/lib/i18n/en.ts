@@ -97,6 +97,13 @@ export const en = {
     exportData: "Export my data",
     exportDataDesc: "Download a copy of all your data in JSON format (GDPR)",
     exportAction: "Export",
+    bulkSelected: "selected",
+    bulkSelectAll: "Select all",
+    bulkMove: "Move",
+    bulkMakePublic: "Make public",
+    bulkMakePrivate: "Make private",
+    bulkDeleteTitle: "DELETE SELECTED",
+    bulkDeleteConfirm: "Are you sure you want to delete {count} presentations? This action cannot be undone.",
   },
   editor: {
     loadError: "Could not load the presentation",

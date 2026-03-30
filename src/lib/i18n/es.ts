@@ -95,6 +95,13 @@ export const es = {
     exportData: "Exportar mis datos",
     exportDataDesc: "Descarga una copia de todos tus datos en formato JSON (GDPR)",
     exportAction: "Exportar",
+    bulkSelected: "seleccionadas",
+    bulkSelectAll: "Seleccionar todo",
+    bulkMove: "Mover",
+    bulkMakePublic: "Hacer público",
+    bulkMakePrivate: "Hacer privado",
+    bulkDeleteTitle: "ELIMINAR SELECCIONADAS",
+    bulkDeleteConfirm: "¿Estás seguro de que querés eliminar {count} presentaciones? Esta acción no se puede deshacer.",
   },
   editor: {
     loadError: "No se pudo cargar la presentación",

@@ -97,6 +97,13 @@ export const fr = {
     exportData: "Exporter mes données",
     exportDataDesc: "Téléchargez une copie de toutes vos données au format JSON (RGPD)",
     exportAction: "Exporter",
+    bulkSelected: "selectionnees",
+    bulkSelectAll: "Tout selectionner",
+    bulkMove: "Deplacer",
+    bulkMakePublic: "Rendre public",
+    bulkMakePrivate: "Rendre prive",
+    bulkDeleteTitle: "SUPPRIMER LA SELECTION",
+    bulkDeleteConfirm: "Voulez-vous vraiment supprimer {count} presentations ? Cette action est irreversible.",
   },
   editor: {
     loadError: "Impossible de charger la présentation",

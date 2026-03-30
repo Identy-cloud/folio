@@ -8,6 +8,7 @@ import type { SlideElement, TextElement } from "@/types/elements";
 import { ShapeRenderer, ArrowRenderer, DividerRenderer, EmbedRenderer, LineRenderer, TableRenderer, VideoRenderer, IconRenderer } from "@/components/elements";
 import { TextRenderer } from "./TextRenderer";
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/image-utils";
+import { calcSnap } from "@/lib/snap-utils";
 
 interface Props {
   element: SlideElement;
@@ -84,10 +85,23 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
     if (!dragging && (Math.abs(dx) > 2 || Math.abs(dy) > 2)) setDragging(true);
     let newX = dragRef.current.origX + dx;
     let newY = dragRef.current.origY + dy;
-    if (useEditorStore.getState().snapToGrid) {
+    const store = useEditorStore.getState();
+    if (store.snapToGrid) {
       const GRID = 40;
       newX = Math.round(newX / GRID) * GRID;
       newY = Math.round(newY / GRID) * GRID;
+    }
+    const slide = store.getActiveSlide();
+    if (slide) {
+      const isMobile = store.editingMode === "mobile";
+      const els = isMobile && slide.mobileElements ? slide.mobileElements : slide.elements;
+      const others = els.filter((el) => el.id !== element.id);
+      const cW = isMobile ? 430 : 1920;
+      const cH = isMobile ? 932 : 1080;
+      const snap = calcSnap({ x: newX, y: newY, w: element.w, h: element.h }, others, cW, cH);
+      newX = snap.x;
+      newY = snap.y;
+      store.setSnapGuides(snap.guides, snap.spacing);
     }
     updateElement(element.id, { x: newX, y: newY });
   }
@@ -101,6 +115,7 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
       pushHistory();
       dragRef.current = null;
       setDragging(false);
+      useEditorStore.getState().clearSnapGuides();
     }
   }
 

@@ -97,6 +97,13 @@ export const pt = {
     exportData: "Exportar meus dados",
     exportDataDesc: "Baixe uma cópia de todos os seus dados em formato JSON (LGPD)",
     exportAction: "Exportar",
+    bulkSelected: "selecionadas",
+    bulkSelectAll: "Selecionar tudo",
+    bulkMove: "Mover",
+    bulkMakePublic: "Tornar publico",
+    bulkMakePrivate: "Tornar privado",
+    bulkDeleteTitle: "EXCLUIR SELECIONADAS",
+    bulkDeleteConfirm: "Tem certeza que deseja excluir {count} apresentacoes? Esta acao nao pode ser desfeita.",
   },
   editor: {
     loadError: "Não foi possível carregar a apresentação",

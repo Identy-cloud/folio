@@ -3,6 +3,7 @@ import { notifications } from "@/db/schema";
 
 type NotificationType =
   | "comment"
+  | "reply"
   | "collaborator_added"
   | "collaborator_removed"
   | "presentation_shared";

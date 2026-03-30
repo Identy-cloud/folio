@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { es } from "date-fns/locale";
 import { DotsThreeVertical, Star } from "@phosphor-icons/react";
@@ -9,6 +9,7 @@ import { SlidePreview } from "@/components/SlidePreview";
 import type { SlideElement } from "@/types/elements";
 import { useTranslation } from "@/lib/i18n/context";
 import { useClickOutside } from "@/hooks/useClickOutside";
+import { SelectionCheckbox } from "./selection-checkbox";
 
 interface Props {
   presentation: {
@@ -31,9 +32,14 @@ interface Props {
   onTogglePublic: () => void;
   onChangeTheme: () => void;
   onAnalytics: () => void;
+  onExportJson: () => void;
   onMove?: () => void;
   isStarred?: boolean;
   onToggleStar?: () => void;
+  selectionMode?: boolean;
+  isSelected?: boolean;
+  onToggleSelect?: () => void;
+  onLongPress?: () => void;
 }
 
 export function PresentationCard({
@@ -44,19 +50,69 @@ export function PresentationCard({
   onTogglePublic,
   onChangeTheme,
   onAnalytics,
+  onExportJson,
   onMove,
   isStarred,
   onToggleStar,
+  selectionMode,
+  isSelected,
+  onToggleSelect,
+  onLongPress,
 }: Props) {
   const { t } = useTranslation();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const didLongPress = useRef(false);
 
   useClickOutside(menuRef, () => setMenuOpen(false), menuOpen);
 
+  const handleTouchStart = useCallback(() => {
+    didLongPress.current = false;
+    longPressTimer.current = setTimeout(() => {
+      didLongPress.current = true;
+      onLongPress?.();
+    }, 500);
+  }, [onLongPress]);
+
+  const handleTouchEnd = useCallback(() => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
+  }, []);
+
+  const handleCardClick = useCallback((e: React.MouseEvent) => {
+    if (selectionMode && onToggleSelect) {
+      e.preventDefault();
+      onToggleSelect();
+    }
+  }, [selectionMode, onToggleSelect]);
+
   return (
-    <div className="group relative flex flex-col border border-neutral-800 bg-[#1e1e1e] transition-shadow hover:shadow-lg">
-      <Link href={`/editor/${presentation.id}`} className="block">
+    <div
+      className={`group relative flex flex-col border bg-[#1e1e1e] transition-shadow hover:shadow-lg ${
+        isSelected ? "border-white" : "border-neutral-800"
+      }`}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+      onTouchCancel={handleTouchEnd}
+    >
+      {onToggleSelect && (
+        <div className="absolute left-2 top-2 z-10">
+          <SelectionCheckbox
+            checked={isSelected ?? false}
+            visible={selectionMode ?? false}
+            onChange={onToggleSelect}
+            ariaLabel={`Select ${presentation.title}`}
+          />
+        </div>
+      )}
+      <Link
+        href={`/editor/${presentation.id}`}
+        className="block"
+        onClick={handleCardClick}
+      >
         {presentation.coverSlide ? (
           <SlidePreview
             slide={presentation.coverSlide}
@@ -109,6 +165,7 @@ export function PresentationCard({
               <MenuItem label={t.dashboard.duplicate} onClick={() => { setMenuOpen(false); onDuplicate(); }} />
               <MenuItem label={t.dashboard.changeTheme} onClick={() => { setMenuOpen(false); onChangeTheme(); }} />
               <MenuItem label="Analytics" onClick={() => { setMenuOpen(false); onAnalytics(); }} />
+              <MenuItem label="Export JSON" onClick={() => { setMenuOpen(false); onExportJson(); }} />
               {onMove && <MenuItem label="Move to folder" onClick={() => { setMenuOpen(false); onMove(); }} />}
               <MenuItem
                 label={presentation.isPublic ? t.dashboard.makePrivate : t.dashboard.makePublic}

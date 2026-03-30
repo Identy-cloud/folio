@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Plus, MagnifyingGlass, SortAscending, Funnel, SquaresFour, List } from "@phosphor-icons/react";
+import { Plus, MagnifyingGlass, SortAscending, Funnel, SquaresFour, List, UploadSimple } from "@phosphor-icons/react";
 import { PresentationCard } from "./presentation-card";
 import type { SlideElement } from "@/types/elements";
 import { SkeletonGrid } from "./skeleton-grid";
@@ -15,6 +15,8 @@ import { AnalyticsDialog } from "./analytics-dialog";
 import { FolderList } from "./folder-list";
 import type { FolderItem } from "./folder-list";
 import { MoveToFolderDialog } from "./move-folder-dialog";
+import { BulkActionBar } from "./bulk-action-bar";
+import { useBulkSelection } from "./use-bulk-selection";
 
 interface Presentation {
   id: string;
@@ -40,6 +42,8 @@ type Dialog =
   | { type: "rename-folder"; folder: FolderItem }
   | { type: "delete-folder"; folderId: string }
   | { type: "move"; presentationId: string }
+  | { type: "bulk-delete" }
+  | { type: "bulk-move" }
   | null;
 
 export default function DashboardPage() {
@@ -101,6 +105,8 @@ export default function DashboardPage() {
     const res = await fetch("/api/presentations");
     if (res.ok) setPresentations(await res.json());
   }
+
+  const bulk = useBulkSelection({ onRefresh: refreshPresentations });
 
   async function refreshFolders() {
     const res = await fetch("/api/folders");
@@ -222,6 +228,55 @@ export default function DashboardPage() {
     refreshPresentations();
   }
 
+  async function handleExportJson(id: string) {
+    try {
+      const res = await fetch(`/api/presentations/${id}/export-json`);
+      if (!res.ok) { toast.error("Export failed"); return; }
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      const disposition = res.headers.get("Content-Disposition");
+      const match = disposition?.match(/filename="(.+)"/);
+      a.download = match?.[1] ?? `presentation-${id}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      toast.success("Exported as JSON");
+    } catch {
+      toast.error("Export failed");
+    }
+  }
+
+  function handleImportJson() {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".json";
+    input.onchange = async () => {
+      const file = input.files?.[0];
+      if (!file) return;
+      try {
+        const text = await file.text();
+        const data = JSON.parse(text);
+        const res = await fetch("/api/presentations/import", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+        if (res.ok) {
+          toast.success("Presentation imported");
+          refreshPresentations();
+        } else {
+          const err = await res.json().catch(() => ({ error: "Import failed" }));
+          toast.error(err.error === "Plan limit reached" ? "Plan limit reached" : "Import failed");
+        }
+      } catch {
+        toast.error("Invalid JSON file");
+      }
+      input.remove();
+    };
+    input.click();
+  }
+
   if (loading) return <SkeletonGrid />;
 
   if (fetchError) {
@@ -336,6 +391,12 @@ export default function DashboardPage() {
             </button>
           </div>
           <button
+            onClick={handleImportJson}
+            className="shrink-0 border border-neutral-700 px-4 py-2 text-xs font-medium tracking-widest text-neutral-300 uppercase hover:bg-neutral-800 transition-colors"
+          >
+            <UploadSimple size={14} className="inline" /> Import
+          </button>
+          <button
             onClick={() => setModalOpen(true)}
             className="shrink-0 bg-neutral-200 px-5 py-2 text-xs font-medium tracking-widest text-[#161616] uppercase hover:bg-neutral-300 transition-colors"
           >
@@ -363,26 +424,60 @@ export default function DashboardPage() {
           {t.dashboard.noResults} &ldquo;{search}&rdquo;
         </p>
       ) : (
-        <div className={viewMode === "grid"
-          ? "grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4"
-          : "flex flex-col gap-2"
-        }>
-          {filtered.map((p) => (
-            <PresentationCard
-              key={p.id}
-              presentation={p}
-              onDuplicate={() => handleDuplicate(p.id)}
-              onRename={() => setDialog({ type: "rename", id: p.id, current: p.title })}
-              onDelete={() => setDialog({ type: "delete", id: p.id })}
-              onTogglePublic={() => handleTogglePublic(p.id, p.isPublic)}
-              onChangeTheme={() => setDialog({ type: "theme", id: p.id, current: p.theme })}
-              onAnalytics={() => setDialog({ type: "analytics", id: p.id, title: p.title })}
-              onMove={() => setDialog({ type: "move", presentationId: p.id })}
-              isStarred={starred.has(p.id)}
-              onToggleStar={() => toggleStar(p.id)}
-            />
-          ))}
-        </div>
+        <>
+          {bulk.selectionMode && (
+            <div className="mb-3 flex items-center gap-3">
+              <button
+                onClick={() => {
+                  const allIds = filtered.map((p) => p.id);
+                  const allSelected = allIds.every((id) => bulk.selectedIds.has(id));
+                  if (allSelected) bulk.clearSelection();
+                  else bulk.selectAll(allIds);
+                }}
+                className="flex h-11 items-center gap-2 rounded px-3 text-xs font-medium text-neutral-300 hover:bg-neutral-800 transition-colors"
+              >
+                <span className={`flex h-5 w-5 items-center justify-center rounded border ${
+                  filtered.length > 0 && filtered.every((p) => bulk.selectedIds.has(p.id))
+                    ? "border-white bg-white text-[#161616]"
+                    : "border-neutral-500"
+                }`}>
+                  {filtered.length > 0 && filtered.every((p) => bulk.selectedIds.has(p.id)) && (
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  )}
+                </span>
+                {t.dashboard.bulkSelectAll}
+              </button>
+              <span className="text-xs text-neutral-500">
+                {bulk.selectedIds.size} {t.dashboard.bulkSelected}
+              </span>
+            </div>
+          )}
+          <div className={viewMode === "grid"
+            ? "grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4"
+            : "flex flex-col gap-2"
+          }>
+            {filtered.map((p) => (
+              <PresentationCard
+                key={p.id}
+                presentation={p}
+                onDuplicate={() => handleDuplicate(p.id)}
+                onRename={() => setDialog({ type: "rename", id: p.id, current: p.title })}
+                onDelete={() => setDialog({ type: "delete", id: p.id })}
+                onTogglePublic={() => handleTogglePublic(p.id, p.isPublic)}
+                onChangeTheme={() => setDialog({ type: "theme", id: p.id, current: p.theme })}
+                onExportJson={() => handleExportJson(p.id)}
+                onAnalytics={() => setDialog({ type: "analytics", id: p.id, title: p.title })}
+                onMove={() => setDialog({ type: "move", presentationId: p.id })}
+                isStarred={starred.has(p.id)}
+                onToggleStar={() => toggleStar(p.id)}
+                selectionMode={bulk.selectionMode}
+                isSelected={bulk.selectedIds.has(p.id)}
+                onToggleSelect={() => bulk.toggleSelect(p.id)}
+                onLongPress={() => bulk.enterSelectionMode(p.id)}
+              />
+            ))}
+          </div>
+        </>
       )}
 
       <TemplateModal open={modalOpen} onClose={() => setModalOpen(false)} />
@@ -446,7 +541,36 @@ export default function DashboardPage() {
           onCancel={() => setDialog(null)}
         />
       )}
+
+      <ConfirmDialog
+        open={dialog?.type === "bulk-delete"}
+        title={t.dashboard.bulkDeleteTitle}
+        message={t.dashboard.bulkDeleteConfirm.replace("{count}", String(bulk.selectedIds.size))}
+        confirmLabel={t.dashboard.deleteAction}
+        destructive
+        onConfirm={async () => { setDialog(null); await bulk.bulkDelete(); }}
+        onCancel={() => setDialog(null)}
+      />
+
+      {dialog?.type === "bulk-move" && (
+        <MoveToFolderDialog
+          folders={folders}
+          onSelect={async (folderId) => { setDialog(null); await bulk.bulkMoveToFolder(folderId); }}
+          onCancel={() => setDialog(null)}
+        />
+      )}
       </div>
+
+      {bulk.selectionMode && bulk.selectedIds.size > 0 && (
+        <BulkActionBar
+          count={bulk.selectedIds.size}
+          onDelete={() => setDialog({ type: "bulk-delete" })}
+          onMakePublic={bulk.bulkMakePublic}
+          onMakePrivate={bulk.bulkMakePrivate}
+          onMoveToFolder={() => setDialog({ type: "bulk-move" })}
+          onCancel={bulk.clearSelection}
+        />
+      )}
     </div>
   );
 }

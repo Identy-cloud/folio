@@ -3,7 +3,7 @@ import { comments, presentations } from "@/db/schema";
 import { getAuthenticatedUser } from "@/lib/auth";
 import { createNotification } from "@/lib/notifications";
 import { checkRateLimit, rateLimitResponse } from "@/lib/rate-limit";
-import { eq, and, desc } from "drizzle-orm";
+import { eq, and, desc, isNull } from "drizzle-orm";
 import { z } from "zod";
 import type { NextRequest } from "next/server";
 
@@ -13,7 +13,24 @@ const postSchema = z.object({
   authorName: z.string().min(1).max(100),
   authorEmail: z.string().email().max(255).optional(),
   content: z.string().min(1).max(2000),
+  parentId: z.string().uuid().optional(),
 });
+
+interface CommentRow {
+  id: string;
+  presentationId: string;
+  slideIndex: number;
+  authorName: string;
+  authorEmail: string | null;
+  content: string;
+  resolved: boolean;
+  parentId: string | null;
+  createdAt: Date;
+}
+
+interface CommentWithReplies extends CommentRow {
+  replies: CommentRow[];
+}
 
 export async function POST(request: NextRequest) {
   const ip =
@@ -33,7 +50,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { presentationId, slideIndex, authorName, authorEmail, content } =
+  const { presentationId, slideIndex, authorName, authorEmail, content, parentId } =
     parsed.data;
 
   const [pres] = await db
@@ -46,6 +63,28 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: "Presentation not found" }, { status: 404 });
   }
 
+  let resolvedParentId: string | null = null;
+  let parentComment: CommentRow | undefined;
+
+  if (parentId) {
+    const [parent] = await db
+      .select()
+      .from(comments)
+      .where(
+        and(
+          eq(comments.id, parentId),
+          eq(comments.presentationId, presentationId)
+        )
+      )
+      .limit(1);
+
+    if (!parent) {
+      return Response.json({ error: "Parent comment not found" }, { status: 404 });
+    }
+    parentComment = parent;
+    resolvedParentId = parent.parentId ?? parent.id;
+  }
+
   const [comment] = await db
     .insert(comments)
     .values({
@@ -54,14 +93,17 @@ export async function POST(request: NextRequest) {
       authorName,
       authorEmail: authorEmail ?? null,
       content,
+      parentId: resolvedParentId,
     })
     .returning();
 
   await createNotification({
     userId: pres.userId,
-    type: "comment",
-    title: "Nuevo comentario",
-    message: `${authorName} comento en "${pres.title}"`,
+    type: parentComment ? "reply" : "comment",
+    title: parentComment ? "Nueva respuesta" : "Nuevo comentario",
+    message: parentComment
+      ? `${authorName} respondió a ${parentComment.authorName} en "${pres.title}"`
+      : `${authorName} comentó en "${pres.title}"`,
     presentationId,
   }).catch(() => {});
 
@@ -103,5 +145,15 @@ export async function GET(request: NextRequest) {
     .where(eq(comments.presentationId, presentationId))
     .orderBy(desc(comments.createdAt));
 
-  return Response.json(allComments);
+  const topLevel = allComments.filter((c) => !c.parentId);
+  const replies = allComments.filter((c) => c.parentId);
+
+  const threaded: CommentWithReplies[] = topLevel.map((parent) => ({
+    ...parent,
+    replies: replies
+      .filter((r) => r.parentId === parent.id)
+      .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()),
+  }));
+
+  return Response.json(threaded);
 }

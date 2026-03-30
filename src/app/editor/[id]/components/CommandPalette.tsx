@@ -131,16 +131,27 @@ export function CommandPalette({ open, onClose }: Props) {
         .catch(() => alert("Export failed"));
     }},
     { id: "export-json", label: "Export as JSON (backup)", category: "Export", action: () => {
-      const { slides, theme, presentationId } = useEditorStore.getState();
-      const data = JSON.stringify({ version: 1, theme, slides }, null, 2);
-      const blob = new Blob([data], { type: "application/json" });
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = `presentation-${presentationId}.json`;
-      a.click();
-      URL.revokeObjectURL(a.href);
+      const { presentationId } = useEditorStore.getState();
+      if (!presentationId) return;
+      fetch(`/api/presentations/${presentationId}/export-json`)
+        .then((res) => {
+          if (!res.ok) { alert("Export failed"); return null; }
+          return res.blob().then((blob) => ({ blob, headers: res.headers }));
+        })
+        .then((result) => {
+          if (!result) return;
+          const url = URL.createObjectURL(result.blob);
+          const a = document.createElement("a");
+          a.href = url;
+          const disposition = result.headers.get("Content-Disposition");
+          const match = disposition?.match(/filename="(.+)"/);
+          a.download = match?.[1] ?? `presentation-${presentationId}.json`;
+          a.click();
+          URL.revokeObjectURL(url);
+        })
+        .catch(() => alert("Export failed"));
     }},
-    { id: "import-json", label: "Import from JSON", category: "Import", action: () => {
+    { id: "import-json", label: "Import presentation from JSON", category: "Import", action: () => {
       const input = document.createElement("input");
       input.type = "file";
       input.accept = ".json";
@@ -150,19 +161,18 @@ export function CommandPalette({ open, onClose }: Props) {
         try {
           const text = await file.text();
           const data = JSON.parse(text);
-          if (data.version === 1 && Array.isArray(data.slides)) {
-            const store = useEditorStore.getState();
-            useEditorStore.setState({
-              slides: data.slides,
-              activeSlideIndex: 0,
-              selectedElementIds: [],
-              dirty: true,
-              saveStatus: "unsaved" as const,
-            });
-            store.pushHistory();
-            alert(`Imported ${data.slides.length} slides`);
+          const res = await fetch("/api/presentations/import", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+          });
+          if (res.ok) {
+            const pres = await res.json();
+            alert(`Imported! Redirecting to new presentation...`);
+            window.location.href = `/editor/${pres.id}`;
           } else {
-            alert("Invalid file format");
+            const err = await res.json().catch(() => ({ error: "Import failed" }));
+            alert(err.error === "Plan limit reached" ? "Plan limit reached" : "Import failed");
           }
         } catch { alert("Failed to parse file"); }
         input.remove();

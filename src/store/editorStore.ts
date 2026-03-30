@@ -3,6 +3,7 @@ import { nanoid } from "nanoid";
 import type { Slide, SlideElement, SlideTransition, TransitionEasing } from "@/types/elements";
 import { generateMobileElements } from "@/lib/mobile-layout";
 import { THEMES, type Theme, type CustomThemeMap } from "@/lib/templates/themes";
+import type { SnapLine, SpacingIndicator } from "@/lib/snap-utils";
 
 export type ActiveTool = "select" | "text" | "image" | "shape" | "arrow";
 export type SaveStatus = "saved" | "saving" | "error" | "unsaved";
@@ -79,6 +80,14 @@ interface EditorState {
   setElementBusy: (id: string) => void;
   clearElementBusy: (id: string) => void;
 
+  snapGuides: SnapLine[];
+  snapSpacing: SpacingIndicator[];
+  setSnapGuides: (guides: SnapLine[], spacing: SpacingIndicator[]) => void;
+  clearSnapGuides: () => void;
+
+  distributeHorizontally: () => void;
+  distributeVertically: () => void;
+
   setSaveStatus: (s: SaveStatus) => void;
   getActiveSlide: () => Slide | undefined;
   dirty: boolean;
@@ -116,6 +125,8 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   dirty: false,
   editingTextId: null,
   busyElementIds: new Set<string>(),
+  snapGuides: [],
+  snapSpacing: [],
 
   init: (presentationId, slides, theme, customThemes) => {
     const sorted = [...slides]
@@ -576,6 +587,53 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     const next = new Set(get().busyElementIds);
     next.delete(id);
     set({ busyElementIds: next });
+  },
+
+  setSnapGuides: (guides, spacing) => set({ snapGuides: guides, snapSpacing: spacing }),
+  clearSnapGuides: () => set({ snapGuides: [], snapSpacing: [] }),
+
+  distributeHorizontally: () => {
+    const { selectedElementIds, slides, activeSlideIndex, editingMode } = get();
+    if (selectedElementIds.length < 3) return;
+    const key = editingMode === "mobile" ? "mobileElements" : "elements";
+    const slide = slides[activeSlideIndex];
+    if (!slide) return;
+    const els = ((key === "mobileElements" ? slide.mobileElements : slide.elements) ?? []);
+    const selected = els.filter((e) => selectedElementIds.includes(e.id));
+    if (selected.length < 3) return;
+    const sorted = [...selected].sort((a, b) => a.x - b.x);
+    const minX = sorted[0].x;
+    const maxRight = sorted[sorted.length - 1].x + sorted[sorted.length - 1].w;
+    const totalW = sorted.reduce((sum, e) => sum + e.w, 0);
+    const gap = (maxRight - minX - totalW) / (sorted.length - 1);
+    let x = minX;
+    for (const el of sorted) {
+      get().updateElement(el.id, { x });
+      x += el.w + gap;
+    }
+    get().pushHistory();
+  },
+
+  distributeVertically: () => {
+    const { selectedElementIds, slides, activeSlideIndex, editingMode } = get();
+    if (selectedElementIds.length < 3) return;
+    const key = editingMode === "mobile" ? "mobileElements" : "elements";
+    const slide = slides[activeSlideIndex];
+    if (!slide) return;
+    const els = ((key === "mobileElements" ? slide.mobileElements : slide.elements) ?? []);
+    const selected = els.filter((e) => selectedElementIds.includes(e.id));
+    if (selected.length < 3) return;
+    const sorted = [...selected].sort((a, b) => a.y - b.y);
+    const minY = sorted[0].y;
+    const maxBottom = sorted[sorted.length - 1].y + sorted[sorted.length - 1].h;
+    const totalH = sorted.reduce((sum, e) => sum + e.h, 0);
+    const gap = (maxBottom - minY - totalH) / (sorted.length - 1);
+    let y = minY;
+    for (const el of sorted) {
+      get().updateElement(el.id, { y });
+      y += el.h + gap;
+    }
+    get().pushHistory();
   },
 
   setSaveStatus: (s) => set({ saveStatus: s }),
