@@ -296,6 +296,9 @@ export function CommandPalette({ open, onClose }: Props) {
     { id: "stock-images", label: "Search stock images", category: "Insert", action: () => {
       window.dispatchEvent(new CustomEvent("folio:open-unsplash"));
     }},
+    { id: "ai-generate", label: "Generate slide with AI", category: "AI", action: () => {
+      window.dispatchEvent(new CustomEvent("folio:open-ai-generate"));
+    }},
     ...SLIDE_LAYOUTS.map((layout) => ({
       id: `layout-${layout.id}`,
       label: `Apply layout: ${layout.name}`,

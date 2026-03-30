@@ -331,6 +331,7 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
         objectFit: "cover",
         filter: "",
         isPlaceholder: false,
+        aspectRatioLocked: true,
       };
 
       addElement(el);

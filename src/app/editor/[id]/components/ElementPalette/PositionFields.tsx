@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useEditorStore } from "@/store/editorStore";
 import { LinkSimple, LinkSimpleBreak } from "@phosphor-icons/react";
 import type { SlideElement } from "@/types/elements";
@@ -38,7 +38,7 @@ export function PositionFields({ element }: Props) {
   const { t } = useTranslation();
   const updateElement = useEditorStore((s) => s.updateElement);
   const pushHistory = useEditorStore((s) => s.pushHistory);
-  const [locked, setLocked] = useState(false);
+  const locked = element.aspectRatioLocked === true;
   const aspect = element.w / element.h;
 
   function update(updates: Partial<SlideElement>) {
@@ -68,7 +68,7 @@ export function PositionFields({ element }: Props) {
         <NumField label="H" value={element.h} onChange={updateH} />
       </div>
       <button
-        onClick={() => setLocked((v) => !v)}
+        onClick={() => { update({ aspectRatioLocked: !locked }); }}
         className={`flex items-center gap-1 rounded px-2 py-1 text-[10px] transition-colors ${
           locked ? "bg-blue-500/20 text-blue-400" : "text-neutral-500 hover:bg-neutral-800"
         }`}

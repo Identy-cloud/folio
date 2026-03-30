@@ -58,6 +58,7 @@ export function img(
     src, objectFit: "cover",
     filter: isDark(themeKey) ? "grayscale(100%)" : "",
     isPlaceholder: true,
+    aspectRatioLocked: true,
   };
 }
 

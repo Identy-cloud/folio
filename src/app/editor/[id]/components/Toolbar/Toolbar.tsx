@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { ArrowCounterClockwise, ArrowClockwise, FilePdf, FilePpt, FileImage, Image as ImageIcon, Desktop, DeviceMobile, Play, ClockCounterClockwise, Stack, NotePencil, ChatCircle, UsersThree, Export, CaretDown, Layout } from "@phosphor-icons/react";
+import { ArrowCounterClockwise, ArrowClockwise, FilePdf, FilePpt, FileImage, Image as ImageIcon, Desktop, DeviceMobile, Play, ClockCounterClockwise, Stack, NotePencil, ChatCircle, UsersThree, Export, CaretDown, Layout, Sparkle, ChartBar } from "@phosphor-icons/react";
 import { FolioLogo } from "@/components/FolioLogo";
 import { Tooltip } from "@/components/ui/Tooltip";
 
@@ -302,6 +302,15 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
             {uploading ? <Spinner /> : t.editor.image}
           </button>
         </Tooltip>
+        <Tooltip content="Generate with AI">
+          <button
+            onClick={() => window.dispatchEvent(new CustomEvent("folio:open-ai-generate"))}
+            className="hidden md:flex items-center gap-1 rounded px-3 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 transition-colors"
+          >
+            <Sparkle size={14} weight="fill" className="text-amber-400" />
+            AI
+          </button>
+        </Tooltip>
         <ExportDropdown
           exporting={exporting}
           exportProgress={exportProgress}
@@ -338,6 +347,15 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
         </div>
       </div>
       <div className="flex items-center gap-2 md:gap-4">
+        <Tooltip content="Analytics">
+          <Link
+            href={`/dashboard/analytics/${presentationId}`}
+            className="hidden md:flex items-center gap-1 rounded px-2.5 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 transition-colors"
+          >
+            <ChartBar size={14} />
+            <span className="hidden lg:inline">Analytics</span>
+          </Link>
+        </Tooltip>
         <Tooltip content="Preview">
           <Link
             href={`/preview/${useEditorStore.getState().presentationId}`}

@@ -114,7 +114,7 @@ export function AnalyticsDialog({ open, presentationId, title, onClose }: Props)
       <div className="mt-4 flex gap-2">
         {presentationId && data && (
           <a
-            href={`/dashboard/${presentationId}/analytics`}
+            href={`/dashboard/analytics/${presentationId}`}
             className="flex-1 rounded border border-neutral-700 py-2 text-center text-xs text-neutral-400 hover:bg-neutral-800 transition-colors"
           >
             Full report →

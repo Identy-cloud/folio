@@ -477,7 +477,7 @@ export default function DashboardPage() {
                 onTogglePublic={() => handleTogglePublic(p.id, p.isPublic)}
                 onChangeTheme={() => setDialog({ type: "theme", id: p.id, current: p.theme })}
                 onExportJson={() => handleExportJson(p.id)}
-                onAnalytics={() => setDialog({ type: "analytics", id: p.id, title: p.title })}
+                onAnalytics={() => { window.location.href = `/dashboard/analytics/${p.id}`; }}
                 onMove={() => setDialog({ type: "move", presentationId: p.id })}
                 isStarred={starred.has(p.id)}
                 onToggleStar={() => toggleStar(p.id)}

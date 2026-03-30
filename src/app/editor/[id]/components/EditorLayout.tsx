@@ -31,6 +31,7 @@ import { CommandPalette } from "./CommandPalette";
 import { UnsplashPicker } from "./UnsplashPicker";
 import { LayoutPicker } from "./LayoutPicker";
 import { AnimationTimeline } from "./AnimationTimeline";
+import { AIGenerateDialog } from "@/components/editor/AIGenerateDialog";
 import { ClockCounterClockwise, Stack, NotePencil } from "@phosphor-icons/react";
 import { MobileSlidePanel } from "./Mobile/MobileSlidePanel";
 import { MobileInsertPanel } from "./Mobile/MobileInsertPanel";
@@ -63,6 +64,7 @@ export function EditorLayout() {
   const [unsplashOpen, setUnsplashOpen] = useState(false);
   const [layoutPickerOpen, setLayoutPickerOpen] = useState(false);
   const [versionsOpen, setVersionsOpen] = useState(false);
+  const [aiGenerateOpen, setAIGenerateOpen] = useState(false);
   const [timelineOpen, setTimelineOpen] = useState(false);
   const rightPanel = versionsOpen ? "versions" : historyOpen ? "history" : layersOpen ? "layers" : "palette";
   const selectedIds = useEditorStore((s) => s.selectedElementIds);
@@ -70,8 +72,13 @@ export function EditorLayout() {
 
   useEffect(() => {
     const onOpenUnsplash = () => setUnsplashOpen(true);
+    const onOpenAIGenerate = () => setAIGenerateOpen(true);
     window.addEventListener("folio:open-unsplash", onOpenUnsplash);
-    return () => window.removeEventListener("folio:open-unsplash", onOpenUnsplash);
+    window.addEventListener("folio:open-ai-generate", onOpenAIGenerate);
+    return () => {
+      window.removeEventListener("folio:open-unsplash", onOpenUnsplash);
+      window.removeEventListener("folio:open-ai-generate", onOpenAIGenerate);
+    };
   }, []);
 
   useEffect(() => {
@@ -242,6 +249,7 @@ export function EditorLayout() {
 
       {/* Help button – bottom-right */}
       <button
+        data-onboarding="help"
         onClick={() => setShortcutsOpen(true)}
         className="fixed bottom-4 right-4 z-40 flex h-8 w-8 items-center justify-center rounded-full bg-neutral-800/80 text-neutral-400 hover:text-white hover:bg-neutral-700 shadow-lg backdrop-blur-sm transition-colors"
         aria-label="Keyboard shortcuts"
@@ -257,8 +265,13 @@ export function EditorLayout() {
       <CommandPalette open={commandOpen} onClose={() => setCommandOpen(false)} />
       <LayoutPicker open={layoutPickerOpen} onClose={() => setLayoutPickerOpen(false)} />
       {unsplashOpen && <UnsplashPicker onClose={() => setUnsplashOpen(false)} />}
+      <AIGenerateDialog open={aiGenerateOpen} onClose={() => setAIGenerateOpen(false)} />
       <Onboarding />
-      <ShortcutsPanel open={shortcutsOpen} onClose={() => setShortcutsOpen(false)} />
+      <ShortcutsPanel
+        open={shortcutsOpen}
+        onClose={() => setShortcutsOpen(false)}
+        onRestartTour={() => window.dispatchEvent(new Event("folio:restart-onboarding"))}
+      />
     </div>
   );
 }

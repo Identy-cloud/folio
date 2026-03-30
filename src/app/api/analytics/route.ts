@@ -2,7 +2,7 @@ import { db } from "@/db";
 import { presentationViews, presentations } from "@/db/schema";
 import { getAuthenticatedUser } from "@/lib/auth";
 import { checkRateLimit, rateLimitResponse } from "@/lib/rate-limit";
-import { eq, and, desc, count, sql } from "drizzle-orm";
+import { eq, and, desc, count, sql, gte } from "drizzle-orm";
 import { z } from "zod";
 import type { NextRequest } from "next/server";
 import { getUserPlan } from "@/lib/stripe";
@@ -115,11 +115,39 @@ export async function GET(request: NextRequest) {
     .orderBy(desc(presentationViews.createdAt))
     .limit(50);
 
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+  const dailyRows = await db
+    .select({
+      date: sql<string>`TO_CHAR(${presentationViews.createdAt}::date, 'YYYY-MM-DD')`,
+      views: count(),
+    })
+    .from(presentationViews)
+    .where(
+      and(
+        eq(presentationViews.presentationId, presentationId),
+        gte(presentationViews.createdAt, thirtyDaysAgo),
+      ),
+    )
+    .groupBy(sql`${presentationViews.createdAt}::date`)
+    .orderBy(sql`${presentationViews.createdAt}::date`);
+
+  const dailyMap = new Map(dailyRows.map((d) => [d.date, d.views]));
+  const viewsOverTime: { date: string; views: number }[] = [];
+  for (let i = 29; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const key = d.toISOString().slice(0, 10);
+    viewsOverTime.push({ date: key, views: dailyMap.get(key) ?? 0 });
+  }
+
   return Response.json({
     totalViews: totals.totalViews,
     uniqueViewers: totals.uniqueViewers,
     avgDuration: totals.avgDuration,
     viewsBySlide,
+    viewsOverTime,
     recentViews,
   });
 }

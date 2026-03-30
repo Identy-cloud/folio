@@ -63,6 +63,7 @@ export function UnsplashPicker({ onClose }: Props) {
       id: nanoid(), type: "image", x: 200, y: 200, w, h,
       rotation: 0, opacity: 1, zIndex: zBase, locked: false,
       src: photo.urls.regular, objectFit: "cover", filter: "none",
+      aspectRatioLocked: true,
     };
     addElement(el);
     onClose();

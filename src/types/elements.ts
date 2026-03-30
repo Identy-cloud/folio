@@ -39,6 +39,7 @@ export interface BaseElement {
   animationDelay?: number;
   animationDuration?: number;
   animationEasing?: "ease" | "ease-in" | "ease-out" | "ease-in-out" | "linear";
+  aspectRatioLocked?: boolean;
 }
 
 export interface TextElement extends BaseElement {

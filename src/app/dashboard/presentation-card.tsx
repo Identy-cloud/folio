@@ -183,7 +183,7 @@ export function PresentationCard({
               <MenuItem label={t.dashboard.rename} onClick={() => { setMenuOpen(false); onRename(); }} />
               <MenuItem label={t.dashboard.duplicate} onClick={() => { setMenuOpen(false); onDuplicate(); }} />
               <MenuItem label={t.dashboard.changeTheme} onClick={() => { setMenuOpen(false); onChangeTheme(); }} />
-              <MenuItem label="Analytics" onClick={() => { setMenuOpen(false); onAnalytics(); }} />
+              <MenuItem label="View analytics" onClick={() => { setMenuOpen(false); onAnalytics(); }} />
               <MenuItem label="Export JSON" onClick={() => { setMenuOpen(false); onExportJson(); }} />
               {onMove && <MenuItem label="Move to folder" onClick={() => { setMenuOpen(false); onMove(); }} />}
               <MenuItem

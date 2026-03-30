@@ -6,6 +6,7 @@ import { DialogShell } from "@/components/ui/DialogShell";
 interface Props {
   open: boolean;
   onClose: () => void;
+  onRestartTour?: () => void;
 }
 
 const isMac = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform);
@@ -84,7 +85,7 @@ const GROUPS: { title: string; items: { keys: string; label: string }[] }[] = [
   },
 ];
 
-export function ShortcutsPanel({ open, onClose }: Props) {
+export function ShortcutsPanel({ open, onClose, onRestartTour }: Props) {
   const [query, setQuery] = useState("");
 
   const filtered = useMemo(() => {
@@ -145,6 +146,16 @@ export function ShortcutsPanel({ open, onClose }: Props) {
           </div>
         ))}
       </div>
+      {onRestartTour && (
+        <div className="px-5 pb-4 pt-2 border-t border-neutral-800">
+          <button
+            onClick={() => { onRestartTour(); onClose(); }}
+            className="w-full rounded bg-neutral-800 py-2.5 text-[10px] font-medium tracking-widest text-neutral-300 uppercase hover:bg-neutral-700 min-h-[44px] transition-colors"
+          >
+            Restart editor tour
+          </button>
+        </div>
+      )}
     </DialogShell>
   );
 }

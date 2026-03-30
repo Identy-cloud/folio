@@ -88,6 +88,7 @@ export function useImageUpload() {
         objectFit: "cover",
         filter: "",
         isPlaceholder: false,
+        aspectRatioLocked: true,
       };
 
       addElement(el);

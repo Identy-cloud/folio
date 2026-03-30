@@ -37,6 +37,7 @@ export const SelectionBox = memo(function SelectionBox({ element, scale }: Props
     origRot: number;
     screenCx: number;
     screenCy: number;
+    aspectRatio: number;
   } | null>(null);
 
   function onHandleDown(e: React.PointerEvent, handle: HandlePos) {
@@ -59,6 +60,7 @@ export const SelectionBox = memo(function SelectionBox({ element, scale }: Props
       origRot: element.rotation,
       screenCx,
       screenCy,
+      aspectRatio: element.w / element.h,
     };
   }
 
@@ -81,8 +83,11 @@ export const SelectionBox = memo(function SelectionBox({ element, scale }: Props
     const GRID = 40;
     const snapVal = (v: number) => snap ? Math.round(v / GRID) * GRID : v;
 
+    const constrain = e.shiftKey || element.aspectRatioLocked === true;
+    const ar = d.aspectRatio;
     const updates: Partial<SlideElement> = {};
     const h = d.handle;
+    const isCorner = h.length === 2;
 
     if (h.includes("e")) {
       updates.w = Math.max(20, snapVal(d.origW + dx));
@@ -99,6 +104,32 @@ export const SelectionBox = memo(function SelectionBox({ element, scale }: Props
       const newH = Math.max(20, snapVal(d.origH - dy));
       updates.h = newH;
       updates.y = d.origY + (d.origH - newH);
+    }
+
+    if (constrain) {
+      if (isCorner) {
+        const newW = updates.w ?? d.origW;
+        const newH = updates.h ?? d.origH;
+        const wFromH = newH * ar;
+        const hFromW = newW / ar;
+        if (Math.abs(dx) >= Math.abs(dy)) {
+          updates.h = Math.max(20, hFromW);
+          if (h.includes("n")) {
+            updates.y = d.origY + d.origH - updates.h;
+          }
+        } else {
+          updates.w = Math.max(20, wFromH);
+          if (h.includes("w")) {
+            updates.x = d.origX + d.origW - updates.w;
+          }
+        }
+      } else if (h === "e" || h === "w") {
+        const newW = updates.w ?? d.origW;
+        updates.h = Math.max(20, newW / ar);
+      } else if (h === "n" || h === "s") {
+        const newH = updates.h ?? d.origH;
+        updates.w = Math.max(20, newH * ar);
+      }
     }
 
     updateElement(element.id, updates);

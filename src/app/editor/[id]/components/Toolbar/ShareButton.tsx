@@ -236,7 +236,7 @@ export function ShareButton() {
   ];
 
   return (
-    <div ref={popRef} className="relative">
+    <div ref={popRef} className="relative" data-onboarding="share">
       <button
         onClick={() => setOpen(!open)}
         className="flex items-center gap-1 rounded px-2 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 transition-colors md:px-3"
