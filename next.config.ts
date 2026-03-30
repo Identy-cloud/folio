@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 import { withSentryConfig } from "@sentry/nextjs";
 
 const securityHeaders = [
-  { key: "X-Frame-Options", value: "DENY" },
+  { key: "X-Frame-Options", value: "SAMEORIGIN" },
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
@@ -15,7 +15,7 @@ const securityHeaders = [
       "img-src 'self' blob: data: https://*.r2.dev https://*.googleusercontent.com https://*.supabase.co https://images.unsplash.com",
       "font-src 'self' https://fonts.gstatic.com",
       "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.r2.dev https://*.partykit.io wss://*.partykit.io https://*.sentry.io https://*.posthog.com https://us.i.posthog.com",
-      "frame-ancestors 'none'",
+      "frame-ancestors 'self'",
     ].join("; "),
   },
 ];
@@ -31,7 +31,11 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "pub-31069c7f6c2e4f4885ccb6d0238e7d0f.r2.dev",
+        hostname: new URL(process.env.R2_PUBLIC_URL ?? "https://pub-31069c7f6c2e4f4885ccb6d0238e7d0f.r2.dev").hostname,
+      },
+      {
+        protocol: "https",
+        hostname: "*.r2.dev",
       },
       {
         protocol: "https",

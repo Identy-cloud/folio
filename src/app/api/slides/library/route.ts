@@ -1,4 +1,5 @@
 import { getAuthenticatedUser } from "@/lib/auth";
+import { checkRateLimit, rateLimitResponse } from "@/lib/rate-limit";
 import { db } from "@/db";
 import { savedSlides } from "@/db/schema";
 import { eq, and, desc } from "drizzle-orm";
@@ -35,6 +36,9 @@ export async function POST(request: Request) {
   if (!user) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const rl = await checkRateLimit(`slides-library:${user.id}`, 20, 60_000);
+  if (!rl.allowed) return rateLimitResponse(rl);
 
   const body = (await request.json()) as SaveBody;
 

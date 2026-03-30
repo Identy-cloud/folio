@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { presentations, collaborators } from "@/db/schema";
 import { getAuthenticatedUser } from "@/lib/auth";
+import { checkRateLimit, rateLimitResponse } from "@/lib/rate-limit";
 import { createNotification } from "@/lib/notifications";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
@@ -64,6 +65,9 @@ export async function PATCH(
   if (!user) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const rl = await checkRateLimit(`pres-update:${user.id}`, 30, 60_000);
+  if (!rl.allowed) return rateLimitResponse(rl);
 
   const { id } = await params;
   const raw = await request.json().catch(() => ({}));
@@ -143,6 +147,9 @@ export async function DELETE(
   if (!user) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const rl = await checkRateLimit(`pres-delete:${user.id}`, 30, 60_000);
+  if (!rl.allowed) return rateLimitResponse(rl);
 
   const { id } = await params;
 

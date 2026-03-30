@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { folders } from "@/db/schema";
 import { getAuthenticatedUser } from "@/lib/auth";
+import { checkRateLimit, rateLimitResponse } from "@/lib/rate-limit";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 
@@ -29,6 +30,9 @@ export async function POST(request: Request) {
   if (!user) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const rl = await checkRateLimit(`folder-create:${user.id}`, 20, 60_000);
+  if (!rl.allowed) return rateLimitResponse(rl);
 
   const raw = await request.json().catch(() => ({}));
   const parsed = createSchema.safeParse(raw);

@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { presentations, slides, presentationVersions } from "@/db/schema";
 import { getAuthenticatedUser } from "@/lib/auth";
+import { checkRateLimit, rateLimitResponse } from "@/lib/rate-limit";
 import { getPlanLimits } from "@/lib/plan-limits";
 import { and, eq, asc, desc, count } from "drizzle-orm";
 import type { NextRequest } from "next/server";
@@ -45,6 +46,9 @@ export async function POST(
 ) {
   const user = await getAuthenticatedUser();
   if (!user) return Response.json({ error: "Unauthorized" }, { status: 401 });
+
+  const rl = await checkRateLimit(`version-create:${user.id}`, 10, 60_000);
+  if (!rl.allowed) return rateLimitResponse(rl);
 
   const { id } = await params;
 

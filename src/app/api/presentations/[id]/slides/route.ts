@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { slides, presentations } from "@/db/schema";
 import { getAuthenticatedUser } from "@/lib/auth";
+import { checkRateLimit, rateLimitResponse } from "@/lib/rate-limit";
 import { and, eq, asc } from "drizzle-orm";
 import { z } from "zod";
 import type { NextRequest } from "next/server";
@@ -122,6 +123,9 @@ export async function PUT(
 ) {
   const user = await getAuthenticatedUser();
   if (!user) return Response.json({ error: "Unauthorized" }, { status: 401 });
+
+  const rl = await checkRateLimit(`slides-save:${user.id}`, 60, 60_000);
+  if (!rl.allowed) return rateLimitResponse(rl);
 
   const { id } = await params;
 

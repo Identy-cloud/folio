@@ -3,9 +3,11 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "@/lib/i18n/context";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
+  const { t } = useTranslation();
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -17,11 +19,11 @@ export default function ResetPasswordPage() {
     setError(null);
 
     if (password.length < 6) {
-      setError("Password must be at least 6 characters");
+      setError(t.auth.passwordMinLength);
       return;
     }
     if (password !== confirm) {
-      setError("Passwords don't match");
+      setError(t.auth.passwordsMismatch);
       return;
     }
 
@@ -50,37 +52,37 @@ export default function ResetPasswordPage() {
             FOLIO
           </h1>
           <p className="mt-2 text-[11px] tracking-[0.4em] text-neutral-500 uppercase">
-            Reset password
+            {t.auth.resetPassword}
           </p>
           <div className="mx-auto mt-6 h-px w-12 bg-neutral-700" />
         </div>
 
         {done ? (
           <div className="text-center">
-            <p className="text-sm text-green-400">Password updated successfully.</p>
-            <p className="mt-2 text-xs text-neutral-500">Redirecting to dashboard...</p>
+            <p className="text-sm text-green-400">{t.auth.passwordUpdated}</p>
+            <p className="mt-2 text-xs text-neutral-500">{t.auth.redirecting}</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-3">
             <input
               type="password"
-              placeholder="New password"
+              placeholder={t.auth.newPassword}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
               minLength={6}
               autoFocus
-              aria-label="Nueva contraseña"
+              aria-label={t.auth.newPassword}
               className="w-full border-b border-neutral-700 bg-transparent px-2 py-3 text-sm text-white placeholder-neutral-500 outline-none focus:border-white transition-colors"
             />
             <input
               type="password"
-              placeholder="Confirm password"
+              placeholder={t.auth.confirmPassword}
               value={confirm}
               onChange={(e) => setConfirm(e.target.value)}
               required
               minLength={6}
-              aria-label="Confirmar contraseña"
+              aria-label={t.auth.confirmPassword}
               className="w-full border-b border-neutral-700 bg-transparent px-2 py-3 text-sm text-white placeholder-neutral-500 outline-none focus:border-white transition-colors"
             />
 
@@ -93,7 +95,7 @@ export default function ResetPasswordPage() {
               disabled={loading}
               className="mt-4 w-full bg-white py-3 text-xs font-semibold tracking-[0.25em] text-black uppercase hover:bg-neutral-200 disabled:opacity-50 transition-colors"
             >
-              {loading ? "..." : "Update password"}
+              {loading ? "..." : t.auth.updatePassword}
             </button>
           </form>
         )}

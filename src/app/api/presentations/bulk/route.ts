@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { presentations } from "@/db/schema";
 import { getAuthenticatedUser } from "@/lib/auth";
+import { checkRateLimit, rateLimitResponse } from "@/lib/rate-limit";
 import { and, eq, inArray } from "drizzle-orm";
 import { z } from "zod";
 import type { NextRequest } from "next/server";
@@ -30,6 +31,9 @@ export async function PATCH(request: NextRequest) {
   if (!user) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const rl = await checkRateLimit(`bulk-patch:${user.id}`, 10, 60_000);
+  if (!rl.allowed) return rateLimitResponse(rl);
 
   const raw = await request.json().catch(() => ({}));
   const parsed = bulkPatchSchema.safeParse(raw);
@@ -79,6 +83,9 @@ export async function DELETE(request: NextRequest) {
   if (!user) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const rl = await checkRateLimit(`bulk-delete:${user.id}`, 10, 60_000);
+  if (!rl.allowed) return rateLimitResponse(rl);
 
   const raw = await request.json().catch(() => ({}));
   const parsed = bulkDeleteSchema.safeParse(raw);

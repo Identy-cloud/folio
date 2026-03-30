@@ -1,5 +1,6 @@
 import { getAuthenticatedUser } from "@/lib/auth";
 import { getStripe, getOrCreateStripeCustomer, PRICE_IDS } from "@/lib/stripe";
+import { checkRateLimit, rateLimitResponse } from "@/lib/rate-limit";
 import { z } from "zod";
 
 const bodySchema = z.object({
@@ -12,6 +13,9 @@ export async function POST(request: Request) {
   if (!user) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const rl = await checkRateLimit(`stripe-checkout:${user.id}`, 5, 60_000);
+  if (!rl.allowed) return rateLimitResponse(rl);
 
   const raw = await request.json().catch(() => ({}));
   const parsed = bodySchema.safeParse(raw);

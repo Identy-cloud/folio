@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { presentations, collaborators, users } from "@/db/schema";
 import { getAuthenticatedUser } from "@/lib/auth";
+import { checkRateLimit, rateLimitResponse } from "@/lib/rate-limit";
 import { sendCollaboratorInvite } from "@/lib/email";
 import { createNotification } from "@/lib/notifications";
 import { getPlanLimits } from "@/lib/plan-limits";
@@ -69,6 +70,9 @@ export async function POST(
   if (!user) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const rl = await checkRateLimit(`collab-add:${user.id}`, 10, 60_000);
+  if (!rl.allowed) return rateLimitResponse(rl);
 
   const { id } = await params;
   const pres = await verifyOwnership(id, user.id);
@@ -166,6 +170,9 @@ export async function DELETE(
   if (!user) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const rl = await checkRateLimit(`collab-remove:${user.id}`, 10, 60_000);
+  if (!rl.allowed) return rateLimitResponse(rl);
 
   const { id } = await params;
   const pres = await verifyOwnership(id, user.id);

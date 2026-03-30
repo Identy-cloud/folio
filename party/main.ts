@@ -43,20 +43,34 @@ export default class YjsServer implements Party.Server {
       return;
     }
 
-    // Verify user has access to this presentation room
+    // Verify user has access to this presentation room (owner OR collaborator)
     const roomId = this.room.id;
     try {
-      const dbRes = await fetch(
-        `${supabaseUrl}/rest/v1/presentations?id=eq.${roomId}&user_id=eq.${userId}&select=id`,
-        {
-          headers: {
-            apikey: supabaseKey,
-            Authorization: `Bearer ${supabaseKey}`,
-          },
-        }
-      );
-      const rows = await dbRes.json();
-      if (!Array.isArray(rows) || rows.length === 0) {
+      const [ownerRes, collabRes] = await Promise.all([
+        fetch(
+          `${supabaseUrl}/rest/v1/presentations?id=eq.${roomId}&user_id=eq.${userId}&select=id`,
+          {
+            headers: {
+              apikey: supabaseKey,
+              Authorization: `Bearer ${supabaseKey}`,
+            },
+          }
+        ),
+        fetch(
+          `${supabaseUrl}/rest/v1/collaborators?presentation_id=eq.${roomId}&user_id=eq.${userId}&select=id`,
+          {
+            headers: {
+              apikey: supabaseKey,
+              Authorization: `Bearer ${supabaseKey}`,
+            },
+          }
+        ),
+      ]);
+      const ownerRows = await ownerRes.json();
+      const collabRows = await collabRes.json();
+      const isOwner = Array.isArray(ownerRows) && ownerRows.length > 0;
+      const isCollaborator = Array.isArray(collabRows) && collabRows.length > 0;
+      if (!isOwner && !isCollaborator) {
         conn.close(4003, "Access denied");
         return;
       }
