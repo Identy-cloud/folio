@@ -8,6 +8,7 @@ import { ProfileAvatar } from "./ProfileAvatar";
 import { PersonalInfoSection } from "./PersonalInfoSection";
 import { SocialLinksSection } from "./SocialLinksSection";
 import { PortfolioLinkSection } from "./PortfolioLinkSection";
+import { BillingSection } from "./BillingSection";
 import { PlanUsageSection } from "./PlanUsageSection";
 import { PreferencesSection } from "./PreferencesSection";
 import { ConnectedAccountsSection } from "./ConnectedAccountsSection";
@@ -64,6 +65,7 @@ export default function ProfilePage() {
       <SocialLinksSection socialLinks={profile.socialLinks ?? {}} onUpdate={patch} />
       {profile.username && <PortfolioLinkSection username={profile.username} />}
 
+      <BillingSection />
       <PlanUsageSection plan={profile.plan} storageUsed={profile.storageUsed ?? 0} />
 
       <div className="border border-neutral-800 p-4">
