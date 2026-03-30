@@ -39,7 +39,7 @@ export function LinkToSlideProperties({ element }: Props) {
       <select
         value={currentValue !== undefined ? String(currentValue) : ""}
         onChange={(e) => handleChange(e.target.value)}
-        className="w-full rounded border border-neutral-700 bg-[#111] px-2 py-1.5 text-xs text-neutral-300 outline-none focus:border-neutral-500"
+        className="w-full cursor-pointer rounded border border-neutral-700 bg-[#111] px-2 py-1.5 text-xs text-neutral-300 outline-none focus:border-neutral-500"
       >
         <option value="">None</option>
         {slides.map((slide, i) => (

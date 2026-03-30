@@ -7,6 +7,7 @@ import { Notebook } from "@phosphor-icons/react";
 import { useTranslation } from "@/lib/i18n/context";
 import { LocaleSelector } from "@/components/LocaleSelector";
 import { PricingTierCard } from "./PricingTierCard";
+import { toast } from "sonner";
 
 function useTiers(p: ReturnType<typeof useTranslation>["t"]["pricing"]) {
   return [
@@ -83,12 +84,12 @@ export function PricingClient() {
         window.location.href = data.url;
       } else {
         console.error("Stripe checkout error:", data.error);
-        alert(data.error ?? "Error creating checkout session");
+        toast.error(data.error ?? "Error creating checkout session");
         setLoading(null);
       }
     } catch (err) {
       console.error("Checkout failed:", err);
-      alert("Connection error. Please try again.");
+      toast.error("Connection error. Please try again.");
       setLoading(null);
     }
   }
@@ -114,7 +115,7 @@ export function PricingClient() {
             onClick={() => setAnnual(!annual)}
             role="switch"
             aria-checked={annual}
-            className={`relative h-6 w-11 rounded-full transition-colors ${annual ? "bg-green-600" : "bg-neutral-700"}`}
+            className={`relative h-6 w-11 cursor-pointer rounded-full transition-colors ${annual ? "bg-green-600" : "bg-neutral-700"}`}
           >
             <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-transform ${annual ? "left-[22px]" : "left-0.5"}`} />
           </button>

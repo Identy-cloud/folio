@@ -42,14 +42,16 @@ export default async function DashboardLayout({
   return (
     <WorkspaceProvider>
     <div className="flex min-h-screen flex-col bg-[#161616] text-neutral-200">
-      <header className="flex h-14 items-center justify-between border-b border-neutral-800 px-4 sm:h-16 sm:px-6">
-        <div className="flex items-center gap-3">
+      <header className="flex h-14 items-center justify-between border-b border-neutral-800 px-3 sm:h-16 sm:px-6">
+        <div className="flex items-center gap-2 sm:gap-3">
           <h1 className="text-xl text-white sm:text-2xl">
             <FolioLogo size={22} />
           </h1>
-          <WorkspaceSwitcherWrapper />
+          <div className="hidden sm:block">
+            <WorkspaceSwitcherWrapper />
+          </div>
         </div>
-        <div className="flex items-center gap-2 sm:gap-4">
+        <div className="flex items-center gap-1.5 sm:gap-4">
           <Link href="/dashboard/profile" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <span className="hidden text-sm text-neutral-400 sm:block">
               {user.user_metadata?.full_name ?? user.email}
@@ -76,34 +78,33 @@ export default async function DashboardLayout({
               Portfolio
             </Link>
           )}
-          <UpgradeButton />
+          <div className="hidden sm:flex">
+            <UpgradeButton />
+          </div>
           <NotificationBell />
-          <LocaleSelector />
+          <div className="hidden sm:block">
+            <LocaleSelector />
+          </div>
           <LogoutButton />
         </div>
       </header>
       <main id="main-content" className="flex-1 p-4 sm:p-6">{children}</main>
-      <footer className="border-t border-neutral-800 px-4 py-3">
-        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
-          <DeleteAccountButton />
-          <Link href="/terms" className="text-[10px] tracking-[0.15em] text-neutral-600 uppercase hover:text-neutral-400 transition-colors">
-            Terminos
-          </Link>
-          <Link href="/privacy" className="text-[10px] tracking-[0.15em] text-neutral-600 uppercase hover:text-neutral-400 transition-colors">
-            Privacidad
-          </Link>
-          <Link href="/cookies" className="text-[10px] tracking-[0.15em] text-neutral-600 uppercase hover:text-neutral-400 transition-colors">
-            Cookies
-          </Link>
-          <Link href="/dmca" className="text-[10px] tracking-[0.15em] text-neutral-600 uppercase hover:text-neutral-400 transition-colors">
-            DMCA
-          </Link>
-          <Link href="/accessibility" className="text-[10px] tracking-[0.15em] text-neutral-600 uppercase hover:text-neutral-400 transition-colors">
-            Accesibilidad
-          </Link>
-          <Link href="/privacy#ccpa" className="text-[10px] tracking-[0.15em] text-neutral-600 uppercase hover:text-neutral-400 transition-colors">
-            No vender mi informacion
-          </Link>
+      <footer className="border-t border-neutral-800 px-4 py-3 sm:px-6">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 sm:gap-x-4">
+            <Link href="/terms" className="text-[10px] tracking-[0.15em] text-neutral-600 uppercase hover:text-neutral-400 transition-colors">
+              Legal
+            </Link>
+            <Link href="/privacy" className="text-[10px] tracking-[0.15em] text-neutral-600 uppercase hover:text-neutral-400 transition-colors">
+              Privacidad
+            </Link>
+            <Link href="/accessibility" className="hidden text-[10px] tracking-[0.15em] text-neutral-600 uppercase hover:text-neutral-400 transition-colors sm:block">
+              Accesibilidad
+            </Link>
+          </div>
+          <div className="shrink-0">
+            <DeleteAccountButton />
+          </div>
         </div>
       </footer>
     </div>

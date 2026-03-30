@@ -396,7 +396,7 @@ export default function DashboardPage() {
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as "recent" | "name" | "oldest")}
               aria-label="Ordenar por"
-              className="rounded border border-neutral-700 bg-[#1e1e1e] px-2 py-1.5 text-xs text-neutral-300 outline-none"
+              className="cursor-pointer rounded border border-neutral-700 bg-[#1e1e1e] px-2 py-1.5 text-xs text-neutral-300 outline-none"
             >
               <option value="recent">Recent</option>
               <option value="oldest">Oldest</option>
@@ -410,7 +410,7 @@ export default function DashboardPage() {
               value={filterBy}
               onChange={(e) => setFilterBy(e.target.value as "all" | "public" | "private" | "starred")}
               aria-label="Filtrar por"
-              className="rounded border border-neutral-700 bg-[#1e1e1e] px-2 py-1.5 text-xs text-neutral-300 outline-none"
+              className="cursor-pointer rounded border border-neutral-700 bg-[#1e1e1e] px-2 py-1.5 text-xs text-neutral-300 outline-none"
             >
               <option value="all">All</option>
               <option value="public">Public</option>

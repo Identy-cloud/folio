@@ -72,7 +72,7 @@ export function AIGeneratePresentationForm({
           <select
             value={language}
             onChange={(e) => onLanguageChange(e.target.value)}
-            className="rounded border border-neutral-700 bg-neutral-900 px-2 py-1.5 text-xs text-neutral-300 outline-none"
+            className="cursor-pointer rounded border border-neutral-700 bg-neutral-900 px-2 py-1.5 text-xs text-neutral-300 outline-none"
           >
             {LANGUAGES.map((l) => (
               <option key={l.value} value={l.value}>{l.label}</option>

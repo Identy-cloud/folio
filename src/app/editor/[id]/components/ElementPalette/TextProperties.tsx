@@ -46,7 +46,7 @@ export function TextProperties({ element }: Props) {
       <select
         value={element.fontFamily}
         onChange={(e) => update({ fontFamily: e.target.value })}
-        className="w-full rounded border border-neutral-700 bg-[#161616] px-2 py-1.5 text-xs text-neutral-200 outline-none"
+        className="w-full cursor-pointer rounded border border-neutral-700 bg-[#161616] px-2 py-1.5 text-xs text-neutral-200 outline-none"
         style={{ fontFamily: element.fontFamily }}
       >
         {ALL_FONTS.map((f) => (

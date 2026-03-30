@@ -99,7 +99,7 @@ export function SlideLibrary({ open, onClose }: Props) {
             <button onClick={saveCurrent} className="flex items-center gap-1 rounded bg-blue-600 px-2.5 py-1 text-xs text-white hover:bg-blue-500 transition-colors">
               <Plus size={12} /> Save current
             </button>
-            <button onClick={onClose} className="text-neutral-400 hover:text-white"><X size={16} /></button>
+            <button onClick={onClose} aria-label="Close" className="text-neutral-400 hover:text-white"><X size={16} /></button>
           </div>
         </div>
         <div className="border-b border-neutral-700 px-4 py-2">

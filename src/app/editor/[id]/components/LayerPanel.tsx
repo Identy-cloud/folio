@@ -84,7 +84,7 @@ export function LayerPanel({ onClose }: { onClose: () => void }) {
               tabIndex={0}
               onClick={() => selectElement(el.id)}
               onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); selectElement(el.id); } }}
-              className={`flex w-full items-center gap-2 rounded px-2 py-1.5 transition-colors ${
+              className={`flex w-full cursor-pointer items-center gap-2 rounded px-2 py-1.5 transition-colors ${
                 isSelected ? "bg-white/10 text-white" : "text-neutral-400 hover:bg-neutral-800"
               } ${!isVisible ? "opacity-50" : ""}`}
             >

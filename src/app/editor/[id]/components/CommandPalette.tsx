@@ -8,6 +8,7 @@ import { THEMES } from "@/lib/templates/themes";
 import { SLIDE_LAYOUTS } from "@/lib/slide-layouts";
 import type { TextElement, ShapeElement, ArrowElement, DividerElement, EmbedElement, LineElement, TableElement, VideoElement, IconElement } from "@/types/elements";
 import { getRecentPresentations } from "@/lib/recent-presentations";
+import { toast } from "sonner";
 
 interface Command {
   id: string;
@@ -90,7 +91,7 @@ export function CommandPalette({ open, onClose }: Props) {
         }
       }));
       const minutes = Math.ceil(words / 150); // ~150 words per minute speaking
-      alert(`${words} words · ${chars} chars · ${slides.length} slides\n\nEstimated presentation time: ~${minutes} min`);
+      toast(`${words} words · ${chars} chars · ${slides.length} slides — ~${minutes} min`);
     }},
     { id: "export-notes", label: "Export speaker notes", category: "Export", action: () => {
       const { slides } = useEditorStore.getState();
@@ -120,7 +121,7 @@ export function CommandPalette({ open, onClose }: Props) {
       if (!presentationId) return;
       fetch(`/api/presentations/${presentationId}/export-pptx`)
         .then((res) => {
-          if (!res.ok) { alert("PPTX export requires Studio or Agency plan"); return null; }
+          if (!res.ok) { toast.error("PPTX export requires Studio or Agency plan"); return null; }
           return res.blob();
         })
         .then((blob) => {
@@ -132,14 +133,14 @@ export function CommandPalette({ open, onClose }: Props) {
           a.click();
           URL.revokeObjectURL(url);
         })
-        .catch(() => alert("Export failed"));
+        .catch(() => toast.error("Export failed"));
     }},
     { id: "export-json", label: "Export as JSON (backup)", category: "Export", action: () => {
       const { presentationId } = useEditorStore.getState();
       if (!presentationId) return;
       fetch(`/api/presentations/${presentationId}/export-json`)
         .then((res) => {
-          if (!res.ok) { alert("Export failed"); return null; }
+          if (!res.ok) { toast.error("Export failed"); return null; }
           return res.blob().then((blob) => ({ blob, headers: res.headers }));
         })
         .then((result) => {
@@ -153,7 +154,7 @@ export function CommandPalette({ open, onClose }: Props) {
           a.click();
           URL.revokeObjectURL(url);
         })
-        .catch(() => alert("Export failed"));
+        .catch(() => toast.error("Export failed"));
     }},
     { id: "import-json", label: "Import presentation from JSON", category: "Import", action: () => {
       const input = document.createElement("input");
@@ -172,13 +173,13 @@ export function CommandPalette({ open, onClose }: Props) {
           });
           if (res.ok) {
             const pres = await res.json();
-            alert(`Imported! Redirecting to new presentation...`);
+            toast.success("Imported! Redirecting…");
             window.location.href = `/editor/${pres.id}`;
           } else {
             const err = await res.json().catch(() => ({ error: "Import failed" }));
-            alert(err.error === "Plan limit reached" ? "Plan limit reached" : "Import failed");
+            toast.error(err.error === "Plan limit reached" ? "Plan limit reached" : "Import failed");
           }
-        } catch { alert("Failed to parse file"); }
+        } catch { toast.error("Failed to parse file"); }
         input.remove();
       };
       input.click();

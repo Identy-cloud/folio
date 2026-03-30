@@ -82,7 +82,7 @@ export function ThemeCustomizer({ open, onClose }: Props) {
       <div className="fixed top-14 left-2 md:left-60 z-50 w-64 rounded border border-neutral-700 bg-[#1e1e1e] p-4 shadow-xl">
         <div className="flex items-center justify-between mb-2">
           <span className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">Themes</span>
-          <button onClick={onClose} className="rounded p-1.5 text-neutral-500 hover:bg-neutral-700 hover:text-neutral-300 transition-colors"><X size={14} /></button>
+          <button onClick={onClose} aria-label="Close" className="rounded p-1.5 text-neutral-500 hover:bg-neutral-700 hover:text-neutral-300 transition-colors"><X size={14} /></button>
         </div>
         <p className="text-[10px] text-neutral-600 mb-2">Current: {themeObj.label}</p>
         <div className="space-y-1 max-h-48 overflow-y-auto">

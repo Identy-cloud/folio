@@ -271,7 +271,7 @@ export function ShareButton() {
                   role="switch"
                   aria-checked={meta.isPublic}
                   aria-label={t.editor.shareLabel}
-                  className={`relative h-6 w-11 rounded-full transition-colors ${
+                  className={`relative h-6 w-11 cursor-pointer rounded-full transition-colors ${
                     meta.isPublic ? "bg-green-600" : "bg-neutral-700"
                   }`}
                 >
@@ -295,6 +295,7 @@ export function ShareButton() {
                     </div>
                     <button
                       onClick={copyLink}
+                      aria-label="Copy link"
                       className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded bg-white text-[#161616] hover:bg-neutral-200 transition-colors"
                     >
                       {copied ? <Check size={14} /> : <LinkIcon size={14} />}

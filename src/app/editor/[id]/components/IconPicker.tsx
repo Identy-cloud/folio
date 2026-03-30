@@ -60,7 +60,7 @@ export function IconPicker({ onClose }: Props) {
       >
         <div className="flex items-center justify-between border-b border-neutral-700 px-4 py-2">
           <span className="text-xs font-medium text-neutral-300 uppercase tracking-wider">Icons</span>
-          <button onClick={onClose} className="text-neutral-500 hover:text-neutral-300">
+          <button onClick={onClose} aria-label="Close" className="text-neutral-500 hover:text-neutral-300">
             <X size={16} />
           </button>
         </div>

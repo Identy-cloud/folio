@@ -44,7 +44,7 @@ export function GradientEditor({ value, onChange }: Props) {
       <div className="h-6 w-full rounded border border-neutral-600" style={{ background: gradientToCSS(g) }} />
       <div className="flex gap-1.5 items-center">
         <select value={g.type} onChange={(e) => onChange({ ...g, type: e.target.value as "linear" | "radial" })}
-          className="rounded border border-neutral-700 bg-[#161616] px-1.5 py-1 text-[10px] text-neutral-300 outline-none">
+          className="cursor-pointer rounded border border-neutral-700 bg-[#161616] px-1.5 py-1 text-[10px] text-neutral-300 outline-none">
           <option value="linear">Linear</option>
           <option value="radial">Radial</option>
         </select>

@@ -97,7 +97,7 @@ export function TranslateDialog({ open, onClose }: Props) {
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
             disabled={loading}
-            className="w-full rounded border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-white outline-none focus:border-neutral-500"
+            className="w-full cursor-pointer rounded border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-white outline-none focus:border-neutral-500"
           >
             {LANGUAGES.map((lang) => (
               <option key={lang} value={lang}>{lang}</option>

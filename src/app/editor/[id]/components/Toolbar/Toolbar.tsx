@@ -8,6 +8,7 @@ import { Tooltip } from "@/components/ui/Tooltip";
 function Spinner() {
   return <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-neutral-500 border-t-white" />;
 }
+import { toast } from "sonner";
 import { useEditorStore } from "@/store/editorStore";
 import Link from "next/link";
 import { GearSix, SquaresFour, Palette } from "@phosphor-icons/react";
@@ -153,7 +154,7 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
       if (!res.ok) {
         const data = await res.json().catch(() => null);
         if (data?.error === "PLAN_LIMIT") {
-          alert("Upgrade to Studio or Agency plan to export PPTX");
+          toast.error("Upgrade to Studio or Agency plan to export PPTX");
         }
         return;
       }

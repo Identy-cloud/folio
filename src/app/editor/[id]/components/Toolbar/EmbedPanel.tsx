@@ -79,7 +79,7 @@ export function EmbedPanel({ slug }: Props) {
           role="switch"
           aria-checked={autoplay}
           aria-label={t.editor.embedAutoplay}
-          className={`relative h-5 w-9 rounded-full transition-colors ${
+          className={`relative h-5 w-9 cursor-pointer rounded-full transition-colors ${
             autoplay ? "bg-green-600" : "bg-neutral-700"
           }`}
         >

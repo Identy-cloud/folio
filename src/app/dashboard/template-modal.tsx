@@ -119,7 +119,7 @@ export function TemplateModal({ open, onClose }: Props) {
         <div className="mb-4 flex items-center justify-between sm:mb-6">
           <div className="flex items-center gap-3">
             {showBack && (
-              <button onClick={goBack} className="rounded p-1 text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-white">
+              <button onClick={goBack} aria-label="Back" className="rounded p-1 text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-white">
                 <ArrowLeft size={18} />
               </button>
             )}

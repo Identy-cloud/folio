@@ -22,7 +22,7 @@ export function ThemeBuilderFonts({ fontDisplay, fontBody, onChangeDisplay, onCh
         <select
           value={fontDisplay}
           onChange={(e) => onChangeDisplay(e.target.value)}
-          className="mt-0.5 w-full rounded border border-neutral-700 bg-[#161616] px-2 py-1.5 text-[11px] text-neutral-200 outline-none focus:border-neutral-500"
+          className="mt-0.5 w-full cursor-pointer rounded border border-neutral-700 bg-[#161616] px-2 py-1.5 text-[11px] text-neutral-200 outline-none focus:border-neutral-500"
         >
           {ALL_FONTS.map((f) => (
             <option key={f.value} value={f.value}>
@@ -45,7 +45,7 @@ export function ThemeBuilderFonts({ fontDisplay, fontBody, onChangeDisplay, onCh
         <select
           value={fontBody}
           onChange={(e) => onChangeBody(e.target.value)}
-          className="mt-0.5 w-full rounded border border-neutral-700 bg-[#161616] px-2 py-1.5 text-[11px] text-neutral-200 outline-none focus:border-neutral-500"
+          className="mt-0.5 w-full cursor-pointer rounded border border-neutral-700 bg-[#161616] px-2 py-1.5 text-[11px] text-neutral-200 outline-none focus:border-neutral-500"
         >
           {ALL_FONTS.map((f) => (
             <option key={f.value} value={f.value}>

@@ -80,7 +80,7 @@ export function UnsplashPicker({ onClose }: Props) {
       <div className="w-full max-w-sm rounded border border-neutral-700 bg-[#1e1e1e] shadow-2xl md:max-w-lg" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between border-b border-neutral-700 px-4 py-2">
           <span className="text-xs font-medium text-neutral-300 uppercase tracking-wider">Stock Images</span>
-          <button onClick={onClose} className="p-1 text-neutral-500 hover:text-neutral-300"><X size={16} /></button>
+          <button onClick={onClose} aria-label="Close" className="p-1 text-neutral-500 hover:text-neutral-300"><X size={16} /></button>
         </div>
         <div className="relative px-4 pt-3">
           <MagnifyingGlass size={14} className="absolute left-7 top-1/2 mt-1.5 -translate-y-1/2 text-neutral-500" />

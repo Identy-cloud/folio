@@ -138,7 +138,7 @@ export function TransitionPicker({
           <select
             value={duration ?? 0}
             onChange={(e) => onDurationChange(parseInt(e.target.value))}
-            className="rounded border border-neutral-700 bg-[#161616] px-1.5 py-1 text-[10px] text-neutral-300 outline-none"
+            className="cursor-pointer rounded border border-neutral-700 bg-[#161616] px-1.5 py-1 text-[10px] text-neutral-300 outline-none"
           >
             <option value={0}>Off</option>
             <option value={3}>3s</option>
