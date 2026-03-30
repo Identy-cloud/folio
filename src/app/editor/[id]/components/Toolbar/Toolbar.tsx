@@ -23,6 +23,8 @@ interface ToolbarProps {
   peerCount?: number;
   onToggleHistory?: () => void;
   historyOpen?: boolean;
+  onToggleVersions?: () => void;
+  versionsOpen?: boolean;
   onToggleLayers?: () => void;
   layersOpen?: boolean;
   onToggleNotes?: () => void;
@@ -35,7 +37,7 @@ interface ToolbarProps {
   onToggleLayoutPicker?: () => void;
 }
 
-export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen, onToggleLayers, layersOpen, onToggleNotes, notesOpen, onToggleSorter, onToggleThemeCustomizer, onToggleComments, onToggleCollaborators, collaboratorsOpen, onToggleLayoutPicker }: ToolbarProps) {
+export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen, onToggleVersions, versionsOpen, onToggleLayers, layersOpen, onToggleNotes, notesOpen, onToggleSorter, onToggleThemeCustomizer, onToggleComments, onToggleCollaborators, collaboratorsOpen, onToggleLayoutPicker }: ToolbarProps) {
   const { t } = useTranslation();
   const undo = useEditorStore((s) => s.undo);
   const redo = useEditorStore((s) => s.redo);
@@ -238,6 +240,18 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
                 aria-pressed={historyOpen}
               >
                 <ClockCounterClockwise size={16} weight="regular" />
+              </button>
+            </Tooltip>
+          )}
+          {onToggleVersions && (
+            <Tooltip content="Version history">
+              <button
+                onClick={onToggleVersions}
+                className={`hidden md:flex rounded p-2 transition-colors ${versionsOpen ? "bg-neutral-700 text-white" : "text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200"}`}
+                aria-label="Version history"
+                aria-pressed={versionsOpen}
+              >
+                <ClockCounterClockwise size={16} weight="fill" />
               </button>
             </Tooltip>
           )}

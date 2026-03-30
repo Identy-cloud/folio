@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { SlidePreview } from "@/components/SlidePreview";
+import { useAudienceWindow } from "@/hooks/useAudienceWindow";
 import type { SlideElement, GradientDef } from "@/types/elements";
 
 interface Slide {
@@ -26,6 +27,9 @@ export function PresenterClient({ title, slides, slug }: Props) {
   const [laser, setLaser] = useState<{ x: number; y: number } | null>(null);
   const laserTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [notesVisible, setNotesVisible] = useState(true);
+
+  const { audienceOpen, canShow, openAudienceWindow, closeAudienceWindow } =
+    useAudienceWindow({ slug, currentSlide: current });
 
   // Timer
   const [elapsed, setElapsed] = useState(0);
@@ -76,9 +80,23 @@ export function PresenterClient({ title, slides, slug }: Props) {
         </div>
         <div className="flex items-center justify-between border-b border-neutral-800 px-4 py-2">
           <span className="text-xs text-neutral-400">{title}</span>
-          <span className="text-xs text-neutral-500">
-            {current + 1} / {total}
-          </span>
+          <div className="flex items-center gap-3">
+            {canShow && (
+              <button
+                onClick={audienceOpen ? closeAudienceWindow : openAudienceWindow}
+                className={`rounded px-3 py-1 text-[10px] font-medium tracking-wider uppercase transition-colors ${
+                  audienceOpen
+                    ? "bg-blue-600 text-white hover:bg-blue-500"
+                    : "bg-neutral-800 text-neutral-300 hover:bg-neutral-700"
+                }`}
+              >
+                {audienceOpen ? "Close audience" : "Present to audience"}
+              </button>
+            )}
+            <span className="text-xs text-neutral-500">
+              {current + 1} / {total}
+            </span>
+          </div>
         </div>
         <div
           className="relative flex flex-1 items-center justify-center p-4 cursor-crosshair"

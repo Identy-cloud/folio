@@ -16,6 +16,7 @@ export interface PlanLimits {
   canUseAllTemplates: boolean;
   canUseAnalytics: boolean;
   canUseAdvancedAnalytics: boolean;
+  maxVersions: number;
 }
 
 export const FREE_THEMES = ["editorial-blue"] as const;
@@ -37,6 +38,7 @@ const LIMITS: Record<Plan, PlanLimits> = {
     canUseAllTemplates: false,
     canUseAnalytics: false,
     canUseAdvancedAnalytics: false,
+    maxVersions: 5,
   },
   creator: {
     maxPresentations: Infinity,
@@ -54,6 +56,7 @@ const LIMITS: Record<Plan, PlanLimits> = {
     canUseAllTemplates: true,
     canUseAnalytics: true,
     canUseAdvancedAnalytics: false,
+    maxVersions: 50,
   },
   studio: {
     maxPresentations: Infinity,
@@ -71,6 +74,7 @@ const LIMITS: Record<Plan, PlanLimits> = {
     canUseAllTemplates: true,
     canUseAnalytics: true,
     canUseAdvancedAnalytics: false,
+    maxVersions: 50,
   },
   agency: {
     maxPresentations: Infinity,
@@ -88,6 +92,7 @@ const LIMITS: Record<Plan, PlanLimits> = {
     canUseAllTemplates: true,
     canUseAnalytics: true,
     canUseAdvancedAnalytics: true,
+    maxVersions: 50,
   },
 };
 

@@ -185,6 +185,21 @@ export const fonts = pgTable("fonts", {
   index("fonts_user_id_idx").on(table.userId),
 ]);
 
+export const presentationVersions = pgTable("presentation_versions", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  presentationId: uuid("presentation_id")
+    .references(() => presentations.id, { onDelete: "cascade" })
+    .notNull(),
+  version: integer("version").notNull(),
+  snapshot: jsonb("snapshot").notNull(),
+  title: text("title"),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+}, (table) => [
+  index("pv_presentation_version_idx").on(table.presentationId, table.version),
+]);
+
 export const comments = pgTable("comments", {
   id: uuid("id").primaryKey().defaultRandom(),
   presentationId: uuid("presentation_id")

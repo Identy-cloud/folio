@@ -58,11 +58,28 @@ export default async function DashboardLayout({
         </div>
       </header>
       <main id="main-content" className="flex-1 p-4 sm:p-6">{children}</main>
-      <footer className="flex flex-wrap items-center justify-center gap-3 border-t border-neutral-800 px-4 py-3 sm:gap-4">
-        <DeleteAccountButton />
-        <Link href="/privacy#ccpa" className="text-[10px] tracking-[0.15em] text-neutral-600 uppercase hover:text-neutral-400 transition-colors">
-          No vender mi informacion
-        </Link>
+      <footer className="border-t border-neutral-800 px-4 py-3">
+        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+          <DeleteAccountButton />
+          <Link href="/terms" className="text-[10px] tracking-[0.15em] text-neutral-600 uppercase hover:text-neutral-400 transition-colors">
+            Terminos
+          </Link>
+          <Link href="/privacy" className="text-[10px] tracking-[0.15em] text-neutral-600 uppercase hover:text-neutral-400 transition-colors">
+            Privacidad
+          </Link>
+          <Link href="/cookies" className="text-[10px] tracking-[0.15em] text-neutral-600 uppercase hover:text-neutral-400 transition-colors">
+            Cookies
+          </Link>
+          <Link href="/dmca" className="text-[10px] tracking-[0.15em] text-neutral-600 uppercase hover:text-neutral-400 transition-colors">
+            DMCA
+          </Link>
+          <Link href="/accessibility" className="text-[10px] tracking-[0.15em] text-neutral-600 uppercase hover:text-neutral-400 transition-colors">
+            Accesibilidad
+          </Link>
+          <Link href="/privacy#ccpa" className="text-[10px] tracking-[0.15em] text-neutral-600 uppercase hover:text-neutral-400 transition-colors">
+            No vender mi informacion
+          </Link>
+        </div>
       </footer>
     </div>
   );

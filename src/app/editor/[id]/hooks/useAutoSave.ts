@@ -6,6 +6,7 @@ import { useTranslation } from "@/lib/i18n/context";
 
 const MAX_RETRIES = 3;
 const BASE_DELAY = 1000;
+const VERSION_INTERVAL_MS = 10 * 60 * 1000;
 
 async function saveWithRetry(presentationId: string, slides: unknown[]) {
   for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
@@ -42,9 +43,19 @@ async function captureThumbnail(presentationId: string) {
   }
 }
 
+export function createVersionSnapshot(presentationId: string, title?: string) {
+  return fetch(`/api/presentations/${presentationId}/versions`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ title: title ?? null }),
+  }).catch(() => null);
+}
+
 export function useAutoSave() {
   const { t } = useTranslation();
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const versionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastVersionRef = useRef<number>(Date.now());
 
   useEffect(() => {
     const unsub = useEditorStore.subscribe((state, prev) => {
@@ -66,6 +77,12 @@ export function useAutoSave() {
 
           if (thumbTimer) clearTimeout(thumbTimer);
           thumbTimer = setTimeout(() => captureThumbnail(presentationId), 5000);
+
+          const elapsed = Date.now() - lastVersionRef.current;
+          if (elapsed >= VERSION_INTERVAL_MS) {
+            lastVersionRef.current = Date.now();
+            createVersionSnapshot(presentationId, "Auto-save");
+          }
         } else {
           setSaveStatus("error");
           toast.error(t.editor.saveToastError);
@@ -76,6 +93,7 @@ export function useAutoSave() {
     return () => {
       unsub();
       if (timerRef.current) clearTimeout(timerRef.current);
+      if (versionTimerRef.current) clearTimeout(versionTimerRef.current);
     };
   }, [t]);
 }

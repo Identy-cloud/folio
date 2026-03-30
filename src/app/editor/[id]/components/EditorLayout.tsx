@@ -19,6 +19,7 @@ import {
 import { BottomSheet } from "@/components/ui/BottomSheet";
 import { ShortcutsPanel } from "@/components/editor/ShortcutsPanel";
 import { HistoryPanel } from "./HistoryPanel";
+import { VersionHistory } from "./VersionHistory";
 import { LayerPanel } from "./LayerPanel";
 import { SlideNotes } from "./SlideNotes";
 import { FindReplace } from "./FindReplace";
@@ -60,7 +61,8 @@ export function EditorLayout() {
   const [notesOpen, setNotesOpen] = useState(false);
   const [unsplashOpen, setUnsplashOpen] = useState(false);
   const [layoutPickerOpen, setLayoutPickerOpen] = useState(false);
-  const rightPanel = historyOpen ? "history" : layersOpen ? "layers" : "palette";
+  const [versionsOpen, setVersionsOpen] = useState(false);
+  const rightPanel = versionsOpen ? "versions" : historyOpen ? "history" : layersOpen ? "layers" : "palette";
   const selectedIds = useEditorStore((s) => s.selectedElementIds);
   const hasSelection = selectedIds.length > 0;
 
@@ -117,9 +119,11 @@ export function EditorLayout() {
         <Toolbar
           connected={connected}
           peerCount={peers.length}
-          onToggleHistory={() => { setHistoryOpen((v) => !v); setLayersOpen(false); }}
+          onToggleHistory={() => { setHistoryOpen((v) => !v); setLayersOpen(false); setVersionsOpen(false); }}
           historyOpen={historyOpen}
-          onToggleLayers={() => { setLayersOpen((v) => !v); setHistoryOpen(false); }}
+          onToggleVersions={() => { setVersionsOpen((v) => !v); setHistoryOpen(false); setLayersOpen(false); }}
+          versionsOpen={versionsOpen}
+          onToggleLayers={() => { setLayersOpen((v) => !v); setHistoryOpen(false); setVersionsOpen(false); }}
           layersOpen={layersOpen}
           onToggleNotes={() => setNotesOpen((v) => !v)}
           notesOpen={notesOpen}
@@ -148,7 +152,11 @@ export function EditorLayout() {
         </div>
 
         <div data-panel="palette" className={`hidden h-full md:block ${compact ? "md:hidden" : ""}`}>
-          {rightPanel === "history" ? (
+          {rightPanel === "versions" ? (
+            <div className="flex h-full w-56 flex-col border-l border-neutral-800 bg-[#161616]">
+              <VersionHistory onClose={() => setVersionsOpen(false)} />
+            </div>
+          ) : rightPanel === "history" ? (
             <div className="flex h-full w-56 flex-col border-l border-neutral-800 bg-[#161616]">
               <HistoryPanel onClose={() => setHistoryOpen(false)} />
             </div>

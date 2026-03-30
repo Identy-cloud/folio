@@ -91,25 +91,52 @@ export default function LandingPage() {
         </Link>
       </section>
 
-      <footer className="flex flex-col items-center gap-3 border-t border-neutral-800 py-8">
-        <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
-          <Link href="/terms" className="text-[10px] tracking-[0.2em] text-neutral-400 uppercase hover:text-neutral-200 transition-colors">
-            Terminos
-          </Link>
-          <Link href="/privacy" className="text-[10px] tracking-[0.2em] text-neutral-400 uppercase hover:text-neutral-200 transition-colors">
-            Privacidad
-          </Link>
-          <Link href="/cookies" className="text-[10px] tracking-[0.2em] text-neutral-400 uppercase hover:text-neutral-200 transition-colors">
-            Cookies
-          </Link>
-          <Link href="/pricing" className="text-[10px] tracking-[0.2em] text-neutral-400 uppercase hover:text-neutral-200 transition-colors">
-            Pricing
-          </Link>
-          <Link href="/privacy#ccpa" className="text-[10px] tracking-[0.2em] text-neutral-400 uppercase hover:text-neutral-200 transition-colors">
-            No vender mi informacion
-          </Link>
+      <footer className="border-t border-neutral-800 px-4 py-10 sm:px-8">
+        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 sm:grid-cols-3">
+          <div>
+            <p className="text-[10px] tracking-[0.3em] text-neutral-500 uppercase">Producto</p>
+            <div className="mt-3 flex flex-col gap-2">
+              <Link href="/pricing" className="text-[10px] tracking-[0.2em] text-neutral-400 uppercase hover:text-neutral-200 transition-colors">
+                Pricing
+              </Link>
+              <Link href="/login" className="text-[10px] tracking-[0.2em] text-neutral-400 uppercase hover:text-neutral-200 transition-colors">
+                Empezar gratis
+              </Link>
+            </div>
+          </div>
+          <div>
+            <p className="text-[10px] tracking-[0.3em] text-neutral-500 uppercase">Legal</p>
+            <div className="mt-3 flex flex-col gap-2">
+              <Link href="/terms" className="text-[10px] tracking-[0.2em] text-neutral-400 uppercase hover:text-neutral-200 transition-colors">
+                Terminos
+              </Link>
+              <Link href="/privacy" className="text-[10px] tracking-[0.2em] text-neutral-400 uppercase hover:text-neutral-200 transition-colors">
+                Privacidad
+              </Link>
+              <Link href="/cookies" className="text-[10px] tracking-[0.2em] text-neutral-400 uppercase hover:text-neutral-200 transition-colors">
+                Cookies
+              </Link>
+              <Link href="/dmca" className="text-[10px] tracking-[0.2em] text-neutral-400 uppercase hover:text-neutral-200 transition-colors">
+                DMCA
+              </Link>
+              <Link href="/accessibility" className="text-[10px] tracking-[0.2em] text-neutral-400 uppercase hover:text-neutral-200 transition-colors">
+                Accesibilidad
+              </Link>
+              <Link href="/privacy#ccpa" className="text-[10px] tracking-[0.2em] text-neutral-400 uppercase hover:text-neutral-200 transition-colors">
+                No vender mi informacion
+              </Link>
+            </div>
+          </div>
+          <div>
+            <p className="text-[10px] tracking-[0.3em] text-neutral-500 uppercase">Empresa</p>
+            <div className="mt-3 flex flex-col gap-2">
+              <a href="mailto:hello@identy.cloud" className="text-[10px] tracking-[0.2em] text-neutral-400 uppercase hover:text-neutral-200 transition-colors">
+                Contacto
+              </a>
+            </div>
+          </div>
         </div>
-        <p className="text-[10px] tracking-[0.3em] text-neutral-600 uppercase">
+        <p className="mt-8 text-center text-[10px] tracking-[0.3em] text-neutral-600 uppercase">
           Folio — Identy Cloud
         </p>
       </footer>

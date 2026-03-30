@@ -17,6 +17,7 @@ import type { FolderItem } from "./folder-list";
 import { MoveToFolderDialog } from "./move-folder-dialog";
 import { BulkActionBar } from "./bulk-action-bar";
 import { useBulkSelection } from "./use-bulk-selection";
+import { AnalyticsOverview } from "./analytics-overview";
 
 interface Presentation {
   id: string;
@@ -328,6 +329,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="min-w-0 flex-1">
+      <AnalyticsOverview />
       <div className="mb-6 flex flex-col gap-3 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="font-display text-2xl tracking-tight sm:text-4xl">
           {activeFolderId

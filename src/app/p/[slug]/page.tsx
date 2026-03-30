@@ -143,6 +143,7 @@ export default async function ViewerPage({
       />
       <ViewerWrapper
         title={data.presentation.title}
+        slug={slug}
         slides={data.slides}
         showWatermark={data.ownerPlan === "free"}
         presentationId={data.presentation.id}

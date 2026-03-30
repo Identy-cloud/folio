@@ -71,6 +71,13 @@
       "when": 1774868609636,
       "tag": "0009_tranquil_captain_cross",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1774869781238,
+      "tag": "0010_flowery_sunfire",
+      "breakpoints": true
     }
   ]
 }
