@@ -69,6 +69,8 @@ export async function POST(
         presentationId: newPres.id,
         order: s.order,
         transition: s.transition,
+        transitionDuration: s.transitionDuration,
+        transitionEasing: s.transitionEasing,
         backgroundColor: s.backgroundColor,
         backgroundImage: s.backgroundImage,
         elements: s.elements,

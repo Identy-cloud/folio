@@ -17,7 +17,7 @@ export function MobileInsertPanel({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
   const addElement = useEditorStore((s) => s.addElement);
   const activeSlide = useEditorStore((s) => s.getActiveSlide());
-  const theme = useEditorStore((s) => THEMES[s.theme] ?? THEMES["editorial-blue"]);
+  const theme = useEditorStore((s) => s.customThemes[s.theme] ?? THEMES[s.theme] ?? THEMES["editorial-blue"]);
   const { trigger: triggerUpload, uploading } = useImageUpload();
   const [showIconPicker, setShowIconPicker] = useState(false);
   const [showUnsplash, setShowUnsplash] = useState(false);

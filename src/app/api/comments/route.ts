@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { comments, presentations } from "@/db/schema";
 import { getAuthenticatedUser } from "@/lib/auth";
+import { createNotification } from "@/lib/notifications";
 import { checkRateLimit, rateLimitResponse } from "@/lib/rate-limit";
 import { eq, and, desc } from "drizzle-orm";
 import { z } from "zod";
@@ -36,7 +37,7 @@ export async function POST(request: NextRequest) {
     parsed.data;
 
   const [pres] = await db
-    .select({ id: presentations.id })
+    .select({ id: presentations.id, userId: presentations.userId, title: presentations.title })
     .from(presentations)
     .where(eq(presentations.id, presentationId))
     .limit(1);
@@ -55,6 +56,14 @@ export async function POST(request: NextRequest) {
       content,
     })
     .returning();
+
+  await createNotification({
+    userId: pres.userId,
+    type: "comment",
+    title: "Nuevo comentario",
+    message: `${authorName} comento en "${pres.title}"`,
+    presentationId,
+  }).catch(() => {});
 
   return Response.json(comment, { status: 201 });
 }

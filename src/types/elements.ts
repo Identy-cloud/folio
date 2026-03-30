@@ -149,11 +149,15 @@ export type SlideElement =
 
 export type SlideTransition = "fade" | "slide-left" | "slide-up" | "slide-right" | "zoom" | "blur" | "none";
 
+export type TransitionEasing = "ease" | "ease-in" | "ease-out" | "ease-in-out" | "linear";
+
 export interface Slide {
   id: string;
   presentationId: string;
   order: number;
   transition: SlideTransition;
+  transitionDuration?: number;
+  transitionEasing?: TransitionEasing;
   backgroundColor: string;
   backgroundImage: string | null;
   elements: SlideElement[];

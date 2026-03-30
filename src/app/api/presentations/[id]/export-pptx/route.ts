@@ -54,6 +54,8 @@ export async function GET(
     presentationId: row.presentationId,
     order: row.order,
     transition: row.transition as Slide["transition"],
+    transitionDuration: row.transitionDuration ?? undefined,
+    transitionEasing: (row.transitionEasing as Slide["transitionEasing"]) ?? undefined,
     backgroundColor: row.backgroundColor,
     backgroundImage: row.backgroundImage,
     elements: (row.elements ?? []) as Slide["elements"],

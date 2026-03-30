@@ -29,7 +29,8 @@ export async function GET(
     .where(eq(users.id, pres.userId))
     .limit(1);
 
-  const theme = THEMES[pres.theme] ?? THEMES["editorial-blue"];
+  const customMap = (pres.customThemes ?? {}) as Record<string, import("@/lib/templates/themes").Theme>;
+  const theme = customMap[pres.theme] ?? THEMES[pres.theme] ?? THEMES["editorial-blue"];
   const authorName = author?.name ?? author?.email ?? "";
 
   return new ImageResponse(

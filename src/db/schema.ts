@@ -49,6 +49,7 @@ export const presentations = pgTable("presentations", {
   isPublic: boolean("is_public").default(false).notNull(),
   password: text("password"),
   thumbnailUrl: text("thumbnail_url"),
+  customThemes: jsonb("custom_themes").default({}).notNull(),
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
     .notNull(),
@@ -68,6 +69,8 @@ export const slides = pgTable("slides", {
   backgroundColor: text("background_color").default("#ffffff").notNull(),
   backgroundImage: text("background_image"),
   transition: text("transition").default("fade").notNull(),
+  transitionDuration: integer("transition_duration"),
+  transitionEasing: text("transition_easing"),
   elements: jsonb("elements").default([]).notNull(),
   mobileElements: jsonb("mobile_elements"),
   notes: text("notes").default("").notNull(),
@@ -126,6 +129,24 @@ export const presentationViews = pgTable("presentation_views", {
     .notNull(),
 }, (table) => [
   index("presentation_views_presentation_id_idx").on(table.presentationId),
+]);
+
+export const notifications = pgTable("notifications", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id")
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull(),
+  type: text("type").notNull(),
+  title: text("title").notNull(),
+  message: text("message").notNull(),
+  presentationId: uuid("presentation_id")
+    .references(() => presentations.id, { onDelete: "set null" }),
+  read: boolean("read").default(false).notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+}, (table) => [
+  index("notifications_user_id_idx").on(table.userId),
 ]);
 
 export const comments = pgTable("comments", {

@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { presentations, collaborators, users } from "@/db/schema";
 import { getAuthenticatedUser } from "@/lib/auth";
+import { createNotification } from "@/lib/notifications";
 import { getPlanLimits } from "@/lib/plan-limits";
 import { getUserPlan } from "@/lib/stripe";
 import { and, eq } from "drizzle-orm";
@@ -128,6 +129,14 @@ export async function POST(
       role,
     })
     .returning();
+
+  await createNotification({
+    userId: targetUser.id,
+    type: "collaborator_added",
+    title: "Agregado como colaborador",
+    message: `${user.name ?? user.email} te agrego a "${pres.title}"`,
+    presentationId: id,
+  }).catch(() => {});
 
   return Response.json({
     id: created.id,

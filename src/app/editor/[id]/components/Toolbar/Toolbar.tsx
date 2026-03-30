@@ -13,6 +13,7 @@ import Link from "next/link";
 import { GearSix, SquaresFour, Palette } from "@phosphor-icons/react";
 import { ShareButton } from "./ShareButton";
 import { PresentationSettings } from "./PresentationSettings";
+import { NotificationBell } from "@/components/NotificationBell";
 import { useImageUpload } from "../../hooks/useImageUpload";
 import { useTranslation } from "@/lib/i18n/context";
 import { usePlanLimits } from "@/hooks/usePlanLimits";
@@ -333,6 +334,7 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
             <span className="hidden sm:inline">Preview</span>
           </Link>
         </Tooltip>
+        <NotificationBell />
         <ShareButton />
         {onToggleCollaborators && (
           <Tooltip content="Collaborators">

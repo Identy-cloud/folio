@@ -1,6 +1,7 @@
 import { db } from "@/db";
-import { presentations } from "@/db/schema";
+import { presentations, collaborators } from "@/db/schema";
 import { getAuthenticatedUser } from "@/lib/auth";
+import { createNotification } from "@/lib/notifications";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 import { THEMES } from "@/lib/templates/themes";
@@ -30,13 +31,24 @@ export async function GET(
   return Response.json(pres);
 }
 
+const themeValueSchema = z.object({
+  primary: z.string(),
+  background: z.string(),
+  text: z.string(),
+  accent: z.string(),
+  fontDisplay: z.string(),
+  fontBody: z.string(),
+  label: z.string(),
+});
+
 const patchSchema = z.object({
   title: z.string().max(255).optional(),
   isPublic: z.boolean().optional(),
-  theme: z.enum(Object.keys(THEMES) as [string, ...string[]]).optional(),
+  theme: z.string().max(64).optional(),
   thumbnailUrl: z.string().url().optional(),
   password: z.string().max(100).nullable().optional(),
   folderId: z.string().uuid().nullable().optional(),
+  customThemes: z.record(z.string().max(64), themeValueSchema).optional(),
 });
 
 export async function PATCH(
@@ -61,6 +73,7 @@ export async function PATCH(
   if (parsed.data.theme !== undefined) updates.theme = parsed.data.theme;
   if (parsed.data.thumbnailUrl !== undefined) updates.thumbnailUrl = parsed.data.thumbnailUrl;
   if (parsed.data.folderId !== undefined) updates.folderId = parsed.data.folderId;
+  if (parsed.data.customThemes !== undefined) updates.customThemes = parsed.data.customThemes;
   if (parsed.data.password !== undefined) {
     updates.password = parsed.data.password
       ? await hash(parsed.data.password, 10)
@@ -77,6 +90,25 @@ export async function PATCH(
 
   if (!updated) {
     return Response.json({ error: "Not found" }, { status: 404 });
+  }
+
+  if (parsed.data.isPublic === true) {
+    const collabs = await db
+      .select({ userId: collaborators.userId })
+      .from(collaborators)
+      .where(eq(collaborators.presentationId, id));
+
+    await Promise.all(
+      collabs.map((c) =>
+        createNotification({
+          userId: c.userId,
+          type: "presentation_shared",
+          title: "Presentacion compartida",
+          message: `"${updated.title}" fue compartida publicamente`,
+          presentationId: id,
+        }).catch(() => {})
+      )
+    );
   }
 
   return Response.json(updated);

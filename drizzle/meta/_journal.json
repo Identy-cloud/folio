@@ -50,6 +50,13 @@
       "when": 1774860491905,
       "tag": "0006_nervous_the_professor",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1774866162086,
+      "tag": "0007_jazzy_zombie",
+      "breakpoints": true
     }
   ]
 }

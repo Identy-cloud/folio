@@ -1,8 +1,8 @@
 import { create } from "zustand";
 import { nanoid } from "nanoid";
-import type { Slide, SlideElement, SlideTransition } from "@/types/elements";
+import type { Slide, SlideElement, SlideTransition, TransitionEasing } from "@/types/elements";
 import { generateMobileElements } from "@/lib/mobile-layout";
-import { THEMES, type Theme } from "@/lib/templates/themes";
+import { THEMES, type Theme, type CustomThemeMap } from "@/lib/templates/themes";
 
 export type ActiveTool = "select" | "text" | "image" | "shape" | "arrow";
 export type SaveStatus = "saved" | "saving" | "error" | "unsaved";
@@ -11,6 +11,7 @@ export type EditingMode = "desktop" | "mobile";
 interface EditorState {
   presentationId: string;
   theme: string;
+  customThemes: CustomThemeMap;
   slides: Slide[];
   activeSlideIndex: number;
   selectedElementIds: string[];
@@ -23,8 +24,11 @@ interface EditorState {
   history: Slide[][];
   historyIndex: number;
 
-  init: (presentationId: string, slides: Slide[], theme?: string) => void;
+  init: (presentationId: string, slides: Slide[], theme?: string, customThemes?: CustomThemeMap) => void;
   getTheme: () => Theme;
+  setCustomThemes: (themes: CustomThemeMap) => void;
+  addCustomTheme: (key: string, theme: Theme) => void;
+  deleteCustomTheme: (key: string) => void;
   setActiveSlide: (index: number) => void;
   addSlide: () => void;
   deleteSlide: (id: string) => void;
@@ -41,6 +45,8 @@ interface EditorState {
   updateSlideBackground: (color: string) => void;
   updateSlideBackgroundImage: (url: string | null) => void;
   updateSlideTransition: (slideId: string, transition: SlideTransition) => void;
+  updateSlideTransitionDuration: (slideId: string, duration: number) => void;
+  updateSlideTransitionEasing: (slideId: string, easing: TransitionEasing) => void;
   updateSlideNotes: (notes: string) => void;
 
   setEditingMode: (mode: EditingMode) => void;
@@ -96,6 +102,7 @@ function debouncedPushHistory() {
 export const useEditorStore = create<EditorState>((set, get) => ({
   presentationId: "",
   theme: "editorial-blue",
+  customThemes: {},
   slides: [],
   activeSlideIndex: 0,
   selectedElementIds: [],
@@ -110,13 +117,14 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   editingTextId: null,
   busyElementIds: new Set<string>(),
 
-  init: (presentationId, slides, theme) => {
+  init: (presentationId, slides, theme, customThemes) => {
     const sorted = [...slides]
       .sort((a, b) => a.order - b.order)
       .map((s) => ({ ...s, transition: s.transition ?? "fade" }));
     set({
       presentationId,
       theme: theme ?? "editorial-blue",
+      customThemes: customThemes ?? {},
       slides: sorted,
       editingMode: "desktop",
       activeSlideIndex: 0,
@@ -339,6 +347,25 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     get().pushHistory();
   },
 
+  updateSlideTransitionDuration: (slideId, duration) => {
+    const { slides } = get();
+    const clamped = Math.max(200, Math.min(2000, duration));
+    const updated = slides.map((s) =>
+      s.id === slideId ? { ...s, transitionDuration: clamped } : s
+    );
+    set({ slides: updated, dirty: true, saveStatus: "unsaved" });
+    get().pushHistory();
+  },
+
+  updateSlideTransitionEasing: (slideId, easing) => {
+    const { slides } = get();
+    const updated = slides.map((s) =>
+      s.id === slideId ? { ...s, transitionEasing: easing } : s
+    );
+    set({ slides: updated, dirty: true, saveStatus: "unsaved" });
+    get().pushHistory();
+  },
+
   updateSlideNotes: (notes) => {
     const { slides, activeSlideIndex } = get();
     const updated = slides.map((s, i) =>
@@ -555,7 +582,22 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   markClean: () => set({ dirty: false }),
 
   getTheme: () => {
-    return THEMES[get().theme] ?? THEMES["editorial-blue"];
+    const { theme, customThemes } = get();
+    return customThemes[theme] ?? THEMES[theme] ?? THEMES["editorial-blue"];
+  },
+
+  setCustomThemes: (themes) => set({ customThemes: themes }),
+
+  addCustomTheme: (key, theme) => {
+    const updated = { ...get().customThemes, [key]: theme };
+    set({ customThemes: updated, dirty: true, saveStatus: "unsaved" as const });
+  },
+
+  deleteCustomTheme: (key) => {
+    const { [key]: _, ...rest } = get().customThemes;
+    const updates: Partial<EditorState> = { customThemes: rest, dirty: true, saveStatus: "unsaved" as const };
+    if (get().theme === key) updates.theme = "editorial-blue";
+    set(updates);
   },
 
   getActiveSlide: () => {

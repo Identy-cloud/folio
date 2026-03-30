@@ -78,7 +78,8 @@ export function ColorPicker({ value, onChange, label }: Props) {
     if (!open) return;
     setRecentColors(getRecentColors());
     import("@/store/editorStore").then(({ useEditorStore }) => {
-      const t = THEMES[useEditorStore.getState().theme];
+      const state = useEditorStore.getState();
+      const t = state.customThemes[state.theme] ?? THEMES[state.theme];
       if (t) setThemeColors([t.background, t.text, t.accent, t.primary].filter((v, i, a) => a.indexOf(v) === i));
     }).catch(() => {});
   }, [open]);

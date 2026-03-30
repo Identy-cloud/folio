@@ -38,12 +38,14 @@ export function ElementPalette() {
   const { t } = useTranslation();
   const addElement = useEditorStore((s) => s.addElement);
   const activeSlide = useEditorStore((s) => s.getActiveSlide());
-  const theme = useEditorStore((s) => THEMES[s.theme] ?? THEMES["editorial-blue"]);
+  const theme = useEditorStore((s) => s.customThemes[s.theme] ?? THEMES[s.theme] ?? THEMES["editorial-blue"]);
   const selectedIds = useEditorStore((s) => s.selectedElementIds);
   const editingMode = useEditorStore((s) => s.editingMode);
   const updateSlideBackground = useEditorStore((s) => s.updateSlideBackground);
   const updateSlideBackgroundImage = useEditorStore((s) => s.updateSlideBackgroundImage);
   const updateSlideTransition = useEditorStore((s) => s.updateSlideTransition);
+  const updateSlideTransitionDuration = useEditorStore((s) => s.updateSlideTransitionDuration);
+  const updateSlideTransitionEasing = useEditorStore((s) => s.updateSlideTransitionEasing);
   const { trigger: triggerUpload, uploading } = useImageUpload();
   const { trigger: triggerBgUpload, uploading: bgUploading } = useBgImageUpload();
   const [showIconPicker, setShowIconPicker] = useState(false);
@@ -237,6 +239,10 @@ export function ElementPalette() {
           <TransitionPicker
             current={activeSlide.transition}
             onChange={(tr) => updateSlideTransition(activeSlide.id, tr)}
+            transitionDuration={activeSlide.transitionDuration}
+            onTransitionDurationChange={(ms) => updateSlideTransitionDuration(activeSlide.id, ms)}
+            transitionEasing={activeSlide.transitionEasing}
+            onTransitionEasingChange={(e) => updateSlideTransitionEasing(activeSlide.id, e)}
             duration={activeSlide.duration}
             onDurationChange={(d) => {
               const slides = useEditorStore.getState().slides;

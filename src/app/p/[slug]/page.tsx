@@ -5,13 +5,15 @@ import { getUserPlan } from "@/lib/stripe";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { ViewerWrapper } from "./viewer-wrapper";
-import type { SlideElement, SlideTransition } from "@/types/elements";
+import type { SlideElement, SlideTransition, TransitionEasing } from "@/types/elements";
 
 interface SlideRow {
   id: string;
   presentationId: string;
   order: number;
   transition: SlideTransition;
+  transitionDuration?: number | null;
+  transitionEasing?: TransitionEasing | null;
   backgroundColor: string;
   backgroundImage: string | null;
   elements: SlideElement[];
@@ -43,6 +45,8 @@ async function getPresentation(slug: string) {
       presentationId: s.presentationId,
       order: s.order,
       transition: (s.transition as SlideTransition) ?? "fade",
+      transitionDuration: s.transitionDuration ?? undefined,
+      transitionEasing: (s.transitionEasing as TransitionEasing) ?? undefined,
       backgroundColor: s.backgroundColor,
       backgroundImage: s.backgroundImage,
       elements: s.elements as SlideElement[],
@@ -115,7 +119,7 @@ export default async function ViewerPage({
       />
       <ViewerWrapper
         title={data.presentation.title}
-        slides={data.slides as SlideRow[]}
+        slides={data.slides}
         showWatermark={data.ownerPlan === "free"}
         presentationId={data.presentation.id}
         hasPassword={!!data.presentation.password}

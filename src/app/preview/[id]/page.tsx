@@ -4,7 +4,7 @@ import { getAuthenticatedUser } from "@/lib/auth";
 import { getUserPlan } from "@/lib/stripe";
 import { and, eq, asc } from "drizzle-orm";
 import { notFound, redirect } from "next/navigation";
-import type { SlideElement, SlideTransition } from "@/types/elements";
+import type { SlideElement, SlideTransition, TransitionEasing } from "@/types/elements";
 import { PreviewClient } from "./preview-client";
 
 export default async function PreviewPage({
@@ -38,6 +38,8 @@ export default async function PreviewPage({
     presentationId: s.presentationId,
     order: s.order,
     transition: (s.transition as SlideTransition) ?? "fade",
+    transitionDuration: s.transitionDuration ?? undefined,
+    transitionEasing: (s.transitionEasing as TransitionEasing) ?? undefined,
     backgroundColor: s.backgroundColor,
     backgroundImage: s.backgroundImage,
     elements: s.elements as SlideElement[],

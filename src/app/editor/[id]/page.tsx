@@ -32,7 +32,7 @@ export default function EditorPage({
         const pres = presResult.status === "fulfilled" && presResult.value.ok
           ? await presResult.value.json()
           : null;
-        init(id, slides, pres?.theme);
+        init(id, slides, pres?.theme, pres?.customThemes as Record<string, import("@/lib/templates/themes").Theme> | undefined);
       } catch {
         setError(t.common.connectionError);
       } finally {

@@ -28,7 +28,8 @@ export function CommandPalette({ open, onClose }: Props) {
   const addSlide = useEditorStore((s) => s.addSlide);
   const activeSlide = useEditorStore((s) => s.getActiveSlide());
   const themeKey = useEditorStore((s) => s.theme);
-  const theme = THEMES[themeKey] ?? THEMES["editorial-blue"];
+  const customThemes = useEditorStore((s) => s.customThemes);
+  const theme = customThemes[themeKey] ?? THEMES[themeKey] ?? THEMES["editorial-blue"];
   const zBase = (activeSlide?.elements.length ?? 0) + 1;
 
   useEffect(() => {
@@ -294,7 +295,7 @@ export function CommandPalette({ open, onClose }: Props) {
         const slide = state.getActiveSlide();
         if (!slide) return;
         if (slide.elements.length > 0 && !confirm("Replace current slide content with this layout?")) return;
-        const th = THEMES[state.theme] ?? THEMES["editorial-blue"];
+        const th = state.customThemes[state.theme] ?? THEMES[state.theme] ?? THEMES["editorial-blue"];
         const elements = layout.generate(th, 1);
         const { slides, activeSlideIndex } = state;
         const updated = slides.map((s, i) =>

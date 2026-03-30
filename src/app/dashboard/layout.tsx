@@ -6,6 +6,7 @@ import { LogoutButton } from "./logout-button";
 import { DeleteAccountButton } from "./delete-account-button";
 import { LocaleSelector } from "@/components/LocaleSelector";
 import { FolioLogo } from "@/components/FolioLogo";
+import { NotificationBell } from "@/components/NotificationBell";
 
 export default async function DashboardLayout({
   children,
@@ -51,6 +52,7 @@ export default async function DashboardLayout({
               </div>
             )}
           </Link>
+          <NotificationBell />
           <LocaleSelector />
           <LogoutButton />
         </div>

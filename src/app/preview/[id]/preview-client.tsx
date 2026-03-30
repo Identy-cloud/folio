@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { ArrowLeft, Eye } from "@phosphor-icons/react";
-import type { SlideElement, SlideTransition } from "@/types/elements";
+import type { SlideElement, SlideTransition, TransitionEasing } from "@/types/elements";
 
 const ViewerClient = dynamic(
   () => import("@/app/p/[slug]/viewer-client").then((m) => m.ViewerClient),
@@ -23,6 +23,8 @@ interface Slide {
   presentationId: string;
   order: number;
   transition: SlideTransition;
+  transitionDuration?: number;
+  transitionEasing?: TransitionEasing;
   backgroundColor: string;
   backgroundImage: string | null;
   elements: SlideElement[];

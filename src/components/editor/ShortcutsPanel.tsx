@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useMemo } from "react";
 import { DialogShell } from "@/components/ui/DialogShell";
 
 interface Props {
@@ -7,105 +8,135 @@ interface Props {
   onClose: () => void;
 }
 
-const isMac = typeof navigator !== "undefined" && navigator.platform.startsWith("Mac");
+const isMac = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform);
 const mod = isMac ? "⌘" : "Ctrl";
 
-const GROUPS = [
+const GROUPS: { title: string; items: { keys: string; label: string }[] }[] = [
   {
     title: "General",
-    shortcuts: [
-      { keys: `${mod} + Z`, label: "Undo" },
-      { keys: `${mod} + Shift + Z`, label: "Redo" },
-      { keys: `${mod} + C`, label: "Copy element" },
-      { keys: `${mod} + V`, label: "Paste element" },
-      { keys: `${mod} + D`, label: "Duplicate" },
-      { keys: `${mod} + A`, label: "Select all" },
-      { keys: "Escape", label: "Deselect / close panel" },
-      { keys: "?", label: "Shortcuts" },
+    items: [
+      { keys: `${mod}+Z`, label: "Undo" },
+      { keys: `${mod}+⇧+Z`, label: "Redo" },
+      { keys: `${mod}+A`, label: "Select all" },
+      { keys: "Esc", label: "Deselect / reset tool" },
+      { keys: "?", label: "Toggle shortcuts panel" },
+      { keys: "/", label: "Command palette" },
     ],
   },
   {
     title: "Elements",
-    shortcuts: [
-      { keys: "Delete / ⌫", label: "Delete element" },
-      { keys: "← → ↑ ↓", label: "Move 1px" },
-      { keys: "Shift + arrows", label: "Move 10px" },
-      { keys: "Alt + arrows", label: "Resize element" },
-      { keys: "Shift + click", label: "Multi-select" },
-      { keys: "1-9 / 0", label: "Opacity 10%-90% / 100%" },
-      { keys: "Tab / Shift+Tab", label: "Cycle through elements" },
-      { keys: "Shift + rotate", label: "Snap rotation to 15°" },
-      { keys: "Shift + H", label: "Flip horizontal (image)" },
-      { keys: "Shift + V", label: "Flip vertical (image)" },
-      { keys: "Alt + drag", label: "Clone element" },
-      { keys: "Double-click canvas", label: "Add text" },
+    items: [
+      { keys: `${mod}+C`, label: "Copy" },
+      { keys: `${mod}+V`, label: "Paste" },
+      { keys: `${mod}+D`, label: "Duplicate" },
+      { keys: "Del / ⌫", label: "Delete" },
+      { keys: "← → ↑ ↓", label: "Move 1 px" },
+      { keys: "⇧+Arrow", label: "Move 10 px" },
+      { keys: "Alt+Arrow", label: "Resize" },
+      { keys: "1–9 / 0", label: "Opacity 10%–90% / 100%" },
+      { keys: "Tab / ⇧+Tab", label: "Cycle elements" },
+      { keys: `${mod}+Alt+C`, label: "Copy style" },
+      { keys: `${mod}+Alt+V`, label: "Paste style" },
+      { keys: "⇧+H", label: "Flip horizontal (image)" },
+      { keys: "⇧+V", label: "Flip vertical (image)" },
+      { keys: "Alt+drag", label: "Clone element" },
     ],
   },
   {
-    title: "Groups & Style",
-    shortcuts: [
-      { keys: `${mod} + ]`, label: "Bring forward" },
-      { keys: `${mod} + [`, label: "Send backward" },
-      { keys: `${mod} + Shift + M`, label: "Center on canvas" },
-      { keys: `${mod} + Shift + D`, label: "Duplicate current slide" },
-      { keys: `${mod} + G`, label: "Group elements" },
-      { keys: `${mod} + Shift + G`, label: "Ungroup" },
-      { keys: `${mod} + Alt + C`, label: "Copy style" },
-      { keys: `${mod} + Alt + V`, label: "Paste style" },
+    title: "Layers & Groups",
+    items: [
+      { keys: `${mod}+G`, label: "Group" },
+      { keys: `${mod}+⇧+G`, label: "Ungroup" },
+      { keys: `${mod}+]`, label: "Bring forward" },
+      { keys: `${mod}+[`, label: "Send backward" },
+      { keys: `${mod}+⇧+]`, label: "Bring to front" },
+      { keys: `${mod}+⇧+[`, label: "Send to back" },
+      { keys: `${mod}+⇧+M`, label: "Center on canvas" },
     ],
   },
   {
-    title: "Canvas",
-    shortcuts: [
-      { keys: `${mod} + scroll`, label: "Zoom in / out" },
-      { keys: "Right-click", label: "Context menu" },
-      { keys: "Drag on empty area", label: "Rubber band select" },
-      { keys: `${mod} + ↑ / ↓`, label: "Reorder slide up / down" },
-      { keys: `${mod} + Enter`, label: "Add new slide" },
-      { keys: `${mod} + F`, label: "Find" },
-      { keys: `${mod} + H`, label: "Find & Replace" },
-      { keys: "Space + drag", label: "Pan canvas" },
-      { keys: `${mod} + 0`, label: "Reset zoom to fit" },
-      { keys: "PageUp / PageDown", label: "Previous / next slide" },
-      { keys: "/", label: "Command palette" },
+    title: "Canvas & Zoom",
+    items: [
+      { keys: `${mod}+scroll`, label: "Zoom in / out" },
+      { keys: `${mod}+0`, label: "Reset zoom to fit" },
+      { keys: "Space+drag", label: "Pan canvas" },
+      { keys: "Double-click", label: "Add text element" },
+    ],
+  },
+  {
+    title: "Slides",
+    items: [
+      { keys: `${mod}+Enter`, label: "New slide" },
+      { keys: `${mod}+⇧+D`, label: "Duplicate slide" },
+      { keys: "PgUp / PgDn", label: "Previous / next slide" },
+      { keys: `${mod}+↑ / ↓`, label: "Reorder slide" },
       { keys: "F2", label: "Slide sorter" },
-      { keys: "F5", label: "Start presentation" },
-      { keys: "F11", label: "Compact mode (hide panels)" },
     ],
   },
   {
-    title: "Viewer",
-    shortcuts: [
-      { keys: "→ / Space", label: "Next slide" },
-      { keys: "←", label: "Previous slide" },
-      { keys: "F", label: "Fullscreen" },
-      { keys: "Escape", label: "Exit fullscreen" },
+    title: "View & Tools",
+    items: [
+      { keys: `${mod}+F`, label: "Find" },
+      { keys: `${mod}+H`, label: "Find & replace" },
+      { keys: "F5", label: "Start presentation" },
+      { keys: "F11", label: "Compact mode" },
     ],
   },
 ];
 
 export function ShortcutsPanel({ open, onClose }: Props) {
+  const [query, setQuery] = useState("");
+
+  const filtered = useMemo(() => {
+    const q = query.toLowerCase().trim();
+    if (!q) return GROUPS;
+    return GROUPS.map((g) => ({
+      ...g,
+      items: g.items.filter(
+        (s) => s.label.toLowerCase().includes(q) || s.keys.toLowerCase().includes(q),
+      ),
+    })).filter((g) => g.items.length > 0);
+  }, [query]);
+
   return (
     <DialogShell
       open={open}
       ariaLabel="Keyboard shortcuts"
       onClose={onClose}
-      className="w-full max-w-md rounded bg-[#1e1e1e] border border-neutral-700 p-6 shadow-xl mx-4"
+      className="fixed inset-0 flex flex-col bg-[#1e1e1e] md:static md:inset-auto md:w-full md:max-w-lg md:max-h-[80vh] md:rounded md:border md:border-neutral-700 md:shadow-xl md:mx-4"
     >
-      <h3 className="font-display text-lg tracking-tight text-neutral-200">
-        KEYBOARD SHORTCUTS
-      </h3>
-      <div className="mt-4 space-y-5">
-        {GROUPS.map((group) => (
-          <div key={group.title}>
-            <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-500 mb-2">
-              {group.title}
+      <div className="flex items-center justify-between px-5 pt-5 pb-3">
+        <h3 className="font-display text-sm tracking-tight text-neutral-200 uppercase">
+          Keyboard Shortcuts
+        </h3>
+        <button onClick={onClose} className="text-neutral-500 hover:text-neutral-300 text-xs">
+          Esc
+        </button>
+      </div>
+      <div className="px-5 pb-3">
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search shortcuts..."
+          autoFocus
+          className="w-full rounded bg-neutral-800 border border-neutral-700 px-3 py-2 text-xs text-neutral-200 placeholder:text-neutral-500 outline-none focus:border-neutral-500"
+        />
+      </div>
+      <div className="flex-1 overflow-y-auto px-5 pb-5 space-y-4">
+        {filtered.length === 0 && (
+          <p className="text-xs text-neutral-500 py-4 text-center">No matching shortcuts</p>
+        )}
+        {filtered.map((g) => (
+          <div key={g.title}>
+            <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-500 mb-1.5">
+              {g.title}
             </p>
-            <div className="space-y-1">
-              {group.shortcuts.map((s) => (
+            <div className="space-y-0.5">
+              {g.items.map((s) => (
                 <div key={s.keys} className="flex items-center justify-between py-1">
                   <span className="text-xs text-neutral-400">{s.label}</span>
-                  <kbd className="rounded bg-neutral-800 px-2 py-0.5 text-[10px] font-mono text-neutral-300">
+                  <kbd className="shrink-0 ml-4 rounded bg-neutral-800 px-2 py-0.5 text-[10px] font-mono text-neutral-300">
                     {s.keys}
                   </kbd>
                 </div>
@@ -114,12 +145,6 @@ export function ShortcutsPanel({ open, onClose }: Props) {
           </div>
         ))}
       </div>
-      <button
-        onClick={onClose}
-        className="mt-5 w-full rounded px-4 py-2 text-xs text-neutral-400 hover:bg-neutral-800 transition-colors"
-      >
-        Close
-      </button>
     </DialogShell>
   );
 }

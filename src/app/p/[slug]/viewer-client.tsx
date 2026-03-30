@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import DOMPurify from "dompurify";
-import type { SlideElement, TextElement, TableElement, SlideTransition } from "@/types/elements";
+import type { SlideElement, TextElement, TableElement, SlideTransition, TransitionEasing } from "@/types/elements";
 import { getElementAnimationStyle } from "@/lib/element-animation";
 import { ShapeRenderer, ArrowRenderer, DividerRenderer, EmbedRenderer, LineRenderer, TableRenderer, VideoRenderer, IconRenderer } from "@/components/elements";
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/image-utils";
@@ -11,12 +11,14 @@ import { CommentsPanel } from "./comments-panel";
 
 const SLIDE_W = 1920;
 const SLIDE_H = 1080;
-const TRANSITION_MS = 400;
+const DEFAULT_TRANSITION_MS = 400;
 
 interface Slide {
   id: string;
   order: number;
   transition: SlideTransition;
+  transitionDuration?: number;
+  transitionEasing?: TransitionEasing;
   backgroundColor: string;
   backgroundImage: string | null;
   elements: SlideElement[];
@@ -105,11 +107,13 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
   // When current changes, start transition
   useEffect(() => {
     if (current === displayed) return;
-    const t = slides[current]?.transition ?? "fade";
+    const incomingSlide = slides[current];
+    const t = incomingSlide?.transition ?? "fade";
     if (t === "none") {
       setDisplayed(current);
       return;
     }
+    const ms = incomingSlide?.transitionDuration ?? DEFAULT_TRANSITION_MS;
     setTransitioning(true);
     setPhase("enter");
 
@@ -123,7 +127,7 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
       setDisplayed(current);
       setTransitioning(false);
       setPhase("idle");
-    }, TRANSITION_MS);
+    }, ms);
 
     return () => { clearTimeout(timer); cancelAnimationFrame(raf); };
   }, [current, displayed, slides]);
@@ -260,11 +264,13 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
   const outgoing = slides[displayed];
   const incoming = slides[current];
   const transType = incoming?.transition ?? "fade";
+  const transMs = incoming?.transitionDuration ?? DEFAULT_TRANSITION_MS;
+  const transEase = incoming?.transitionEasing ?? "ease";
   const dir = current > displayed ? 1 : -1;
 
   function getTransitionStyles(role: "in" | "out"): React.CSSProperties {
-    const dur = `${TRANSITION_MS}ms`;
-    const ease = "cubic-bezier(0.22, 1, 0.36, 1)";
+    const dur = `${transMs}ms`;
+    const ease = transEase;
     const isEntering = phase === "enter";
 
     if (transType === "fade") {

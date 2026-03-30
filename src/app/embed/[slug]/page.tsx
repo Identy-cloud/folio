@@ -3,7 +3,7 @@ import { presentations, slides } from "@/db/schema";
 import { getUserPlan } from "@/lib/stripe";
 import { eq, asc } from "drizzle-orm";
 import { notFound } from "next/navigation";
-import type { SlideElement, SlideTransition } from "@/types/elements";
+import type { SlideElement, SlideTransition, TransitionEasing } from "@/types/elements";
 import type { Metadata } from "next";
 import { EmbedViewer } from "./embed-viewer";
 
@@ -12,6 +12,8 @@ interface SlideRow {
   presentationId: string;
   order: number;
   transition: SlideTransition;
+  transitionDuration?: number;
+  transitionEasing?: TransitionEasing;
   backgroundColor: string;
   backgroundImage: string | null;
   elements: SlideElement[];
@@ -71,6 +73,8 @@ export default async function EmbedPage({
     presentationId: s.presentationId,
     order: s.order,
     transition: (s.transition as SlideTransition) ?? "fade",
+    transitionDuration: s.transitionDuration ?? undefined,
+    transitionEasing: (s.transitionEasing as TransitionEasing) ?? undefined,
     backgroundColor: s.backgroundColor,
     backgroundImage: s.backgroundImage,
     elements: s.elements as SlideElement[],

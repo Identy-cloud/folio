@@ -50,7 +50,8 @@ const PREVIEW_RECTS: Record<string, { x: number; y: number; w: number; h: number
 
 export function LayoutPicker({ open, onClose }: Props) {
   const themeKey = useEditorStore((s) => s.theme);
-  const theme = THEMES[themeKey] ?? THEMES["editorial-blue"];
+  const customThemes = useEditorStore((s) => s.customThemes);
+  const theme = customThemes[themeKey] ?? THEMES[themeKey] ?? THEMES["editorial-blue"];
   const activeSlide = useEditorStore((s) => s.getActiveSlide());
 
   if (!open) return null;
@@ -64,7 +65,7 @@ export function LayoutPicker({ open, onClose }: Props) {
     if (hasContent && !confirm("Replace current slide content with this layout?")) return;
 
     const state = useEditorStore.getState();
-    const th = THEMES[state.theme] ?? THEMES["editorial-blue"];
+    const th = state.customThemes[state.theme] ?? THEMES[state.theme] ?? THEMES["editorial-blue"];
     const elements = layout.generate(th, 1);
     const { slides, activeSlideIndex } = state;
     const updated = slides.map((s, i) =>

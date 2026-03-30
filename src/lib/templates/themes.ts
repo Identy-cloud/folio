@@ -8,6 +8,8 @@ export interface Theme {
   label: string;
 }
 
+export type CustomThemeMap = Record<string, Theme>;
+
 export const THEMES: Record<string, Theme> = {
   "editorial-blue": {
     primary: "#1a1aff",

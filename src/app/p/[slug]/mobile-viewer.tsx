@@ -2,7 +2,7 @@
 
 import { useState, useRef, useMemo, useCallback, useEffect } from "react";
 import DOMPurify from "dompurify";
-import type { SlideElement, TextElement, ShapeElement, TableElement, VideoElement, IconElement, SlideTransition } from "@/types/elements";
+import type { SlideElement, TextElement, ShapeElement, TableElement, VideoElement, IconElement, SlideTransition, TransitionEasing } from "@/types/elements";
 import { getElementAnimationStyle } from "@/lib/element-animation";
 import { VideoRenderer } from "@/components/elements/VideoRenderer";
 import { IconRenderer } from "@/components/elements/IconRenderer";
@@ -11,6 +11,8 @@ import { useTranslation } from "@/lib/i18n/context";
 interface Slide {
   id: string;
   transition: SlideTransition;
+  transitionDuration?: number;
+  transitionEasing?: TransitionEasing;
   backgroundColor: string;
   elements: SlideElement[];
   mobileElements?: SlideElement[] | null;
@@ -22,7 +24,7 @@ interface Props {
   showWatermark?: boolean;
 }
 
-const TRANSITION_MS = 350;
+const DEFAULT_TRANSITION_MS = 350;
 
 export function MobileViewer({ title, slides, showWatermark }: Props) {
   const { t } = useTranslation();
@@ -47,8 +49,10 @@ export function MobileViewer({ title, slides, showWatermark }: Props) {
 
   useEffect(() => {
     if (current === displayed) return;
-    const tr = slides[current]?.transition ?? "fade";
+    const incomingSlide = slides[current];
+    const tr = incomingSlide?.transition ?? "fade";
     if (tr === "none") { setDisplayed(current); return; }
+    const ms = incomingSlide?.transitionDuration ?? DEFAULT_TRANSITION_MS;
     setAnimating(true);
     setPhase("enter");
     const raf = requestAnimationFrame(() => setPhase("active"));
@@ -56,7 +60,7 @@ export function MobileViewer({ title, slides, showWatermark }: Props) {
       setDisplayed(current);
       setAnimating(false);
       setPhase("idle");
-    }, TRANSITION_MS);
+    }, ms);
     return () => { clearTimeout(timer); cancelAnimationFrame(raf); };
   }, [current, displayed, slides]);
 
@@ -88,12 +92,14 @@ export function MobileViewer({ title, slides, showWatermark }: Props) {
 
   const activeSlide = incoming ?? outgoing;
   const transType = incoming?.transition ?? "fade";
+  const transMs = incoming?.transitionDuration ?? DEFAULT_TRANSITION_MS;
+  const transEase = incoming?.transitionEasing ?? "ease";
   const dir = current > displayed ? 1 : -1;
 
   function getStyle(role: "in" | "out"): React.CSSProperties {
     if (!animating) return {};
-    const dur = `${TRANSITION_MS}ms`;
-    const ease = "cubic-bezier(0.22, 1, 0.36, 1)";
+    const dur = `${transMs}ms`;
+    const ease = transEase;
     const isEntering = phase === "enter";
 
     if (transType === "fade") {

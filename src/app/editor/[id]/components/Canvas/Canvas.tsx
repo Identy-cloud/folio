@@ -76,7 +76,7 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
   const clearSelection = useEditorStore((s) => s.clearSelection);
   const activeTool = useEditorStore((s) => s.activeTool);
   const addElement = useEditorStore((s) => s.addElement);
-  const theme = useEditorStore((s) => THEMES[s.theme] ?? THEMES["editorial-blue"]);
+  const theme = useEditorStore((s) => s.customThemes[s.theme] ?? THEMES[s.theme] ?? THEMES["editorial-blue"]);
   const editingMode = useEditorStore((s) => s.editingMode);
   const editingTextId = useEditorStore((s) => s.editingTextId);
 

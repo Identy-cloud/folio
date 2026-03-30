@@ -14,7 +14,7 @@ import { useEditorStore } from "@/store/editorStore";
 import { useSessionGuard } from "@/hooks/useSessionGuard";
 import {
   StackSimple, PlusCircle, SlidersHorizontal,
-  ArrowCounterClockwise, ArrowClockwise,
+  ArrowCounterClockwise, ArrowClockwise, Question,
 } from "@phosphor-icons/react";
 import { BottomSheet } from "@/components/ui/BottomSheet";
 import { ShortcutsPanel } from "@/components/editor/ShortcutsPanel";
@@ -223,6 +223,15 @@ export function EditorLayout() {
           <MobilePropertiesPanel onClose={() => setMobilePanel(null)} />
         )}
       </BottomSheet>
+
+      {/* Help button – bottom-right */}
+      <button
+        onClick={() => setShortcutsOpen(true)}
+        className="fixed bottom-4 right-4 z-40 flex h-8 w-8 items-center justify-center rounded-full bg-neutral-800/80 text-neutral-400 hover:text-white hover:bg-neutral-700 shadow-lg backdrop-blur-sm transition-colors"
+        aria-label="Keyboard shortcuts"
+      >
+        <Question size={16} weight="bold" />
+      </button>
 
       <FindReplace open={findOpen} onClose={() => setFindOpen(false)} showReplace={findShowReplace} />
       <SlideSorter open={sorterOpen} onClose={() => setSorterOpen(false)} />
