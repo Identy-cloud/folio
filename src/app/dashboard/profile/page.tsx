@@ -1,13 +1,16 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
-import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Camera, DownloadSimple, Trash, Warning } from "@phosphor-icons/react";
+import { ArrowLeft, DownloadSimple, Copy, Check } from "@phosphor-icons/react";
 import { useTranslation } from "@/lib/i18n/context";
-import { LocaleSelector } from "@/components/LocaleSelector";
-import { createClient } from "@/lib/supabase/client";
+import { ProfileAvatar } from "./ProfileAvatar";
+import { PersonalInfoSection } from "./PersonalInfoSection";
+import { PlanUsageSection } from "./PlanUsageSection";
+import { PreferencesSection } from "./PreferencesSection";
+import { SecuritySection } from "./SecuritySection";
+import { DangerZone } from "./DangerZone";
 
 interface Profile {
   id: string;
@@ -17,6 +20,7 @@ interface Profile {
   bio: string | null;
   avatarUrl: string | null;
   plan: string;
+  storageUsed: number;
   emailDigest: boolean;
   createdAt: string;
   presentationCount: number;
@@ -26,20 +30,19 @@ export default function ProfilePage() {
   const { t } = useTranslation();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [name, setName] = useState("");
-  const [username, setUsername] = useState("");
-  const [bio, setBio] = useState("");
-  const [usernameError, setUsernameError] = useState("");
-  const [uploading, setUploading] = useState(false);
   const [exporting, setExporting] = useState(false);
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [changingPassword, setChangingPassword] = useState(false);
-  const [deletePassword, setDeletePassword] = useState("");
-  const [confirmingDelete, setConfirmingDelete] = useState(false);
-  const [deleting, setDeleting] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [copiedUrl, setCopiedUrl] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/profile")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => { if (data) setProfile(data); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, []);
+
+  const patch = useCallback((data: Record<string, unknown>) => {
+    setProfile((p) => (p ? { ...p, ...data } : p));
+  }, []);
 
   const handleExportData = useCallback(async () => {
     setExporting(true);
@@ -54,537 +57,90 @@ export default function ProfilePage() {
       a.download = `folio-data-export-${new Date().toISOString().slice(0, 10)}.json`;
       a.click();
       URL.revokeObjectURL(url);
-    } catch {
-      toast.error(t.common.connectionError);
-    } finally {
-      setExporting(false);
-    }
+    } catch { toast.error(t.common.connectionError); }
+    finally { setExporting(false); }
   }, [t]);
 
-  async function handleChangePassword() {
-    if (!newPassword.trim() || newPassword.length < 8) {
-      toast.error("Password must be at least 8 characters");
-      return;
-    }
-    if (newPassword !== confirmPassword) {
-      toast.error("Passwords do not match");
-      return;
-    }
-    setChangingPassword(true);
-    try {
-      const supabase = createClient();
-      const { error } = await supabase.auth.updateUser({ password: newPassword });
-      if (error) {
-        toast.error(error.message);
-      } else {
-        toast.success("Password updated");
-        setNewPassword("");
-        setConfirmPassword("");
-      }
-    } catch {
-      toast.error(t.common.connectionError);
-    } finally {
-      setChangingPassword(false);
-    }
+  function copyPortfolioUrl() {
+    navigator.clipboard.writeText(`${window.location.origin}/u/${profile?.username}`);
+    setCopiedUrl(true);
+    toast.success("URL copiada");
+    setTimeout(() => setCopiedUrl(false), 2000);
   }
 
-  async function handleDeleteAccount() {
-    if (!deletePassword.trim()) return;
-    setDeleting(true);
-    try {
-      const res = await fetch("/api/account", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password: deletePassword }),
-      });
-      if (res.ok) {
-        window.location.href = "/login";
-      } else {
-        const data: { error?: string } = await res.json().catch(() => ({}));
-        if (data.error === "Invalid password") {
-          toast.error(t.auth.wrongPassword);
-        } else {
-          toast.error(t.common.error ?? "Failed to delete account");
-        }
-      }
-    } catch {
-      toast.error(t.common.connectionError ?? "Connection error");
-    }
-    setDeleting(false);
-    setDeletePassword("");
-  }
-
-  useEffect(() => {
-    fetch("/api/profile")
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
-        if (data) {
-          setProfile(data);
-          setName(data.name ?? "");
-          setUsername(data.username ?? "");
-          setBio(data.bio ?? "");
-        }
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, []);
-
-  async function handleSaveName() {
-    if (!name.trim() || name === profile?.name) return;
-    setSaving(true);
-    const res = await fetch("/api/profile", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: name.trim() }),
-    });
-    if (res.ok) {
-      const data = await res.json();
-      setProfile((p) => (p ? { ...p, ...data } : p));
-      toast.success(t.common.save);
-    } else {
-      toast.error(t.common.error);
-    }
-    setSaving(false);
-  }
-
-  async function handleSaveProfile() {
-    setUsernameError("");
-    const usernameVal = username.trim().toLowerCase() || null;
-    if (usernameVal && !/^[a-zA-Z0-9][a-zA-Z0-9-]{1,28}[a-zA-Z0-9]$/.test(usernameVal)) {
-      setUsernameError("3-30 chars, alphanumeric and hyphens only");
-      return;
-    }
-    setSaving(true);
-    const res = await fetch("/api/profile", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username: usernameVal, bio: bio.trim() || null }),
-    });
-    if (res.ok) {
-      const data = await res.json();
-      setProfile((p) => (p ? { ...p, ...data } : p));
-      toast.success(t.common.save);
-    } else {
-      const err = await res.json().catch(() => ({ error: "Error" }));
-      if (err.error === "Username already taken") setUsernameError("Username already taken");
-      else toast.error(t.common.error);
-    }
-    setSaving(false);
-  }
-
-  async function handleAvatarUpload(file: File) {
-    if (!file.type.startsWith("image/")) return;
-    setUploading(true);
-    try {
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ contentType: file.type, filename: file.name }),
-      });
-      if (!res.ok) { toast.error(t.editor.uploadError); return; }
-
-      const { signedUrl, publicUrl } = await res.json();
-      const putRes = await fetch(signedUrl, {
-        method: "PUT",
-        headers: { "Content-Type": file.type },
-        body: file,
-      });
-      if (!putRes.ok) { toast.error(t.editor.uploadFileError); return; }
-
-      const patchRes = await fetch("/api/profile", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ avatarUrl: publicUrl }),
-      });
-      if (patchRes.ok) {
-        const data = await patchRes.json();
-        setProfile((p) => (p ? { ...p, ...data } : p));
-        toast.success(t.common.save);
-      }
-    } catch {
-      toast.error(t.common.connectionError);
-    } finally {
-      setUploading(false);
-    }
-  }
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-32">
-        <span className="text-sm text-neutral-500">{t.common.loading}</span>
-      </div>
-    );
-  }
-
-  if (!profile) {
-    return (
-      <div className="flex items-center justify-center py-32">
-        <span className="text-sm text-red-400">{t.common.error}</span>
-      </div>
-    );
-  }
-
-  const initials = (profile.name ?? profile.email)
-    .split(" ")
-    .map((w) => w[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-
-  const planLabels: Record<string, string> = {
-    free: "Free",
-    pro: "Pro",
-    team: "Team",
-  };
+  if (loading) return <div className="flex items-center justify-center py-32"><span className="text-sm text-neutral-500">{t.common.loading}</span></div>;
+  if (!profile) return <div className="flex items-center justify-center py-32"><span className="text-sm text-red-400">{t.common.error}</span></div>;
 
   return (
     <div className="mx-auto max-w-lg space-y-8 py-4 sm:py-8">
       <div className="flex items-center gap-3">
-        <Link
-          href="/dashboard"
-          className="flex h-8 w-8 items-center justify-center rounded text-neutral-400 hover:bg-neutral-800 hover:text-white transition-colors"
-          aria-label="Back"
-        >
+        <Link href="/dashboard" className="flex h-8 w-8 items-center justify-center rounded text-neutral-400 hover:bg-neutral-800 hover:text-white transition-colors" aria-label="Back">
           <ArrowLeft size={18} />
         </Link>
-        <h2 className="font-display text-2xl tracking-tight sm:text-3xl">
-          {t.dashboard.profile ?? "PERFIL"}
-        </h2>
+        <h2 className="font-display text-2xl tracking-tight sm:text-3xl">{t.dashboard.profile ?? "PERFIL"}</h2>
       </div>
 
-      {/* Avatar */}
-      <div className="flex items-center gap-5">
-        <div className="relative">
-          {profile.avatarUrl ? (
-            <Image
-              src={profile.avatarUrl}
-              alt=""
-              width={72}
-              height={72}
-              className="rounded-full object-cover"
-              style={{ width: 72, height: 72 }}
-            />
-          ) : (
-            <div className="flex h-[72px] w-[72px] items-center justify-center rounded-full bg-neutral-700 text-lg font-medium text-neutral-300">
-              {initials}
-            </div>
-          )}
-          <button
-            onClick={() => inputRef.current?.click()}
-            disabled={uploading}
-            className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-neutral-800 border border-neutral-600 text-neutral-300 hover:bg-neutral-700 hover:text-white transition-colors disabled:opacity-50"
-            aria-label="Change avatar"
-          >
-            <Camera size={14} />
-          </button>
-          <input
-            ref={inputRef}
-            type="file"
-            accept="image/jpeg,image/png,image/webp"
-            className="hidden"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) handleAvatarUpload(file);
-              e.target.value = "";
-            }}
-          />
-        </div>
-        <div>
-          <p className="text-sm text-neutral-200">{profile.name ?? profile.email}</p>
-          <p className="text-xs text-neutral-500">{profile.email}</p>
-        </div>
-      </div>
+      <ProfileAvatar profile={profile} onUpdate={patch} />
+      <PersonalInfoSection profile={profile} onUpdate={patch} />
 
-      {/* Name */}
-      <div className="space-y-1.5">
-        <label className="block text-[10px] font-medium uppercase tracking-wider text-neutral-500">
-          {t.dashboard.profileName ?? "Nombre"}
-        </label>
-        <div className="flex gap-2">
-          <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder={profile.email}
-            className="flex-1 border-b border-neutral-700 bg-transparent px-2 py-2 text-sm text-neutral-200 outline-none focus:border-white transition-colors"
-          />
-          <button
-            onClick={handleSaveName}
-            disabled={saving || !name.trim() || name === profile.name}
-            className="shrink-0 bg-white px-4 py-2 text-xs font-medium tracking-widest text-[#161616] uppercase hover:bg-neutral-200 transition-colors disabled:opacity-30"
-          >
-            {saving ? "..." : t.common.save}
-          </button>
-        </div>
-      </div>
-
-      {/* Username */}
-      <div className="space-y-1.5">
-        <label className="block text-[10px] font-medium uppercase tracking-wider text-neutral-500">
-          Username
-        </label>
-        <input
-          value={username}
-          onChange={(e) => { setUsername(e.target.value); setUsernameError(""); }}
-          placeholder="your-username"
-          className="w-full border-b border-neutral-700 bg-transparent px-2 py-2 text-sm text-neutral-200 outline-none focus:border-white transition-colors"
-        />
-        {usernameError && (
-          <p className="text-xs text-red-400">{usernameError}</p>
-        )}
-        {username.trim() && !usernameError && (
-          <p className="text-xs text-neutral-500">
-            folio.app/u/{username.trim().toLowerCase()}
-          </p>
-        )}
-      </div>
-
-      {/* Bio */}
-      <div className="space-y-1.5">
-        <label className="block text-[10px] font-medium uppercase tracking-wider text-neutral-500">
-          Bio
-        </label>
-        <textarea
-          value={bio}
-          onChange={(e) => setBio(e.target.value)}
-          placeholder="Short bio for your portfolio page"
-          maxLength={300}
-          rows={3}
-          className="w-full resize-none border-b border-neutral-700 bg-transparent px-2 py-2 text-sm text-neutral-200 outline-none focus:border-white transition-colors"
-        />
-        <div className="flex items-center justify-between">
-          <p className="text-xs text-neutral-600">{bio.length}/300</p>
-          <button
-            onClick={handleSaveProfile}
-            disabled={saving || (username === (profile.username ?? "") && bio === (profile.bio ?? ""))}
-            className="shrink-0 bg-white px-4 py-2 text-xs font-medium tracking-widest text-[#161616] uppercase hover:bg-neutral-200 transition-colors disabled:opacity-30"
-          >
-            {saving ? "..." : t.common.save}
-          </button>
-        </div>
-      </div>
-
-      {/* Email (read-only) */}
-      <div className="space-y-1.5">
-        <label className="block text-[10px] font-medium uppercase tracking-wider text-neutral-500">
-          Email
-        </label>
-        <p className="border-b border-neutral-800 px-2 py-2 text-sm text-neutral-400">
-          {profile.email}
-        </p>
-      </div>
-
-      {/* Plan */}
-      <div className="flex items-center justify-between border border-neutral-800 p-4">
-        <div>
-          <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-500">
-            {t.dashboard.profilePlan ?? "Plan"}
-          </p>
-          <p className="mt-1 text-lg font-medium text-neutral-200">
-            {planLabels[profile.plan] ?? profile.plan}
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          {profile.plan !== "free" && (
-            <button
-              onClick={async () => {
-                const res = await fetch("/api/stripe/portal", { method: "POST" });
-                const data = await res.json();
-                if (data.url) window.location.href = data.url;
-              }}
-              className="text-xs tracking-[0.2em] text-neutral-500 uppercase hover:text-white transition-colors"
-            >
-              Manage
+      {/* Portfolio link */}
+      {profile.username && (
+        <div className="border border-neutral-800 p-4">
+          <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-500">Portfolio publico</p>
+          <div className="mt-2 flex items-center gap-2">
+            <p className="flex-1 truncate text-sm text-neutral-300">
+              {typeof window !== "undefined" ? window.location.origin : ""}/u/{profile.username}
+            </p>
+            <button onClick={copyPortfolioUrl} aria-label="Copy URL" className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-neutral-800 text-neutral-400 hover:bg-neutral-700 hover:text-white transition-colors">
+              {copiedUrl ? <Check size={14} /> : <Copy size={14} />}
             </button>
-          )}
-          <Link
-            href="/pricing"
-            className="text-xs tracking-[0.2em] text-neutral-400 uppercase hover:text-white transition-colors"
-          >
-            {t.dashboard.profileUpgrade ?? "Ver planes"}
-          </Link>
-        </div>
-      </div>
-
-      {/* Stats */}
-      <div className="grid grid-cols-2 gap-4">
-        <div className="border border-neutral-800 p-4">
-          <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-500">
-            {t.dashboard.profilePresentations ?? "Presentaciones"}
-          </p>
-          <p className="mt-1 font-display text-2xl tracking-tight">
-            {profile.presentationCount}
-          </p>
-        </div>
-        <div className="border border-neutral-800 p-4">
-          <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-500">
-            {t.dashboard.profileMember ?? "Miembro desde"}
-          </p>
-          <p className="mt-1 text-sm text-neutral-300">
-            {new Date(profile.createdAt).toLocaleDateString()}
-          </p>
-        </div>
-      </div>
-
-      {/* Email digest toggle */}
-      <div className="border border-neutral-800 p-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-500">
-              Weekly analytics email
-            </p>
-            <p className="mt-1 text-xs text-neutral-500">
-              Receive a weekly summary of your presentation views every Monday
-            </p>
+            <Link href={`/u/${profile.username}`} target="_blank" className="text-xs tracking-[0.15em] text-neutral-500 uppercase hover:text-white transition-colors">
+              Ver
+            </Link>
           </div>
-          <button
-            onClick={async () => {
-              const next = !profile.emailDigest;
-              setProfile((p) => (p ? { ...p, emailDigest: next } : p));
-              const res = await fetch("/api/profile", {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ emailDigest: next }),
-              });
-              if (res.ok) {
-                toast.success(next ? "Digest enabled" : "Digest disabled");
-              } else {
-                setProfile((p) => (p ? { ...p, emailDigest: !next } : p));
-                toast.error(t.common.error);
-              }
-            }}
-            className={`relative h-6 w-11 shrink-0 cursor-pointer rounded-full transition-colors ${
-              profile.emailDigest ? "bg-white" : "bg-neutral-700"
-            }`}
-            role="switch"
-            aria-checked={profile.emailDigest}
-          >
-            <span
-              className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-neutral-900 transition-transform ${
-                profile.emailDigest ? "translate-x-5" : "translate-x-0"
-              }`}
-            />
-          </button>
         </div>
+      )}
+
+      <PlanUsageSection plan={profile.plan} storageUsed={profile.storageUsed ?? 0} />
+
+      {/* Member since */}
+      <div className="border border-neutral-800 p-4">
+        <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-500">{t.dashboard.profileMember ?? "Miembro desde"}</p>
+        <p className="mt-1 text-sm text-neutral-300">{new Date(profile.createdAt).toLocaleDateString()}</p>
       </div>
 
-      {/* Language */}
-      <div className="border border-neutral-800 p-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-500">
-              Idioma
-            </p>
-            <p className="mt-1 text-xs text-neutral-500">
-              Cambia el idioma de la interfaz
-            </p>
-          </div>
-          <LocaleSelector />
-        </div>
+      <PreferencesSection emailDigest={profile.emailDigest} onToggleDigest={(next) => patch({ emailDigest: next })} />
+
+      <div className="space-y-4">
+        <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-500">Seguridad</p>
+        <SecuritySection />
       </div>
 
-      {/* Change password */}
-      <div className="border border-neutral-800 p-4">
-        <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-500">
-          Cambiar contraseña
-        </p>
-        <div className="mt-3 space-y-2">
-          <input
-            type="password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            placeholder="Nueva contraseña (min. 8 caracteres)"
-            className="w-full border-b border-neutral-700 bg-transparent px-2 py-2 text-sm text-neutral-200 outline-none placeholder:text-neutral-600 focus:border-white transition-colors"
-          />
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            placeholder="Confirmar contraseña"
-            className="w-full border-b border-neutral-700 bg-transparent px-2 py-2 text-sm text-neutral-200 outline-none placeholder:text-neutral-600 focus:border-white transition-colors"
-          />
-          <div className="flex justify-end pt-1">
-            <button
-              onClick={handleChangePassword}
-              disabled={changingPassword || !newPassword.trim() || !confirmPassword.trim()}
-              className="shrink-0 bg-white px-4 py-2 text-xs font-medium tracking-widest text-[#161616] uppercase hover:bg-neutral-200 transition-colors disabled:opacity-30"
-            >
-              {changingPassword ? "..." : "Actualizar"}
+      {/* Data & Privacy */}
+      <div className="space-y-4">
+        <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-500">Datos y privacidad</p>
+        <div className="border border-neutral-800 p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs text-neutral-200">{t.dashboard.exportData ?? "Exportar mis datos"}</p>
+              <p className="mt-0.5 text-[11px] text-neutral-500">{t.dashboard.exportDataDesc ?? "Descarga todos tus datos en JSON (GDPR)"}</p>
+            </div>
+            <button onClick={handleExportData} disabled={exporting} className="flex shrink-0 items-center gap-2 border border-neutral-700 px-3 py-1.5 text-xs font-medium tracking-widest text-neutral-300 uppercase hover:border-white hover:text-white transition-colors disabled:opacity-30">
+              <DownloadSimple size={14} />
+              {exporting ? "..." : (t.dashboard.exportAction ?? "Exportar")}
             </button>
           </div>
         </div>
-      </div>
-
-      {/* Data export */}
-      <div className="border border-neutral-800 p-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-500">
-              {t.dashboard.exportData ?? "Exportar mis datos"}
-            </p>
-            <p className="mt-1 text-xs text-neutral-500">
-              {t.dashboard.exportDataDesc ?? "Descarga una copia de todos tus datos en formato JSON (GDPR)"}
-            </p>
-          </div>
-          <button
-            onClick={handleExportData}
-            disabled={exporting}
-            className="flex shrink-0 items-center gap-2 border border-neutral-700 px-4 py-2 text-xs font-medium tracking-widest text-neutral-300 uppercase hover:border-white hover:text-white transition-colors disabled:opacity-30"
-          >
-            <DownloadSimple size={14} />
-            {exporting ? "..." : (t.dashboard.exportAction ?? "Exportar")}
-          </button>
+        <div className="flex flex-wrap gap-x-4 gap-y-1 px-1">
+          <Link href="/terms" className="text-[11px] text-neutral-600 hover:text-neutral-400 transition-colors">Terminos de servicio</Link>
+          <Link href="/privacy" className="text-[11px] text-neutral-600 hover:text-neutral-400 transition-colors">Politica de privacidad</Link>
+          <Link href="/cookies" className="text-[11px] text-neutral-600 hover:text-neutral-400 transition-colors">Cookies</Link>
+          <Link href="/dmca" className="text-[11px] text-neutral-600 hover:text-neutral-400 transition-colors">DMCA</Link>
+          <Link href="/accessibility" className="text-[11px] text-neutral-600 hover:text-neutral-400 transition-colors">Accesibilidad</Link>
         </div>
       </div>
 
-      {/* Danger zone */}
-      <div className="border border-red-900/50 p-4">
-        <div className="flex items-center gap-2">
-          <Warning size={14} className="text-red-400" />
-          <p className="text-[10px] font-medium uppercase tracking-wider text-red-400">
-            Zona de peligro
-          </p>
-        </div>
-        <p className="mt-2 text-xs text-neutral-500">
-          Una vez que elimines tu cuenta, se borrarán todas tus presentaciones, datos y configuraciones de forma permanente.
-        </p>
-        {!confirmingDelete ? (
-          <button
-            onClick={() => setConfirmingDelete(true)}
-            className="mt-3 flex items-center gap-2 text-xs text-neutral-500 hover:text-red-400 transition-colors"
-          >
-            <Trash size={14} />
-            {t.auth.deleteAccount}
-          </button>
-        ) : (
-          <div className="mt-3 space-y-2">
-            <p className="text-xs text-red-400">{t.auth.deleteConfirm}</p>
-            <input
-              type="password"
-              value={deletePassword}
-              onChange={(e) => setDeletePassword(e.target.value)}
-              placeholder={t.auth.enterPassword}
-              autoFocus
-              className="w-full border-b border-neutral-700 bg-transparent px-2 py-2 text-sm text-neutral-200 outline-none placeholder:text-neutral-600 focus:border-red-500 transition-colors"
-              onKeyDown={(e) => { if (e.key === "Enter") handleDeleteAccount(); }}
-            />
-            <div className="flex items-center gap-3">
-              <button
-                onClick={handleDeleteAccount}
-                disabled={deleting || !deletePassword.trim()}
-                className="text-xs font-medium text-red-400 hover:text-red-300 transition-colors disabled:opacity-50"
-              >
-                {deleting ? "..." : t.auth.deleteAction}
-              </button>
-              <button
-                onClick={() => { setConfirmingDelete(false); setDeletePassword(""); }}
-                className="text-xs text-neutral-500 hover:text-neutral-300 transition-colors"
-              >
-                {t.auth.deleteCancel}
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
+      <DangerZone />
     </div>
   );
 }
