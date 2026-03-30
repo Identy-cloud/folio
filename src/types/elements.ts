@@ -32,6 +32,7 @@ export interface BaseElement {
   filterBlur?: number;
   groupId?: string;
   linkUrl?: string;
+  linkSlideIndex?: number;
   borderWidth?: number;
   borderColor?: string;
   visible?: boolean;

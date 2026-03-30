@@ -52,6 +52,7 @@ function mobileBg(slide: Slide): string {
 export function MobileViewer({ title, slides, showWatermark, presentationId, forkCount, recordingUrl, recordingTimeline, recordingDuration }: Props) {
   const { t } = useTranslation();
   const [current, setCurrent] = useState(0);
+  const [slideHistory, setSlideHistory] = useState<number[]>([]);
   const [forking, setForking] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const [localForkCount, setLocalForkCount] = useState(forkCount ?? 0);
@@ -124,6 +125,21 @@ export function MobileViewer({ title, slides, showWatermark, presentationId, for
     if (animating || current <= 0) return;
     setCurrent((c) => c - 1);
   }, [animating, current]);
+
+  const jumpToSlide = useCallback((targetIndex: number) => {
+    if (animating || targetIndex < 0 || targetIndex >= total || targetIndex === current) return;
+    setSlideHistory((h) => [...h, current]);
+    setCurrent(targetIndex);
+  }, [animating, total, current]);
+
+  const goBackFromJump = useCallback(() => {
+    setSlideHistory((h) => {
+      if (h.length === 0) return h;
+      const prev = h[h.length - 1];
+      setCurrent(prev);
+      return h.slice(0, -1);
+    });
+  }, []);
 
   const [phase, setPhase] = useState<"idle" | "enter" | "active">("idle");
 
@@ -280,9 +296,19 @@ export function MobileViewer({ title, slides, showWatermark, presentationId, for
               willChange: pinch.isZoomed ? "transform" : "auto",
             }}
           >
-            <MobileSlideContent animateKey={animating ? -1 : current} elements={inElements} bg={mobileBg(activeSlide)} />
+            <MobileSlideContent animateKey={animating ? -1 : current} elements={inElements} bg={mobileBg(activeSlide)} onSlideJump={jumpToSlide} />
           </div>
         </div>
+        {/* Back button after non-linear jump */}
+        {slideHistory.length > 0 && (
+          <button
+            onClick={goBackFromJump}
+            className="absolute top-3 left-12 z-20 flex items-center gap-1 rounded-full bg-black/60 px-2.5 py-1 text-[10px] text-white/80 backdrop-blur-sm active:bg-black/80"
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            Back
+          </button>
+        )}
         {/* Zoom level badge */}
         {showZoomBadge && pinch.scale !== 1 && (
           <div className="absolute top-4 left-1/2 z-20 -translate-x-1/2 rounded-full bg-black/60 px-3 py-1 text-xs font-medium text-white/80 backdrop-blur-sm transition-opacity duration-300">
@@ -391,7 +417,7 @@ export function MobileViewer({ title, slides, showWatermark, presentationId, for
   );
 }
 
-function MobileSlideContent({ elements, bg, animateKey }: { elements: SlideElement[]; bg: string; animateKey?: number }) {
+function MobileSlideContent({ elements, bg, animateKey, onSlideJump }: { elements: SlideElement[]; bg: string; animateKey?: number; onSlideJump?: (index: number) => void }) {
   const sorted = useMemo(() => {
     const titles: SlideElement[] = [];
     const images: SlideElement[] = [];
@@ -426,24 +452,39 @@ function MobileSlideContent({ elements, bg, animateKey }: { elements: SlideEleme
           element={el}
           delay={shouldAnimate ? i * 80 : 0}
           animate={shouldAnimate}
+          onSlideJump={onSlideJump}
         />
       ))}
     </div>
   );
 }
 
-function MobileElement({ element, delay = 0, animate = true }: { element: SlideElement; delay?: number; animate?: boolean }) {
+function MobileElement({ element, delay = 0, animate = true, onSlideJump }: { element: SlideElement; delay?: number; animate?: boolean; onSlideJump?: (index: number) => void }) {
   const totalDelay = (element.animationDelay ?? 0) + delay;
   const animStyle = animate ? getElementAnimationStyle(element.animation, totalDelay, element.animationDuration, element.animationEasing) : {};
+  const hasSlideLink = element.linkSlideIndex !== undefined && onSlideJump;
+
+  function wrapLink(content: React.ReactNode) {
+    if (!hasSlideLink) return content;
+    return (
+      <button
+        onClick={() => onSlideJump!(element.linkSlideIndex!)}
+        className="w-full text-left active:opacity-70 transition-opacity"
+      >
+        {content}
+      </button>
+    );
+  }
+
   if (element.type === "arrow") return null;
   if (element.type === "line") return null;
 
   if (element.type === "shape") {
-    return <div style={animStyle}><MobileShape element={element} /></div>;
+    return wrapLink(<div style={animStyle}><MobileShape element={element} /></div>);
   }
 
   if (element.type === "divider") {
-    return (
+    return wrapLink(
       <div className="py-2" style={animStyle}>
         <div style={{ height: element.strokeWidth, backgroundColor: element.color, opacity: element.opacity }} />
       </div>
@@ -452,7 +493,7 @@ function MobileElement({ element, delay = 0, animate = true }: { element: SlideE
 
   if (element.type === "image") {
     const hasCrop = (element.cropWidth ?? 1) < 1 || (element.cropHeight ?? 1) < 1 || (element.cropX ?? 0) > 0 || (element.cropY ?? 0) > 0;
-    return (
+    return wrapLink(
       <div style={{
         ...animStyle,
         clipPath: hasCrop
@@ -476,15 +517,15 @@ function MobileElement({ element, delay = 0, animate = true }: { element: SlideE
   }
 
   if (element.type === "text") {
-    return <div style={animStyle}><MobileText element={element} /></div>;
+    return wrapLink(<div style={animStyle}><MobileText element={element} /></div>);
   }
 
   if (element.type === "table") {
-    return <div style={animStyle} className="w-full overflow-x-auto"><MobileTable element={element} /></div>;
+    return wrapLink(<div style={animStyle} className="w-full overflow-x-auto"><MobileTable element={element} /></div>);
   }
 
   if (element.type === "icon") {
-    return (
+    return wrapLink(
       <div style={{ ...animStyle, width: 48, height: 48 }} className="mx-auto">
         <IconRenderer element={element} />
       </div>
@@ -492,7 +533,7 @@ function MobileElement({ element, delay = 0, animate = true }: { element: SlideE
   }
 
   if (element.type === "video") {
-    return (
+    return wrapLink(
       <div style={{ ...animStyle, aspectRatio: `${element.w} / ${element.h}` }} className="w-full rounded overflow-hidden">
         <VideoRenderer element={element} mode="viewer" />
       </div>

@@ -18,6 +18,7 @@ export const users = pgTable("users", {
   avatarUrl: text("avatar_url"),
   plan: text("plan").default("free").notNull(),
   storageUsed: bigint("storage_used", { mode: "number" }).default(0).notNull(),
+  emailDigest: boolean("email_digest").default(true).notNull(),
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
     .notNull(),
@@ -258,6 +259,22 @@ export const savedSlides = pgTable("saved_slides", {
     .notNull(),
 }, (table) => [
   index("saved_slides_user_id_idx").on(table.userId),
+]);
+
+export const questions = pgTable("questions", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  presentationId: uuid("presentation_id")
+    .references(() => presentations.id, { onDelete: "cascade" })
+    .notNull(),
+  text: text("text").notNull(),
+  authorName: text("author_name").notNull(),
+  upvotes: integer("upvotes").default(0).notNull(),
+  answered: boolean("answered").default(false).notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+}, (table) => [
+  index("questions_presentation_id_idx").on(table.presentationId),
 ]);
 
 export const comments = pgTable("comments", {

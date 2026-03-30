@@ -23,6 +23,7 @@ export async function GET() {
     avatarUrl: user.avatarUrl,
     plan: await getUserPlan(user.id),
     storageUsed: user.storageUsed ?? 0,
+    emailDigest: user.emailDigest,
     createdAt: user.createdAt,
     presentationCount: stats?.total ?? 0,
   });
@@ -31,6 +32,7 @@ export async function GET() {
 const patchSchema = z.object({
   name: z.string().min(1).max(100).optional(),
   avatarUrl: z.string().url().max(2048).nullable().optional(),
+  emailDigest: z.boolean().optional(),
 });
 
 export async function PATCH(request: Request) {
@@ -48,6 +50,7 @@ export async function PATCH(request: Request) {
   const updates: Record<string, unknown> = {};
   if (parsed.data.name !== undefined) updates.name = parsed.data.name;
   if (parsed.data.avatarUrl !== undefined) updates.avatarUrl = parsed.data.avatarUrl;
+  if (parsed.data.emailDigest !== undefined) updates.emailDigest = parsed.data.emailDigest;
 
   if (Object.keys(updates).length === 0) {
     return Response.json({ error: "No changes" }, { status: 400 });

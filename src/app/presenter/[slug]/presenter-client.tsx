@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { SlidePreview } from "@/components/SlidePreview";
 import { useAudienceWindow } from "@/hooks/useAudienceWindow";
+import { QaPresenter } from "./qa-presenter";
 import type { SlideElement, GradientDef } from "@/types/elements";
 
 interface Slide {
@@ -19,9 +20,10 @@ interface Props {
   title: string;
   slides: Slide[];
   slug: string;
+  presentationId: string;
 }
 
-export function PresenterClient({ title, slides, slug }: Props) {
+export function PresenterClient({ title, slides, slug, presentationId }: Props) {
   const [current, setCurrent] = useState(0);
   const total = slides.length;
   const [laser, setLaser] = useState<{ x: number; y: number } | null>(null);
@@ -161,6 +163,11 @@ export function PresenterClient({ title, slides, slug }: Props) {
               <p className="text-xs italic text-neutral-600">No notes for this slide</p>
             )}
           </div>
+        </div>
+
+        {/* Q&A */}
+        <div className="border-t border-neutral-800 flex-1 overflow-hidden">
+          <QaPresenter presentationId={presentationId} />
         </div>
 
         {/* Controls */}

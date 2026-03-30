@@ -11,6 +11,7 @@ import { textShadowCSS, filterBlurCSS } from "@/lib/element-style-utils";
 import { useViewerFonts } from "@/hooks/useViewerFonts";
 import { MobileViewer } from "./mobile-viewer";
 import { CommentsPanel } from "./comments-panel";
+import { QaPanel } from "./qa-panel";
 import { ReportModal } from "@/components/ReportModal";
 import { PrintSlides } from "./print-slides";
 import { RecordingPlayer } from "./recording-player";
@@ -59,6 +60,7 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
   const autoplayRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [showHelp, setShowHelp] = useState(true);
   const [showReport, setShowReport] = useState(false);
+  const [slideHistory, setSlideHistory] = useState<number[]>([]);
   const [forking, setForking] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const [localForkCount, setLocalForkCount] = useState(forkCount ?? 0);
@@ -197,6 +199,21 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
     if (transitioning || current <= 0) return;
     setCurrent((c) => c - 1);
   }, [transitioning, current]);
+
+  const jumpToSlide = useCallback((targetIndex: number) => {
+    if (transitioning || targetIndex < 0 || targetIndex >= total || targetIndex === current) return;
+    setSlideHistory((h) => [...h, current]);
+    setCurrent(targetIndex);
+  }, [transitioning, total, current]);
+
+  const goBackFromJump = useCallback(() => {
+    setSlideHistory((h) => {
+      if (h.length === 0) return h;
+      const prev = h[h.length - 1];
+      setCurrent(prev);
+      return h.slice(0, -1);
+    });
+  }, []);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -447,6 +464,7 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
         scale={scale}
         transitionStyle={transitioning ? getTransitionStyles("in") : undefined}
         animateKey={transitioning ? -1 : current}
+        onSlideJump={jumpToSlide}
       />
 
       {/* Free tier watermark */}
@@ -491,6 +509,17 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
             </div>
           </div>
         </div>
+      )}
+
+      {/* Back button after non-linear jump */}
+      {slideHistory.length > 0 && (
+        <button
+          onClick={(e) => { e.stopPropagation(); goBackFromJump(); }}
+          className="absolute top-4 left-4 z-20 flex items-center gap-1.5 rounded-full bg-black/60 px-3 py-1.5 text-xs text-white/80 backdrop-blur-sm hover:bg-black/80 transition-colors"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+          Back
+        </button>
       )}
 
       {showWatermark && (
@@ -656,6 +685,10 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
       )}
 
       {presentationId && (
+        <QaPanel presentationId={presentationId} />
+      )}
+
+      {presentationId && (
         <button
           onClick={(e) => { e.stopPropagation(); setShowReport(true); }}
           className="fixed bottom-20 right-4 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white/40 backdrop-blur-sm hover:bg-white/20 hover:text-white/70 transition-colors"
@@ -694,11 +727,13 @@ function SlideLayer({
   scale,
   transitionStyle,
   animateKey,
+  onSlideJump,
 }: {
   slide: Slide;
   scale: number;
   transitionStyle?: React.CSSProperties;
   animateKey?: number;
+  onSlideJump?: (index: number) => void;
 }) {
   const sorted = useMemo(
     () => slide.elements.filter((el) => el.visible !== false).slice().sort((a, b) => a.zIndex - b.zIndex),
@@ -725,13 +760,14 @@ function SlideLayer({
           element={el}
           delay={shouldAnimate ? i * 80 : 0}
           animate={shouldAnimate}
+          onSlideJump={onSlideJump}
         />
       ))}
     </div>
   );
 }
 
-function ViewerElement({ element, delay, animate }: { element: SlideElement; delay: number; animate: boolean }) {
+function ViewerElement({ element, delay, animate, onSlideJump }: { element: SlideElement; delay: number; animate: boolean; onSlideJump?: (index: number) => void }) {
   const totalDelay = (element.animationDelay ?? 0) + delay;
   const animStyle = animate ? getElementAnimationStyle(element.animation, totalDelay, element.animationDuration, element.animationEasing) : {};
 
@@ -795,7 +831,13 @@ function ViewerElement({ element, delay, animate }: { element: SlideElement; del
         </div>
       )}
       </div>
-      {element.linkUrl && (
+      {element.linkSlideIndex !== undefined && onSlideJump ? (
+        <button
+          className="absolute inset-0 z-10 cursor-pointer hover:bg-white/5 transition-colors"
+          onClick={(e) => { e.stopPropagation(); onSlideJump(element.linkSlideIndex!); }}
+          aria-label={`Go to slide ${element.linkSlideIndex + 1}`}
+        />
+      ) : element.linkUrl ? (
         <a
           href={element.linkUrl}
           target="_blank"
@@ -804,7 +846,7 @@ function ViewerElement({ element, delay, animate }: { element: SlideElement; del
           onClick={(e) => e.stopPropagation()}
           aria-label={`Link to ${element.linkUrl}`}
         />
-      )}
+      ) : null}
     </div>
   );
 }

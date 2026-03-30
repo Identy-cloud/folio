@@ -24,9 +24,10 @@ interface Slide {
 interface Props {
   slide: Slide;
   scale: number;
+  onSlideJump?: (index: number) => void;
 }
 
-export function EmbedSlideLayer({ slide, scale }: Props) {
+export function EmbedSlideLayer({ slide, scale, onSlideJump }: Props) {
   const sorted = useMemo(
     () => slide.elements.filter((el) => el.visible !== false).slice().sort((a, b) => a.zIndex - b.zIndex),
     [slide.elements]
@@ -44,13 +45,13 @@ export function EmbedSlideLayer({ slide, scale }: Props) {
       }}
     >
       {sorted.map((el) => (
-        <EmbedElement key={el.id} element={el} />
+        <EmbedElement key={el.id} element={el} onSlideJump={onSlideJump} />
       ))}
     </div>
   );
 }
 
-function EmbedElement({ element }: { element: SlideElement }) {
+function EmbedElement({ element, onSlideJump }: { element: SlideElement; onSlideJump?: (index: number) => void }) {
   return (
     <div
       style={{
@@ -86,6 +87,13 @@ function EmbedElement({ element }: { element: SlideElement }) {
         {element.type === "icon" && <IconRenderer element={element} />}
         {element.type === "image" && <EmbedImage element={element} />}
       </div>
+      {element.linkSlideIndex !== undefined && onSlideJump ? (
+        <button
+          className="absolute inset-0 z-10 cursor-pointer hover:bg-white/5 transition-colors"
+          onClick={(e) => { e.stopPropagation(); onSlideJump(element.linkSlideIndex!); }}
+          aria-label={`Go to slide ${element.linkSlideIndex + 1}`}
+        />
+      ) : null}
     </div>
   );
 }

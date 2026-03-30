@@ -19,6 +19,7 @@ import { LockToggle } from "./LockToggle";
 import { DeleteButton } from "./DeleteButton";
 import { MultiSelectControls } from "./MultiSelectControls";
 import { ShadowControls } from "./ShadowControls";
+import { LinkToSlideProperties } from "./LinkToSlideProperties";
 import { EmbedProperties } from "./EmbedProperties";
 import { LineProperties } from "./LineProperties";
 import { TableProperties } from "./TableProperties";
@@ -176,6 +177,9 @@ export function ElementPalette() {
           </CollapsibleSection>
           <CollapsibleSection title="Animation" defaultOpen={false}>
             <AnimationProperties element={selectedElement} />
+          </CollapsibleSection>
+          <CollapsibleSection title="Link" defaultOpen={false}>
+            <LinkToSlideProperties element={selectedElement} />
           </CollapsibleSection>
           <CollapsibleSection title="Align" defaultOpen={false}>
             <AlignControls elementId={selectedElement.id} />

@@ -4,7 +4,9 @@ import {
   commentNotificationHtml,
   welcomeHtml,
   passwordResetHtml,
+  analyticsDigestTemplate,
 } from "./email-templates";
+import type { AnalyticsDigestData } from "./email-templates";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const EMAIL_FROM = process.env.EMAIL_FROM ?? "noreply@identy.cloud";
@@ -63,5 +65,13 @@ export function sendPasswordResetEmail(to: string, resetLink: string) {
     to,
     subject: "Reset your Folio password",
     html: passwordResetHtml(resetLink),
+  });
+}
+
+export function sendAnalyticsDigest(to: string, data: AnalyticsDigestData) {
+  return sendEmail({
+    to,
+    subject: `Your week in review: ${data.totalViews.toLocaleString()} views`,
+    html: analyticsDigestTemplate(data),
   });
 }

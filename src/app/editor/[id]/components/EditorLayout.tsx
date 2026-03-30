@@ -36,6 +36,7 @@ import { AIGenerateDialog } from "@/components/editor/AIGenerateDialog";
 import { AIGeneratePresentationDialog } from "@/components/editor/AIGeneratePresentationDialog";
 import { TranslateDialog } from "@/components/editor/TranslateDialog";
 import { AIImageDialog } from "@/components/editor/AIImageDialog";
+import { ImportSlideModal } from "./ImportSlideModal";
 import { ClockCounterClockwise, Stack, NotePencil, ChatCircleDots } from "@phosphor-icons/react";
 import { ChatPanel } from "./ChatPanel";
 import { useChat } from "../hooks/useChat";
@@ -80,6 +81,7 @@ export function EditorLayout() {
   const [aiPresentationOpen, setAIPresentationOpen] = useState(false);
   const [aiImageOpen, setAIImageOpen] = useState(false);
   const [slideLibraryOpen, setSlideLibraryOpen] = useState(false);
+  const [importSlideOpen, setImportSlideOpen] = useState(false);
   const rightPanel = versionsOpen ? "versions" : historyOpen ? "history" : layersOpen ? "layers" : "palette";
   const selectedIds = useEditorStore((s) => s.selectedElementIds);
   const hasSelection = selectedIds.length > 0;
@@ -91,12 +93,14 @@ export function EditorLayout() {
     const onOpenAIPresentation = () => setAIPresentationOpen(true);
     const onOpenAIImage = () => setAIImageOpen(true);
     const onOpenSlideLibrary = () => setSlideLibraryOpen(true);
+    const onOpenImportSlide = () => setImportSlideOpen(true);
     window.addEventListener("folio:open-unsplash", onOpenUnsplash);
     window.addEventListener("folio:open-ai-generate", onOpenAIGenerate);
     window.addEventListener("folio:open-translate", onOpenTranslate);
     window.addEventListener("folio:open-ai-presentation", onOpenAIPresentation);
     window.addEventListener("folio:open-ai-image", onOpenAIImage);
     window.addEventListener("folio:open-slide-library", onOpenSlideLibrary);
+    window.addEventListener("folio:open-import-slide", onOpenImportSlide);
     return () => {
       window.removeEventListener("folio:open-unsplash", onOpenUnsplash);
       window.removeEventListener("folio:open-ai-generate", onOpenAIGenerate);
@@ -104,6 +108,7 @@ export function EditorLayout() {
       window.removeEventListener("folio:open-ai-presentation", onOpenAIPresentation);
       window.removeEventListener("folio:open-ai-image", onOpenAIImage);
       window.removeEventListener("folio:open-slide-library", onOpenSlideLibrary);
+      window.removeEventListener("folio:open-import-slide", onOpenImportSlide);
     };
   }, []);
 
@@ -324,6 +329,7 @@ export function EditorLayout() {
       <TranslateDialog open={translateOpen} onClose={() => setTranslateOpen(false)} />
       <AIImageDialog open={aiImageOpen} onClose={() => setAIImageOpen(false)} />
       <SlideLibrary open={slideLibraryOpen} onClose={() => setSlideLibraryOpen(false)} />
+      <ImportSlideModal open={importSlideOpen} onClose={() => setImportSlideOpen(false)} />
       <Onboarding />
       <ShortcutsPanel
         open={shortcutsOpen}

@@ -116,6 +116,7 @@ export function SlidePanel() {
           onDelete={deleteSlide}
           onTransition={updateSlideTransition}
           onSaveToLibrary={saveSlideToLibrary}
+          onImportSlide={() => setImportOpen(true)}
           onClose={() => setContextMenu(null)}
           labels={{
             duplicate: t.editor.duplicateSlide,

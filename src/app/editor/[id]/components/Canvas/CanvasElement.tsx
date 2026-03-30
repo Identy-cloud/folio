@@ -234,6 +234,18 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
         </div>
       )}
       {isBusy && <BusyOverlay />}
+      {element.linkSlideIndex !== undefined && (
+        <div
+          className="pointer-events-none absolute -top-1 -right-1 z-50 flex h-5 w-5 items-center justify-center rounded-full bg-blue-500 text-white shadow-sm"
+          style={{ transform: `scale(${1 / scale})`, transformOrigin: "top right" }}
+          title={`Links to slide ${element.linkSlideIndex + 1}`}
+        >
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+          </svg>
+        </div>
+      )}
     </div>
   );
 });

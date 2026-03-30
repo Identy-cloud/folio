@@ -33,6 +33,7 @@ export function EmbedViewer({ title, slides, showWatermark, presentationId, hasP
   useViewerFonts(presentationId);
   const [unlocked, setUnlocked] = useState(!hasPassword);
   const [current, setCurrent] = useState(0);
+  const [slideHistory, setSlideHistory] = useState<number[]>([]);
   const [scale, setScale] = useState(1);
   const [playing, setPlaying] = useState(initialAutoplay);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -54,6 +55,21 @@ export function EmbedViewer({ title, slides, showWatermark, presentationId, hasP
 
   const goNext = useCallback(() => setCurrent((c) => (c < total - 1 ? c + 1 : 0)), [total]);
   const goPrev = useCallback(() => setCurrent((c) => (c > 0 ? c - 1 : total - 1)), [total]);
+
+  const jumpToSlide = useCallback((targetIndex: number) => {
+    if (targetIndex < 0 || targetIndex >= total || targetIndex === current) return;
+    setSlideHistory((h) => [...h, current]);
+    setCurrent(targetIndex);
+  }, [total, current]);
+
+  const goBackFromJump = useCallback(() => {
+    setSlideHistory((h) => {
+      if (h.length === 0) return h;
+      const prev = h[h.length - 1];
+      setCurrent(prev);
+      return h.slice(0, -1);
+    });
+  }, []);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -84,7 +100,18 @@ export function EmbedViewer({ title, slides, showWatermark, presentationId, hasP
       ref={containerRef}
       className="relative flex h-screen w-screen items-center justify-center overflow-hidden bg-black select-none"
     >
-      <EmbedSlideLayer slide={slide} scale={scale} />
+      <EmbedSlideLayer slide={slide} scale={scale} onSlideJump={jumpToSlide} />
+
+      {/* Back button after non-linear jump */}
+      {slideHistory.length > 0 && (
+        <button
+          onClick={goBackFromJump}
+          className="absolute top-2 left-2 z-20 flex items-center gap-1 rounded-full bg-black/60 px-2.5 py-1 text-[10px] text-white/80 backdrop-blur-sm hover:bg-black/80 transition-colors"
+        >
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+          Back
+        </button>
+      )}
 
       {/* Navigation arrows */}
       {total > 1 && (

@@ -54,6 +54,9 @@ export function CommandPalette({ open, onClose }: Props) {
     { id: "table", label: "Table", category: "Insert", action: () => addElement({ id: nanoid(), type: "table", x: 200, y: 200, w: 600, h: 300, rotation: 0, opacity: 1, zIndex: zBase, locked: false, ...tableDefaults(theme) } satisfies TableElement) },
     { id: "icon", label: "Icon (Star)", category: "Insert", action: () => addElement({ id: nanoid(), type: "icon", x: 200, y: 200, w: 120, h: 120, rotation: 0, opacity: 1, zIndex: zBase, locked: false, iconName: "Star", ...iconDefaults(theme) } satisfies IconElement) },
     { id: "slide", label: "New slide", category: "Slide", action: () => addSlide() },
+    { id: "import-slide", label: "Import slide from another presentation", category: "Slide", action: () => {
+      window.dispatchEvent(new CustomEvent("folio:open-import-slide"));
+    }},
     { id: "select-all", label: "Select all elements", category: "Edit", action: () => { const s = useEditorStore.getState().getActiveSlide(); if (s) useEditorStore.setState({ selectedElementIds: s.elements.map((e) => e.id) }); } },
     { id: "deselect", label: "Deselect all", category: "Edit", action: () => useEditorStore.setState({ selectedElementIds: [] }) },
     { id: "center", label: "Center element on canvas", category: "Edit", action: () => {

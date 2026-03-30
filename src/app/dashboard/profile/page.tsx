@@ -13,6 +13,7 @@ interface Profile {
   name: string | null;
   avatarUrl: string | null;
   plan: string;
+  emailDigest: boolean;
   createdAt: string;
   presentationCount: number;
 }
@@ -282,6 +283,48 @@ export default function ProfilePage() {
           <p className="mt-1 text-sm text-neutral-300">
             {new Date(profile.createdAt).toLocaleDateString()}
           </p>
+        </div>
+      </div>
+
+      {/* Email digest toggle */}
+      <div className="border border-neutral-800 p-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-500">
+              Weekly analytics email
+            </p>
+            <p className="mt-1 text-xs text-neutral-500">
+              Receive a weekly summary of your presentation views every Monday
+            </p>
+          </div>
+          <button
+            onClick={async () => {
+              const next = !profile.emailDigest;
+              setProfile((p) => (p ? { ...p, emailDigest: next } : p));
+              const res = await fetch("/api/profile", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ emailDigest: next }),
+              });
+              if (res.ok) {
+                toast.success(next ? "Digest enabled" : "Digest disabled");
+              } else {
+                setProfile((p) => (p ? { ...p, emailDigest: !next } : p));
+                toast.error(t.common.error);
+              }
+            }}
+            className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${
+              profile.emailDigest ? "bg-white" : "bg-neutral-700"
+            }`}
+            role="switch"
+            aria-checked={profile.emailDigest}
+          >
+            <span
+              className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-neutral-900 transition-transform ${
+                profile.emailDigest ? "translate-x-5" : "translate-x-0"
+              }`}
+            />
+          </button>
         </div>
       </div>
 

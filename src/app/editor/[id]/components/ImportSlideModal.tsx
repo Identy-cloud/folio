@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { nanoid } from "nanoid";
+import { MagnifyingGlass } from "@phosphor-icons/react";
 import { DialogShell } from "@/components/ui/DialogShell";
 import { SlidePreview } from "@/components/SlidePreview";
 import { useEditorStore } from "@/store/editorStore";
@@ -31,12 +32,15 @@ export function ImportSlideModal({ open, onClose }: Props) {
   const { t } = useTranslation();
   const presentationId = useEditorStore((s) => s.presentationId);
   const slides = useEditorStore((s) => s.slides);
+  const activeSlideIndex = useEditorStore((s) => s.activeSlideIndex);
   const [data, setData] = useState<RemotePresentation[]>([]);
   const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     if (!open) return;
     setLoading(true);
+    setSearch("");
     fetch(`/api/presentations/${presentationId}/import-slide`)
       .then((r) => (r.ok ? r.json() : []))
       .then(setData)
@@ -44,27 +48,30 @@ export function ImportSlideModal({ open, onClose }: Props) {
       .finally(() => setLoading(false));
   }, [open, presentationId]);
 
+  const filtered = useMemo(() =>
+    search.trim() ? data.filter((p) => p.title.toLowerCase().includes(search.toLowerCase())) : data
+  , [data, search]);
+
   function importSlide(slide: RemoteSlide) {
+    const insertAt = activeSlideIndex + 1;
     const newSlide = {
       id: nanoid(),
       presentationId,
-      order: slides.length,
+      order: insertAt,
       transition: "fade" as const,
       backgroundColor: slide.backgroundColor,
       backgroundImage: null,
-      elements: (slide.elements as SlideElement[]).map((el) => ({
-        ...el,
-        id: nanoid(),
-      })),
+      elements: (slide.elements as SlideElement[]).map((el) => ({ ...el, id: nanoid() })),
       mobileElements: null,
       notes: "",
     };
 
     const store = useEditorStore.getState();
-    const updated = [...store.slides, newSlide];
+    const updated = [...store.slides];
+    updated.splice(insertAt, 0, newSlide);
     useEditorStore.setState({
-      slides: updated,
-      activeSlideIndex: updated.length - 1,
+      slides: updated.map((s, i) => ({ ...s, order: i })),
+      activeSlideIndex: insertAt,
       dirty: true,
       saveStatus: "unsaved",
     });
@@ -77,7 +84,7 @@ export function ImportSlideModal({ open, onClose }: Props) {
       open={open}
       ariaLabel={t.editor.importSlide ?? "Import slide"}
       onClose={onClose}
-      className="w-full max-w-2xl max-h-[80vh] overflow-y-auto rounded bg-[#1e1e1e] border border-neutral-700 p-6 shadow-xl mx-4"
+      className="w-full max-w-2xl max-h-[80vh] overflow-y-auto rounded bg-[#1e1e1e] border border-neutral-700 p-4 md:p-6 shadow-xl mx-4"
     >
       <h3 className="font-display text-lg tracking-tight text-neutral-200">
         {t.editor.importSlide ?? "IMPORT SLIDE"}
@@ -86,20 +93,30 @@ export function ImportSlideModal({ open, onClose }: Props) {
         {t.editor.importSlideDesc ?? "Select a slide from another presentation to import"}
       </p>
 
+      <div className="relative mt-3">
+        <MagnifyingGlass size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-neutral-500" />
+        <input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search presentations..."
+          className="w-full rounded border border-neutral-700 bg-neutral-800 py-2 pl-8 pr-3 text-xs text-neutral-200 outline-none placeholder:text-neutral-500 focus:border-neutral-500"
+        />
+      </div>
+
       {loading ? (
         <p className="py-8 text-center text-xs text-neutral-500">{t.common.loading}</p>
-      ) : data.length === 0 ? (
+      ) : filtered.length === 0 ? (
         <p className="py-8 text-center text-xs text-neutral-500">
-          {t.editor.noOtherPresentations ?? "No other presentations found"}
+          {search ? "No presentations match your search" : (t.editor.noOtherPresentations ?? "No other presentations found")}
         </p>
       ) : (
         <div className="mt-4 space-y-5">
-          {data.map((pres) => (
+          {filtered.map((pres) => (
             <div key={pres.id}>
               <p className="mb-2 text-[10px] font-medium uppercase tracking-wider text-neutral-400">
                 {pres.title}
               </p>
-              <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
                 {pres.slides.map((slide) => (
                   <button
                     key={slide.id}

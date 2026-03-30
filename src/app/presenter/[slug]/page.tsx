@@ -38,5 +38,5 @@ export default async function PresenterPage({
     notes: s.notes,
   }));
 
-  return <PresenterClient title={pres.title} slides={mapped} slug={slug} />;
+  return <PresenterClient title={pres.title} slides={mapped} slug={slug} presentationId={pres.id} />;
 }

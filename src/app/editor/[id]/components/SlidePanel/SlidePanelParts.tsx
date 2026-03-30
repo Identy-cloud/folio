@@ -64,13 +64,14 @@ interface SlideContextMenuProps {
   onDelete: (id: string) => void;
   onTransition: (id: string, tr: SlideTransition) => void;
   onSaveToLibrary?: (id: string) => void;
+  onImportSlide?: () => void;
   onClose: () => void;
   labels: { duplicate: string; moveToStart: string; moveToEnd: string; delete: string };
 }
 
 export function SlideContextMenu({
   menu, slides, onDuplicate, onMoveToStart, onMoveToEnd,
-  onAddSlide, onDelete, onTransition, onSaveToLibrary, onClose, labels,
+  onAddSlide, onDelete, onTransition, onSaveToLibrary, onImportSlide, onClose, labels,
 }: SlideContextMenuProps) {
   return (
     <div
@@ -81,6 +82,7 @@ export function SlideContextMenu({
       <CtxItem label={labels.moveToStart} onClick={() => { onMoveToStart(menu.slideId); onClose(); }} />
       <CtxItem label={labels.moveToEnd} onClick={() => { onMoveToEnd(menu.slideId); onClose(); }} />
       <CtxItem label="Add slide after" onClick={() => { onAddSlide(); onClose(); }} />
+      {onImportSlide && <CtxItem label="Import slide from..." onClick={() => { onImportSlide(); onClose(); }} />}
       {onSaveToLibrary && <CtxItem label="Save to library" onClick={() => { onSaveToLibrary(menu.slideId); onClose(); }} />}
       <div className="border-t border-neutral-700">
         <TransitionPicker
