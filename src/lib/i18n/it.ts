@@ -194,6 +194,9 @@ export const it = {
     bulkMakePrivate: "Rendi privato",
     bulkDeleteTitle: "ELIMINA SELEZIONATE",
     bulkDeleteConfirm: "Sei sicuro di voler eliminare {count} presentazioni? Questa azione non puo essere annullata.",
+    recentSection: "RECENTI",
+    starredFilter: "Preferiti",
+    openRecent: "Apri recente",
   },
   editor: {
     loadError: "Impossibile caricare la presentazione",

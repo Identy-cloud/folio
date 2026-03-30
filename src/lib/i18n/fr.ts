@@ -194,6 +194,9 @@ export const fr = {
     bulkMakePrivate: "Rendre prive",
     bulkDeleteTitle: "SUPPRIMER LA SELECTION",
     bulkDeleteConfirm: "Voulez-vous vraiment supprimer {count} presentations ? Cette action est irreversible.",
+    recentSection: "RECENTES",
+    starredFilter: "Favorites",
+    openRecent: "Ouvrir recemment",
   },
   editor: {
     loadError: "Impossible de charger la présentation",

@@ -18,7 +18,9 @@ import { MoveToFolderDialog } from "./move-folder-dialog";
 import { BulkActionBar } from "./bulk-action-bar";
 import { useBulkSelection } from "./use-bulk-selection";
 import { AnalyticsOverview } from "./analytics-overview";
+import { RecentSection } from "./recent-section";
 import { useWorkspace } from "./workspace-context";
+import { AIGeneratePresentationDialog } from "@/components/editor/AIGeneratePresentationDialog";
 
 interface Presentation {
   id: string;
@@ -58,12 +60,19 @@ export default function DashboardPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState<"recent" | "name" | "oldest" | "starred">("recent");
-  const [filterBy, setFilterBy] = useState<"all" | "public" | "private">("all");
+  const [filterBy, setFilterBy] = useState<"all" | "public" | "private" | "starred">("all");
   const [starred, setStarred] = useState<Set<string>>(new Set());
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [dialog, setDialog] = useState<Dialog>(null);
   const [folders, setFolders] = useState<FolderItem[]>([]);
   const [activeFolderId, setActiveFolderId] = useState<string | null>(null);
+  const [aiDialogOpen, setAiDialogOpen] = useState(false);
+
+  useEffect(() => {
+    const handler = () => setAiDialogOpen(true);
+    window.addEventListener("folio:open-ai-presentation", handler);
+    return () => window.removeEventListener("folio:open-ai-presentation", handler);
+  }, []);
 
   useEffect(() => {
     try {
@@ -310,6 +319,7 @@ export default function DashboardPage() {
       if (search && !p.title.toLowerCase().includes(search.toLowerCase())) return false;
       if (filterBy === "public" && !p.isPublic) return false;
       if (filterBy === "private" && p.isPublic) return false;
+      if (filterBy === "starred" && !starred.has(p.id)) return false;
       return true;
     })
     .sort((a, b) => {
@@ -339,6 +349,13 @@ export default function DashboardPage() {
 
       <div className="min-w-0 flex-1">
       <AnalyticsOverview />
+      {presentations.length >= 5 && !activeFolderId && filterBy === "all" && !search && (
+        <RecentSection
+          presentations={presentations}
+          starred={starred}
+          onToggleStar={toggleStar}
+        />
+      )}
       <div className="mb-6 flex flex-col gap-3 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="font-display text-2xl tracking-tight sm:text-4xl">
           {activeFolderId
@@ -374,13 +391,14 @@ export default function DashboardPage() {
             <Funnel size={14} className="text-neutral-500" />
             <select
               value={filterBy}
-              onChange={(e) => setFilterBy(e.target.value as "all" | "public" | "private")}
+              onChange={(e) => setFilterBy(e.target.value as "all" | "public" | "private" | "starred")}
               aria-label="Filtrar por"
               className="rounded border border-neutral-700 bg-[#1e1e1e] px-2 py-1.5 text-xs text-neutral-300 outline-none"
             >
               <option value="all">All</option>
               <option value="public">Public</option>
               <option value="private">Private</option>
+              <option value="starred">{t.dashboard.starredFilter}</option>
             </select>
           </div>
           <div className="flex rounded border border-neutral-700 p-0.5">
@@ -582,6 +600,8 @@ export default function DashboardPage() {
           onCancel={bulk.clearSelection}
         />
       )}
+
+      <AIGeneratePresentationDialog open={aiDialogOpen} onClose={() => setAiDialogOpen(false)} />
     </div>
   );
 }

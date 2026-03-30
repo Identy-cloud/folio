@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { ArrowCounterClockwise, ArrowClockwise, FilePdf, FilePpt, FileImage, Image as ImageIcon, Desktop, DeviceMobile, Play, ClockCounterClockwise, Stack, NotePencil, ChatCircle, UsersThree, Export, CaretDown, Layout, Sparkle, ChartBar } from "@phosphor-icons/react";
+import { ArrowCounterClockwise, ArrowClockwise, FilePdf, FilePpt, FileImage, Image as ImageIcon, Desktop, DeviceMobile, Play, ClockCounterClockwise, Stack, NotePencil, ChatCircle, UsersThree, Export, CaretDown, Layout, Sparkle, ChartBar, GlobeSimple } from "@phosphor-icons/react";
 import { FolioLogo } from "@/components/FolioLogo";
 import { Tooltip } from "@/components/ui/Tooltip";
 
@@ -309,6 +309,14 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
           >
             <Sparkle size={14} weight="fill" className="text-amber-400" />
             AI
+          </button>
+        </Tooltip>
+        <Tooltip content="Translate presentation">
+          <button
+            onClick={() => window.dispatchEvent(new CustomEvent("folio:open-translate"))}
+            className="hidden md:flex items-center gap-1 rounded px-3 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 transition-colors"
+          >
+            <GlobeSimple size={14} weight="bold" className="text-blue-400" />
           </button>
         </Tooltip>
         <ExportDropdown

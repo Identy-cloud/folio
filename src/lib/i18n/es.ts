@@ -192,6 +192,9 @@ export const es = {
     bulkMakePrivate: "Hacer privado",
     bulkDeleteTitle: "ELIMINAR SELECCIONADAS",
     bulkDeleteConfirm: "¿Estás seguro de que querés eliminar {count} presentaciones? Esta acción no se puede deshacer.",
+    recentSection: "RECIENTES",
+    starredFilter: "Destacadas",
+    openRecent: "Abrir reciente",
   },
   editor: {
     loadError: "No se pudo cargar la presentación",

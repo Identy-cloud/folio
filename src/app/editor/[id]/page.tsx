@@ -5,6 +5,7 @@ import { useEditorStore } from "@/store/editorStore";
 import { EditorLayout } from "./components/EditorLayout";
 import { EditorErrorBoundary } from "./components/EditorErrorBoundary";
 import { useTranslation } from "@/lib/i18n/context";
+import { trackRecentPresentation } from "@/lib/recent-presentations";
 
 export default function EditorPage({
   params,
@@ -33,6 +34,7 @@ export default function EditorPage({
           ? await presResult.value.json()
           : null;
         init(id, slides, pres?.theme, pres?.customThemes as Record<string, import("@/lib/templates/themes").Theme> | undefined);
+        trackRecentPresentation(id, pres?.title ?? "Untitled");
       } catch {
         setError(t.common.connectionError);
       } finally {

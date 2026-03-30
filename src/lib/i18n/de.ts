@@ -194,6 +194,9 @@ export const de = {
     bulkMakePrivate: "Privat machen",
     bulkDeleteTitle: "AUSWAHL LOSCHEN",
     bulkDeleteConfirm: "Mochtest du wirklich {count} Prasentationen loschen? Diese Aktion kann nicht ruckgangig gemacht werden.",
+    recentSection: "NEUESTE",
+    starredFilter: "Markiert",
+    openRecent: "Zuletzt geoffnet",
   },
   editor: {
     loadError: "Die Präsentation konnte nicht geladen werden",

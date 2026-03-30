@@ -194,6 +194,9 @@ export const en = {
     bulkMakePrivate: "Make private",
     bulkDeleteTitle: "DELETE SELECTED",
     bulkDeleteConfirm: "Are you sure you want to delete {count} presentations? This action cannot be undone.",
+    recentSection: "RECENT",
+    starredFilter: "Starred",
+    openRecent: "Open recent",
   },
   editor: {
     loadError: "Could not load the presentation",

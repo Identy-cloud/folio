@@ -12,6 +12,7 @@ import { useViewerFonts } from "@/hooks/useViewerFonts";
 import { MobileViewer } from "./mobile-viewer";
 import { CommentsPanel } from "./comments-panel";
 import { ReportModal } from "@/components/ReportModal";
+import { PrintSlides } from "./print-slides";
 
 const SLIDE_W = 1920;
 const SLIDE_H = 1080;
@@ -304,7 +305,12 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
   }
 
   if (isMobile) {
-    return <MobileViewer title={title} slides={slides} showWatermark={showWatermark} presentationId={presentationId} forkCount={forkCount} />;
+    return (
+      <>
+        <MobileViewer title={title} slides={slides} showWatermark={showWatermark} presentationId={presentationId} forkCount={forkCount} />
+        <PrintSlides slides={slides} title={title} />
+      </>
+    );
   }
 
   const outgoing = slides[displayed];
@@ -405,8 +411,10 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
   }
 
   return (
+    <>
     <div
       ref={containerRef}
+      data-viewer-container
       className="relative flex h-screen w-screen items-center justify-center overflow-hidden bg-black select-none"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
@@ -466,6 +474,10 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
               <div className="text-center">
                 <kbd className="rounded bg-white/20 px-2 py-1 text-xs font-mono">1-9</kbd>
                 <p className="mt-1 text-[10px] text-white/50">Jump</p>
+              </div>
+              <div className="text-center">
+                <kbd className="rounded bg-white/20 px-2 py-1 text-xs font-mono">{"\u2318"}P</kbd>
+                <p className="mt-1 text-[10px] text-white/50">Print</p>
               </div>
             </div>
           </div>
@@ -554,6 +566,21 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
             <button
               onClick={(e) => {
                 e.stopPropagation();
+                window.print();
+              }}
+              className="text-white/40 hover:text-white/80 transition-colors text-[10px] sm:text-xs"
+              aria-label="Print presentation"
+              title="Print (Cmd+P)"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="6 9 6 2 18 2 18 9" />
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                <rect x="6" y="14" width="12" height="8" />
+              </svg>
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
                 navigator.clipboard.writeText(window.location.href);
                 const btn = e.currentTarget;
                 btn.textContent = "Copied!";
@@ -637,6 +664,8 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
         </div>
       )}
     </div>
+    <PrintSlides slides={slides} title={title} />
+    </>
   );
 }
 

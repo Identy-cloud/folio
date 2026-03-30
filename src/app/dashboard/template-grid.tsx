@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { TEMPLATES, type TemplateCategory } from "@/lib/templates/templates";
 import type { TemplateDefinition } from "@/lib/templates/template-types";
-import { Plus } from "@phosphor-icons/react";
+import { Plus, Sparkle } from "@phosphor-icons/react";
 import { useTranslation } from "@/lib/i18n/context";
 
 const CATEGORIES: { key: TemplateCategory | "all"; label: string }[] = [
@@ -17,11 +17,12 @@ const CATEGORIES: { key: TemplateCategory | "all"; label: string }[] = [
 interface Props {
   onSelectTemplate: (tpl: TemplateDefinition) => void;
   onBlank: () => void;
+  onAIGenerate: () => void;
   disabled: boolean;
   creatingBlank: boolean;
 }
 
-export function TemplateGrid({ onSelectTemplate, onBlank, disabled, creatingBlank }: Props) {
+export function TemplateGrid({ onSelectTemplate, onBlank, onAIGenerate, disabled, creatingBlank }: Props) {
   const { t } = useTranslation();
   const [category, setCategory] = useState<TemplateCategory | "all">("all");
 
@@ -75,6 +76,26 @@ export function TemplateGrid({ onSelectTemplate, onBlank, disabled, creatingBlan
             </div>
           </button>
         ))}
+
+        <button
+          onClick={onAIGenerate}
+          disabled={disabled}
+          className="group relative overflow-hidden rounded border border-amber-800/40 bg-amber-950/20 text-left transition-all hover:border-amber-700/60 hover:shadow-lg disabled:opacity-50"
+        >
+          <div className="flex aspect-video items-center justify-center">
+            <div className="flex flex-col items-center">
+              <Sparkle size={28} weight="fill" className="text-amber-400" />
+              <span className="mt-2 block text-xs font-medium uppercase tracking-wider text-amber-300">
+                Generate with AI
+              </span>
+            </div>
+          </div>
+          <div className="px-4 py-2.5">
+            <p className="text-[11px] leading-relaxed text-neutral-400">
+              Describe a topic and AI creates a full presentation
+            </p>
+          </div>
+        </button>
 
         <button
           onClick={onBlank}

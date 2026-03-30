@@ -194,6 +194,9 @@ export const pt = {
     bulkMakePrivate: "Tornar privado",
     bulkDeleteTitle: "EXCLUIR SELECIONADAS",
     bulkDeleteConfirm: "Tem certeza que deseja excluir {count} apresentacoes? Esta acao nao pode ser desfeita.",
+    recentSection: "RECENTES",
+    starredFilter: "Favoritos",
+    openRecent: "Abrir recente",
   },
   editor: {
     loadError: "Não foi possível carregar a apresentação",

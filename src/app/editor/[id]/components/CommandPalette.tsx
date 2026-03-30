@@ -7,6 +7,7 @@ import { textDefaults, shapeDefaults, arrowDefaults, dividerDefaults, lineDefaul
 import { THEMES } from "@/lib/templates/themes";
 import { SLIDE_LAYOUTS } from "@/lib/slide-layouts";
 import type { TextElement, ShapeElement, ArrowElement, DividerElement, EmbedElement, LineElement, TableElement, VideoElement, IconElement } from "@/types/elements";
+import { getRecentPresentations } from "@/lib/recent-presentations";
 
 interface Command {
   id: string;
@@ -299,6 +300,21 @@ export function CommandPalette({ open, onClose }: Props) {
     { id: "ai-generate", label: "Generate slide with AI", category: "AI", action: () => {
       window.dispatchEvent(new CustomEvent("folio:open-ai-generate"));
     }},
+    { id: "ai-presentation", label: "Generate presentation with AI", category: "AI", action: () => {
+      window.dispatchEvent(new CustomEvent("folio:open-ai-presentation"));
+    }},
+    { id: "ai-translate", label: "Translate presentation", category: "AI", action: () => {
+      window.dispatchEvent(new CustomEvent("folio:open-translate"));
+    }},
+    ...getRecentPresentations()
+      .filter((entry) => entry.id !== useEditorStore.getState().presentationId)
+      .slice(0, 5)
+      .map((entry) => ({
+        id: `recent-${entry.id}`,
+        label: `Open: ${entry.title}`,
+        category: "Recent",
+        action: () => { window.location.href = `/editor/${entry.id}`; },
+      })),
     ...SLIDE_LAYOUTS.map((layout) => ({
       id: `layout-${layout.id}`,
       label: `Apply layout: ${layout.name}`,

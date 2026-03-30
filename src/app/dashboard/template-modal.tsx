@@ -134,7 +134,7 @@ export function TemplateModal({ open, onClose }: Props) {
         </div>
 
         {step === "template" && (
-          <TemplateGrid onSelectTemplate={(tpl) => { setSelectedTemplate(tpl); setStep("preview"); }} onBlank={handleBlank} disabled={creating !== null} creatingBlank={creating === "blank"} />
+          <TemplateGrid onSelectTemplate={(tpl) => { setSelectedTemplate(tpl); setStep("preview"); }} onBlank={handleBlank} onAIGenerate={() => { onClose(); window.dispatchEvent(new CustomEvent("folio:open-ai-presentation")); }} disabled={creating !== null} creatingBlank={creating === "blank"} />
         )}
         {step === "preview" && selectedTemplate && (
           <TemplatePreview template={selectedTemplate} onBack={() => setStep("template")} onConfirm={() => setStep("theme")} />

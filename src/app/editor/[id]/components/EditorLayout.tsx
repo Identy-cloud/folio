@@ -32,6 +32,8 @@ import { UnsplashPicker } from "./UnsplashPicker";
 import { LayoutPicker } from "./LayoutPicker";
 import { AnimationTimeline } from "./AnimationTimeline";
 import { AIGenerateDialog } from "@/components/editor/AIGenerateDialog";
+import { AIGeneratePresentationDialog } from "@/components/editor/AIGeneratePresentationDialog";
+import { TranslateDialog } from "@/components/editor/TranslateDialog";
 import { ClockCounterClockwise, Stack, NotePencil } from "@phosphor-icons/react";
 import { MobileSlidePanel } from "./Mobile/MobileSlidePanel";
 import { MobileInsertPanel } from "./Mobile/MobileInsertPanel";
@@ -66,6 +68,8 @@ export function EditorLayout() {
   const [versionsOpen, setVersionsOpen] = useState(false);
   const [aiGenerateOpen, setAIGenerateOpen] = useState(false);
   const [timelineOpen, setTimelineOpen] = useState(false);
+  const [translateOpen, setTranslateOpen] = useState(false);
+  const [aiPresentationOpen, setAIPresentationOpen] = useState(false);
   const rightPanel = versionsOpen ? "versions" : historyOpen ? "history" : layersOpen ? "layers" : "palette";
   const selectedIds = useEditorStore((s) => s.selectedElementIds);
   const hasSelection = selectedIds.length > 0;
@@ -73,11 +77,17 @@ export function EditorLayout() {
   useEffect(() => {
     const onOpenUnsplash = () => setUnsplashOpen(true);
     const onOpenAIGenerate = () => setAIGenerateOpen(true);
+    const onOpenTranslate = () => setTranslateOpen(true);
+    const onOpenAIPresentation = () => setAIPresentationOpen(true);
     window.addEventListener("folio:open-unsplash", onOpenUnsplash);
     window.addEventListener("folio:open-ai-generate", onOpenAIGenerate);
+    window.addEventListener("folio:open-translate", onOpenTranslate);
+    window.addEventListener("folio:open-ai-presentation", onOpenAIPresentation);
     return () => {
       window.removeEventListener("folio:open-unsplash", onOpenUnsplash);
       window.removeEventListener("folio:open-ai-generate", onOpenAIGenerate);
+      window.removeEventListener("folio:open-translate", onOpenTranslate);
+      window.removeEventListener("folio:open-ai-presentation", onOpenAIPresentation);
     };
   }, []);
 
@@ -266,6 +276,8 @@ export function EditorLayout() {
       <LayoutPicker open={layoutPickerOpen} onClose={() => setLayoutPickerOpen(false)} />
       {unsplashOpen && <UnsplashPicker onClose={() => setUnsplashOpen(false)} />}
       <AIGenerateDialog open={aiGenerateOpen} onClose={() => setAIGenerateOpen(false)} />
+      <AIGeneratePresentationDialog open={aiPresentationOpen} onClose={() => setAIPresentationOpen(false)} />
+      <TranslateDialog open={translateOpen} onClose={() => setTranslateOpen(false)} />
       <Onboarding />
       <ShortcutsPanel
         open={shortcutsOpen}
