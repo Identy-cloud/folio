@@ -280,6 +280,27 @@ export const questions = pgTable("questions", {
   index("questions_presentation_id_idx").on(table.presentationId),
 ]);
 
+export const sessions = pgTable("sessions", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id")
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull(),
+  token: text("token").unique().notNull(),
+  device: text("device"),
+  browser: text("browser"),
+  os: text("os"),
+  ip: text("ip"),
+  lastActiveAt: timestamp("last_active_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+}, (table) => [
+  index("sessions_user_id_idx").on(table.userId),
+  index("sessions_token_idx").on(table.token),
+]);
+
 export const comments = pgTable("comments", {
   id: uuid("id").primaryKey().defaultRandom(),
   presentationId: uuid("presentation_id")

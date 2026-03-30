@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
+import { trackSession } from "@/lib/session-tracker";
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
@@ -7,18 +8,26 @@ export async function GET(request: Request) {
   const type = searchParams.get("type");
   const next = searchParams.get("next") ?? "/dashboard";
 
-  // Validate redirect is a safe relative path
   const safeNext = next.startsWith("/") && !next.startsWith("//") ? next : "/dashboard";
 
   if (code) {
     const supabase = await createClient();
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
-    if (!error) {
-      // Password reset flow → redirect to reset page
+    const { error, data } = await supabase.auth.exchangeCodeForSession(code);
+    if (!error && data.user) {
       if (type === "recovery") {
         return NextResponse.redirect(`${origin}/reset-password`);
       }
-      return NextResponse.redirect(`${origin}${safeNext}`);
+
+      const token = await trackSession(data.user.id, request.headers);
+      const response = NextResponse.redirect(`${origin}${safeNext}`);
+      response.cookies.set("session-token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: 60 * 60 * 24 * 30,
+      });
+      return response;
     }
   }
 
