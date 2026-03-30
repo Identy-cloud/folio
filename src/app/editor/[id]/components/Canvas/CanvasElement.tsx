@@ -9,6 +9,7 @@ import { ShapeRenderer, ArrowRenderer, DividerRenderer, EmbedRenderer, LineRende
 import { TextRenderer } from "./TextRenderer";
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/image-utils";
 import { calcSnap } from "@/lib/snap-utils";
+import { filterBlurCSS } from "@/lib/element-style-utils";
 
 interface Props {
   element: SlideElement;
@@ -136,6 +137,7 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
   return (
     <div
       data-element-id={element.id}
+      data-element-hidden={element.visible === false ? "true" : undefined}
       title={`${element.type}${element.type === "text" ? `: ${(element as import("@/types/elements").TextElement).content.replace(/<[^>]*>/g, "").slice(0, 30)}` : ""} — ${Math.round(element.w)}×${Math.round(element.h)}`}
       style={{
         position: "absolute",
@@ -144,7 +146,7 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
         width: element.w,
         height: element.h,
         transform: `rotate(${element.rotation}deg)`,
-        opacity: element.opacity,
+        opacity: element.visible === false ? element.opacity * 0.2 : element.opacity,
         cursor: element.locked ? "default" : "move",
         touchAction: "none",
         outline: isSelected ? "2px solid #3b82f6" : "none",
@@ -154,6 +156,7 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
           ? `${element.shadow.offsetX}px ${element.shadow.offsetY}px ${element.shadow.blur}px ${element.shadow.color}`
           : undefined,
         border: (element.borderWidth ?? 0) > 0 ? `${element.borderWidth}px solid ${element.borderColor ?? "#000"}` : undefined,
+        filter: filterBlurCSS(element.filterBlur),
       }}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}

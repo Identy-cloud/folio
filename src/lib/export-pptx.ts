@@ -78,6 +78,16 @@ function addTextElement(
   const isUnderline = el.textDecoration === "underline";
   const isStrike = el.textDecoration === "line-through";
 
+  const shadowOpts = el.textShadow
+    ? {
+        type: "outer" as const,
+        blur: el.textShadow.blur * 0.75,
+        offset: Math.max(Math.abs(el.textShadow.offsetX), Math.abs(el.textShadow.offsetY)) * 0.75,
+        color: hexToRgb(el.textShadow.color.startsWith("rgba") ? "#000000" : el.textShadow.color),
+        opacity: 0.4,
+      }
+    : undefined;
+
   pptSlide.addText(plainText, {
     x: pxToInchX(el.x),
     y: pxToInchY(el.y),
@@ -96,6 +106,7 @@ function addTextElement(
     charSpacing: el.letterSpacing * el.fontSize,
     rotate: el.rotation,
     transparency: Math.round((1 - el.opacity) * 100),
+    shadow: shadowOpts,
     wrap: true,
   });
 }
@@ -294,9 +305,9 @@ export async function generatePptxBuffer(
       }
     }
 
-    const sortedElements = [...slide.elements].sort(
-      (a, b) => a.zIndex - b.zIndex
-    );
+    const sortedElements = [...slide.elements]
+      .filter((el) => el.visible !== false)
+      .sort((a, b) => a.zIndex - b.zIndex);
 
     for (const el of sortedElements) {
       try {

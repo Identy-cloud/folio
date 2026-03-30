@@ -9,6 +9,7 @@ import { THEMES } from "@/lib/templates/themes";
 import { toast } from "sonner";
 import type { ImageElement } from "@/types/elements";
 import { slideBackground } from "@/lib/gradient-utils";
+import { usePinchZoom } from "@/hooks/usePinchZoom";
 import { CanvasElement } from "./CanvasElement";
 import { SelectionBox } from "./SelectionBox";
 import { SnapGuides } from "./SnapGuides";
@@ -54,6 +55,8 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
   const [darkCanvas, setDarkCanvas] = useState(true);
   const [safeArea, setSafeArea] = useState(false);
   const [cropElementId, setCropElementId] = useState<string | null>(null);
+  const [showTouchZoomBadge, setShowTouchZoomBadge] = useState(false);
+  const touchZoomTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     function onCropImage(e: Event) {
@@ -84,6 +87,59 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
   const isMobileMode = editingMode === "mobile";
   const canvasW = isMobileMode ? MOBILE_W : DESKTOP_W;
   const canvasH = isMobileMode ? MOBILE_H : DESKTOP_H;
+
+  const editorPinchRef = useRef<{ initialDist: number; initialScale: number } | null>(null);
+  const editorPanTouchRef = useRef<{ startX: number; startY: number; origX: number; origY: number } | null>(null);
+
+  function handleEditorTouchStart(e: React.TouchEvent) {
+    if (!narrow) return;
+    if (e.touches.length === 2) {
+      editorPanTouchRef.current = null;
+      const d = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY,
+      );
+      editorPinchRef.current = { initialDist: d, initialScale: scale };
+    } else if (e.touches.length === 1) {
+      editorPanTouchRef.current = {
+        startX: e.touches[0].clientX,
+        startY: e.touches[0].clientY,
+        origX: panOffset.x,
+        origY: panOffset.y,
+      };
+    }
+  }
+
+  function handleEditorTouchMove(e: React.TouchEvent) {
+    if (!narrow) return;
+    if (e.touches.length === 2 && editorPinchRef.current) {
+      e.preventDefault();
+      const d = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY,
+      );
+      const ratio = d / editorPinchRef.current.initialDist;
+      const next = Math.max(0.1, Math.min(2, editorPinchRef.current.initialScale * ratio));
+      setScale(next);
+      setZoomOverride(next);
+      setShowTouchZoomBadge(true);
+      if (touchZoomTimer.current) clearTimeout(touchZoomTimer.current);
+      touchZoomTimer.current = setTimeout(() => setShowTouchZoomBadge(false), 1000);
+    } else if (e.touches.length === 1 && editorPanTouchRef.current && !editorPinchRef.current) {
+      const dx = e.touches[0].clientX - editorPanTouchRef.current.startX;
+      const dy = e.touches[0].clientY - editorPanTouchRef.current.startY;
+      setPanOffset({
+        x: editorPanTouchRef.current.origX + dx,
+        y: editorPanTouchRef.current.origY + dy,
+      });
+    }
+  }
+
+  function handleEditorTouchEnd(e: React.TouchEvent) {
+    if (!narrow) return;
+    if (e.touches.length < 2) editorPinchRef.current = null;
+    if (e.touches.length === 0) editorPanTouchRef.current = null;
+  }
 
   useEffect(() => {
     function onZoomFit() { zoomFit(); }
@@ -339,6 +395,9 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
       onDrop={handleDrop}
       onWheel={handleWheel}
       onContextMenu={handleContextMenu}
+      onTouchStart={handleEditorTouchStart}
+      onTouchMove={handleEditorTouchMove}
+      onTouchEnd={handleEditorTouchEnd}
       onPointerDown={(e) => {
         if (spaceDown.current) {
           e.preventDefault();
@@ -475,6 +534,13 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
           elementId={ctxMenu.elementId}
           onClose={() => setCtxMenu(null)}
         />
+      )}
+
+      {/* Mobile pinch zoom badge */}
+      {narrow && showTouchZoomBadge && (
+        <div className="absolute top-3 left-1/2 z-30 -translate-x-1/2 rounded-full bg-neutral-900/80 px-3 py-1 text-xs font-medium text-neutral-300 backdrop-blur-sm">
+          {Math.round(scale * 100)}%
+        </div>
       )}
 
       {/* Slide info */}

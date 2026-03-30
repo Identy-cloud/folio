@@ -168,7 +168,7 @@ export function ElementPalette() {
             {selectedElement.type === "icon" && <IconProperties element={selectedElement as IconElement} />}
             {selectedElement.type === "video" && <VideoProperties element={selectedElement as VideoElement} />}
           </CollapsibleSection>
-          <CollapsibleSection title="Shadow" defaultOpen={false}>
+          <CollapsibleSection title="Effects" defaultOpen={false}>
             <ShadowControls element={selectedElement} />
           </CollapsibleSection>
           <CollapsibleSection title="Animation" defaultOpen={false}>

@@ -29,10 +29,12 @@ export interface BaseElement {
   zIndex: number;
   locked: boolean;
   shadow?: ElementShadow;
+  filterBlur?: number;
   groupId?: string;
   linkUrl?: string;
   borderWidth?: number;
   borderColor?: string;
+  visible?: boolean;
   animation?: ElementAnimation;
   animationDelay?: number;
   animationDuration?: number;
@@ -48,6 +50,7 @@ export interface TextElement extends BaseElement {
   fontStyle?: "normal" | "italic";
   textDecoration?: "none" | "underline" | "line-through";
   textStroke?: { width: number; color: string };
+  textShadow?: ElementShadow;
   lineHeight: number;
   letterSpacing: number;
   color: string;

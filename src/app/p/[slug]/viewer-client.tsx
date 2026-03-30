@@ -7,6 +7,7 @@ import { getElementAnimationStyle } from "@/lib/element-animation";
 import { ShapeRenderer, ArrowRenderer, DividerRenderer, EmbedRenderer, LineRenderer, TableRenderer, VideoRenderer, IconRenderer } from "@/components/elements";
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/image-utils";
 import { slideBackground } from "@/lib/gradient-utils";
+import { textShadowCSS, filterBlurCSS } from "@/lib/element-style-utils";
 import { useViewerFonts } from "@/hooks/useViewerFonts";
 import { MobileViewer } from "./mobile-viewer";
 import { CommentsPanel } from "./comments-panel";
@@ -597,7 +598,7 @@ function SlideLayer({
   animateKey?: number;
 }) {
   const sorted = useMemo(
-    () => slide.elements.slice().sort((a, b) => a.zIndex - b.zIndex),
+    () => slide.elements.filter((el) => el.visible !== false).slice().sort((a, b) => a.zIndex - b.zIndex),
     [slide.elements]
   );
 
@@ -644,6 +645,7 @@ function ViewerElement({ element, delay, animate }: { element: SlideElement; del
           ? `${element.shadow.offsetX}px ${element.shadow.offsetY}px ${element.shadow.blur}px ${element.shadow.color}`
           : undefined,
         border: (element.borderWidth ?? 0) > 0 ? `${element.borderWidth}px solid ${element.borderColor ?? "#000"}` : undefined,
+        filter: filterBlurCSS(element.filterBlur),
         ...animStyle,
       }}
     >
@@ -723,6 +725,7 @@ function ViewerText({ element }: { element: TextElement }) {
         lineHeight: element.lineHeight,
         letterSpacing: `${element.letterSpacing}em`,
         color: element.color,
+        textShadow: textShadowCSS(element.textShadow),
         textAlign: element.textAlign,
         overflow: "hidden",
         wordBreak: "break-word",

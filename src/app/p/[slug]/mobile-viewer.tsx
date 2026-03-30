@@ -9,6 +9,8 @@ import { IconRenderer } from "@/components/elements/IconRenderer";
 import { useTranslation } from "@/lib/i18n/context";
 import { ReportModal } from "@/components/ReportModal";
 import { gradientToCSS } from "@/lib/gradient-utils";
+import { textShadowCSS } from "@/lib/element-style-utils";
+import { usePinchZoom } from "@/hooks/usePinchZoom";
 
 interface Slide {
   id: string;
@@ -45,7 +47,25 @@ export function MobileViewer({ title, slides, showWatermark, presentationId }: P
   const touchRef = useRef<{ x: number; y: number; t: number } | null>(null);
   const scrollingRef = useRef(false);
   const [showReport, setShowReport] = useState(false);
+  const [showZoomBadge, setShowZoomBadge] = useState(false);
+  const zoomBadgeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const total = slides.length;
+
+  const pinch = usePinchZoom({ minScale: 0.5, maxScale: 3, boundsWidth: 375, boundsHeight: 667 });
+
+  useEffect(() => {
+    if (pinch.scale !== 1) {
+      setShowZoomBadge(true);
+      if (zoomBadgeTimer.current) clearTimeout(zoomBadgeTimer.current);
+      zoomBadgeTimer.current = setTimeout(() => setShowZoomBadge(false), 1000);
+    } else {
+      setShowZoomBadge(false);
+    }
+  }, [pinch.scale]);
+
+  useEffect(() => {
+    pinch.reset();
+  }, [current, pinch.reset]);
 
   const goNext = useCallback(() => {
     if (animating || current >= total - 1) return;
@@ -77,17 +97,23 @@ export function MobileViewer({ title, slides, showWatermark, presentationId }: P
   }, [current, displayed, slides]);
 
   function handleTouchStart(e: React.TouchEvent) {
+    pinch.handlers.onTouchStart(e);
+    if (e.touches.length >= 2) return;
     scrollingRef.current = false;
     touchRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY, t: Date.now() };
   }
 
   function handleTouchMove(e: React.TouchEvent) {
+    pinch.handlers.onTouchMove(e);
+    if (e.touches.length >= 2 || pinch.isZoomed) return;
     if (!touchRef.current) return;
     const dy = Math.abs(e.touches[0].clientY - touchRef.current.y);
     if (dy > 10) scrollingRef.current = true;
   }
 
   function handleTouchEnd(e: React.TouchEvent) {
+    pinch.handlers.onTouchEnd(e);
+    if (pinch.isZoomed) { touchRef.current = null; return; }
     if (!touchRef.current || scrollingRef.current) { touchRef.current = null; return; }
     const dx = e.changedTouches[0].clientX - touchRef.current.x;
     const elapsed = Date.now() - touchRef.current.t;
@@ -199,11 +225,22 @@ export function MobileViewer({ title, slides, showWatermark, presentationId }: P
         <div className="absolute inset-0" style={getStyle("in")}>
           <div
             className="h-full overflow-y-auto overscroll-contain pb-14"
-            style={{ background: mobileBg(activeSlide) }}
+            style={{
+              background: mobileBg(activeSlide),
+              transform: `translate(${pinch.offsetX}px, ${pinch.offsetY}px) scale(${pinch.scale})`,
+              transformOrigin: "center center",
+              willChange: pinch.isZoomed ? "transform" : "auto",
+            }}
           >
             <MobileSlideContent animateKey={animating ? -1 : current} elements={inElements} bg={mobileBg(activeSlide)} />
           </div>
         </div>
+        {/* Zoom level badge */}
+        {showZoomBadge && pinch.scale !== 1 && (
+          <div className="absolute top-4 left-1/2 z-20 -translate-x-1/2 rounded-full bg-black/60 px-3 py-1 text-xs font-medium text-white/80 backdrop-blur-sm transition-opacity duration-300">
+            {pinch.scale.toFixed(1)}x
+          </div>
+        )}
       </div>
 
       {/* Fixed bottom bar */}
@@ -269,6 +306,7 @@ function MobileSlideContent({ elements, bg, animateKey }: { elements: SlideEleme
     const decorative: SlideElement[] = [];
 
     for (const el of elements) {
+      if (el.visible === false) continue;
       if (el.type === "text" && el.fontSize >= 48) titles.push(el);
       else if (el.type === "image") images.push(el);
       else if (el.type === "text" && el.opacity > 0.2) body.push(el);
@@ -413,6 +451,7 @@ function MobileText({ element }: { element: TextElement }) {
         lineHeight: isTitle ? 1.1 : 1.6,
         letterSpacing: `${element.letterSpacing}em`,
         color: element.color,
+        textShadow: textShadowCSS(element.textShadow),
         opacity: element.opacity,
       }}
       dangerouslySetInnerHTML={{ __html: sanitized }}

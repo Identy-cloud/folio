@@ -76,6 +76,7 @@ export function LayerPanel({ onClose }: { onClose: () => void }) {
         {sorted.map((el) => {
           const Icon = TYPE_ICONS[el.type] ?? Rectangle;
           const isSelected = selectedIds.includes(el.id);
+          const isVisible = el.visible !== false;
           return (
             <div
               key={el.id}
@@ -85,7 +86,7 @@ export function LayerPanel({ onClose }: { onClose: () => void }) {
               onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); selectElement(el.id); } }}
               className={`flex w-full items-center gap-2 rounded px-2 py-1.5 transition-colors ${
                 isSelected ? "bg-white/10 text-white" : "text-neutral-400 hover:bg-neutral-800"
-              }`}
+              } ${!isVisible ? "opacity-50" : ""}`}
             >
               <Icon size={12} className="shrink-0" />
               <span className="flex-1 text-[11px] truncate text-left">{getLabel(el)}</span>
@@ -103,13 +104,13 @@ export function LayerPanel({ onClose }: { onClose: () => void }) {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  updateElement(el.id, { opacity: el.opacity > 0 ? 0 : 1 });
+                  updateElement(el.id, { visible: !isVisible });
                   pushHistory();
                 }}
-                aria-label={el.opacity > 0 ? "Ocultar capa" : "Mostrar capa"}
+                aria-label={isVisible ? "Ocultar capa" : "Mostrar capa"}
                 className="p-0.5 text-neutral-600 hover:text-neutral-300"
               >
-                {el.opacity > 0 ? <Eye size={10} /> : <EyeSlash size={10} />}
+                {isVisible ? <Eye size={10} /> : <EyeSlash size={10} />}
               </button>
             </div>
           );

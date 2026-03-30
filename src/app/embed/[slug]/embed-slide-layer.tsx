@@ -6,6 +6,7 @@ import type { SlideElement, TextElement, TableElement, SlideTransition, Gradient
 import { ShapeRenderer, ArrowRenderer, DividerRenderer, EmbedRenderer, LineRenderer, TableRenderer, VideoRenderer, IconRenderer } from "@/components/elements";
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/image-utils";
 import { slideBackground } from "@/lib/gradient-utils";
+import { textShadowCSS, filterBlurCSS } from "@/lib/element-style-utils";
 
 const SLIDE_W = 1920;
 const SLIDE_H = 1080;
@@ -27,7 +28,7 @@ interface Props {
 
 export function EmbedSlideLayer({ slide, scale }: Props) {
   const sorted = useMemo(
-    () => slide.elements.slice().sort((a, b) => a.zIndex - b.zIndex),
+    () => slide.elements.filter((el) => el.visible !== false).slice().sort((a, b) => a.zIndex - b.zIndex),
     [slide.elements]
   );
 
@@ -63,6 +64,7 @@ function EmbedElement({ element }: { element: SlideElement }) {
           ? `${element.shadow.offsetX}px ${element.shadow.offsetY}px ${element.shadow.blur}px ${element.shadow.color}`
           : undefined,
         border: (element.borderWidth ?? 0) > 0 ? `${element.borderWidth}px solid ${element.borderColor ?? "#000"}` : undefined,
+        filter: filterBlurCSS(element.filterBlur),
       }}
     >
       <div
@@ -103,6 +105,8 @@ function EmbedText({ element }: { element: TextElement }) {
         fontWeight: element.fontWeight,
         fontStyle: element.fontStyle ?? "normal",
         textDecoration: element.textDecoration ?? "none",
+        WebkitTextStroke: element.textStroke ? `${element.textStroke.width}px ${element.textStroke.color}` : undefined,
+        textShadow: textShadowCSS(element.textShadow),
         lineHeight: element.lineHeight,
         letterSpacing: `${element.letterSpacing}em`,
         color: element.color,

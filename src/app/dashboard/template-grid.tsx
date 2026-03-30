@@ -1,0 +1,104 @@
+"use client";
+
+import { useState } from "react";
+import { TEMPLATES, type TemplateCategory } from "@/lib/templates/templates";
+import type { TemplateDefinition } from "@/lib/templates/template-types";
+import { Plus } from "@phosphor-icons/react";
+import { useTranslation } from "@/lib/i18n/context";
+
+const CATEGORIES: { key: TemplateCategory | "all"; label: string }[] = [
+  { key: "all", label: "All" },
+  { key: "business", label: "Business" },
+  { key: "creative", label: "Creative" },
+  { key: "education", label: "Education" },
+  { key: "pitch", label: "Pitch" },
+];
+
+interface Props {
+  onSelectTemplate: (tpl: TemplateDefinition) => void;
+  onBlank: () => void;
+  disabled: boolean;
+  creatingBlank: boolean;
+}
+
+export function TemplateGrid({ onSelectTemplate, onBlank, disabled, creatingBlank }: Props) {
+  const { t } = useTranslation();
+  const [category, setCategory] = useState<TemplateCategory | "all">("all");
+
+  const filtered = category === "all"
+    ? TEMPLATES
+    : TEMPLATES.filter((tpl) => tpl.category === category);
+
+  return (
+    <div>
+      <div className="mb-4 flex gap-1.5 overflow-x-auto pb-1 scrollbar-none sm:mb-6 sm:gap-2">
+        {CATEGORIES.map((cat) => (
+          <button
+            key={cat.key}
+            onClick={() => setCategory(cat.key)}
+            className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition-colors sm:px-4 sm:py-2 sm:text-sm ${
+              category === cat.key
+                ? "bg-white/10 text-white"
+                : "text-neutral-400 hover:bg-white/5 hover:text-neutral-200"
+            }`}
+          >
+            {cat.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+        {filtered.map((tpl) => (
+          <button
+            key={tpl.id}
+            onClick={() => onSelectTemplate(tpl)}
+            disabled={disabled}
+            className="group relative overflow-hidden rounded border border-neutral-700 text-left transition-all hover:border-neutral-500 hover:shadow-lg disabled:opacity-50"
+          >
+            <div className="flex aspect-video items-end bg-neutral-900 p-4">
+              <div>
+                <p className="font-display text-xl leading-none tracking-tight text-white">
+                  {tpl.name}
+                </p>
+                <p className="mt-1.5 text-[10px] text-neutral-500">
+                  {tpl.slideCount} slides
+                </p>
+              </div>
+              <span className="absolute right-3 top-3 rounded-full bg-white/5 px-2 py-0.5 text-[10px] capitalize text-neutral-400">
+                {tpl.category}
+              </span>
+            </div>
+            <div className="px-4 py-2.5">
+              <p className="text-[11px] leading-relaxed text-neutral-400">
+                {tpl.description}
+              </p>
+            </div>
+          </button>
+        ))}
+
+        <button
+          onClick={onBlank}
+          disabled={disabled}
+          className="relative overflow-hidden rounded border-2 border-dashed border-neutral-700 text-neutral-500 transition-colors hover:border-neutral-500 hover:text-neutral-300 disabled:opacity-50"
+        >
+          <div className="flex aspect-video items-center justify-center">
+            <div className="flex flex-col items-center">
+              <Plus size={28} />
+              <span className="mt-2 block text-xs uppercase tracking-wider">
+                {t.dashboard.blank}
+              </span>
+            </div>
+          </div>
+          <div className="px-4 py-2">
+            <p className="text-xs text-neutral-400">{t.common.noTemplate}</p>
+          </div>
+          {creatingBlank && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/70">
+              <span className="text-xs text-neutral-400">{t.common.creating}</span>
+            </div>
+          )}
+        </button>
+      </div>
+    </div>
+  );
+}

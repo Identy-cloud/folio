@@ -3,6 +3,7 @@
 import { useRef, useEffect, useMemo, useCallback } from "react";
 import DOMPurify from "dompurify";
 import type { TextElement } from "@/types/elements";
+import { textShadowCSS } from "@/lib/element-style-utils";
 
 interface TextRendererProps {
   element: TextElement;
@@ -69,6 +70,7 @@ export function TextRenderer({ element, editing, onExitEdit }: TextRendererProps
     cursor: editing ? "text" : "inherit",
     outline: editing ? "2px solid #3b82f6" : "none",
     outlineOffset: 1,
+    textShadow: textShadowCSS(element.textShadow),
     overflow: "hidden",
     wordBreak: "break-word",
   };

@@ -5,6 +5,7 @@ import type { Slide, SlideElement, TextElement, TableElement } from "@/types/ele
 import { ShapeRenderer, ArrowRenderer, DividerRenderer, LineRenderer, TableRenderer, VideoRenderer, IconRenderer } from "@/components/elements";
 import { getOptimizedImageUrl, IMAGE_PRESETS } from "@/lib/image-utils";
 import { slideBackground } from "@/lib/gradient-utils";
+import { textShadowCSS, filterBlurCSS } from "@/lib/element-style-utils";
 
 const W = 1920;
 const H = 1080;
@@ -58,6 +59,7 @@ export const SlidePreview = memo(function SlidePreview({ slide, className }: Pro
           }}
         >
           {slide.elements
+            .filter((el) => el.visible !== false)
             .slice()
             .sort((a, b) => a.zIndex - b.zIndex)
             .map((el) => (
@@ -85,6 +87,7 @@ const PreviewElement = memo(function PreviewElement({ element }: { element: Slid
           ? `${element.shadow.offsetX}px ${element.shadow.offsetY}px ${element.shadow.blur}px ${element.shadow.color}`
           : undefined,
         border: (element.borderWidth ?? 0) > 0 ? `${element.borderWidth}px solid ${element.borderColor ?? "#000"}` : undefined,
+        filter: filterBlurCSS(element.filterBlur),
         pointerEvents: "none",
       }}
     >
@@ -142,6 +145,7 @@ function PreviewText({ element }: { element: TextElement }) {
         lineHeight: element.lineHeight,
         letterSpacing: `${element.letterSpacing}em`,
         color: element.color,
+        textShadow: textShadowCSS(element.textShadow),
         textAlign: element.textAlign,
         overflow: "hidden",
         wordBreak: "break-word",

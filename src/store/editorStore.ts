@@ -54,6 +54,8 @@ interface EditorState {
   setEditingMode: (mode: EditingMode) => void;
   generateMobileLayout: () => void;
 
+  toggleElementVisibility: (elementId: string) => void;
+
   bringToFront: (elementId: string) => void;
   sendToBack: (elementId: string) => void;
   bringForward: (elementId: string) => void;
@@ -395,6 +397,23 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     set({ slides: updated, dirty: true, saveStatus: "unsaved" });
   },
 
+  toggleElementVisibility: (elementId) => {
+    const { slides, activeSlideIndex, editingMode } = get();
+    const key = editingMode === "mobile" ? "mobileElements" : "elements";
+    const updated = slides.map((s, i) => {
+      if (i !== activeSlideIndex) return s;
+      const arr = (key === "mobileElements" ? s.mobileElements : s.elements) ?? [];
+      return {
+        ...s,
+        [key]: arr.map((el) =>
+          el.id === elementId ? { ...el, visible: el.visible === false } as typeof el : el
+        ),
+      };
+    });
+    set({ slides: updated, dirty: true, saveStatus: "unsaved" });
+    get().pushHistory();
+  },
+
   bringToFront: (elementId) => {
     const { slides, activeSlideIndex, editingMode } = get();
     const slide = slides[activeSlideIndex];
@@ -530,7 +549,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     const els = get().editingMode === "mobile" && slide?.mobileElements ? slide.mobileElements : slide?.elements;
     const el = els?.find((e) => e.id === selectedElementIds[0]);
     if (!el) return;
-    const { id, type, x, y, w, h, rotation, zIndex, locked, groupId, animation, animationDelay, animationDuration, animationEasing, ...style } = el as unknown as Record<string, unknown>;
+    const { id, type, x, y, w, h, rotation, zIndex, locked, visible, groupId, animation, animationDelay, animationDuration, animationEasing, ...style } = el as unknown as Record<string, unknown>;
     styleClipboard = style;
   },
 

@@ -1,14 +1,8 @@
 import type { Slide, TextElement, ShapeElement, ImageElement } from "@/types/elements";
 import type { Theme } from "./themes";
 import { generateTemplate } from "./generator";
-
-export interface TemplateDefinition {
-  id: string;
-  name: string;
-  description: string;
-  slideCount: number;
-  generate: (theme: Theme, themeKey: string, presentationId: string) => Omit<Slide, "id">[];
-}
+export type { TemplateCategory, TemplateDefinition } from "./template-types";
+import type { TemplateDefinition } from "./template-types";
 
 const IMG = {
   portrait1: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&q=80&auto=format&fit=crop",
@@ -678,12 +672,18 @@ function minimal(t: Theme, tk: string, pid: string): Omit<Slide, "id">[] {
 // TEMPLATE REGISTRY
 // ---------------------------------------------------------------------------
 
-export const TEMPLATES: TemplateDefinition[] = [
+import { BUSINESS_TEMPLATES } from "./templates-business";
+import { CREATIVE_TEMPLATES } from "./templates-creative";
+import { EDUCATION_TEMPLATES } from "./templates-education";
+import { PITCH_TEMPLATES } from "./templates-pitch";
+
+const BASE_TEMPLATES: TemplateDefinition[] = [
   {
     id: "creative-brief",
     name: "Creative Brief",
     description: "Editorial project proposal with team showcase, concept, and timeline stages.",
     slideCount: 6,
+    category: "creative",
     generate: (_theme, themeKey, presentationId) =>
       generateTemplate(themeKey, presentationId),
   },
@@ -692,6 +692,7 @@ export const TEMPLATES: TemplateDefinition[] = [
     name: "Pitch Deck",
     description: "Investor-ready deck with problem, solution, market size, and call to action.",
     slideCount: 5,
+    category: "pitch",
     generate: (theme, themeKey, presentationId) =>
       pitchDeck(theme, themeKey, presentationId),
   },
@@ -700,6 +701,7 @@ export const TEMPLATES: TemplateDefinition[] = [
     name: "Portfolio",
     description: "Creative portfolio with full-bleed imagery, project showcases, and services grid.",
     slideCount: 5,
+    category: "creative",
     generate: (theme, themeKey, presentationId) =>
       portfolio(theme, themeKey, presentationId),
   },
@@ -708,6 +710,7 @@ export const TEMPLATES: TemplateDefinition[] = [
     name: "Annual Report",
     description: "Corporate report with executive summary, key metrics, milestones, and outlook.",
     slideCount: 5,
+    category: "business",
     generate: (theme, themeKey, presentationId) =>
       report(theme, themeKey, presentationId),
   },
@@ -716,7 +719,16 @@ export const TEMPLATES: TemplateDefinition[] = [
     name: "Minimal",
     description: "Ultra-clean presentation with generous whitespace and centered typography.",
     slideCount: 5,
+    category: "creative",
     generate: (theme, themeKey, presentationId) =>
       minimal(theme, themeKey, presentationId),
   },
+];
+
+export const TEMPLATES: TemplateDefinition[] = [
+  ...BASE_TEMPLATES,
+  ...BUSINESS_TEMPLATES,
+  ...CREATIVE_TEMPLATES,
+  ...EDUCATION_TEMPLATES,
+  ...PITCH_TEMPLATES,
 ];

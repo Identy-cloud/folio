@@ -33,6 +33,9 @@ export async function exportToPdf({
       height: 1080,
       pixelRatio: 1,
       cacheBust: true,
+      filter: (node: HTMLElement) => {
+        return node.getAttribute?.("data-element-hidden") !== "true";
+      },
     });
 
     if (i > 0) pdf.addPage([1920, 1080], "landscape");
