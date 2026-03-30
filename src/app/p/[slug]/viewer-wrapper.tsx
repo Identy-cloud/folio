@@ -51,9 +51,10 @@ interface Props {
   showWatermark?: boolean;
   presentationId?: string;
   hasPassword?: boolean;
+  forkCount?: number;
 }
 
-export function ViewerWrapper({ title, slug, slides, showWatermark, presentationId, hasPassword }: Props) {
+export function ViewerWrapper({ title, slug, slides, showWatermark, presentationId, hasPassword, forkCount }: Props) {
   const searchParams = useSearchParams();
   const isPresenterMode = searchParams.get("presenter") === "true";
   const initialSlide = parseInt(searchParams.get("slide") ?? "0", 10);
@@ -68,5 +69,5 @@ export function ViewerWrapper({ title, slug, slides, showWatermark, presentation
     );
   }
 
-  return <ViewerClient title={title} slides={slides} showWatermark={showWatermark} presentationId={presentationId} hasPassword={hasPassword} />;
+  return <ViewerClient title={title} slides={slides} showWatermark={showWatermark} presentationId={presentationId} hasPassword={hasPassword} forkCount={forkCount} />;
 }

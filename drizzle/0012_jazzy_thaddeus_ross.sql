@@ -1,0 +1,1 @@
+ALTER TABLE "presentations" ADD COLUMN "fork_count" integer DEFAULT 0 NOT NULL;

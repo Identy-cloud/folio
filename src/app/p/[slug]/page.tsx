@@ -148,6 +148,7 @@ export default async function ViewerPage({
         showWatermark={data.ownerPlan === "free"}
         presentationId={data.presentation.id}
         hasPassword={!!data.presentation.password}
+        forkCount={data.presentation.forkCount}
       />
     </>
   );

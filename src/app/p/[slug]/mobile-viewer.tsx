@@ -28,6 +28,7 @@ interface Props {
   slides: Slide[];
   showWatermark?: boolean;
   presentationId?: string;
+  forkCount?: number;
 }
 
 const DEFAULT_TRANSITION_MS = 350;
@@ -39,9 +40,47 @@ function mobileBg(slide: Slide): string {
   return slide.backgroundColor;
 }
 
-export function MobileViewer({ title, slides, showWatermark, presentationId }: Props) {
+export function MobileViewer({ title, slides, showWatermark, presentationId, forkCount }: Props) {
   const { t } = useTranslation();
   const [current, setCurrent] = useState(0);
+  const [forking, setForking] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+  const [localForkCount, setLocalForkCount] = useState(forkCount ?? 0);
+
+  useEffect(() => {
+    if (!toast) return;
+    const timer = setTimeout(() => setToast(null), 3000);
+    return () => clearTimeout(timer);
+  }, [toast]);
+
+  const handleFork = useCallback(async () => {
+    if (!presentationId || forking) return;
+    setForking(true);
+    try {
+      const res = await fetch(`/api/presentations/${presentationId}/clone`, { method: "POST" });
+      if (res.ok) {
+        const p = await res.json();
+        setLocalForkCount((c) => c + 1);
+        setToast({ message: "Forked! Redirecting...", type: "success" });
+        setTimeout(() => { window.location.href = `/editor/${p.id}`; }, 800);
+      } else if (res.status === 401) {
+        window.location.href = "/login";
+      } else if (res.status === 403) {
+        const data = await res.json();
+        if (data.error === "PLAN_LIMIT") {
+          setToast({ message: `Plan limit (${data.limit})`, type: "error" });
+        } else {
+          setToast({ message: "Cannot fork", type: "error" });
+        }
+      } else {
+        setToast({ message: "Fork failed", type: "error" });
+      }
+    } catch {
+      setToast({ message: "Network error", type: "error" });
+    } finally {
+      setForking(false);
+    }
+  }, [presentationId, forking]);
   const [displayed, setDisplayed] = useState(0);
   const [animating, setAnimating] = useState(false);
   const touchRef = useRef<{ x: number; y: number; t: number } | null>(null);
@@ -257,13 +296,39 @@ export function MobileViewer({ title, slides, showWatermark, presentationId }: P
             </div>
           </div>
         </div>
-        <a
-          href="/"
-          onClick={(e) => e.stopPropagation()}
-          className="block border-t border-white/5 px-4 py-1.5 text-center text-[10px] text-white/30 active:text-white/50"
-        >
-          {t.viewer.createOwn}
-        </a>
+        <div className="flex items-center justify-between border-t border-white/5 px-4 py-1.5">
+          <a
+            href="/"
+            onClick={(e) => e.stopPropagation()}
+            className="text-[10px] text-white/30 active:text-white/50"
+          >
+            Folio
+          </a>
+          <div className="flex items-center gap-3">
+            {localForkCount > 0 && (
+              <span className="flex items-center gap-1 text-[10px] text-white/30">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="18" r="3" /><circle cx="6" cy="6" r="3" /><circle cx="18" cy="6" r="3" />
+                  <path d="M18 9v2c0 .6-.4 1-1 1H7c-.6 0-1-.4-1-1V9" /><path d="M12 12v3" />
+                </svg>
+                {localForkCount}
+              </span>
+            )}
+            {presentationId && (
+              <button
+                onClick={handleFork}
+                disabled={forking}
+                className="flex h-8 items-center gap-1 rounded-full bg-white/10 px-3 text-[10px] text-white/60 active:bg-white/20 disabled:opacity-50"
+              >
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="18" r="3" /><circle cx="6" cy="6" r="3" /><circle cx="18" cy="6" r="3" />
+                  <path d="M18 9v2c0 .6-.4 1-1 1H7c-.6 0-1-.4-1-1V9" /><path d="M12 12v3" />
+                </svg>
+                {forking ? "..." : "Fork"}
+              </button>
+            )}
+          </div>
+        </div>
       </div>
 
       {presentationId && (
@@ -284,6 +349,14 @@ export function MobileViewer({ title, slides, showWatermark, presentationId }: P
           presentationId={presentationId}
           onClose={() => setShowReport(false)}
         />
+      )}
+
+      {toast && (
+        <div className={`absolute top-4 left-1/2 z-50 -translate-x-1/2 rounded-lg px-3 py-1.5 text-[10px] font-medium backdrop-blur-sm ${
+          toast.type === "success" ? "bg-green-900/80 text-green-200" : "bg-red-900/80 text-red-200"
+        }`}>
+          {toast.message}
+        </div>
       )}
 
       {/* Swipe hint */}

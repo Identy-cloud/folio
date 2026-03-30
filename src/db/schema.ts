@@ -87,6 +87,7 @@ export const presentations = pgTable("presentations", {
   customThemes: jsonb("custom_themes").default({}).notNull(),
   shareExpiresAt: timestamp("share_expires_at", { withTimezone: true }),
   shareToken: text("share_token").unique(),
+  forkCount: integer("fork_count").default(0).notNull(),
   publishAt: timestamp("publish_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()

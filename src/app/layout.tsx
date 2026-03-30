@@ -13,6 +13,7 @@ import { Toaster } from "sonner";
 import { I18nProvider } from "@/lib/i18n/context";
 import { CookieBanner } from "@/components/CookieBanner";
 import { PostHogProvider } from "@/components/PostHogProvider";
+import { ServiceWorkerRegistrar } from "@/components/ServiceWorkerRegistrar";
 import "./globals.css";
 
 const bebasNeue = Bebas_Neue({
@@ -95,6 +96,9 @@ export const metadata: Metadata = {
     statusBarStyle: "black-translucent",
     title: "Folio",
   },
+  other: {
+    "theme-color": "#161616",
+  },
 };
 
 export default function RootLayout({
@@ -112,6 +116,7 @@ export default function RootLayout({
           {children}
           <CookieBanner />
           <PostHogProvider />
+          <ServiceWorkerRegistrar />
         </I18nProvider>
         <Toaster
           position="bottom-center"

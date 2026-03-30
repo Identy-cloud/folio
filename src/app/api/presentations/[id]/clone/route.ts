@@ -4,7 +4,7 @@ import { getAuthenticatedUser } from "@/lib/auth";
 import { checkRateLimit, rateLimitResponse } from "@/lib/rate-limit";
 import { getPlanLimits } from "@/lib/plan-limits";
 import { getUserPlan } from "@/lib/stripe";
-import { eq, asc, count } from "drizzle-orm";
+import { eq, asc, count, sql } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import type { NextRequest } from "next/server";
 
@@ -56,9 +56,11 @@ export async function POST(
     .insert(presentations)
     .values({
       userId: user.id,
-      title: `${original.title} (copy)`,
+      title: `${original.title} (fork)`,
       slug: nanoid(10),
       theme: original.theme,
+      isPublic: false,
+      customThemes: original.customThemes,
     })
     .returning();
 
@@ -71,12 +73,19 @@ export async function POST(
         transitionDuration: s.transitionDuration,
         transitionEasing: s.transitionEasing,
         backgroundColor: s.backgroundColor,
+        backgroundGradient: s.backgroundGradient,
         backgroundImage: s.backgroundImage,
         elements: s.elements,
         mobileElements: s.mobileElements,
+        notes: s.notes,
       }))
     );
   }
+
+  await db
+    .update(presentations)
+    .set({ forkCount: sql`${presentations.forkCount} + 1` })
+    .where(eq(presentations.id, id));
 
   return Response.json(newPres, { status: 201 });
 }

@@ -1,6 +1,7 @@
 import { db } from "@/db";
-import { comments, presentations } from "@/db/schema";
+import { comments, presentations, users } from "@/db/schema";
 import { getAuthenticatedUser } from "@/lib/auth";
+import { sendCommentNotification } from "@/lib/email";
 import { createNotification } from "@/lib/notifications";
 import { checkRateLimit, rateLimitResponse } from "@/lib/rate-limit";
 import { eq, and, desc, isNull } from "drizzle-orm";
@@ -106,6 +107,23 @@ export async function POST(request: NextRequest) {
       : `${authorName} comentó en "${pres.title}"`,
     presentationId,
   }).catch(() => {});
+
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://folio.identy.cloud";
+  db.select({ email: users.email })
+    .from(users)
+    .where(eq(users.id, pres.userId))
+    .limit(1)
+    .then(([owner]) => {
+      if (owner?.email) {
+        sendCommentNotification(
+          owner.email,
+          authorName,
+          pres.title ?? "Untitled",
+          `${appUrl}/editor/${presentationId}`
+        ).catch(() => {});
+      }
+    })
+    .catch(() => {});
 
   return Response.json(comment, { status: 201 });
 }

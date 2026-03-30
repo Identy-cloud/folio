@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { presentations, collaborators, users } from "@/db/schema";
 import { getAuthenticatedUser } from "@/lib/auth";
+import { sendCollaboratorInvite } from "@/lib/email";
 import { createNotification } from "@/lib/notifications";
 import { getPlanLimits } from "@/lib/plan-limits";
 import { getUserPlan } from "@/lib/stripe";
@@ -137,6 +138,14 @@ export async function POST(
     message: `${user.name ?? user.email} te agrego a "${pres.title}"`,
     presentationId: id,
   }).catch(() => {});
+
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://folio.identy.cloud";
+  sendCollaboratorInvite(
+    targetUser.email,
+    user.name ?? user.email ?? "Someone",
+    pres.title ?? "Untitled",
+    `${appUrl}/editor/${id}`
+  ).catch(() => {});
 
   return Response.json({
     id: created.id,

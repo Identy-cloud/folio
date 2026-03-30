@@ -36,9 +36,10 @@ interface Props {
   showWatermark?: boolean;
   presentationId?: string;
   hasPassword?: boolean;
+  forkCount?: number;
 }
 
-export function ViewerClient({ title, slides, showWatermark, presentationId, hasPassword }: Props) {
+export function ViewerClient({ title, slides, showWatermark, presentationId, hasPassword, forkCount }: Props) {
   useViewerFonts(presentationId);
   const [unlocked, setUnlocked] = useState(!hasPassword);
   const [pwInput, setPwInput] = useState("");
@@ -48,12 +49,50 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
   const autoplayRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [showHelp, setShowHelp] = useState(true);
   const [showReport, setShowReport] = useState(false);
+  const [forking, setForking] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+  const [localForkCount, setLocalForkCount] = useState(forkCount ?? 0);
 
   useEffect(() => {
     if (!showHelp) return;
     const t = setTimeout(() => setShowHelp(false), 4000);
     return () => clearTimeout(t);
   }, [showHelp]);
+
+  useEffect(() => {
+    if (!toast) return;
+    const t = setTimeout(() => setToast(null), 3000);
+    return () => clearTimeout(t);
+  }, [toast]);
+
+  const handleFork = useCallback(async () => {
+    if (!presentationId || forking) return;
+    setForking(true);
+    try {
+      const res = await fetch(`/api/presentations/${presentationId}/clone`, { method: "POST" });
+      if (res.ok) {
+        const p = await res.json();
+        setLocalForkCount((c) => c + 1);
+        setToast({ message: "Forked! Redirecting to editor...", type: "success" });
+        setTimeout(() => { window.location.href = `/editor/${p.id}`; }, 800);
+      } else if (res.status === 401) {
+        window.location.href = "/login";
+      } else if (res.status === 403) {
+        const data = await res.json();
+        if (data.error === "PLAN_LIMIT") {
+          setToast({ message: `Plan limit reached (${data.limit} presentations)`, type: "error" });
+        } else {
+          setToast({ message: "Cannot fork this presentation", type: "error" });
+        }
+      } else {
+        setToast({ message: "Failed to fork presentation", type: "error" });
+      }
+    } catch {
+      setToast({ message: "Network error", type: "error" });
+    } finally {
+      setForking(false);
+    }
+  }, [presentationId, forking]);
 
   const [current, setCurrent] = useState(0);
   const [displayed, setDisplayed] = useState(0);
@@ -265,7 +304,7 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
   }
 
   if (isMobile) {
-    return <MobileViewer title={title} slides={slides} showWatermark={showWatermark} presentationId={presentationId} />;
+    return <MobileViewer title={title} slides={slides} showWatermark={showWatermark} presentationId={presentationId} forkCount={forkCount} />;
   }
 
   const outgoing = slides[displayed];
@@ -534,23 +573,30 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
           >
             Folio — Editorial Slides
           </a>
-          {presentationId && (
-            <button
-              onClick={async (e) => {
-                e.stopPropagation();
-                const res = await fetch(`/api/presentations/${presentationId}/clone`, { method: "POST" });
-                if (res.ok) {
-                  const p = await res.json();
-                  window.open(`/editor/${p.id}`, "_blank");
-                } else if (res.status === 401) {
-                  window.open("/login", "_blank");
-                }
-              }}
-              className="text-[10px] text-white/40 hover:text-white/70 transition-colors sm:text-xs"
-            >
-              Use as template →
-            </button>
-          )}
+          <div className="flex items-center gap-3">
+            {localForkCount > 0 && (
+              <span className="flex items-center gap-1 text-[10px] text-white/30 sm:text-xs">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="18" r="3" /><circle cx="6" cy="6" r="3" /><circle cx="18" cy="6" r="3" />
+                  <path d="M18 9v2c0 .6-.4 1-1 1H7c-.6 0-1-.4-1-1V9" /><path d="M12 12v3" />
+                </svg>
+                {localForkCount}
+              </span>
+            )}
+            {presentationId && (
+              <button
+                onClick={(e) => { e.stopPropagation(); handleFork(); }}
+                disabled={forking}
+                className="flex items-center gap-1 text-[10px] text-white/40 hover:text-white/70 transition-colors sm:text-xs disabled:opacity-50"
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="18" r="3" /><circle cx="6" cy="6" r="3" /><circle cx="18" cy="6" r="3" />
+                  <path d="M18 9v2c0 .6-.4 1-1 1H7c-.6 0-1-.4-1-1V9" /><path d="M12 12v3" />
+                </svg>
+                {forking ? "Forking..." : "Fork"}
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -581,6 +627,14 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
           presentationId={presentationId}
           onClose={() => setShowReport(false)}
         />
+      )}
+
+      {toast && (
+        <div className={`fixed top-4 left-1/2 z-50 -translate-x-1/2 rounded-lg px-4 py-2 text-xs font-medium backdrop-blur-sm transition-all duration-300 ${
+          toast.type === "success" ? "bg-green-900/80 text-green-200" : "bg-red-900/80 text-red-200"
+        }`}>
+          {toast.message}
+        </div>
       )}
     </div>
   );
