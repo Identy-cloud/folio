@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "@phosphor-icons/react";
 import { useTranslation } from "@/lib/i18n/context";
@@ -10,6 +11,7 @@ import { PersonalInfoSection } from "./PersonalInfoSection";
 import { SocialLinksSection } from "./SocialLinksSection";
 import { PortfolioLinkSection } from "./PortfolioLinkSection";
 import { BillingSection } from "./BillingSection";
+import { PlanFeaturesSection } from "./PlanFeaturesSection";
 import { PlanUsageSection } from "./PlanUsageSection";
 import { PreferencesSection } from "./PreferencesSection";
 import { ConnectedAccountsSection } from "./ConnectedAccountsSection";
@@ -37,7 +39,9 @@ export default function ProfilePage() {
   const { t } = useTranslation();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState<TabId>("profile");
+  const searchParams = useSearchParams();
+  const initialTab = (searchParams.get("tab") as TabId) || "profile";
+  const [tab, setTab] = useState<TabId>(initialTab);
 
   useEffect(() => {
     fetch("/api/profile")
@@ -81,6 +85,7 @@ export default function ProfilePage() {
         {tab === "billing" && (
           <>
             <BillingSection />
+            <PlanFeaturesSection plan={profile.plan} />
             <PlanUsageSection plan={profile.plan} storageUsed={profile.storageUsed ?? 0} />
           </>
         )}
