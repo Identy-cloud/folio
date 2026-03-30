@@ -3,8 +3,6 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { LogoutButton } from "./logout-button";
-import { DeleteAccountButton } from "./delete-account-button";
-import { LocaleSelector } from "@/components/LocaleSelector";
 import { FolioLogo } from "@/components/FolioLogo";
 import { NotificationBell } from "@/components/NotificationBell";
 import { UpgradeButton } from "@/components/UpgradeButton";
@@ -82,29 +80,21 @@ export default async function DashboardLayout({
             <UpgradeButton />
           </div>
           <NotificationBell />
-          <div className="hidden sm:block">
-            <LocaleSelector />
-          </div>
           <LogoutButton />
         </div>
       </header>
       <main id="main-content" className="flex-1 p-4 sm:p-6">{children}</main>
       <footer className="border-t border-neutral-800 px-4 py-3 sm:px-6">
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 sm:gap-x-4">
-            <Link href="/terms" className="text-[10px] tracking-[0.15em] text-neutral-600 uppercase hover:text-neutral-400 transition-colors">
-              Legal
-            </Link>
-            <Link href="/privacy" className="text-[10px] tracking-[0.15em] text-neutral-600 uppercase hover:text-neutral-400 transition-colors">
-              Privacidad
-            </Link>
-            <Link href="/accessibility" className="hidden text-[10px] tracking-[0.15em] text-neutral-600 uppercase hover:text-neutral-400 transition-colors sm:block">
-              Accesibilidad
-            </Link>
-          </div>
-          <div className="shrink-0">
-            <DeleteAccountButton />
-          </div>
+        <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 sm:gap-x-4">
+          <Link href="/terms" className="text-[10px] tracking-[0.15em] text-neutral-600 uppercase hover:text-neutral-400 transition-colors">
+            Legal
+          </Link>
+          <Link href="/privacy" className="text-[10px] tracking-[0.15em] text-neutral-600 uppercase hover:text-neutral-400 transition-colors">
+            Privacidad
+          </Link>
+          <Link href="/accessibility" className="hidden text-[10px] tracking-[0.15em] text-neutral-600 uppercase hover:text-neutral-400 transition-colors sm:block">
+            Accesibilidad
+          </Link>
         </div>
       </footer>
     </div>
