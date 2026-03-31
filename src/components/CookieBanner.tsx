@@ -2,58 +2,108 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useTranslation } from "@/lib/i18n/context";
 
 export function CookieBanner() {
   const [visible, setVisible] = useState(false);
+  const [animating, setAnimating] = useState(false);
+  const { t } = useTranslation();
+  const c = t.cookieBanner;
 
   useEffect(() => {
     const accepted = localStorage.getItem("folio-cookies-accepted");
     const rejected = localStorage.getItem("folio-cookies-rejected");
     if (!accepted && !rejected) {
-      setVisible(true);
+      const timer = setTimeout(() => {
+        setVisible(true);
+        requestAnimationFrame(() => setAnimating(true));
+      }, 800);
+      return () => clearTimeout(timer);
     }
   }, []);
 
+  function dismiss(callback: () => void) {
+    setAnimating(false);
+    setTimeout(() => {
+      callback();
+      setVisible(false);
+    }, 300);
+  }
+
   function accept() {
-    localStorage.setItem("folio-cookies-accepted", "1");
-    localStorage.removeItem("folio-cookies-rejected");
-    setVisible(false);
-    window.dispatchEvent(new Event("folio-cookies-consent"));
+    dismiss(() => {
+      localStorage.setItem("folio-cookies-accepted", "1");
+      localStorage.removeItem("folio-cookies-rejected");
+      window.dispatchEvent(new Event("folio-cookies-consent"));
+    });
   }
 
   function reject() {
-    localStorage.setItem("folio-cookies-rejected", "1");
-    localStorage.removeItem("folio-cookies-accepted");
-    setVisible(false);
+    dismiss(() => {
+      localStorage.setItem("folio-cookies-rejected", "1");
+      localStorage.removeItem("folio-cookies-accepted");
+    });
   }
 
   if (!visible) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-[9999] border-t border-steel/30 bg-navy px-4 py-3 sm:flex sm:items-center sm:justify-between sm:px-6">
-      <p className="text-xs text-silver/70">
-        Utilizamos cookies esenciales y de analitica.{" "}
-        <Link href="/cookies" className="underline underline-offset-2 hover:text-white transition-colors">
-          Politica de cookies
-        </Link>
-        {" · "}
-        <Link href="/privacy" className="underline underline-offset-2 hover:text-white transition-colors">
-          Privacidad
-        </Link>
-      </p>
-      <div className="mt-2 flex gap-2 sm:mt-0">
-        <button
-          onClick={reject}
-          className="w-full rounded border border-steel/60 px-4 py-1.5 text-xs font-medium text-silver hover:border-white hover:text-white transition-colors sm:w-auto"
-        >
-          Rechazar
-        </button>
-        <button
-          onClick={accept}
-          className="w-full rounded bg-accent px-4 py-1.5 text-xs font-medium text-white hover:bg-accent-hover transition-colors sm:w-auto"
-        >
-          Aceptar
-        </button>
+    <div
+      className={`fixed bottom-4 left-4 right-4 z-[9999] sm:left-auto sm:right-6 sm:bottom-6 sm:max-w-sm transition-all duration-300 ease-out ${
+        animating
+          ? "translate-y-0 opacity-100"
+          : "translate-y-4 opacity-0"
+      }`}
+    >
+      <div className="rounded-2xl border border-silver/30 bg-white p-5 shadow-xl shadow-navy/8">
+        <div className="flex items-start gap-3">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent/10">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-accent">
+              <circle cx="12" cy="12" r="10" />
+              <circle cx="8" cy="9" r="1.5" fill="currentColor" stroke="none" />
+              <circle cx="15" cy="7" r="1" fill="currentColor" stroke="none" />
+              <circle cx="10" cy="14" r="1" fill="currentColor" stroke="none" />
+              <circle cx="16" cy="13" r="1.5" fill="currentColor" stroke="none" />
+              <circle cx="13" cy="17" r="1" fill="currentColor" stroke="none" />
+            </svg>
+          </div>
+          <div className="min-w-0">
+            <h3 className="text-sm font-semibold text-navy">{c.title}</h3>
+            <p className="mt-1 text-xs leading-relaxed text-steel">
+              {c.description}
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-3 flex gap-3 text-[11px]">
+          <Link
+            href="/cookies"
+            className="text-steel/60 underline underline-offset-2 transition-colors hover:text-navy"
+          >
+            {c.cookiePolicy}
+          </Link>
+          <Link
+            href="/privacy"
+            className="text-steel/60 underline underline-offset-2 transition-colors hover:text-navy"
+          >
+            {c.privacyPolicy}
+          </Link>
+        </div>
+
+        <div className="mt-4 flex gap-2">
+          <button
+            onClick={reject}
+            className="flex-1 rounded-lg border border-silver/40 px-4 py-2.5 text-xs font-medium text-navy transition-colors hover:border-navy/30 hover:bg-[#FAFAFA]"
+          >
+            {c.reject}
+          </button>
+          <button
+            onClick={accept}
+            className="flex-1 rounded-lg bg-navy px-4 py-2.5 text-xs font-medium text-white transition-colors hover:bg-navy/90"
+          >
+            {c.accept}
+          </button>
+        </div>
       </div>
     </div>
   );
