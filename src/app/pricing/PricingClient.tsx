@@ -7,47 +7,23 @@ import { Notebook } from "@phosphor-icons/react";
 import { useTranslation } from "@/lib/i18n/context";
 import { LocaleSelector } from "@/components/LocaleSelector";
 import { PricingTierCard } from "./PricingTierCard";
+import { PricingToggle } from "./PricingToggle";
 import { toast } from "sonner";
 
 function useTiers(p: ReturnType<typeof useTranslation>["t"]["pricing"]) {
   return [
-    {
-      name: p.freeName, monthly: 0, annual: 0, description: p.freeDesc,
-      features: [
-        { text: p.freeF1, included: true }, { text: p.freeF2, included: true },
-        { text: p.freeF3, included: true }, { text: p.freeF4, included: false },
-        { text: p.freeF5, included: false }, { text: p.freeF6, included: false },
-      ],
-      cta: p.freeCta, plan: null as string | null, highlighted: false,
-    },
-    {
-      name: p.creatorName, monthly: 19, annual: 15, description: p.creatorDesc,
-      features: [
-        { text: p.creatorF1, included: true }, { text: p.creatorF2, included: true },
-        { text: p.creatorF3, included: true }, { text: p.creatorF4, included: true },
-        { text: p.creatorF5, included: true }, { text: p.creatorF6, included: true },
-        { text: p.creatorF7, included: false }, { text: p.creatorF8, included: false },
-      ],
-      cta: p.creatorCta, plan: "creator" as string | null, highlighted: false,
-    },
-    {
-      name: p.studioName, monthly: 49, annual: 39, description: p.studioDesc,
-      features: [
-        { text: p.studioF1, included: true }, { text: p.studioF2, included: true },
-        { text: p.studioF3, included: true }, { text: p.studioF4, included: true },
-        { text: p.studioF5, included: true }, { text: p.studioF6, included: true },
-      ],
-      cta: p.studioCta, plan: "studio" as string | null, highlighted: true,
-    },
-    {
-      name: p.agencyName, monthly: 149, annual: 119, description: p.agencyDesc,
-      features: [
-        { text: p.agencyF1, included: true }, { text: p.agencyF2, included: true },
-        { text: p.agencyF3, included: true }, { text: p.agencyF4, included: true },
-        { text: p.agencyF5, included: true }, { text: p.agencyF6, included: true },
-      ],
-      cta: p.agencyCta, plan: "agency" as string | null, highlighted: false,
-    },
+    { name: p.freeName, monthly: 0, annual: 0, description: p.freeDesc,
+      features: [{ text: p.freeF1, included: true }, { text: p.freeF2, included: true }, { text: p.freeF3, included: true }, { text: p.freeF4, included: false }, { text: p.freeF5, included: false }, { text: p.freeF6, included: false }],
+      cta: p.freeCta, plan: null as string | null, highlighted: false },
+    { name: p.creatorName, monthly: 19, annual: 15, description: p.creatorDesc,
+      features: [{ text: p.creatorF1, included: true }, { text: p.creatorF2, included: true }, { text: p.creatorF3, included: true }, { text: p.creatorF4, included: true }, { text: p.creatorF5, included: true }, { text: p.creatorF6, included: true }, { text: p.creatorF7, included: false }, { text: p.creatorF8, included: false }],
+      cta: p.creatorCta, plan: "creator" as string | null, highlighted: false },
+    { name: p.studioName, monthly: 49, annual: 39, description: p.studioDesc,
+      features: [{ text: p.studioF1, included: true }, { text: p.studioF2, included: true }, { text: p.studioF3, included: true }, { text: p.studioF4, included: true }, { text: p.studioF5, included: true }, { text: p.studioF6, included: true }],
+      cta: p.studioCta, plan: "studio" as string | null, highlighted: true },
+    { name: p.agencyName, monthly: 149, annual: 119, description: p.agencyDesc,
+      features: [{ text: p.agencyF1, included: true }, { text: p.agencyF2, included: true }, { text: p.agencyF3, included: true }, { text: p.agencyF4, included: true }, { text: p.agencyF5, included: true }, { text: p.agencyF6, included: true }],
+      cta: p.agencyCta, plan: "agency" as string | null, highlighted: false },
   ];
 }
 
@@ -75,20 +51,11 @@ export function PricingClient() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ plan, period: annual ? "annual" : "monthly" }),
       });
-      if (res.status === 401) {
-        router.push(`/login?redirect=/pricing`);
-        return;
-      }
+      if (res.status === 401) { router.push(`/login?redirect=/pricing`); return; }
       const data = await res.json() as { url?: string; error?: string };
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        console.error("Stripe checkout error:", data.error);
-        toast.error(data.error ?? "Error creating checkout session");
-        setLoading(null);
-      }
-    } catch (err) {
-      console.error("Checkout failed:", err);
+      if (data.url) { window.location.href = data.url; }
+      else { toast.error(data.error ?? "Error creating checkout session"); setLoading(null); }
+    } catch {
       toast.error("Connection error. Please try again.");
       setLoading(null);
     }
@@ -97,54 +64,34 @@ export function PricingClient() {
   return (
     <div className="flex min-h-screen flex-col bg-navy text-white">
       <header className="flex items-center justify-between px-4 py-6 sm:px-8">
-        <Link href="/" className="flex items-center gap-1.5 font-display text-xl tracking-tight sm:text-2xl"><Notebook size={22} weight="duotone" />FOLIO</Link>
+        <Link href="/" className="flex items-center gap-1.5 font-display text-xl tracking-tight sm:text-2xl">
+          <Notebook size={22} weight="duotone" />FOLIO
+        </Link>
         <div className="flex items-center gap-4">
           <LocaleSelector />
-          <Link href="/" className="text-xs tracking-[0.25em] text-silver/70 uppercase hover:text-white transition-colors">{p.back}</Link>
+          <Link href="/" className="text-xs tracking-[0.25em] text-silver/70 uppercase transition-colors hover:text-white">{p.back}</Link>
         </div>
       </header>
 
       <main className="flex flex-1 flex-col items-center px-4 py-8 sm:px-6 lg:py-16">
-        <p className="text-[10px] tracking-[0.5em] text-silver/50 uppercase">{p.label}</p>
-        <h1 className="mt-4 font-display text-3xl tracking-tight sm:text-5xl lg:text-7xl">{p.heading}</h1>
-        <p className="mt-4 max-w-lg text-center text-sm leading-relaxed text-silver/70">{p.description}</p>
+        <p className="text-[10px] tracking-[0.5em] text-accent uppercase">{p.label}</p>
+        <h1 className="mt-4 font-display text-4xl tracking-tight sm:text-5xl lg:text-7xl">{p.heading}</h1>
+        <div className="mx-auto mt-3 h-px w-12 bg-accent/40" />
+        <p className="mt-5 max-w-lg text-center text-sm leading-relaxed text-silver/60">{p.description}</p>
 
-        <div className="mt-8 flex items-center gap-3">
-          <span className={`text-xs ${!annual ? "text-white" : "text-silver/50"}`}>{p.monthly}</span>
-          <button
-            onClick={() => setAnnual(!annual)}
-            role="switch"
-            aria-checked={annual}
-            className={`relative h-6 w-11 cursor-pointer rounded-full transition-colors ${annual ? "bg-green-600" : "bg-steel"}`}
-          >
-            <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-transform ${annual ? "left-[22px]" : "left-0.5"}`} />
-          </button>
-          <span className={`text-xs ${annual ? "text-white" : "text-silver/50"}`}>{p.annual} <span className="text-green-500">{p.discount}</span></span>
-        </div>
+        <PricingToggle annual={annual} setAnnual={setAnnual} monthlyLabel={p.monthly} annualLabel={p.annual} discountLabel={p.discount} />
 
-        <div className="mt-12 grid w-full max-w-6xl grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {tiers.map((tier) => {
+        <div className="mt-12 grid w-full max-w-6xl grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {tiers.map((tier, i) => {
             const price = annual ? tier.annual : tier.monthly;
-            const isCurrent = currentPlan === (tier.plan ?? "free");
             return (
-              <PricingTierCard
-                key={tier.name}
-                name={tier.name}
-                price={price}
-                annualTotal={annual ? price * 12 : null}
-                description={tier.description}
-                features={tier.features}
-                cta={tier.cta}
-                plan={tier.plan}
-                highlighted={tier.highlighted}
-                isCurrent={isCurrent}
-                loading={loading}
-                currentPlanLabel={p.currentPlan}
-                popularLabel={p.popular}
-                perMonthLabel={p.perMonth}
-                perYearLabel={p.perYear}
-                onCheckout={handleCheckout}
-              />
+              <PricingTierCard key={tier.name} name={tier.name} price={price}
+                annualTotal={annual ? price * 12 : null} description={tier.description}
+                features={tier.features} cta={tier.cta} plan={tier.plan}
+                highlighted={tier.highlighted} isCurrent={currentPlan === (tier.plan ?? "free")}
+                loading={loading} currentPlanLabel={p.currentPlan} popularLabel={p.popular}
+                perMonthLabel={p.perMonth} perYearLabel={p.perYear}
+                onCheckout={handleCheckout} index={i} />
             );
           })}
         </div>

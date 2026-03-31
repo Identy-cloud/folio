@@ -24,46 +24,108 @@ interface PricingTierCardProps {
   perMonthLabel: string;
   perYearLabel: string;
   onCheckout: (plan: string) => void;
+  index: number;
 }
 
 export function PricingTierCard({
   name, price, annualTotal, description, features, cta,
   plan, highlighted, isCurrent, loading,
   currentPlanLabel, popularLabel, perMonthLabel, perYearLabel,
-  onCheckout,
+  onCheckout, index,
 }: PricingTierCardProps) {
+  const delay = `${index * 100}ms`;
+
   return (
-    <div className={`flex flex-col border p-5 sm:p-6 ${highlighted ? "border-silver/50 bg-navy relative" : "border-steel/30 bg-navy"}`}>
+    <div
+      className={`animate-card-entrance group relative flex flex-col rounded-sm border p-6 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-black/30 ${
+        highlighted
+          ? "border-accent/30 bg-gradient-to-b from-slate/60 to-slate/30"
+          : "border-steel/20 bg-navy hover:border-steel/40"
+      }`}
+      style={{ animationDelay: delay }}
+    >
+      {/* Accent top stripe */}
+      <div className={`absolute inset-x-0 top-0 h-0.5 rounded-t-sm transition-all duration-300 ${
+        highlighted
+          ? "bg-accent animate-border-glow"
+          : "bg-steel/20 group-hover:bg-accent/50"
+      }`} />
+
+      {/* Popular badge */}
       {highlighted && (
-        <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-white px-3 py-0.5 text-[10px] font-semibold tracking-widest text-black uppercase">{popularLabel}</span>
+        <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-sm bg-accent px-4 py-1 text-[10px] font-bold tracking-[0.2em] text-white uppercase shadow-lg shadow-accent/20">
+          {popularLabel}
+        </span>
       )}
-      <p className="text-[10px] tracking-[0.4em] text-silver/50 uppercase">{name}</p>
-      <div className="mt-3 flex items-baseline gap-1">
-        <span className="font-display text-3xl tracking-tight sm:text-4xl">${price}</span>
-        {price > 0 && <span className="text-sm text-silver/50">{perMonthLabel}</span>}
+
+      <p className="text-[10px] font-semibold tracking-[0.4em] text-silver/50 uppercase">
+        {name}
+      </p>
+
+      <div className="mt-4 flex items-baseline gap-1">
+        <span className="font-display text-4xl tracking-tight sm:text-5xl">
+          ${price}
+        </span>
+        {price > 0 && (
+          <span className="text-sm text-silver/40">{perMonthLabel}</span>
+        )}
       </div>
-      {annualTotal !== null && price > 0 && <p className="mt-1 text-[10px] text-green-500">${annualTotal}{perYearLabel}</p>}
-      <p className="mt-3 text-xs leading-relaxed text-silver/50">{description}</p>
-      <ul className="mt-5 flex-1 space-y-2">
+
+      {annualTotal !== null && price > 0 && (
+        <p className="mt-1 text-[11px] font-medium text-green-400">
+          ${annualTotal}{perYearLabel}
+        </p>
+      )}
+
+      <p className="mt-3 text-xs leading-relaxed text-silver/50">
+        {description}
+      </p>
+
+      <div className="my-5 h-px bg-steel/20" />
+
+      <ul className="flex-1 space-y-3">
         {features.map((f) => (
-          <li key={f.text} className="flex items-start gap-2 text-xs">
-            {f.included
-              ? <Check size={14} className="mt-0.5 shrink-0 text-green-500" />
-              : <XIcon size={14} className="mt-0.5 shrink-0 text-silver/40" />}
-            <span className={f.included ? "text-silver" : "text-silver/50"}>{f.text}</span>
+          <li key={f.text} className="flex items-start gap-2.5 text-xs">
+            {f.included ? (
+              <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-green-500/10">
+                <Check size={10} weight="bold" className="text-green-400" />
+              </span>
+            ) : (
+              <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-steel/10">
+                <XIcon size={10} weight="bold" className="text-silver/30" />
+              </span>
+            )}
+            <span className={f.included ? "text-silver/80" : "text-silver/35"}>
+              {f.text}
+            </span>
           </li>
         ))}
       </ul>
+
       <div className="mt-6">
         {isCurrent ? (
-          <span className="block w-full border border-green-600 py-2.5 text-center text-xs font-semibold tracking-[0.2em] text-green-500 uppercase">{currentPlanLabel}</span>
+          <span className="flex w-full min-h-[48px] items-center justify-center rounded-sm border border-green-600/50 text-xs font-semibold tracking-[0.2em] text-green-400 uppercase">
+            {currentPlanLabel}
+          </span>
         ) : plan ? (
-          <button onClick={() => onCheckout(plan)} disabled={loading !== null}
-            className={`block w-full py-2.5 text-center text-xs font-semibold tracking-[0.2em] uppercase transition-colors disabled:opacity-50 ${highlighted ? "bg-accent text-white hover:bg-accent-hover" : "border border-steel/60 text-silver hover:border-white hover:text-white"}`}>
-            {loading === plan ? "..." : cta}
+          <button
+            onClick={() => onCheckout(plan)}
+            disabled={loading !== null}
+            className={`flex w-full min-h-[48px] items-center justify-center rounded-sm text-xs font-semibold tracking-[0.2em] uppercase transition-all duration-200 active:scale-[0.98] disabled:opacity-50 ${
+              highlighted
+                ? "bg-accent text-white shadow-lg shadow-accent/20 hover:bg-accent-hover hover:shadow-accent/30"
+                : "bg-slate text-silver hover:bg-steel hover:text-white"
+            }`}
+          >
+            {loading === plan ? (
+              <span className="h-3.5 w-3.5 rounded-full border-2 border-white/30 border-t-white animate-btn-spin" />
+            ) : cta}
           </button>
         ) : (
-          <Link href="/login" className="block w-full border border-steel py-2.5 text-center text-xs font-semibold tracking-[0.2em] text-silver/70 uppercase hover:border-silver/50 transition-colors">
+          <Link
+            href="/login"
+            className="flex w-full min-h-[48px] items-center justify-center rounded-sm border border-steel/30 text-xs font-semibold tracking-[0.2em] text-silver/60 uppercase transition-all duration-200 hover:border-silver/40 hover:text-silver"
+          >
             {cta}
           </Link>
         )}
