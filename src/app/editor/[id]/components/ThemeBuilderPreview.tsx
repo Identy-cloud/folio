@@ -9,7 +9,7 @@ interface Props {
 export function ThemeBuilderPreview({ theme }: Props) {
   return (
     <div
-      className="aspect-video w-full rounded border border-neutral-700 overflow-hidden"
+      className="aspect-video w-full rounded border border-steel overflow-hidden"
       style={{ backgroundColor: theme.background }}
     >
       <div className="flex h-full flex-col items-center justify-center gap-1.5 p-3">

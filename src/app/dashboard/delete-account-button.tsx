@@ -51,7 +51,7 @@ export function DeleteAccountButton() {
           onChange={(e) => setPassword(e.target.value)}
           placeholder={t.auth.enterPassword}
           autoFocus
-          className="h-7 rounded border border-neutral-700 bg-neutral-900 px-2 text-[10px] text-neutral-200 placeholder:text-neutral-600 focus:border-red-500 focus:outline-none"
+          className="h-7 rounded border border-steel bg-navy px-2 text-[10px] text-silver placeholder:text-silver/40 focus:border-red-500 focus:outline-none"
           onKeyDown={(e) => {
             if (e.key === "Enter") handleDelete();
           }}
@@ -66,7 +66,7 @@ export function DeleteAccountButton() {
           </button>
           <button
             onClick={() => { setConfirming(false); setPassword(""); }}
-            className="text-[10px] text-neutral-500 hover:text-neutral-300"
+            className="text-[10px] text-silver/50 hover:text-silver"
           >
             {t.auth.deleteCancel}
           </button>
@@ -78,7 +78,7 @@ export function DeleteAccountButton() {
   return (
     <button
       onClick={() => setConfirming(true)}
-      className="text-[10px] text-neutral-600 hover:text-red-400 transition-colors"
+      className="text-[10px] text-silver/40 hover:text-red-400 transition-colors"
     >
       {t.auth.deleteAccount}
     </button>

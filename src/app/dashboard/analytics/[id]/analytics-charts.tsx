@@ -15,7 +15,7 @@ export function ViewsOverTimeChart({ data }: { data: DayData[] }) {
 
   return (
     <section>
-      <h2 className="mb-4 text-xs font-medium uppercase tracking-wider text-neutral-400">
+      <h2 className="mb-4 text-xs font-medium uppercase tracking-wider text-silver/70">
         Views over time (30 days)
       </h2>
       <div className="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
@@ -35,11 +35,11 @@ export function ViewsOverTimeChart({ data }: { data: DayData[] }) {
                   style={{ height: `${pct}%` }}
                 />
                 {showLabel && (
-                  <span className="absolute -bottom-5 text-[8px] text-neutral-600">
+                  <span className="absolute -bottom-5 text-[8px] text-silver/40">
                     {label.toLocaleDateString("en", { month: "short", day: "numeric" })}
                   </span>
                 )}
-                <div className="pointer-events-none absolute -top-7 left-1/2 -translate-x-1/2 hidden group-hover:block rounded bg-neutral-700 px-2 py-0.5 text-[10px] text-white whitespace-nowrap">
+                <div className="pointer-events-none absolute -top-7 left-1/2 -translate-x-1/2 hidden group-hover:block rounded bg-steel px-2 py-0.5 text-[10px] text-white whitespace-nowrap">
                   {d.views} views
                 </div>
               </div>
@@ -56,7 +56,7 @@ export function ViewsBySlideChart({ data }: { data: SlideData[] }) {
 
   return (
     <section>
-      <h2 className="mb-4 text-xs font-medium uppercase tracking-wider text-neutral-400">
+      <h2 className="mb-4 text-xs font-medium uppercase tracking-wider text-silver/70">
         Views by slide
       </h2>
       <div className="space-y-2">
@@ -64,10 +64,10 @@ export function ViewsBySlideChart({ data }: { data: SlideData[] }) {
           const pct = Math.max((s.views / max) * 100, 4);
           return (
             <div key={s.slideIndex} className="flex items-center gap-3">
-              <span className="w-16 shrink-0 text-right text-sm text-neutral-500">
+              <span className="w-16 shrink-0 text-right text-sm text-silver/50">
                 Slide {s.slideIndex + 1}
               </span>
-              <div className="flex-1 h-6 rounded bg-neutral-800 overflow-hidden">
+              <div className="flex-1 h-6 rounded bg-white/5 overflow-hidden">
                 <div
                   className="h-full rounded bg-blue-500/40 flex items-center px-2 transition-all"
                   style={{ width: `${pct}%` }}

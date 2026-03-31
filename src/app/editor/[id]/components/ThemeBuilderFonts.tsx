@@ -16,13 +16,13 @@ export function ThemeBuilderFonts({ fontDisplay, fontBody, onChangeDisplay, onCh
   return (
     <div className="space-y-2">
       <div>
-        <span className="text-[10px] text-neutral-500 uppercase tracking-wider">
+        <span className="text-[10px] text-silver/50 uppercase tracking-wider">
           Heading font
         </span>
         <select
           value={fontDisplay}
           onChange={(e) => onChangeDisplay(e.target.value)}
-          className="mt-0.5 w-full cursor-pointer rounded border border-neutral-700 bg-[#161616] px-2 py-1.5 text-[11px] text-neutral-200 outline-none focus:border-neutral-500"
+          className="mt-0.5 w-full cursor-pointer rounded border border-steel bg-navy px-2 py-1.5 text-[11px] text-silver outline-none focus:border-silver/50"
         >
           {ALL_FONTS.map((f) => (
             <option key={f.value} value={f.value}>
@@ -39,13 +39,13 @@ export function ThemeBuilderFonts({ fontDisplay, fontBody, onChangeDisplay, onCh
         </select>
       </div>
       <div>
-        <span className="text-[10px] text-neutral-500 uppercase tracking-wider">
+        <span className="text-[10px] text-silver/50 uppercase tracking-wider">
           Body font
         </span>
         <select
           value={fontBody}
           onChange={(e) => onChangeBody(e.target.value)}
-          className="mt-0.5 w-full cursor-pointer rounded border border-neutral-700 bg-[#161616] px-2 py-1.5 text-[11px] text-neutral-200 outline-none focus:border-neutral-500"
+          className="mt-0.5 w-full cursor-pointer rounded border border-steel bg-navy px-2 py-1.5 text-[11px] text-silver outline-none focus:border-silver/50"
         >
           {ALL_FONTS.map((f) => (
             <option key={f.value} value={f.value}>

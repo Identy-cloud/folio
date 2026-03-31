@@ -386,7 +386,7 @@ export function CommandPalette({ open, onClose }: Props) {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[20vh]" role="dialog" aria-modal="true" onClick={onClose}>
-      <div className="w-full max-w-md rounded border border-neutral-700 bg-[#1e1e1e] shadow-2xl" onClick={(e) => e.stopPropagation()}>
+      <div className="w-full max-w-md rounded border border-steel bg-slate shadow-2xl" onClick={(e) => e.stopPropagation()}>
         <input
           ref={inputRef}
           value={query}
@@ -399,7 +399,7 @@ export function CommandPalette({ open, onClose }: Props) {
           }}
           placeholder="Type to search commands..."
           aria-label="Paleta de comandos"
-          className="w-full border-b border-neutral-700 bg-transparent px-4 py-3 text-sm text-white outline-none placeholder:text-neutral-500"
+          className="w-full border-b border-steel bg-transparent px-4 py-3 text-sm text-white outline-none placeholder:text-silver/50"
         />
         <div className="max-h-60 overflow-y-auto p-1" role="listbox">
           {filtered.map((cmd, i) => (
@@ -409,15 +409,15 @@ export function CommandPalette({ open, onClose }: Props) {
               aria-selected={i === selectedIdx}
               onClick={() => run(cmd)}
               className={`flex w-full items-center justify-between rounded px-3 py-2 text-left text-sm transition-colors ${
-                i === selectedIdx ? "bg-neutral-800 text-white" : "text-neutral-300 hover:bg-neutral-800"
+                i === selectedIdx ? "bg-white/5 text-white" : "text-silver hover:bg-white/5"
               }`}
             >
               <span>{cmd.label}</span>
-              <span className="text-[10px] text-neutral-600">{cmd.category}</span>
+              <span className="text-[10px] text-silver/40">{cmd.category}</span>
             </button>
           ))}
           {filtered.length === 0 && (
-            <p className="px-3 py-4 text-center text-xs text-neutral-600">No matches</p>
+            <p className="px-3 py-4 text-center text-xs text-silver/40">No matches</p>
           )}
         </div>
       </div>

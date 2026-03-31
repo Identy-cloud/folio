@@ -10,7 +10,7 @@ export function BlurControls({ element }: { element: SlideElement }) {
 
   return (
     <div className="space-y-1.5">
-      <span className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">Blur Effect</span>
+      <span className="text-[11px] font-medium text-silver/70 uppercase tracking-wider">Blur Effect</span>
       <label className="flex items-center gap-2">
         <input
           type="range"
@@ -23,7 +23,7 @@ export function BlurControls({ element }: { element: SlideElement }) {
           }}
           className="flex-1 accent-white"
         />
-        <span className="text-[10px] text-neutral-600 w-6 text-right">{blur}px</span>
+        <span className="text-[10px] text-silver/40 w-6 text-right">{blur}px</span>
       </label>
     </div>
   );

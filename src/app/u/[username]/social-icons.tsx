@@ -24,7 +24,7 @@ export function SocialIcons({ links }: Props) {
           target="_blank"
           rel="noopener noreferrer"
           aria-label={label}
-          className="text-neutral-500 hover:text-white transition-colors"
+          className="text-silver/50 hover:text-white transition-colors"
         >
           <Icon size={18} />
         </a>

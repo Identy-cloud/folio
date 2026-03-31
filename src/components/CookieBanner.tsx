@@ -30,8 +30,8 @@ export function CookieBanner() {
   if (!visible) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-[9999] border-t border-neutral-800 bg-[#1a1a1a] px-4 py-3 sm:flex sm:items-center sm:justify-between sm:px-6">
-      <p className="text-xs text-neutral-400">
+    <div className="fixed bottom-0 left-0 right-0 z-[9999] border-t border-steel/30 bg-navy px-4 py-3 sm:flex sm:items-center sm:justify-between sm:px-6">
+      <p className="text-xs text-silver/70">
         Utilizamos cookies esenciales y de analitica.{" "}
         <Link href="/cookies" className="underline underline-offset-2 hover:text-white transition-colors">
           Politica de cookies
@@ -44,13 +44,13 @@ export function CookieBanner() {
       <div className="mt-2 flex gap-2 sm:mt-0">
         <button
           onClick={reject}
-          className="w-full rounded border border-neutral-600 px-4 py-1.5 text-xs font-medium text-neutral-300 hover:border-white hover:text-white transition-colors sm:w-auto"
+          className="w-full rounded border border-steel/60 px-4 py-1.5 text-xs font-medium text-silver hover:border-white hover:text-white transition-colors sm:w-auto"
         >
           Rechazar
         </button>
         <button
           onClick={accept}
-          className="w-full rounded bg-white px-4 py-1.5 text-xs font-medium text-black hover:bg-neutral-200 transition-colors sm:w-auto"
+          className="w-full rounded bg-accent px-4 py-1.5 text-xs font-medium text-white hover:bg-accent-hover transition-colors sm:w-auto"
         >
           Aceptar
         </button>

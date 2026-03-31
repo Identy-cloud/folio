@@ -2,33 +2,33 @@ import Link from "next/link";
 
 export default function TermsPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-[#161616] text-white">
+    <div className="flex min-h-screen flex-col bg-navy text-white">
       <header className="flex items-center justify-between px-4 py-6 sm:px-8">
         <Link href="/" className="font-display text-xl tracking-tight sm:text-2xl">
           FOLIO
         </Link>
         <Link
           href="/"
-          className="text-xs tracking-[0.25em] text-neutral-400 uppercase hover:text-white transition-colors"
+          className="text-xs tracking-[0.25em] text-silver/70 uppercase hover:text-white transition-colors"
         >
           Volver
         </Link>
       </header>
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-12 sm:px-6 lg:py-20">
-        <p className="text-[10px] tracking-[0.5em] text-neutral-500 uppercase">
+        <p className="text-[10px] tracking-[0.5em] text-silver/50 uppercase">
           Legal
         </p>
         <h1 className="mt-4 font-display text-3xl tracking-tight sm:text-5xl">
           Terminos de Servicio
         </h1>
-        <p className="mt-4 text-sm text-neutral-500">
+        <p className="mt-4 text-sm text-silver/50">
           Ultima actualizacion: 28 de marzo de 2026
         </p>
 
-        <div className="mt-12 space-y-10 text-sm leading-relaxed text-neutral-400">
+        <div className="mt-12 space-y-10 text-sm leading-relaxed text-silver/70">
           <section>
-            <h2 className="mb-3 font-display text-lg tracking-tight text-neutral-200">
+            <h2 className="mb-3 font-display text-lg tracking-tight text-silver">
               1. Aceptacion de los Terminos
             </h2>
             <p>
@@ -40,7 +40,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="mb-3 font-display text-lg tracking-tight text-neutral-200">
+            <h2 className="mb-3 font-display text-lg tracking-tight text-silver">
               2. Cuenta de Usuario
             </h2>
             <p>
@@ -52,7 +52,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="mb-3 font-display text-lg tracking-tight text-neutral-200">
+            <h2 className="mb-3 font-display text-lg tracking-tight text-silver">
               3. Propiedad del Contenido
             </h2>
             <p>
@@ -65,13 +65,13 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="mb-3 font-display text-lg tracking-tight text-neutral-200">
+            <h2 className="mb-3 font-display text-lg tracking-tight text-silver">
               4. Uso Aceptable
             </h2>
             <p className="mb-3">
               Al utilizar Folio te comprometes a no:
             </p>
-            <ul className="list-inside list-disc space-y-1 text-neutral-500">
+            <ul className="list-inside list-disc space-y-1 text-silver/50">
               <li>Subir contenido ilegal, difamatorio u ofensivo</li>
               <li>Intentar acceder a cuentas o datos de otros usuarios</li>
               <li>Utilizar el servicio para distribuir malware o spam</li>
@@ -82,7 +82,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="mb-3 font-display text-lg tracking-tight text-neutral-200">
+            <h2 className="mb-3 font-display text-lg tracking-tight text-silver">
               5. Propiedad Intelectual
             </h2>
             <p>
@@ -94,7 +94,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="mb-3 font-display text-lg tracking-tight text-neutral-200">
+            <h2 className="mb-3 font-display text-lg tracking-tight text-silver">
               6. Limitacion de Responsabilidad
             </h2>
             <p>
@@ -106,7 +106,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="mb-3 font-display text-lg tracking-tight text-neutral-200">
+            <h2 className="mb-3 font-display text-lg tracking-tight text-silver">
               7. Terminacion
             </h2>
             <p>
@@ -118,38 +118,38 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="mb-3 font-display text-lg tracking-tight text-neutral-200">
+            <h2 className="mb-3 font-display text-lg tracking-tight text-silver">
               8. Suscripciones, Cancelacion y Reembolsos
             </h2>
             <p className="mb-3">
               Folio ofrece planes de suscripcion de pago (Pro, Team) ademas del plan
               gratuito. Al suscribirte:
             </p>
-            <ul className="list-inside list-disc space-y-1 text-neutral-500">
+            <ul className="list-inside list-disc space-y-1 text-silver/50">
               <li>
-                <span className="text-neutral-300">Facturacion</span> — Los pagos se procesan
+                <span className="text-silver">Facturacion</span> — Los pagos se procesan
                 de forma recurrente (mensual o anual) a traves de Stripe.
               </li>
               <li>
-                <span className="text-neutral-300">Cancelacion</span> — Puedes cancelar tu
+                <span className="text-silver">Cancelacion</span> — Puedes cancelar tu
                 suscripcion en cualquier momento desde el portal de facturacion (accesible
                 desde tu perfil). La cancelacion sera efectiva al final del periodo de
                 facturacion actual y conservaras el acceso hasta esa fecha.
               </li>
               <li>
-                <span className="text-neutral-300">Reembolsos</span> — No ofrecemos reembolsos
+                <span className="text-silver">Reembolsos</span> — No ofrecemos reembolsos
                 proporcionales por periodos parciales. Si cancelas, no se te cobrara en el
                 siguiente ciclo de facturacion.
               </li>
               <li>
-                <span className="text-neutral-300">Cambio de plan</span> — Puedes cambiar de
+                <span className="text-silver">Cambio de plan</span> — Puedes cambiar de
                 plan en cualquier momento. El nuevo precio se aplicara en el siguiente ciclo.
               </li>
             </ul>
           </section>
 
           <section>
-            <h2 className="mb-3 font-display text-lg tracking-tight text-neutral-200">
+            <h2 className="mb-3 font-display text-lg tracking-tight text-silver">
               9. Edad Minima
             </h2>
             <p>
@@ -161,7 +161,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="mb-3 font-display text-lg tracking-tight text-neutral-200">
+            <h2 className="mb-3 font-display text-lg tracking-tight text-silver">
               10. Ley Aplicable y Jurisdiccion
             </h2>
             <p>
@@ -173,7 +173,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="mb-3 font-display text-lg tracking-tight text-neutral-200">
+            <h2 className="mb-3 font-display text-lg tracking-tight text-silver">
               11. Resolucion de Disputas
             </h2>
             <p>
@@ -185,7 +185,7 @@ export default function TermsPage() {
                 href="https://ec.europa.eu/consumers/odr"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-neutral-200 underline underline-offset-4 hover:text-white transition-colors"
+                className="text-silver underline underline-offset-4 hover:text-white transition-colors"
               >
                 ec.europa.eu/consumers/odr
               </a>
@@ -193,7 +193,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="mb-3 font-display text-lg tracking-tight text-neutral-200">
+            <h2 className="mb-3 font-display text-lg tracking-tight text-silver">
               12. Cambios en los Terminos
             </h2>
             <p>
@@ -205,14 +205,14 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="mb-3 font-display text-lg tracking-tight text-neutral-200">
+            <h2 className="mb-3 font-display text-lg tracking-tight text-silver">
               13. Contacto
             </h2>
             <p>
               Para cualquier consulta sobre estos terminos, puedes escribirnos a{" "}
               <a
                 href="mailto:legal@identy.cloud"
-                className="text-neutral-200 underline underline-offset-4 hover:text-white transition-colors"
+                className="text-silver underline underline-offset-4 hover:text-white transition-colors"
               >
                 legal@identy.cloud
               </a>
@@ -222,7 +222,7 @@ export default function TermsPage() {
       </main>
 
       <footer className="flex items-center justify-center py-8">
-        <p className="text-[10px] tracking-[0.3em] text-neutral-600 uppercase">
+        <p className="text-[10px] tracking-[0.3em] text-silver/40 uppercase">
           Folio — Identy Cloud
         </p>
       </footer>

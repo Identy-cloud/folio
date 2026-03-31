@@ -54,20 +54,20 @@ export function SlidePanel() {
     useTouchDrag({ onReorder: reorderSlides });
 
   return (
-    <div className="flex h-full w-56 flex-col border-r border-neutral-800 bg-[#161616]">
-      <div className="flex items-center justify-between border-b border-neutral-800 px-3 py-2">
-        <span className="text-xs font-medium text-neutral-400 uppercase tracking-wider">
+    <div className="flex h-full w-56 flex-col border-r border-steel/30 bg-navy">
+      <div className="flex items-center justify-between border-b border-steel/30 px-3 py-2">
+        <span className="text-xs font-medium text-silver/70 uppercase tracking-wider">
           {t.editor.slides} ({slides.length})
         </span>
         <div className="flex items-center gap-2">
           <button
             onClick={() => setImportOpen(true)}
-            className="text-neutral-500 hover:text-neutral-200"
+            className="text-silver/50 hover:text-silver"
             title={t.editor.importSlide ?? "Import slide"}
           >
             <ArrowSquareIn size={14} />
           </button>
-          <button onClick={addSlide} className="text-xs text-neutral-500 hover:text-neutral-200">
+          <button onClick={addSlide} className="text-xs text-silver/50 hover:text-silver">
             <Plus size={12} className="inline" /> {t.editor.addSlide}
           </button>
         </div>

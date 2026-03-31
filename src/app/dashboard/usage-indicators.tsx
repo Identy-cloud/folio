@@ -45,19 +45,19 @@ export function UsageIndicators() {
   const storagePercent = Math.min((storageUsed / storageMax) * 100, 100);
 
   return (
-    <div className="mb-4 flex flex-col gap-3 rounded border border-neutral-800 bg-neutral-900/50 p-3 sm:flex-row sm:items-center sm:gap-6 sm:p-4">
+    <div className="mb-4 flex flex-col gap-3 rounded border border-steel/30 bg-navy/50 p-3 sm:flex-row sm:items-center sm:gap-6 sm:p-4">
       {presMax !== Infinity && (
         <div className="flex flex-1 flex-col gap-1">
-          <div className="flex items-center justify-between text-xs text-neutral-400">
+          <div className="flex items-center justify-between text-xs text-silver/70">
             <span>
               {t.dashboard.usagePresentations
                 .replace("{used}", String(presUsed))
                 .replace("{max}", String(presMax))}
             </span>
           </div>
-          <div className="h-1.5 w-full overflow-hidden rounded-full bg-neutral-800">
+          <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/5">
             <div
-              className={`h-full rounded-full transition-all ${presPercent >= 90 ? "bg-red-500" : presPercent >= 70 ? "bg-yellow-500" : "bg-neutral-400"}`}
+              className={`h-full rounded-full transition-all ${presPercent >= 90 ? "bg-red-500" : presPercent >= 70 ? "bg-yellow-500" : "bg-silver/50"}`}
               style={{ width: `${presPercent}%` }}
             />
           </div>
@@ -65,16 +65,16 @@ export function UsageIndicators() {
       )}
 
       <div className="flex flex-1 flex-col gap-1">
-        <div className="flex items-center justify-between text-xs text-neutral-400">
+        <div className="flex items-center justify-between text-xs text-silver/70">
           <span>
             {t.dashboard.usageStorage
               .replace("{used}", formatBytes(storageUsed))
               .replace("{max}", formatBytes(storageMax))}
           </span>
         </div>
-        <div className="h-1.5 w-full overflow-hidden rounded-full bg-neutral-800">
+        <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/5">
           <div
-            className={`h-full rounded-full transition-all ${storagePercent >= 90 ? "bg-red-500" : storagePercent >= 70 ? "bg-yellow-500" : "bg-neutral-400"}`}
+            className={`h-full rounded-full transition-all ${storagePercent >= 90 ? "bg-red-500" : storagePercent >= 70 ? "bg-yellow-500" : "bg-silver/50"}`}
             style={{ width: `${storagePercent}%` }}
           />
         </div>
@@ -83,7 +83,7 @@ export function UsageIndicators() {
       {!isPaid && (
         <Link
           href="/pricing"
-          className="shrink-0 text-xs font-medium tracking-widest text-neutral-300 uppercase transition-colors hover:text-white"
+          className="shrink-0 text-xs font-medium tracking-widest text-silver uppercase transition-colors hover:text-white"
         >
           {t.dashboard.usageUpgrade}
         </Link>

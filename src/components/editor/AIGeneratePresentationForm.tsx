@@ -40,13 +40,13 @@ export function AIGeneratePresentationForm({
           if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) onGenerate();
         }}
         placeholder="Describe your presentation topic..."
-        className="h-20 w-full resize-none rounded border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-white outline-none placeholder:text-neutral-500 focus:border-neutral-500"
+        className="h-20 w-full resize-none rounded border border-steel bg-navy px-3 py-2 text-sm text-white outline-none placeholder:text-silver/50 focus:border-silver/50"
         maxLength={2000}
       />
 
       <div className="flex flex-wrap gap-3">
         <div className="flex-1">
-          <label className="mb-1 block text-[10px] text-neutral-500 uppercase tracking-wider">
+          <label className="mb-1 block text-[10px] text-silver/50 uppercase tracking-wider">
             Slides
           </label>
           <div className="flex gap-1">
@@ -56,8 +56,8 @@ export function AIGeneratePresentationForm({
                 onClick={() => onSlideCountChange(n)}
                 className={`rounded px-2.5 py-1.5 text-xs transition-colors ${
                   slideCount === n
-                    ? "bg-white text-[#161616]"
-                    : "bg-neutral-800 text-neutral-400 hover:text-white"
+                    ? "bg-accent text-white"
+                    : "bg-white/5 text-silver/70 hover:text-white"
                 }`}
               >
                 {n}
@@ -66,13 +66,13 @@ export function AIGeneratePresentationForm({
           </div>
         </div>
         <div>
-          <label className="mb-1 block text-[10px] text-neutral-500 uppercase tracking-wider">
+          <label className="mb-1 block text-[10px] text-silver/50 uppercase tracking-wider">
             Language
           </label>
           <select
             value={language}
             onChange={(e) => onLanguageChange(e.target.value)}
-            className="cursor-pointer rounded border border-neutral-700 bg-neutral-900 px-2 py-1.5 text-xs text-neutral-300 outline-none"
+            className="cursor-pointer rounded border border-steel bg-navy px-2 py-1.5 text-xs text-silver outline-none"
           >
             {LANGUAGES.map((l) => (
               <option key={l.value} value={l.value}>{l.label}</option>
@@ -85,30 +85,30 @@ export function AIGeneratePresentationForm({
         value={style}
         onChange={(e) => onStyleChange(e.target.value)}
         placeholder="Style hints (optional): formal, creative, data-driven..."
-        className="w-full rounded border border-neutral-700 bg-neutral-900 px-3 py-2 text-xs text-white outline-none placeholder:text-neutral-500 focus:border-neutral-500"
+        className="w-full rounded border border-steel bg-navy px-3 py-2 text-xs text-white outline-none placeholder:text-silver/50 focus:border-silver/50"
         maxLength={200}
       />
 
       {error && <p className="text-xs text-red-400">{error}</p>}
 
       <div className="flex items-center justify-between pt-1">
-        <span className="text-[10px] text-neutral-600">
+        <span className="text-[10px] text-silver/40">
           {topic.length}/2000 | Ctrl+Enter to generate
         </span>
         <div className="flex gap-2">
           <button
             onClick={onClose}
-            className="rounded px-3 py-1.5 text-xs text-neutral-400 hover:text-neutral-200 transition-colors"
+            className="rounded px-3 py-1.5 text-xs text-silver/70 hover:text-silver transition-colors"
           >
             Cancel
           </button>
           <button
             onClick={onGenerate}
             disabled={!topic.trim() || loading}
-            className="flex items-center gap-1.5 rounded bg-white px-3 py-1.5 text-xs font-medium text-[#161616] hover:bg-neutral-200 disabled:opacity-40 disabled:pointer-events-none transition-colors"
+            className="flex items-center gap-1.5 rounded bg-accent px-3 py-1.5 text-xs font-medium text-white hover:bg-accent-hover disabled:opacity-40 disabled:pointer-events-none transition-colors"
           >
             {loading && (
-              <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-neutral-400 border-t-[#161616]" />
+              <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-silver/50 border-t-navy" />
             )}
             {loading ? "Generating..." : "Generate Outline"}
           </button>

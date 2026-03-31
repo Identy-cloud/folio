@@ -22,9 +22,9 @@ export function SlideNotes() {
   }
 
   return (
-    <div className="hidden md:block border-t border-neutral-800 bg-[#161616]">
+    <div className="hidden md:block border-t border-steel/30 bg-navy">
       <div className="px-3 py-1.5">
-        <span className="text-[10px] font-medium text-neutral-500 uppercase tracking-wider">
+        <span className="text-[10px] font-medium text-silver/50 uppercase tracking-wider">
           Slide Notes
         </span>
       </div>
@@ -33,7 +33,7 @@ export function SlideNotes() {
         onChange={(e) => setLocal(e.target.value)}
         onBlur={commit}
         placeholder="Add speaker notes…"
-        className="w-full resize-none bg-transparent px-3 pb-2 text-xs text-neutral-300 outline-none placeholder:text-neutral-700"
+        className="w-full resize-none bg-transparent px-3 pb-2 text-xs text-silver outline-none placeholder:text-silver/30"
         rows={3}
       />
     </div>

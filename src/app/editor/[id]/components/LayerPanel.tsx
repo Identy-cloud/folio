@@ -51,27 +51,27 @@ export function LayerPanel({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center justify-between border-b border-neutral-800 px-3 py-2">
+      <div className="flex items-center justify-between border-b border-steel/30 px-3 py-2">
         <div className="flex items-center gap-1.5">
-          <Stack size={14} className="text-neutral-400" />
-          <span className="text-xs font-medium text-neutral-400 uppercase tracking-wider">Layers</span>
+          <Stack size={14} className="text-silver/70" />
+          <span className="text-xs font-medium text-silver/70 uppercase tracking-wider">Layers</span>
         </div>
-        <button onClick={onClose} className="text-xs text-neutral-500 hover:text-neutral-300">Close</button>
+        <button onClick={onClose} className="text-xs text-silver/50 hover:text-silver">Close</button>
       </div>
       {elements.length > 3 && (
         <div className="relative px-2 pt-2">
-          <MagnifyingGlass size={12} className="absolute left-4 top-1/2 mt-1 -translate-y-1/2 text-neutral-600" />
+          <MagnifyingGlass size={12} className="absolute left-4 top-1/2 mt-1 -translate-y-1/2 text-silver/40" />
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search layers..."
-            className="w-full rounded border border-neutral-800 bg-[#111] py-1.5 pl-7 pr-2 text-[10px] text-neutral-400 outline-none placeholder:text-neutral-700 focus:border-neutral-600"
+            className="w-full rounded border border-steel/30 bg-navy py-1.5 pl-7 pr-2 text-[10px] text-silver/70 outline-none placeholder:text-silver/30 focus:border-silver/40"
           />
         </div>
       )}
       <div className="flex-1 overflow-y-auto p-1">
         {sorted.length === 0 && (
-          <p className="py-4 text-center text-xs text-neutral-600">No elements</p>
+          <p className="py-4 text-center text-xs text-silver/40">No elements</p>
         )}
         {sorted.map((el) => {
           const Icon = TYPE_ICONS[el.type] ?? Rectangle;
@@ -85,7 +85,7 @@ export function LayerPanel({ onClose }: { onClose: () => void }) {
               onClick={() => selectElement(el.id)}
               onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); selectElement(el.id); } }}
               className={`flex w-full cursor-pointer items-center gap-2 rounded px-2 py-1.5 transition-colors ${
-                isSelected ? "bg-white/10 text-white" : "text-neutral-400 hover:bg-neutral-800"
+                isSelected ? "bg-white/10 text-white" : "text-silver/70 hover:bg-white/5"
               } ${!isVisible ? "opacity-50" : ""}`}
             >
               <Icon size={12} className="shrink-0" />
@@ -97,7 +97,7 @@ export function LayerPanel({ onClose }: { onClose: () => void }) {
                   pushHistory();
                 }}
                 aria-label={el.locked ? "Desbloquear capa" : "Bloquear capa"}
-                className="p-0.5 text-neutral-600 hover:text-neutral-300"
+                className="p-0.5 text-silver/40 hover:text-silver"
               >
                 {el.locked ? <LockSimple size={10} /> : <LockSimpleOpen size={10} />}
               </button>
@@ -108,7 +108,7 @@ export function LayerPanel({ onClose }: { onClose: () => void }) {
                   pushHistory();
                 }}
                 aria-label={isVisible ? "Ocultar capa" : "Mostrar capa"}
-                className="p-0.5 text-neutral-600 hover:text-neutral-300"
+                className="p-0.5 text-silver/40 hover:text-silver"
               >
                 {isVisible ? <Eye size={10} /> : <EyeSlash size={10} />}
               </button>

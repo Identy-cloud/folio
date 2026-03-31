@@ -75,19 +75,19 @@ export function NotesEditor() {
   }, [slide, isPaid, title, updateSlideNotes]);
 
   return (
-    <div className="border-t border-neutral-800 px-3 py-2">
+    <div className="border-t border-steel/30 px-3 py-2">
       <div className="mb-1 flex items-center justify-between">
-        <label className="block text-[10px] font-medium uppercase tracking-wider text-neutral-500">
+        <label className="block text-[10px] font-medium uppercase tracking-wider text-silver/50">
           {t.editor.notes ?? "Notes"}
         </label>
         <button
           onClick={generateNotes}
           disabled={generating}
           title="Generate notes with AI"
-          className="flex h-6 min-w-[24px] items-center gap-1 rounded px-1.5 text-[10px] text-neutral-500 transition-colors hover:bg-neutral-800 hover:text-neutral-300 disabled:opacity-50"
+          className="flex h-6 min-w-[24px] items-center gap-1 rounded px-1.5 text-[10px] text-silver/50 transition-colors hover:bg-white/5 hover:text-silver disabled:opacity-50"
         >
           {generating ? (
-            <span className="inline-block h-3 w-3 animate-spin rounded-full border border-neutral-500 border-t-neutral-300" />
+            <span className="inline-block h-3 w-3 animate-spin rounded-full border border-silver/50 border-t-neutral-300" />
           ) : (
             <Sparkle size={12} weight="fill" />
           )}
@@ -102,7 +102,7 @@ export function NotesEditor() {
         }}
         placeholder={t.editor.notesPlaceholder ?? "Presenter notes..."}
         rows={3}
-        className="w-full resize-none rounded border border-neutral-700 bg-[#161616] px-2 py-1.5 text-xs text-neutral-300 outline-none placeholder:text-neutral-600 focus:border-neutral-500"
+        className="w-full resize-none rounded border border-steel bg-navy px-2 py-1.5 text-xs text-silver outline-none placeholder:text-silver/40 focus:border-silver/50"
       />
       <UpgradeModal
         open={showUpgrade}

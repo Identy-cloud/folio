@@ -29,13 +29,13 @@ export function EmbedPanel({ slug }: Props) {
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center gap-2 text-xs text-neutral-300">
+      <div className="flex items-center gap-2 text-xs text-silver">
         <Code size={14} />
         <span>{t.editor.embed}</span>
       </div>
 
       {/* Preview */}
-      <div className="overflow-hidden rounded border border-neutral-700 bg-black">
+      <div className="overflow-hidden rounded border border-steel bg-black">
         <iframe
           src={src}
           title={t.editor.embedPreview}
@@ -47,40 +47,40 @@ export function EmbedPanel({ slug }: Props) {
       {/* Dimensions */}
       <div className="flex items-center gap-2">
         <label className="flex flex-1 flex-col gap-1">
-          <span className="text-[10px] text-neutral-500">{t.editor.embedWidth}</span>
+          <span className="text-[10px] text-silver/50">{t.editor.embedWidth}</span>
           <input
             type="number"
             min={320}
             max={1920}
             value={width}
             onChange={(e) => setWidth(Number(e.target.value) || 960)}
-            className="w-full rounded border border-neutral-700 bg-[#111111] px-2 py-1.5 text-xs text-neutral-300 outline-none focus:border-neutral-500"
+            className="w-full rounded border border-steel bg-navy px-2 py-1.5 text-xs text-silver outline-none focus:border-silver/50"
           />
         </label>
-        <span className="mt-4 text-xs text-neutral-600">x</span>
+        <span className="mt-4 text-xs text-silver/40">x</span>
         <label className="flex flex-1 flex-col gap-1">
-          <span className="text-[10px] text-neutral-500">{t.editor.embedHeight}</span>
+          <span className="text-[10px] text-silver/50">{t.editor.embedHeight}</span>
           <input
             type="number"
             min={180}
             max={1080}
             value={height}
             onChange={(e) => setHeight(Number(e.target.value) || 540)}
-            className="w-full rounded border border-neutral-700 bg-[#111111] px-2 py-1.5 text-xs text-neutral-300 outline-none focus:border-neutral-500"
+            className="w-full rounded border border-steel bg-navy px-2 py-1.5 text-xs text-silver outline-none focus:border-silver/50"
           />
         </label>
       </div>
 
       {/* Autoplay toggle */}
       <div className="flex items-center justify-between">
-        <span className="text-xs text-neutral-400">{t.editor.embedAutoplay}</span>
+        <span className="text-xs text-silver/70">{t.editor.embedAutoplay}</span>
         <button
           onClick={() => setAutoplay((v) => !v)}
           role="switch"
           aria-checked={autoplay}
           aria-label={t.editor.embedAutoplay}
           className={`relative h-5 w-9 cursor-pointer rounded-full transition-colors ${
-            autoplay ? "bg-green-600" : "bg-neutral-700"
+            autoplay ? "bg-green-600" : "bg-steel"
           }`}
         >
           <span
@@ -92,15 +92,15 @@ export function EmbedPanel({ slug }: Props) {
       </div>
 
       {/* Code preview + copy */}
-      <div className="rounded border border-neutral-700 bg-[#111111] p-2">
-        <pre className="max-h-16 overflow-auto text-[10px] leading-relaxed text-neutral-500 break-all whitespace-pre-wrap">
+      <div className="rounded border border-steel bg-navy p-2">
+        <pre className="max-h-16 overflow-auto text-[10px] leading-relaxed text-silver/50 break-all whitespace-pre-wrap">
           {embedCode}
         </pre>
       </div>
 
       <button
         onClick={copyCode}
-        className="flex w-full items-center justify-center gap-2 rounded bg-white py-2 text-xs font-medium text-[#161616] hover:bg-neutral-200 transition-colors"
+        className="flex w-full items-center justify-center gap-2 rounded bg-accent py-2 text-xs font-medium text-white hover:bg-accent-hover transition-colors"
       >
         {copied ? <Check size={14} /> : <Copy size={14} />}
         {copied ? t.editor.embedCopied : t.editor.embedCopyCode}

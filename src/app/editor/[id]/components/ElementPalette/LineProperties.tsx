@@ -21,7 +21,7 @@ export function LineProperties({ element }: Props) {
 
   return (
     <div className="space-y-3">
-      <span className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">
+      <span className="text-[11px] font-medium text-silver/70 uppercase tracking-wider">
         Line / Connector
       </span>
 
@@ -32,7 +32,7 @@ export function LineProperties({ element }: Props) {
       />
 
       <div>
-        <span className="mb-1 block text-[10px] text-neutral-500">Style</span>
+        <span className="mb-1 block text-[10px] text-silver/50">Style</span>
         <div className="flex gap-1">
           {(["solid", "dashed", "dotted"] as const).map((d) => (
             <button
@@ -40,8 +40,8 @@ export function LineProperties({ element }: Props) {
               onClick={() => update({ strokeDash: d })}
               className={`flex-1 rounded px-2 py-1 text-[10px] transition-colors ${
                 element.strokeDash === d
-                  ? "bg-white text-[#161616]"
-                  : "text-neutral-500 hover:bg-neutral-800"
+                  ? "bg-accent text-white"
+                  : "text-silver/50 hover:bg-white/5"
               }`}
             >
               {d}
@@ -51,7 +51,7 @@ export function LineProperties({ element }: Props) {
       </div>
 
       <label className="flex flex-col gap-0.5">
-        <span className="text-[10px] text-neutral-500">Stroke width</span>
+        <span className="text-[10px] text-silver/50">Stroke width</span>
         <input
           type="number"
           min={1}
@@ -68,14 +68,14 @@ export function LineProperties({ element }: Props) {
               if (!isNaN(n)) update({ strokeWidth: n });
             }
           }}
-          className="w-full rounded border border-neutral-700 bg-[#161616] px-2 py-1 text-xs text-neutral-200 outline-none focus:border-neutral-500"
+          className="w-full rounded border border-steel bg-navy px-2 py-1 text-xs text-silver outline-none focus:border-silver/50"
         />
       </label>
 
       <div>
-        <span className="mb-1 block text-[10px] text-neutral-500">Arrows</span>
+        <span className="mb-1 block text-[10px] text-silver/50">Arrows</span>
         <div className="flex gap-2">
-          <label className="flex items-center gap-1.5 text-[10px] text-neutral-400">
+          <label className="flex items-center gap-1.5 text-[10px] text-silver/70">
             <input
               type="checkbox"
               checked={element.arrowStart}
@@ -84,7 +84,7 @@ export function LineProperties({ element }: Props) {
             />
             Start
           </label>
-          <label className="flex items-center gap-1.5 text-[10px] text-neutral-400">
+          <label className="flex items-center gap-1.5 text-[10px] text-silver/70">
             <input
               type="checkbox"
               checked={element.arrowEnd}

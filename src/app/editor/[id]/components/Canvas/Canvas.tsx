@@ -390,7 +390,7 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
   return (
     <div
       ref={wrapperRef}
-      className={`relative h-full w-full overflow-hidden touch-none ${dragOver ? "ring-2 ring-inset ring-blue-500/50" : ""} ${darkCanvas ? "bg-[#111]" : "bg-[#e5e5e5]"}`}
+      className={`relative h-full w-full overflow-hidden touch-none ${dragOver ? "ring-2 ring-inset ring-blue-500/50" : ""} ${darkCanvas ? "bg-navy" : "bg-[#e5e5e5]"}`}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
@@ -539,13 +539,13 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
 
       {/* Mobile pinch zoom badge */}
       {narrow && showTouchZoomBadge && (
-        <div className="absolute top-3 left-1/2 z-30 -translate-x-1/2 rounded-full bg-neutral-900/80 px-3 py-1 text-xs font-medium text-neutral-300 backdrop-blur-sm">
+        <div className="absolute top-3 left-1/2 z-30 -translate-x-1/2 rounded-full bg-navy/80 px-3 py-1 text-xs font-medium text-silver backdrop-blur-sm">
           {Math.round(scale * 100)}%
         </div>
       )}
 
       {/* Slide info */}
-      <div className="absolute bottom-3 left-3 z-30 hidden md:flex items-center gap-2 text-[10px] text-neutral-600">
+      <div className="absolute bottom-3 left-3 z-30 hidden md:flex items-center gap-2 text-[10px] text-silver/40">
         <span>Slide {activeSlideIndex + 1}/{useEditorStore.getState().slides.length}</span>
         <span>·</span>
         <span>{(isMobileMode && slide.mobileElements ? slide.mobileElements : slide.elements).length} elements</span>
@@ -558,46 +558,46 @@ export function Canvas({ peers = [], onCursorMove, onCursorLeave }: CanvasProps)
       </div>
 
       {/* Zoom + Grid controls */}
-      <div className="absolute bottom-3 right-3 z-30 hidden md:flex items-center gap-1 rounded bg-neutral-900/80 px-1 py-0.5 backdrop-blur-sm">
+      <div className="absolute bottom-3 right-3 z-30 hidden md:flex items-center gap-1 rounded bg-navy/80 px-1 py-0.5 backdrop-blur-sm">
         <button
           onClick={() => {
             setShowGrid((v) => !v);
             useEditorStore.setState((s) => ({ snapToGrid: !s.snapToGrid }));
           }}
-          className={`rounded p-1 transition-colors ${showGrid ? "text-blue-400" : "text-neutral-400 hover:text-white"}`}
+          className={`rounded p-1 transition-colors ${showGrid ? "text-blue-400" : "text-silver/70 hover:text-white"}`}
           aria-label="Toggle grid"
           aria-pressed={showGrid}
         >
           <GridFour size={14} />
         </button>
-        <div className="w-px h-3 bg-neutral-700" />
-        <button onClick={zoomOut} className="rounded p-1 text-neutral-400 hover:text-white transition-colors" aria-label="Zoom out">
+        <div className="w-px h-3 bg-steel" />
+        <button onClick={zoomOut} className="rounded p-1 text-silver/70 hover:text-white transition-colors" aria-label="Zoom out">
           <MagnifyingGlassMinus size={14} />
         </button>
         <button
           onClick={zoomFit}
-          className="min-w-[3rem] px-1 text-center text-[10px] text-neutral-300 hover:text-white transition-colors"
+          className="min-w-[3rem] px-1 text-center text-[10px] text-silver hover:text-white transition-colors"
           aria-label="Fit to view"
         >
           {Math.round(scale * 100)}%
         </button>
-        <button onClick={zoomIn} className="rounded p-1 text-neutral-400 hover:text-white transition-colors" aria-label="Zoom in">
+        <button onClick={zoomIn} className="rounded p-1 text-silver/70 hover:text-white transition-colors" aria-label="Zoom in">
           <MagnifyingGlassPlus size={14} />
         </button>
-        <div className="w-px h-3 bg-neutral-700" />
+        <div className="w-px h-3 bg-steel" />
         {[50, 100, 150].map((p) => (
           <button
             key={p}
             onClick={() => { setScale(p / 100); setZoomOverride(p / 100); setPanOffset({ x: 0, y: 0 }); }}
-            className={`px-1 text-[9px] transition-colors ${Math.round(scale * 100) === p ? "text-white" : "text-neutral-500 hover:text-neutral-300"}`}
+            className={`px-1 text-[9px] transition-colors ${Math.round(scale * 100) === p ? "text-white" : "text-silver/50 hover:text-silver"}`}
           >
             {p}
           </button>
         ))}
-        <div className="w-px h-3 bg-neutral-700" />
+        <div className="w-px h-3 bg-steel" />
         <button
           onClick={() => setDarkCanvas((v) => !v)}
-          className="px-1 text-[9px] text-neutral-500 hover:text-neutral-300 transition-colors"
+          className="px-1 text-[9px] text-silver/50 hover:text-silver transition-colors"
           title="Toggle canvas background"
         >
           {darkCanvas ? "☀" : "☾"}

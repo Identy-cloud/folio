@@ -23,7 +23,7 @@ export function LockToggle({ element }: { element: SlideElement }) {
       className={`flex w-full items-center justify-center gap-2 rounded border px-3 py-2 text-xs transition-colors disabled:opacity-40 disabled:pointer-events-none ${
         element.locked
           ? "border-amber-900/50 bg-amber-950/30 text-amber-400 hover:bg-amber-950/50"
-          : "border-neutral-700 text-neutral-400 hover:bg-neutral-800"
+          : "border-steel text-silver/70 hover:bg-white/5"
       }`}
     >
       {element.locked ? <Lock size={14} weight="regular" /> : <LockOpen size={14} weight="regular" />}

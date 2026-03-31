@@ -20,24 +20,24 @@ export class EditorErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="flex h-screen items-center justify-center bg-[#111111]">
+        <div className="flex h-screen items-center justify-center bg-navy">
           <div className="text-center">
-            <h2 className="font-display text-4xl tracking-tight text-neutral-200">
+            <h2 className="font-display text-4xl tracking-tight text-silver">
               SOMETHING WENT WRONG
             </h2>
-            <p className="mt-2 text-sm text-neutral-500">
+            <p className="mt-2 text-sm text-silver/50">
               The editor encountered an error. Your work was saved automatically.
             </p>
             <div className="mt-6 flex justify-center gap-3">
               <button
                 onClick={() => this.setState({ hasError: false })}
-                className="bg-white px-6 py-2.5 text-sm font-medium tracking-widest text-[#161616] uppercase hover:bg-neutral-200"
+                className="bg-accent px-6 py-2.5 text-sm font-medium tracking-widest text-white uppercase hover:bg-accent-hover"
               >
                 Retry
               </button>
               <a
                 href="/dashboard"
-                className="border border-neutral-600 px-6 py-2.5 text-sm font-medium tracking-widest text-neutral-400 uppercase hover:border-neutral-400 hover:text-neutral-200"
+                className="border border-steel/60 px-6 py-2.5 text-sm font-medium tracking-widest text-silver/70 uppercase hover:border-silver hover:text-silver"
               >
                 Dashboard
               </a>

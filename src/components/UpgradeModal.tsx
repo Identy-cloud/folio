@@ -59,13 +59,13 @@ export function UpgradeModal({ open, onClose, feature, requiredPlan }: Props) {
   return (
     <DialogShell open={open} ariaLabel="Upgrade" onClose={onClose}>
       <div className="text-center">
-        <p className="text-[10px] tracking-[0.4em] text-neutral-500 uppercase">
+        <p className="text-[10px] tracking-[0.4em] text-silver/50 uppercase">
           Upgrade
         </p>
-        <h3 className="mt-3 font-display text-2xl tracking-tight text-neutral-200">
+        <h3 className="mt-3 font-display text-2xl tracking-tight text-silver">
           {feature}
         </h3>
-        <p className="mt-3 text-sm text-neutral-400">
+        <p className="mt-3 text-sm text-silver/70">
           Disponible en el plan{" "}
           <span className="font-medium text-white">{PLAN_LABELS[requiredPlan]}</span>
           {" "}por{" "}
@@ -75,13 +75,13 @@ export function UpgradeModal({ open, onClose, feature, requiredPlan }: Props) {
           <button
             onClick={handleUpgrade}
             disabled={loading}
-            className="w-full bg-white py-3 text-xs font-semibold tracking-[0.25em] text-black uppercase hover:bg-neutral-200 disabled:opacity-50 transition-colors"
+            className="w-full bg-accent py-3 text-xs font-semibold tracking-[0.25em] text-white uppercase hover:bg-accent-hover disabled:opacity-50 transition-colors"
           >
             {loading ? "..." : `Upgrade a ${PLAN_LABELS[requiredPlan]}`}
           </button>
           <button
             onClick={onClose}
-            className="w-full py-2 text-xs text-neutral-500 hover:text-neutral-300 transition-colors"
+            className="w-full py-2 text-xs text-silver/50 hover:text-silver transition-colors"
           >
             Ahora no
           </button>

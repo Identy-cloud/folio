@@ -35,46 +35,46 @@ export function TableProperties({ element }: Props) {
   }
 
   const numInput =
-    "w-full rounded border border-neutral-700 bg-[#161616] px-2 py-1 text-xs text-neutral-200 outline-none focus:border-neutral-500";
+    "w-full rounded border border-steel bg-navy px-2 py-1 text-xs text-silver outline-none focus:border-silver/50";
 
   return (
     <div className="space-y-3">
-      <span className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">
+      <span className="text-[11px] font-medium text-silver/70 uppercase tracking-wider">
         Table
       </span>
 
       <div className="grid grid-cols-2 gap-2">
         <label className="flex flex-col gap-0.5">
-          <span className="text-[10px] text-neutral-500">Rows</span>
+          <span className="text-[10px] text-silver/50">Rows</span>
           <div className="flex items-center gap-1">
             <button
               onClick={() => { if (element.rows > 1) resizeCells(element.rows - 1, element.cols); }}
-              className="rounded border border-neutral-700 px-1.5 py-0.5 text-xs text-neutral-400 hover:bg-neutral-800"
+              className="rounded border border-steel px-1.5 py-0.5 text-xs text-silver/70 hover:bg-white/5"
             >
               -
             </button>
-            <span className="flex-1 text-center text-xs text-neutral-200">{element.rows}</span>
+            <span className="flex-1 text-center text-xs text-silver">{element.rows}</span>
             <button
               onClick={() => { if (element.rows < 20) resizeCells(element.rows + 1, element.cols); }}
-              className="rounded border border-neutral-700 px-1.5 py-0.5 text-xs text-neutral-400 hover:bg-neutral-800"
+              className="rounded border border-steel px-1.5 py-0.5 text-xs text-silver/70 hover:bg-white/5"
             >
               +
             </button>
           </div>
         </label>
         <label className="flex flex-col gap-0.5">
-          <span className="text-[10px] text-neutral-500">Columns</span>
+          <span className="text-[10px] text-silver/50">Columns</span>
           <div className="flex items-center gap-1">
             <button
               onClick={() => { if (element.cols > 1) resizeCells(element.rows, element.cols - 1); }}
-              className="rounded border border-neutral-700 px-1.5 py-0.5 text-xs text-neutral-400 hover:bg-neutral-800"
+              className="rounded border border-steel px-1.5 py-0.5 text-xs text-silver/70 hover:bg-white/5"
             >
               -
             </button>
-            <span className="flex-1 text-center text-xs text-neutral-200">{element.cols}</span>
+            <span className="flex-1 text-center text-xs text-silver">{element.cols}</span>
             <button
               onClick={() => { if (element.cols < 10) resizeCells(element.rows, element.cols + 1); }}
-              className="rounded border border-neutral-700 px-1.5 py-0.5 text-xs text-neutral-400 hover:bg-neutral-800"
+              className="rounded border border-steel px-1.5 py-0.5 text-xs text-silver/70 hover:bg-white/5"
             >
               +
             </button>
@@ -89,7 +89,7 @@ export function TableProperties({ element }: Props) {
           onChange={(e) => update({ headerRow: e.target.checked })}
           className="accent-blue-500"
         />
-        <span className="text-[10px] text-neutral-400">Header row</span>
+        <span className="text-[10px] text-silver/70">Header row</span>
       </label>
 
       <ColorPicker
@@ -107,7 +107,7 @@ export function TableProperties({ element }: Props) {
       )}
 
       <label className="flex flex-col gap-0.5">
-        <span className="text-[10px] text-neutral-500">Font size</span>
+        <span className="text-[10px] text-silver/50">Font size</span>
         <input
           type="number"
           min={8}
@@ -123,7 +123,7 @@ export function TableProperties({ element }: Props) {
       </label>
 
       <label className="flex flex-col gap-0.5">
-        <span className="text-[10px] text-neutral-500">Cell padding</span>
+        <span className="text-[10px] text-silver/50">Cell padding</span>
         <input
           type="number"
           min={0}

@@ -46,7 +46,7 @@ export function FolderList({
         ))}
         <button
           onClick={onCreate}
-          className="flex shrink-0 items-center gap-1.5 rounded-full border border-dashed border-neutral-600 px-3 py-1.5 text-xs text-neutral-400 hover:border-neutral-400 hover:text-neutral-200 transition-colors"
+          className="flex shrink-0 items-center gap-1.5 rounded-full border border-dashed border-steel/60 px-3 py-1.5 text-xs text-silver/70 hover:border-silver hover:text-silver transition-colors"
         >
           <FolderPlus size={14} />
           New
@@ -72,7 +72,7 @@ export function FolderList({
         ))}
         <button
           onClick={onCreate}
-          className="mt-2 flex w-full items-center gap-2 rounded px-3 py-2 text-xs text-neutral-500 hover:bg-neutral-800 hover:text-neutral-300 transition-colors"
+          className="mt-2 flex w-full items-center gap-2 rounded px-3 py-2 text-xs text-silver/50 hover:bg-white/5 hover:text-silver transition-colors"
         >
           <FolderPlus size={14} />
           New folder
@@ -96,8 +96,8 @@ function ChipButton({
       onClick={onClick}
       className={`flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
         active
-          ? "bg-neutral-200 text-[#161616]"
-          : "border border-neutral-700 text-neutral-400 hover:border-neutral-500 hover:text-neutral-200"
+          ? "bg-silver text-white"
+          : "border border-steel text-silver/70 hover:border-silver/50 hover:text-silver"
       }`}
     >
       <Folder size={14} weight={active ? "fill" : "regular"} />
@@ -120,8 +120,8 @@ function SidebarItem({
       onClick={onClick}
       className={`flex w-full items-center gap-2 rounded px-3 py-2 text-sm transition-colors ${
         active
-          ? "bg-neutral-800 text-neutral-100"
-          : "text-neutral-400 hover:bg-neutral-800/50 hover:text-neutral-200"
+          ? "bg-white/5 text-white"
+          : "text-silver/70 hover:bg-white/5 hover:text-silver"
       }`}
     >
       <Folder size={16} weight={active ? "fill" : "regular"} />
@@ -153,8 +153,8 @@ function SidebarFolder({
         onClick={onSelect}
         className={`flex flex-1 items-center gap-2 rounded px-3 py-2 text-sm transition-colors ${
           active
-            ? "bg-neutral-800 text-neutral-100"
-            : "text-neutral-400 hover:bg-neutral-800/50 hover:text-neutral-200"
+            ? "bg-white/5 text-white"
+            : "text-silver/70 hover:bg-white/5 hover:text-silver"
         }`}
       >
         <Folder size={16} weight={active ? "fill" : "regular"} />
@@ -163,21 +163,21 @@ function SidebarFolder({
       <div ref={menuRef} className="relative">
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="rounded p-1 text-neutral-600 opacity-0 group-hover:opacity-100 hover:text-neutral-300 transition-all"
+          className="rounded p-1 text-silver/40 opacity-0 group-hover:opacity-100 hover:text-silver transition-all"
         >
           <DotsThree size={16} weight="regular" />
         </button>
         {menuOpen && (
-          <div className="absolute right-0 top-full z-50 mt-1 w-32 rounded border border-neutral-700 bg-[#242424] py-1 shadow-lg">
+          <div className="absolute right-0 top-full z-50 mt-1 w-32 rounded border border-steel bg-steel py-1 shadow-lg">
             <button
               onClick={() => { setMenuOpen(false); onRename(); }}
-              className="flex w-full items-center gap-2 px-3 py-1.5 text-xs text-neutral-300 hover:bg-neutral-800"
+              className="flex w-full items-center gap-2 px-3 py-1.5 text-xs text-silver hover:bg-white/5"
             >
               <PencilSimple size={12} /> Rename
             </button>
             <button
               onClick={() => { setMenuOpen(false); onDelete(); }}
-              className="flex w-full items-center gap-2 px-3 py-1.5 text-xs text-red-500 hover:bg-neutral-800"
+              className="flex w-full items-center gap-2 px-3 py-1.5 text-xs text-red-500 hover:bg-white/5"
             >
               <Trash size={12} /> Delete
             </button>

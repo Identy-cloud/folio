@@ -78,14 +78,14 @@ export function RecordingControls() {
     return (
       <div className="flex items-center gap-2">
         <audio src={previewUrl} controls className="h-8 w-32 md:w-40" />
-        <span className="text-[10px] text-neutral-500">{formatTime(recordingData.duration)}</span>
+        <span className="text-[10px] text-silver/50">{formatTime(recordingData.duration)}</span>
         <Tooltip content="Save recording">
           <button onClick={handleSave} disabled={saving} className="flex h-8 w-8 items-center justify-center rounded bg-green-600 text-white hover:bg-green-500 disabled:opacity-50 transition-colors">
             <FloppyDisk size={14} />
           </button>
         </Tooltip>
         <Tooltip content="Discard">
-          <button onClick={discardRecording} className="flex h-8 w-8 items-center justify-center rounded bg-neutral-700 text-neutral-300 hover:bg-neutral-600 transition-colors">
+          <button onClick={discardRecording} className="flex h-8 w-8 items-center justify-center rounded bg-steel text-silver hover:bg-steel/80 transition-colors">
             <Trash size={14} />
           </button>
         </Tooltip>
@@ -99,7 +99,7 @@ export function RecordingControls() {
         <Circle size={10} weight="fill" className="text-red-500 animate-pulse" />
         <span className="font-mono text-xs text-red-400">{formatTime(duration)}</span>
         <Tooltip content={isPaused ? "Resume" : "Pause"}>
-          <button onClick={isPaused ? resumeRecording : pauseRecording} className="flex h-8 w-8 items-center justify-center rounded bg-neutral-700 text-neutral-300 hover:bg-neutral-600 transition-colors">
+          <button onClick={isPaused ? resumeRecording : pauseRecording} className="flex h-8 w-8 items-center justify-center rounded bg-steel text-silver hover:bg-steel/80 transition-colors">
             {isPaused ? <Play size={14} weight="fill" /> : <Pause size={14} weight="fill" />}
           </button>
         </Tooltip>
@@ -119,14 +119,14 @@ export function RecordingControls() {
         <button onClick={() => {
           if (!limits.canRecord) { setShowUpgrade(true); return; }
           startRecording();
-        }} className="flex h-8 items-center gap-1.5 rounded px-2 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 transition-colors">
+        }} className="flex h-8 items-center gap-1.5 rounded px-2 text-silver/70 hover:bg-white/5 hover:text-silver transition-colors">
           <Microphone size={14} weight={saved ? "fill" : "regular"} className={saved ? "text-red-400" : ""} />
           <span className="hidden md:inline text-xs">{saved ? "Re-record" : "Record"}</span>
         </button>
       </Tooltip>
       {saved && (
         <Tooltip content="Delete recording">
-          <button onClick={handleDelete} className="flex h-8 w-8 items-center justify-center rounded text-neutral-500 hover:bg-neutral-800 hover:text-red-400 transition-colors">
+          <button onClick={handleDelete} className="flex h-8 w-8 items-center justify-center rounded text-silver/50 hover:bg-white/5 hover:text-red-400 transition-colors">
             <Trash size={12} />
           </button>
         </Tooltip>

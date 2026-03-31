@@ -47,11 +47,11 @@ export function CommentThread({
       <div
         className={`rounded px-2 py-1.5 text-xs ${
           comment.resolved
-            ? "bg-neutral-800/50 text-neutral-600 line-through"
-            : "bg-neutral-800 text-neutral-300"
+            ? "bg-white/5 text-silver/40 line-through"
+            : "bg-white/5 text-silver"
         }`}
       >
-        <span className="text-[10px] text-neutral-500">
+        <span className="text-[10px] text-silver/50">
           {showSlide ? `Slide ${comment.slideIndex + 1} · ` : ""}
           {comment.authorName}
         </span>
@@ -59,14 +59,14 @@ export function CommentThread({
         <div className="flex items-center gap-2 mt-1">
           <button
             onClick={() => onReply(comment.id)}
-            className="text-[10px] text-neutral-500 hover:text-neutral-300 transition-colors"
+            className="text-[10px] text-silver/50 hover:text-silver transition-colors"
           >
             Reply
           </button>
           {hasReplies && (
             <button
               onClick={() => setExpanded((v) => !v)}
-              className="flex items-center gap-0.5 text-[10px] text-neutral-500 hover:text-neutral-300 transition-colors"
+              className="flex items-center gap-0.5 text-[10px] text-silver/50 hover:text-silver transition-colors"
             >
               {expanded ? <CaretDown size={10} /> : <CaretRight size={10} />}
               {comment.replies.length}{" "}
@@ -77,13 +77,13 @@ export function CommentThread({
       </div>
 
       {hasReplies && expanded && (
-        <div className="ml-3 mt-1 border-l border-neutral-700 pl-2 space-y-1">
+        <div className="ml-3 mt-1 border-l border-steel pl-2 space-y-1">
           {comment.replies.map((r) => (
             <div
               key={r.id}
-              className="rounded bg-neutral-800/70 px-2 py-1.5 text-xs text-neutral-400"
+              className="rounded bg-white/5/70 px-2 py-1.5 text-xs text-silver/70"
             >
-              <span className="text-[10px] text-neutral-500">
+              <span className="text-[10px] text-silver/50">
                 <ArrowBendDownRight size={8} className="inline mr-0.5" />
                 {r.authorName}
               </span>
@@ -107,13 +107,13 @@ export function CommentThread({
               if (e.key === "Escape") onReply("");
             }}
             placeholder="Write a reply..."
-            className="flex-1 rounded bg-neutral-800 px-2 py-1 text-xs text-neutral-300 placeholder:text-neutral-600 outline-none focus:ring-1 focus:ring-neutral-600 min-w-0"
+            className="flex-1 rounded bg-white/5 px-2 py-1 text-xs text-silver placeholder:text-silver/40 outline-none focus:ring-1 focus:ring-neutral-600 min-w-0"
             disabled={submitting}
           />
           <button
             onClick={onSubmitReply}
             disabled={submitting || !replyContent.trim()}
-            className="shrink-0 rounded bg-neutral-700 px-2 py-1 text-[10px] text-neutral-300 hover:bg-neutral-600 disabled:opacity-40 transition-colors"
+            className="shrink-0 rounded bg-steel px-2 py-1 text-[10px] text-silver hover:bg-steel/80 disabled:opacity-40 transition-colors"
           >
             Send
           </button>

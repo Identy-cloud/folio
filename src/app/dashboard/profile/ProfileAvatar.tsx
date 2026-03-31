@@ -72,14 +72,14 @@ export function ProfileAvatar({ profile, onUpdate }: Props) {
             style={{ width: 72, height: 72 }}
           />
         ) : (
-          <div className="flex h-[72px] w-[72px] items-center justify-center rounded-full bg-neutral-700 text-lg font-medium text-neutral-300">
+          <div className="flex h-[72px] w-[72px] items-center justify-center rounded-full bg-steel text-lg font-medium text-silver">
             {initials}
           </div>
         )}
         <button
           onClick={() => inputRef.current?.click()}
           disabled={uploading}
-          className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full border border-neutral-600 bg-neutral-800 text-neutral-300 hover:bg-neutral-700 hover:text-white transition-colors disabled:opacity-50"
+          className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full border border-steel/60 bg-white/5 text-silver hover:bg-steel hover:text-white transition-colors disabled:opacity-50"
           aria-label="Change avatar"
         >
           <Camera size={14} />
@@ -97,8 +97,8 @@ export function ProfileAvatar({ profile, onUpdate }: Props) {
         />
       </div>
       <div>
-        <p className="text-sm text-neutral-200">{profile.name ?? profile.email}</p>
-        <p className="text-xs text-neutral-500">{profile.email}</p>
+        <p className="text-sm text-silver">{profile.name ?? profile.email}</p>
+        <p className="text-xs text-silver/50">{profile.email}</p>
       </div>
     </div>
   );

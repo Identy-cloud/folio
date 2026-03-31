@@ -73,19 +73,19 @@ export function CommentsPanel({ presentationId, currentSlide, totalSlides }: Pro
       </button>
 
       {open && (
-        <div className="fixed bottom-0 right-0 top-0 z-30 flex w-[calc(100%-2rem)] max-w-80 flex-col bg-[#1a1a1a] shadow-2xl sm:max-w-96">
-          <div className="flex items-center justify-between border-b border-neutral-800 px-4 py-3">
-            <span className="text-xs font-medium uppercase tracking-wider text-neutral-400">
+        <div className="fixed bottom-0 right-0 top-0 z-30 flex w-[calc(100%-2rem)] max-w-80 flex-col bg-navy shadow-2xl sm:max-w-96">
+          <div className="flex items-center justify-between border-b border-steel/30 px-4 py-3">
+            <span className="text-xs font-medium uppercase tracking-wider text-silver/70">
               Feedback — Slide {currentSlide + 1}
             </span>
-            <button onClick={() => setOpen(false)} className="text-neutral-400 hover:text-white">
+            <button onClick={() => setOpen(false)} className="text-silver/70 hover:text-white">
               <X size={16} />
             </button>
           </div>
 
           <div className="flex-1 overflow-y-auto p-4 space-y-3">
             {slideComments.length === 0 && otherComments.length === 0 && (
-              <p className="text-center text-xs text-neutral-600 py-8">No comments yet</p>
+              <p className="text-center text-xs text-silver/40 py-8">No comments yet</p>
             )}
 
             {slideComments.length > 0 && (
@@ -98,7 +98,7 @@ export function CommentsPanel({ presentationId, currentSlide, totalSlides }: Pro
 
             {otherComments.length > 0 && (
               <>
-                <p className="pt-2 text-[10px] uppercase tracking-wider text-neutral-600">
+                <p className="pt-2 text-[10px] uppercase tracking-wider text-silver/40">
                   Other slides
                 </p>
                 <div className="space-y-2 opacity-60">
@@ -110,13 +110,13 @@ export function CommentsPanel({ presentationId, currentSlide, totalSlides }: Pro
             )}
           </div>
 
-          <form onSubmit={handleSubmit} className="border-t border-neutral-800 p-3 space-y-2">
+          <form onSubmit={handleSubmit} className="border-t border-steel/30 p-3 space-y-2">
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Your name"
               required
-              className="w-full rounded border border-neutral-700 bg-[#111] px-2 py-1.5 text-xs text-neutral-200 outline-none placeholder:text-neutral-600 focus:border-neutral-500"
+              className="w-full rounded border border-steel bg-navy px-2 py-1.5 text-xs text-silver outline-none placeholder:text-silver/40 focus:border-silver/50"
             />
             <div className="flex gap-2">
               <input
@@ -124,12 +124,12 @@ export function CommentsPanel({ presentationId, currentSlide, totalSlides }: Pro
                 onChange={(e) => setContent(e.target.value)}
                 placeholder="Leave feedback..."
                 required
-                className="flex-1 rounded border border-neutral-700 bg-[#111] px-2 py-1.5 text-xs text-neutral-200 outline-none placeholder:text-neutral-600 focus:border-neutral-500"
+                className="flex-1 rounded border border-steel bg-navy px-2 py-1.5 text-xs text-silver outline-none placeholder:text-silver/40 focus:border-silver/50"
               />
               <button
                 type="submit"
                 disabled={sending || !name.trim() || !content.trim()}
-                className="flex h-8 w-8 items-center justify-center rounded bg-white text-[#161616] hover:bg-neutral-200 disabled:opacity-30 transition-colors"
+                className="flex h-8 w-8 items-center justify-center rounded bg-accent text-white hover:bg-accent-hover disabled:opacity-30 transition-colors"
               >
                 <PaperPlaneTilt size={14} />
               </button>
@@ -143,14 +143,14 @@ export function CommentsPanel({ presentationId, currentSlide, totalSlides }: Pro
 
 function CommentBubble({ comment, current }: { comment: Comment; current?: boolean }) {
   return (
-    <div className={`rounded border px-3 py-2 ${current ? "border-neutral-700 bg-neutral-800/50" : "border-neutral-800"}`}>
+    <div className={`rounded border px-3 py-2 ${current ? "border-steel bg-white/5" : "border-steel/30"}`}>
       <div className="flex items-center justify-between">
-        <span className="text-[10px] font-medium text-neutral-300">{comment.authorName}</span>
-        <span className="text-[9px] text-neutral-600">
+        <span className="text-[10px] font-medium text-silver">{comment.authorName}</span>
+        <span className="text-[9px] text-silver/40">
           Slide {comment.slideIndex + 1}
         </span>
       </div>
-      <p className="mt-1 text-xs text-neutral-400">{comment.content}</p>
+      <p className="mt-1 text-xs text-silver/70">{comment.content}</p>
     </div>
   );
 }

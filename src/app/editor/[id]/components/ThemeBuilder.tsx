@@ -77,14 +77,14 @@ export function ThemeBuilder({ open, onClose }: Props) {
 
   return (
     <DialogShell open={open} ariaLabel="Create custom theme" onClose={onClose}>
-      <div className="w-full max-w-sm rounded bg-[#1e1e1e] border border-neutral-700 p-4 shadow-xl mx-auto">
+      <div className="w-full max-w-sm rounded bg-slate border border-steel p-4 shadow-xl mx-auto">
         <div className="flex items-center justify-between mb-3">
-          <span className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">
+          <span className="text-[11px] font-medium text-silver/70 uppercase tracking-wider">
             Create Theme
           </span>
           <button
             onClick={onClose}
-            className="rounded p-1.5 text-neutral-500 hover:bg-neutral-700 hover:text-neutral-300 transition-colors"
+            className="rounded p-1.5 text-silver/50 hover:bg-steel hover:text-silver transition-colors"
           >
             <X size={14} />
           </button>
@@ -97,7 +97,7 @@ export function ThemeBuilder({ open, onClose }: Props) {
             value={draft.label}
             onChange={(e) => update("label", e.target.value)}
             placeholder="Theme name"
-            className="w-full rounded border border-neutral-700 bg-[#161616] px-2 py-1.5 text-[11px] text-neutral-200 outline-none focus:border-neutral-500"
+            className="w-full rounded border border-steel bg-navy px-2 py-1.5 text-[11px] text-silver outline-none focus:border-silver/50"
           />
         </div>
 
@@ -120,14 +120,14 @@ export function ThemeBuilder({ open, onClose }: Props) {
         <div className="mt-4 flex gap-2">
           <button
             onClick={onClose}
-            className="flex-1 rounded px-3 py-2 text-xs text-neutral-400 hover:bg-neutral-800 transition-colors"
+            className="flex-1 rounded px-3 py-2 text-xs text-silver/70 hover:bg-white/5 transition-colors"
           >
             Cancel
           </button>
           <button
             onClick={handleSave}
             disabled={saving || !limits.canUseBrandKit}
-            className="flex-1 rounded bg-white px-3 py-2 text-xs font-medium text-[#161616] hover:bg-neutral-200 disabled:opacity-40 transition-colors"
+            className="flex-1 rounded bg-accent px-3 py-2 text-xs font-medium text-white hover:bg-accent-hover disabled:opacity-40 transition-colors"
           >
             {saving ? "Saving..." : !limits.canUseBrandKit ? "Studio+" : "Save & Apply"}
           </button>

@@ -17,9 +17,9 @@ function Cell({ value }: { value: Support }) {
     return <span className="text-white">&#10003;</span>;
   }
   if (value === "partial") {
-    return <span className="text-neutral-500">~</span>;
+    return <span className="text-silver/50">~</span>;
   }
-  return <span className="text-neutral-700">&mdash;</span>;
+  return <span className="text-silver/40">&mdash;</span>;
 }
 
 export function LandingComparison() {
@@ -38,8 +38,8 @@ export function LandingComparison() {
   const headers = [l.compFeature, "Folio", "Canva", "Google Slides", "PowerPoint"];
 
   return (
-    <section className="border-t border-neutral-800 px-4 py-16 sm:px-8 sm:py-24">
-      <p className="text-center text-[10px] tracking-[0.5em] text-neutral-500 uppercase">
+    <section className="border-t border-steel/30 px-4 py-16 sm:px-8 sm:py-24">
+      <p className="text-center text-[10px] tracking-[0.5em] text-silver/50 uppercase">
         {l.comparisonLabel}
       </p>
       <h2 className="mt-3 text-center font-display text-3xl tracking-tight sm:text-5xl">
@@ -48,12 +48,12 @@ export function LandingComparison() {
       <div className="mx-auto mt-12 max-w-4xl overflow-x-auto">
         <table className="w-full min-w-[480px] text-left text-xs">
           <thead>
-            <tr className="border-b border-neutral-800">
+            <tr className="border-b border-steel/30">
               {headers.map((h, i) => (
                 <th
                   key={h}
                   className={`pb-3 font-semibold tracking-[0.15em] uppercase ${
-                    i === 0 ? "text-neutral-500" : i === 1 ? "text-white" : "text-neutral-600"
+                    i === 0 ? "text-silver/50" : i === 1 ? "text-white" : "text-silver/40"
                   }`}
                 >
                   {h}
@@ -63,8 +63,8 @@ export function LandingComparison() {
           </thead>
           <tbody>
             {rows.map((row) => (
-              <tr key={row.feature} className="border-b border-neutral-800/50">
-                <td className="py-3 text-neutral-400">{row.feature}</td>
+              <tr key={row.feature} className="border-b border-steel/30/50">
+                <td className="py-3 text-silver/70">{row.feature}</td>
                 <td className="py-3 text-center"><Cell value={row.folio} /></td>
                 <td className="py-3 text-center"><Cell value={row.canva} /></td>
                 <td className="py-3 text-center"><Cell value={row.google} /></td>

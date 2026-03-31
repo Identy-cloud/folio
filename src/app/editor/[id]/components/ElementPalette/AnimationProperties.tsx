@@ -46,7 +46,7 @@ export function AnimationProperties({ element }: Props) {
 
   return (
     <div className="space-y-2">
-      <span className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">
+      <span className="text-[11px] font-medium text-silver/70 uppercase tracking-wider">
         {t.editor.transition}
       </span>
       <div className="flex gap-1">
@@ -58,7 +58,7 @@ export function AnimationProperties({ element }: Props) {
             className={`flex h-7 flex-1 items-center justify-center rounded border text-xs transition-colors ${
               current === a.id
                 ? "border-blue-500 bg-blue-500/10 text-blue-400"
-                : "border-neutral-700 text-neutral-500 hover:border-neutral-600 hover:text-neutral-300"
+                : "border-steel text-silver/50 hover:border-silver/40 hover:text-silver"
             }`}
           >
             {a.label}
@@ -69,7 +69,7 @@ export function AnimationProperties({ element }: Props) {
         <div className="space-y-2">
           <div className="flex gap-2">
             <label className="flex items-center gap-1">
-              <span className="text-[10px] text-neutral-500">Delay</span>
+              <span className="text-[10px] text-silver/50">Delay</span>
               <input
                 type="number"
                 min={0}
@@ -79,11 +79,11 @@ export function AnimationProperties({ element }: Props) {
                 onChange={(e) => setDelay(e.target.value)}
                 onBlur={commitDelay}
                 onKeyDown={(e) => e.key === "Enter" && commitDelay()}
-                className="w-14 rounded border border-neutral-700 bg-[#161616] px-1.5 py-1 text-xs text-neutral-200 outline-none focus:border-neutral-500"
+                className="w-14 rounded border border-steel bg-navy px-1.5 py-1 text-xs text-silver outline-none focus:border-silver/50"
               />
             </label>
             <label className="flex items-center gap-1">
-              <span className="text-[10px] text-neutral-500">Duration</span>
+              <span className="text-[10px] text-silver/50">Duration</span>
               <input
                 type="number"
                 min={100}
@@ -94,13 +94,13 @@ export function AnimationProperties({ element }: Props) {
                   const n = parseInt(e.target.value, 10);
                   if (!isNaN(n)) { updateElement(element.id, { animationDuration: n }); pushHistory(); }
                 }}
-                className="w-14 rounded border border-neutral-700 bg-[#161616] px-1.5 py-1 text-xs text-neutral-200 outline-none focus:border-neutral-500"
+                className="w-14 rounded border border-steel bg-navy px-1.5 py-1 text-xs text-silver outline-none focus:border-silver/50"
               />
             </label>
-            <span className="text-[10px] text-neutral-600 self-center">ms</span>
+            <span className="text-[10px] text-silver/40 self-center">ms</span>
           </div>
           <div>
-            <span className="mb-1 block text-[10px] text-neutral-500">Easing</span>
+            <span className="mb-1 block text-[10px] text-silver/50">Easing</span>
             <div className="flex gap-1">
               {(["ease", "ease-in", "ease-out", "ease-in-out", "linear"] as const).map((e) => (
                 <button
@@ -108,8 +108,8 @@ export function AnimationProperties({ element }: Props) {
                   onClick={() => { updateElement(element.id, { animationEasing: e }); pushHistory(); }}
                   className={`flex-1 rounded px-0.5 py-1 text-[10px] transition-colors ${
                     (element.animationEasing ?? "ease") === e
-                      ? "bg-white text-[#161616]"
-                      : "text-neutral-500 hover:bg-neutral-800"
+                      ? "bg-accent text-white"
+                      : "text-silver/50 hover:bg-white/5"
                   }`}
                 >
                   {e.replace("ease-", "")}

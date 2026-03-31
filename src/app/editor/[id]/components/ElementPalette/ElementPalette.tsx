@@ -60,12 +60,12 @@ export function ElementPalette() {
 
   function add(el: Parameters<typeof addElement>[0]) { addElement(el); }
 
-  const btn = "flex w-full items-center gap-2 rounded border border-neutral-700 px-3 py-2 text-xs text-neutral-300 hover:bg-neutral-800";
+  const btn = "flex w-full items-center gap-2 rounded border border-steel px-3 py-2 text-xs text-silver hover:bg-white/5";
 
   return (
-    <div className="flex h-full w-56 flex-col border-l border-neutral-800 bg-[#161616]">
-      <div className="border-b border-neutral-800 px-3 py-2">
-        <span className="text-xs font-medium text-neutral-400 uppercase tracking-wider">{t.editor.insert}</span>
+    <div className="flex h-full w-56 flex-col border-l border-steel/30 bg-navy">
+      <div className="border-b border-steel/30 px-3 py-2">
+        <span className="text-xs font-medium text-silver/70 uppercase tracking-wider">{t.editor.insert}</span>
       </div>
       <div className="shrink-0 p-3 space-y-1.5">
         <button onClick={() => add({ id: nanoid(), type: "text", x: 100, y: 100, w: 400, h: 80, rotation: 0, opacity: 1, zIndex: zBase, locked: false, content: t.editor.writeHere, ...textDefaults(theme) } satisfies TextElement)} className={btn}>
@@ -141,8 +141,8 @@ export function ElementPalette() {
       {showUnsplash && <UnsplashPicker onClose={() => setShowUnsplash(false)} />}
 
       {selectedIds.length > 1 ? (
-        <div className="flex-1 overflow-y-auto border-t border-neutral-800 p-3 space-y-4">
-          <span className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">
+        <div className="flex-1 overflow-y-auto border-t border-steel/30 p-3 space-y-4">
+          <span className="text-[11px] font-medium text-silver/70 uppercase tracking-wider">
             {selectedIds.length} elements selected
           </span>
           <MultiSelectControls elementIds={selectedIds} />
@@ -157,7 +157,7 @@ export function ElementPalette() {
           </button>
         </div>
       ) : selectedElement ? (
-        <div className="flex-1 overflow-y-auto border-t border-neutral-800 p-3 space-y-4">
+        <div className="flex-1 overflow-y-auto border-t border-steel/30 p-3 space-y-4">
           <CollapsibleSection title="Position" defaultOpen>
             <PositionFields element={selectedElement} />
           </CollapsibleSection>
@@ -192,9 +192,9 @@ export function ElementPalette() {
           <DeleteButton elementId={selectedElement.id} />
         </div>
       ) : activeSlide && (
-        <div className="flex-1 overflow-y-auto border-t border-neutral-800 p-3 space-y-4">
+        <div className="flex-1 overflow-y-auto border-t border-steel/30 p-3 space-y-4">
           <div className="space-y-2">
-            <span className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">{t.editor.slideBg}</span>
+            <span className="text-[11px] font-medium text-silver/70 uppercase tracking-wider">{t.editor.slideBg}</span>
             <ColorPicker
               value={activeSlide.backgroundColor}
               onChange={updateSlideBackground}
@@ -203,12 +203,12 @@ export function ElementPalette() {
             />
             {activeSlide.backgroundImage ? (
               <div className="space-y-1">
-                <img src={activeSlide.backgroundImage} alt="" className="w-full rounded border border-neutral-700 aspect-video object-cover" />
+                <img src={activeSlide.backgroundImage} alt="" className="w-full rounded border border-steel aspect-video object-cover" />
                 <button onClick={() => updateSlideBackgroundImage(null)} className="w-full text-[10px] text-red-400 hover:text-red-300">{t.editor.removeBgImage}</button>
               </div>
             ) : (
               <div className="space-y-1.5">
-                <button onClick={triggerBgUpload} disabled={bgUploading} className="w-full rounded border border-dashed border-neutral-700 py-2 text-[10px] text-neutral-500 hover:border-neutral-500 disabled:opacity-50">
+                <button onClick={triggerBgUpload} disabled={bgUploading} className="w-full rounded border border-dashed border-steel py-2 text-[10px] text-silver/50 hover:border-silver/50 disabled:opacity-50">
                   {bgUploading ? t.editor.uploading : t.editor.addBgImage}
                 </button>
                 <input
@@ -220,14 +220,14 @@ export function ElementPalette() {
                       if (url) { updateSlideBackgroundImage(url); (e.target as HTMLInputElement).value = ""; }
                     }
                   }}
-                  className="w-full rounded border border-neutral-800 bg-[#111] px-2 py-1.5 text-[10px] text-neutral-400 outline-none placeholder:text-neutral-700 focus:border-neutral-600"
+                  className="w-full rounded border border-steel/30 bg-navy px-2 py-1.5 text-[10px] text-silver/70 outline-none placeholder:text-silver/30 focus:border-silver/40"
                 />
               </div>
             )}
           </div>
           {/* Background patterns */}
           <div className="space-y-1.5">
-            <span className="text-[10px] text-neutral-500">Pattern overlay</span>
+            <span className="text-[10px] text-silver/50">Pattern overlay</span>
             <div className="flex flex-wrap gap-1">
               {[
                 { label: "None", value: "" },
@@ -242,7 +242,7 @@ export function ElementPalette() {
                     if (!p.value) { updateSlideBackgroundImage(null); return; }
                     updateSlideBackgroundImage(p.value);
                   }}
-                  className="rounded px-2 py-1 text-[10px] text-neutral-500 hover:bg-neutral-800 hover:text-neutral-300 transition-colors"
+                  className="rounded px-2 py-1 text-[10px] text-silver/50 hover:bg-white/5 hover:text-silver transition-colors"
                 >
                   {p.label}
                 </button>

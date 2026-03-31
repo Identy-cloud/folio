@@ -165,7 +165,7 @@ export const CanvasElement = memo(function CanvasElement({ element, scale, isSel
     >
       {dragging && (
         <div
-          className="pointer-events-none absolute -bottom-5 left-1/2 z-50 whitespace-nowrap rounded bg-neutral-900/90 px-1.5 py-0.5 text-[9px] text-neutral-300"
+          className="pointer-events-none absolute -bottom-5 left-1/2 z-50 whitespace-nowrap rounded bg-navy/90 px-1.5 py-0.5 text-[9px] text-silver"
           style={{ transform: `translate(-50%, 0) scale(${1 / scale})`, transformOrigin: "top center" }}
         >
           {Math.round(element.x)}, {Math.round(element.y)}

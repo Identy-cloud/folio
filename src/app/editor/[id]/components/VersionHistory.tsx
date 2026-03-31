@@ -74,22 +74,22 @@ export function VersionHistory({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center justify-between border-b border-neutral-800 px-3 py-2">
+      <div className="flex items-center justify-between border-b border-steel/30 px-3 py-2">
         <div className="flex items-center gap-1.5">
-          <ClockCounterClockwise size={14} className="text-neutral-400" />
-          <span className="text-xs font-medium text-neutral-400 uppercase tracking-wider">
+          <ClockCounterClockwise size={14} className="text-silver/70" />
+          <span className="text-xs font-medium text-silver/70 uppercase tracking-wider">
             Versions
           </span>
         </div>
-        <button onClick={onClose} className="text-xs text-neutral-500 hover:text-neutral-300">
+        <button onClick={onClose} className="text-xs text-silver/50 hover:text-silver">
           Close
         </button>
       </div>
-      <div className="border-b border-neutral-800 px-3 py-2">
+      <div className="border-b border-steel/30 px-3 py-2">
         <button
           onClick={handleSnapshot}
           disabled={creating}
-          className="flex w-full items-center justify-center gap-1.5 rounded bg-neutral-800 px-2 py-1.5 text-xs text-neutral-300 hover:bg-neutral-700 disabled:opacity-50 transition-colors"
+          className="flex w-full items-center justify-center gap-1.5 rounded bg-white/5 px-2 py-1.5 text-xs text-silver hover:bg-steel disabled:opacity-50 transition-colors"
         >
           <Plus size={12} />
           {creating ? "Saving..." : "Save snapshot"}
@@ -97,22 +97,22 @@ export function VersionHistory({ onClose }: { onClose: () => void }) {
       </div>
       <div className="flex-1 overflow-y-auto p-2 space-y-0.5">
         {loading && (
-          <p className="py-4 text-center text-xs text-neutral-600">Loading...</p>
+          <p className="py-4 text-center text-xs text-silver/40">Loading...</p>
         )}
         {!loading && versions.length === 0 && (
-          <p className="py-4 text-center text-xs text-neutral-600">No versions yet</p>
+          <p className="py-4 text-center text-xs text-silver/40">No versions yet</p>
         )}
         {versions.map((v) => (
           <div
             key={v.id}
-            className="group flex items-center gap-2 rounded px-2 py-1.5 text-left text-[11px] text-neutral-400 hover:bg-neutral-800 transition-colors"
+            className="group flex items-center gap-2 rounded px-2 py-1.5 text-left text-[11px] text-silver/70 hover:bg-white/5 transition-colors"
           >
-            <span className="inline-block h-1.5 w-1.5 rounded-full shrink-0 bg-neutral-600" />
+            <span className="inline-block h-1.5 w-1.5 rounded-full shrink-0 bg-steel/80" />
             <div className="flex-1 min-w-0">
               <span className="block truncate">
                 {v.title || `Version ${v.version}`}
               </span>
-              <span className="text-neutral-600">{relativeTime(v.createdAt)}</span>
+              <span className="text-silver/40">{relativeTime(v.createdAt)}</span>
             </div>
             {confirmId === v.id ? (
               <div className="flex gap-1 shrink-0">
@@ -125,7 +125,7 @@ export function VersionHistory({ onClose }: { onClose: () => void }) {
                 </button>
                 <button
                   onClick={() => setConfirmId(null)}
-                  className="rounded bg-neutral-700 px-1.5 py-0.5 text-[10px] text-neutral-300 hover:bg-neutral-600"
+                  className="rounded bg-steel px-1.5 py-0.5 text-[10px] text-silver hover:bg-steel/80"
                 >
                   No
                 </button>
@@ -133,7 +133,7 @@ export function VersionHistory({ onClose }: { onClose: () => void }) {
             ) : (
               <button
                 onClick={() => setConfirmId(v.id)}
-                className="shrink-0 rounded p-1 text-neutral-600 opacity-0 group-hover:opacity-100 hover:text-neutral-300 transition-opacity"
+                className="shrink-0 rounded p-1 text-silver/40 opacity-0 group-hover:opacity-100 hover:text-silver transition-opacity"
                 title="Restore this version"
               >
                 <ArrowCounterClockwise size={12} />

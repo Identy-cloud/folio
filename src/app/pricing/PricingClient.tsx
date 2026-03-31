@@ -95,31 +95,31 @@ export function PricingClient() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#161616] text-white">
+    <div className="flex min-h-screen flex-col bg-navy text-white">
       <header className="flex items-center justify-between px-4 py-6 sm:px-8">
         <Link href="/" className="flex items-center gap-1.5 font-display text-xl tracking-tight sm:text-2xl"><Notebook size={22} weight="duotone" />FOLIO</Link>
         <div className="flex items-center gap-4">
           <LocaleSelector />
-          <Link href="/" className="text-xs tracking-[0.25em] text-neutral-400 uppercase hover:text-white transition-colors">{p.back}</Link>
+          <Link href="/" className="text-xs tracking-[0.25em] text-silver/70 uppercase hover:text-white transition-colors">{p.back}</Link>
         </div>
       </header>
 
       <main className="flex flex-1 flex-col items-center px-4 py-8 sm:px-6 lg:py-16">
-        <p className="text-[10px] tracking-[0.5em] text-neutral-500 uppercase">{p.label}</p>
+        <p className="text-[10px] tracking-[0.5em] text-silver/50 uppercase">{p.label}</p>
         <h1 className="mt-4 font-display text-3xl tracking-tight sm:text-5xl lg:text-7xl">{p.heading}</h1>
-        <p className="mt-4 max-w-lg text-center text-sm leading-relaxed text-neutral-400">{p.description}</p>
+        <p className="mt-4 max-w-lg text-center text-sm leading-relaxed text-silver/70">{p.description}</p>
 
         <div className="mt-8 flex items-center gap-3">
-          <span className={`text-xs ${!annual ? "text-white" : "text-neutral-500"}`}>{p.monthly}</span>
+          <span className={`text-xs ${!annual ? "text-white" : "text-silver/50"}`}>{p.monthly}</span>
           <button
             onClick={() => setAnnual(!annual)}
             role="switch"
             aria-checked={annual}
-            className={`relative h-6 w-11 cursor-pointer rounded-full transition-colors ${annual ? "bg-green-600" : "bg-neutral-700"}`}
+            className={`relative h-6 w-11 cursor-pointer rounded-full transition-colors ${annual ? "bg-green-600" : "bg-steel"}`}
           >
             <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-transform ${annual ? "left-[22px]" : "left-0.5"}`} />
           </button>
-          <span className={`text-xs ${annual ? "text-white" : "text-neutral-500"}`}>{p.annual} <span className="text-green-500">{p.discount}</span></span>
+          <span className={`text-xs ${annual ? "text-white" : "text-silver/50"}`}>{p.annual} <span className="text-green-500">{p.discount}</span></span>
         </div>
 
         <div className="mt-12 grid w-full max-w-6xl grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -148,11 +148,11 @@ export function PricingClient() {
             );
           })}
         </div>
-        <p className="mt-10 text-xs text-neutral-600">{p.allPricesNote}</p>
+        <p className="mt-10 text-xs text-silver/40">{p.allPricesNote}</p>
       </main>
 
       <footer className="flex items-center justify-center py-8">
-        <p className="text-[10px] tracking-[0.3em] text-neutral-600 uppercase">{t.landing.footer}</p>
+        <p className="text-[10px] tracking-[0.3em] text-silver/40 uppercase">{t.landing.footer}</p>
       </footer>
     </div>
   );

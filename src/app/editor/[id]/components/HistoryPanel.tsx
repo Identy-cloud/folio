@@ -24,12 +24,12 @@ export function HistoryPanel({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center justify-between border-b border-neutral-800 px-3 py-2">
+      <div className="flex items-center justify-between border-b border-steel/30 px-3 py-2">
         <div className="flex items-center gap-1.5">
-          <ClockCounterClockwise size={14} className="text-neutral-400" />
-          <span className="text-xs font-medium text-neutral-400 uppercase tracking-wider">History</span>
+          <ClockCounterClockwise size={14} className="text-silver/70" />
+          <span className="text-xs font-medium text-silver/70 uppercase tracking-wider">History</span>
         </div>
-        <button onClick={onClose} className="text-xs text-neutral-500 hover:text-neutral-300">
+        <button onClick={onClose} className="text-xs text-silver/50 hover:text-silver">
           Close
         </button>
       </div>
@@ -45,19 +45,19 @@ export function HistoryPanel({ onClose }: { onClose: () => void }) {
                 isCurrent
                   ? "bg-white/10 text-white"
                   : isFuture
-                  ? "text-neutral-600 hover:bg-neutral-800/50 hover:text-neutral-400"
-                  : "text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200"
+                  ? "text-silver/40 hover:bg-white/5 hover:text-silver/70"
+                  : "text-silver/70 hover:bg-white/5 hover:text-silver"
               }`}
             >
               <span className={`inline-block h-1.5 w-1.5 rounded-full shrink-0 ${
-                isCurrent ? "bg-white" : isFuture ? "bg-neutral-700" : "bg-neutral-600"
+                isCurrent ? "bg-white" : isFuture ? "bg-steel" : "bg-steel/80"
               }`} />
               {i === 0 ? "Initial state" : `Change ${i}`}
             </button>
           );
         })}
         {history.length === 0 && (
-          <p className="py-4 text-center text-xs text-neutral-600">No history yet</p>
+          <p className="py-4 text-center text-xs text-silver/40">No history yet</p>
         )}
       </div>
     </div>

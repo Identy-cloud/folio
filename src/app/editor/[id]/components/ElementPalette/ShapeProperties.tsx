@@ -25,7 +25,7 @@ export function ShapeProperties({ element }: Props) {
 
   return (
     <div className="space-y-3">
-      <span className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">{t.editor.shape}</span>
+      <span className="text-[11px] font-medium text-silver/70 uppercase tracking-wider">{t.editor.shape}</span>
 
       <ColorPicker
         label={t.editor.fill}
@@ -38,7 +38,7 @@ export function ShapeProperties({ element }: Props) {
 
       <div className="grid grid-cols-2 gap-2">
         <label className="flex flex-col gap-0.5">
-          <span className="text-[10px] text-neutral-500">{t.editor.strokeWidth}</span>
+          <span className="text-[10px] text-silver/50">{t.editor.strokeWidth}</span>
           <input
             type="number"
             min={0} max={20}
@@ -46,12 +46,12 @@ export function ShapeProperties({ element }: Props) {
             onChange={(e) => setStrokeW(e.target.value)}
             onBlur={() => { const n = parseInt(strokeW, 10); if (!isNaN(n)) update({ strokeWidth: n }); }}
             onKeyDown={(e) => { if (e.key === "Enter") { const n = parseInt(strokeW, 10); if (!isNaN(n)) update({ strokeWidth: n }); } }}
-            className="w-full rounded border border-neutral-700 bg-[#161616] px-2 py-1 text-xs text-neutral-200 outline-none focus:border-neutral-500"
+            className="w-full rounded border border-steel bg-navy px-2 py-1 text-xs text-silver outline-none focus:border-silver/50"
           />
         </label>
         {element.shape === "rect" && (
           <label className="flex flex-col gap-0.5">
-            <span className="text-[10px] text-neutral-500">{t.editor.borderRadius}</span>
+            <span className="text-[10px] text-silver/50">{t.editor.borderRadius}</span>
             <input
               type="number"
               min={0}
@@ -59,7 +59,7 @@ export function ShapeProperties({ element }: Props) {
               onChange={(e) => setRadius(e.target.value)}
               onBlur={() => { const n = parseInt(radius, 10); if (!isNaN(n)) update({ borderRadius: n }); }}
               onKeyDown={(e) => { if (e.key === "Enter") { const n = parseInt(radius, 10); if (!isNaN(n)) update({ borderRadius: n }); } }}
-              className="w-full rounded border border-neutral-700 bg-[#161616] px-2 py-1 text-xs text-neutral-200 outline-none focus:border-neutral-500"
+              className="w-full rounded border border-steel bg-navy px-2 py-1 text-xs text-silver outline-none focus:border-silver/50"
             />
           </label>
         )}

@@ -51,46 +51,46 @@ export function MobileInsertPanel({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="grid grid-cols-2 gap-2 p-4">
-      <button onClick={addText} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800">
+      <button onClick={addText} className="flex items-center gap-2 rounded border border-steel px-4 py-3 text-sm text-silver hover:bg-white/5">
         <TextT size={18} weight="regular" /> {t.editor.tools.text}
       </button>
-      <button onClick={() => addShape("rect")} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800">
+      <button onClick={() => addShape("rect")} className="flex items-center gap-2 rounded border border-steel px-4 py-3 text-sm text-silver hover:bg-white/5">
         <Rectangle size={18} weight="regular" /> {t.editor.rectangle}
       </button>
-      <button onClick={() => addShape("circle")} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800">
+      <button onClick={() => addShape("circle")} className="flex items-center gap-2 rounded border border-steel px-4 py-3 text-sm text-silver hover:bg-white/5">
         <Circle size={18} weight="regular" /> {t.editor.circle}
       </button>
-      <button onClick={() => addShape("triangle")} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800">
+      <button onClick={() => addShape("triangle")} className="flex items-center gap-2 rounded border border-steel px-4 py-3 text-sm text-silver hover:bg-white/5">
         <Triangle size={18} weight="regular" /> {t.editor.triangle}
       </button>
-      <button onClick={() => addShape("diamond")} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800">
+      <button onClick={() => addShape("diamond")} className="flex items-center gap-2 rounded border border-steel px-4 py-3 text-sm text-silver hover:bg-white/5">
         <Diamond size={18} weight="regular" /> Diamond
       </button>
-      <button onClick={() => addShape("star")} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800">
+      <button onClick={() => addShape("star")} className="flex items-center gap-2 rounded border border-steel px-4 py-3 text-sm text-silver hover:bg-white/5">
         <Star size={18} weight="regular" /> Star
       </button>
       <button onClick={() => {
         addElement({ id: nanoid(), type: "arrow", x: 200, y: 400, w: 300, h: 60, rotation: 0, opacity: 1, zIndex: (activeSlide?.elements.length ?? 0) + 1, locked: false, direction: "right", ...arrowDefaults(theme) } satisfies ArrowElement);
         onClose();
-      }} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800">
+      }} className="flex items-center gap-2 rounded border border-steel px-4 py-3 text-sm text-silver hover:bg-white/5">
         <ArrowRight size={18} weight="regular" /> Arrow
       </button>
       <button onClick={() => {
         addElement({ id: nanoid(), type: "divider", x: 100, y: 500, w: 600, h: 10, rotation: 0, opacity: 1, zIndex: (activeSlide?.elements.length ?? 0) + 1, locked: false, ...dividerDefaults(theme) } satisfies DividerElement);
         onClose();
-      }} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800">
+      }} className="flex items-center gap-2 rounded border border-steel px-4 py-3 text-sm text-silver hover:bg-white/5">
         <Minus size={18} weight="regular" /> Line
       </button>
       <button onClick={() => {
         addElement({ id: nanoid(), type: "line", x: 200, y: 300, w: 300, h: 200, rotation: 0, opacity: 1, zIndex: (activeSlide?.elements.length ?? 0) + 1, locked: false, x1: 0, y1: 0, x2: 300, y2: 200, ...lineDefaults(theme) } satisfies LineElement);
         onClose();
-      }} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800">
+      }} className="flex items-center gap-2 rounded border border-steel px-4 py-3 text-sm text-silver hover:bg-white/5">
         <LineSegment size={18} weight="regular" /> Connector
       </button>
       <button onClick={() => {
         addElement({ id: nanoid(), type: "table", x: 100, y: 200, w: 600, h: 300, rotation: 0, opacity: 1, zIndex: (activeSlide?.elements.length ?? 0) + 1, locked: false, ...tableDefaults(theme) } satisfies TableElement);
         onClose();
-      }} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800">
+      }} className="flex items-center gap-2 rounded border border-steel px-4 py-3 text-sm text-silver hover:bg-white/5">
         <GridNine size={18} weight="regular" /> Table
       </button>
       <button onClick={async () => {
@@ -98,19 +98,19 @@ export function MobileInsertPanel({ onClose }: { onClose: () => void }) {
         if (!url) return;
         addElement({ id: nanoid(), type: "video", x: 200, y: 200, w: 640, h: 360, rotation: 0, opacity: 1, zIndex: (activeSlide?.elements.length ?? 0) + 1, locked: false, src: url, ...videoDefaults() } satisfies VideoElement);
         onClose();
-      }} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800">
+      }} className="flex items-center gap-2 rounded border border-steel px-4 py-3 text-sm text-silver hover:bg-white/5">
         <VideoCamera size={18} weight="regular" /> Video
       </button>
-      <button onClick={() => setShowIconPicker(true)} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800">
+      <button onClick={() => setShowIconPicker(true)} className="flex items-center gap-2 rounded border border-steel px-4 py-3 text-sm text-silver hover:bg-white/5">
         <Smiley size={18} weight="regular" /> Icon
       </button>
-      <button onClick={() => { triggerUpload(); onClose(); }} disabled={uploading} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800 disabled:opacity-50">
+      <button onClick={() => { triggerUpload(); onClose(); }} disabled={uploading} className="flex items-center gap-2 rounded border border-steel px-4 py-3 text-sm text-silver hover:bg-white/5 disabled:opacity-50">
         <ImageIcon size={18} weight="regular" /> {uploading ? t.editor.uploading : t.editor.image}
       </button>
-      <button onClick={() => setShowUnsplash(true)} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800">
+      <button onClick={() => setShowUnsplash(true)} className="flex items-center gap-2 rounded border border-steel px-4 py-3 text-sm text-silver hover:bg-white/5">
         <ImageSquare size={18} weight="regular" /> Stock Images
       </button>
-      <button onClick={() => { window.dispatchEvent(new CustomEvent("folio:open-ai-image")); onClose(); }} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800">
+      <button onClick={() => { window.dispatchEvent(new CustomEvent("folio:open-ai-image")); onClose(); }} className="flex items-center gap-2 rounded border border-steel px-4 py-3 text-sm text-silver hover:bg-white/5">
         <Sparkle size={18} weight="fill" className="text-amber-400" /> AI Image
       </button>
       {showIconPicker && <IconPicker onClose={() => { setShowIconPicker(false); onClose(); }} />}

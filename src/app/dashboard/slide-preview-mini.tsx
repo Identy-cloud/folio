@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef, useState, useEffect } from "react";
 import type { Slide } from "@/types/elements";
 
 interface Props {
@@ -7,12 +8,26 @@ interface Props {
 }
 
 export function SlidePreviewMini({ slide }: Props) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1 / 16);
+
+  useEffect(() => {
+    const el = containerRef.current?.parentElement;
+    if (!el) return;
+    const update = () => setScale(el.clientWidth / 1920);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
   if (!slide) return null;
 
   return (
     <div
-      className="pointer-events-none absolute inset-0 origin-top-left scale-[calc(1/16)]"
-      style={{ width: 1920, height: 1080 }}
+      ref={containerRef}
+      className="pointer-events-none absolute inset-0 origin-top-left"
+      style={{ width: 1920, height: 1080, transform: `scale(${scale})` }}
     >
       {slide.elements.map((el) => {
         if (el.type === "shape") {
@@ -68,7 +83,7 @@ export function SlidePreviewMini({ slide }: Props) {
           return (
             <div
               key={el.id}
-              className="absolute overflow-hidden bg-neutral-800"
+              className="absolute overflow-hidden bg-white/5"
               style={{
                 left: el.x,
                 top: el.y,

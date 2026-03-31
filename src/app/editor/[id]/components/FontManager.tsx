@@ -65,37 +65,37 @@ export function FontManager({ open, onClose }: Props) {
   return (
     <>
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-        <div className="w-full max-w-md rounded-xl bg-[#1a1a1a] border border-neutral-800 shadow-2xl">
-          <div className="flex items-center justify-between border-b border-neutral-800 px-4 py-3">
-            <h2 className="text-sm font-semibold text-neutral-100">Custom Fonts</h2>
-            <button onClick={onClose} className="rounded p-1 text-neutral-400 hover:bg-neutral-800">
+        <div className="w-full max-w-md rounded-xl bg-navy border border-steel/30 shadow-2xl">
+          <div className="flex items-center justify-between border-b border-steel/30 px-4 py-3">
+            <h2 className="text-sm font-semibold text-white">Custom Fonts</h2>
+            <button onClick={onClose} className="rounded p-1 text-silver/70 hover:bg-white/5">
               <X size={16} />
             </button>
           </div>
           <div className="max-h-[60vh] overflow-y-auto p-4 space-y-3">
-            {loading && <p className="text-xs text-neutral-500">Loading...</p>}
+            {loading && <p className="text-xs text-silver/50">Loading...</p>}
             {!loading && fonts.length === 0 && (
-              <p className="text-xs text-neutral-500">No custom fonts yet.</p>
+              <p className="text-xs text-silver/50">No custom fonts yet.</p>
             )}
             {fonts.map((f) => (
-              <div key={f.id} className="flex items-center justify-between rounded-lg bg-neutral-900 px-3 py-2">
+              <div key={f.id} className="flex items-center justify-between rounded-lg bg-navy px-3 py-2">
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-xs font-medium text-neutral-200">{f.name}</p>
-                  <p className="text-[10px] text-neutral-500" style={{ fontFamily: f.family }}>
+                  <p className="truncate text-xs font-medium text-silver">{f.name}</p>
+                  <p className="text-[10px] text-silver/50" style={{ fontFamily: f.family }}>
                     The quick brown fox jumps over the lazy dog
                   </p>
                 </div>
                 <button
                   onClick={() => handleDelete(f)}
                   disabled={deleting === f.id}
-                  className="ml-2 shrink-0 rounded p-1.5 text-neutral-500 hover:bg-neutral-800 hover:text-red-400 disabled:opacity-50"
+                  className="ml-2 shrink-0 rounded p-1.5 text-silver/50 hover:bg-white/5 hover:text-red-400 disabled:opacity-50"
                 >
                   {deleting === f.id ? <SpinnerGap size={14} className="animate-spin" /> : <Trash size={14} />}
                 </button>
               </div>
             ))}
           </div>
-          <div className="border-t border-neutral-800 px-4 py-3">
+          <div className="border-t border-steel/30 px-4 py-3">
             {error && <p className="mb-2 text-xs text-red-400">{error}</p>}
             <input ref={inputRef} type="file" accept={ACCEPTED} className="hidden" onChange={(e) => {
               const f = e.target.files?.[0];
@@ -105,7 +105,7 @@ export function FontManager({ open, onClose }: Props) {
             <button
               onClick={() => inputRef.current?.click()}
               disabled={uploading}
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-white px-3 py-2 text-xs font-medium text-[#161616] hover:bg-neutral-200 disabled:opacity-50"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-accent px-3 py-2 text-xs font-medium text-white hover:bg-accent-hover disabled:opacity-50"
             >
               {uploading ? <SpinnerGap size={14} className="animate-spin" /> : <UploadSimple size={14} />}
               {uploading ? "Uploading..." : "Upload Font"}

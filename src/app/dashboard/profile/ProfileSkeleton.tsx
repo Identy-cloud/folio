@@ -1,7 +1,7 @@
 "use client";
 
 export function Bone({ className }: { className: string }) {
-  return <div className={`animate-pulse rounded bg-neutral-800 ${className}`} />;
+  return <div className={`animate-pulse rounded bg-white/5 ${className}`} />;
 }
 
 export function ProfileSkeleton() {
@@ -14,7 +14,7 @@ export function ProfileSkeleton() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 border-b border-neutral-800 pb-px">
+      <div className="flex gap-1 border-b border-steel/30 pb-px">
         <Bone className="h-8 w-20" />
         <Bone className="h-8 w-16" />
         <Bone className="h-8 w-24" />
@@ -56,7 +56,7 @@ export function ProfileSkeleton() {
         </div>
 
         {/* Card */}
-        <div className="border border-neutral-800 p-4 space-y-3">
+        <div className="border border-steel/30 p-4 space-y-3">
           <Bone className="h-3 w-24" />
           <Bone className="h-4 w-full" />
           <Bone className="h-4 w-2/3" />

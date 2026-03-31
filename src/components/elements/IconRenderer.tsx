@@ -11,7 +11,7 @@ export function IconRenderer({ element }: Props) {
   const entry = getIconByName(element.iconName);
   if (!entry) {
     return (
-      <div className="flex h-full w-full items-center justify-center text-neutral-500">
+      <div className="flex h-full w-full items-center justify-center text-silver/50">
         <span className="text-xs">?</span>
       </div>
     );

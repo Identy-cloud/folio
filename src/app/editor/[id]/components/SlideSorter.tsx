@@ -26,12 +26,12 @@ export function SlideSorter({ open, onClose }: Props) {
   if (!open) return null;
 
   return (
-    <div ref={trapRef} role="dialog" aria-modal="true" aria-label="Organizador de slides" className="fixed inset-0 z-50 flex flex-col bg-[#111]/95 backdrop-blur-sm">
-      <div className="flex items-center justify-between border-b border-neutral-800 px-6 py-3">
+    <div ref={trapRef} role="dialog" aria-modal="true" aria-label="Organizador de slides" className="fixed inset-0 z-50 flex flex-col bg-navy/95 backdrop-blur-sm">
+      <div className="flex items-center justify-between border-b border-steel/30 px-6 py-3">
         <h2 className="font-display text-xl tracking-tight text-white">
           SLIDE SORTER — {slides.length} slides
         </h2>
-        <button onClick={onClose} aria-label="Cerrar" className="rounded p-2 text-neutral-400 hover:text-white transition-colors">
+        <button onClick={onClose} aria-label="Cerrar" className="rounded p-2 text-silver/70 hover:text-white transition-colors">
           <X size={20} />
         </button>
       </div>
@@ -54,7 +54,7 @@ export function SlideSorter({ open, onClose }: Props) {
                   ? "ring-2 ring-blue-500 border-blue-500"
                   : i === activeSlideIndex
                     ? "border-blue-500 ring-2 ring-blue-500/30"
-                    : "border-neutral-700 hover:border-neutral-500"
+                    : "border-steel hover:border-silver/50"
               }`}
             >
               <SlidePreview slide={slide} className="w-full" />
@@ -63,14 +63,14 @@ export function SlideSorter({ open, onClose }: Props) {
                 <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button
                     onClick={(e) => { e.stopPropagation(); duplicateSlide(slide.id); }}
-                    className="text-[9px] text-neutral-400 hover:text-white"
+                    className="text-[9px] text-silver/70 hover:text-white"
                   >
                     Dup
                   </button>
                   {slides.length > 1 && (
                     <button
                       onClick={(e) => { e.stopPropagation(); deleteSlide(slide.id); }}
-                      className="text-neutral-400 hover:text-red-400"
+                      className="text-silver/70 hover:text-red-400"
                     >
                       <Trash size={10} />
                     </button>

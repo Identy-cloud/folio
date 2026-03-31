@@ -21,14 +21,14 @@ function NumField({ label, value, onChange }: { label: string; value: number; on
 
   return (
     <label className="flex flex-col gap-0.5">
-      <span className="text-[10px] text-neutral-500">{label}</span>
+      <span className="text-[10px] text-silver/50">{label}</span>
       <input
         type="number"
         value={local}
         onChange={(e) => setLocal(e.target.value)}
         onBlur={commit}
         onKeyDown={(e) => e.key === "Enter" && commit()}
-        className="w-full rounded border border-neutral-700 bg-[#161616] px-2 py-1 text-xs text-neutral-200 outline-none focus:border-neutral-500"
+        className="w-full rounded border border-steel bg-navy px-2 py-1 text-xs text-silver outline-none focus:border-silver/50"
       />
     </label>
   );
@@ -58,7 +58,7 @@ export function PositionFields({ element }: Props) {
 
   return (
     <div className="space-y-2">
-      <span className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">
+      <span className="text-[11px] font-medium text-silver/70 uppercase tracking-wider">
         {t.editor.position}
       </span>
       <div className="grid grid-cols-2 gap-2">
@@ -70,7 +70,7 @@ export function PositionFields({ element }: Props) {
       <button
         onClick={() => { update({ aspectRatioLocked: !locked }); }}
         className={`flex items-center gap-1 rounded px-2 py-1 text-[10px] transition-colors ${
-          locked ? "bg-blue-500/20 text-blue-400" : "text-neutral-500 hover:bg-neutral-800"
+          locked ? "bg-blue-500/20 text-blue-400" : "text-silver/50 hover:bg-white/5"
         }`}
       >
         {locked ? <LinkSimple size={12} /> : <LinkSimpleBreak size={12} />}
@@ -79,7 +79,7 @@ export function PositionFields({ element }: Props) {
       <div className="grid grid-cols-2 gap-2">
         <NumField label={t.editor.rotation} value={element.rotation} onChange={(v) => update({ rotation: v })} />
         <label className="flex flex-col gap-0.5">
-          <span className="text-[10px] text-neutral-500">{t.editor.opacity} {Math.round(element.opacity * 100)}%</span>
+          <span className="text-[10px] text-silver/50">{t.editor.opacity} {Math.round(element.opacity * 100)}%</span>
           <input
             type="range"
             min={0} max={1} step={0.05}
@@ -94,38 +94,38 @@ export function PositionFields({ element }: Props) {
       {/* Border */}
       <div className="flex gap-2">
         <label className="flex flex-col gap-0.5 flex-1">
-          <span className="text-[10px] text-neutral-500">Border</span>
+          <span className="text-[10px] text-silver/50">Border</span>
           <input
             type="number"
             min={0}
             max={20}
             value={element.borderWidth ?? 0}
             onChange={(e) => update({ borderWidth: parseInt(e.target.value) || 0 })}
-            className="w-full rounded border border-neutral-700 bg-[#161616] px-2 py-1 text-xs text-neutral-200 outline-none focus:border-neutral-500"
+            className="w-full rounded border border-steel bg-navy px-2 py-1 text-xs text-silver outline-none focus:border-silver/50"
           />
         </label>
         {(element.borderWidth ?? 0) > 0 && (
           <label className="flex flex-col gap-0.5 flex-1">
-            <span className="text-[10px] text-neutral-500">Color</span>
+            <span className="text-[10px] text-silver/50">Color</span>
             <input
               type="color"
               value={element.borderColor ?? "#000000"}
               onChange={(e) => update({ borderColor: e.target.value })}
-              className="h-7 w-full rounded border border-neutral-700 bg-[#161616] cursor-pointer"
+              className="h-7 w-full rounded border border-steel bg-navy cursor-pointer"
             />
           </label>
         )}
       </div>
       {/* Link URL */}
       <label className="flex flex-col gap-0.5">
-        <span className="text-[10px] text-neutral-500">Link URL</span>
+        <span className="text-[10px] text-silver/50">Link URL</span>
         <input
           type="url"
           value={element.linkUrl ?? ""}
           onChange={(e) => updateElement(element.id, { linkUrl: e.target.value || undefined })}
           onBlur={pushHistory}
           placeholder="https://..."
-          className="w-full rounded border border-neutral-700 bg-[#161616] px-2 py-1 text-xs text-neutral-200 outline-none placeholder:text-neutral-700 focus:border-neutral-500"
+          className="w-full rounded border border-steel bg-navy px-2 py-1 text-xs text-silver outline-none placeholder:text-silver/30 focus:border-silver/50"
         />
       </label>
     </div>

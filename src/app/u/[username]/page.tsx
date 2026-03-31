@@ -92,7 +92,7 @@ export default async function PortfolioPage({ params }: Props) {
   if (!data) notFound();
 
   return (
-    <div className="min-h-screen bg-[#111] text-neutral-200">
+    <div className="min-h-screen bg-navy text-silver">
       <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12 lg:py-16">
         <header className="mb-8 flex flex-col items-center gap-4 text-center sm:mb-12">
           {data.user.avatarUrl ? (
@@ -104,7 +104,7 @@ export default async function PortfolioPage({ params }: Props) {
               className="h-20 w-20 rounded-full object-cover"
             />
           ) : (
-            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-neutral-800 text-xl font-medium text-neutral-400">
+            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white/5 text-xl font-medium text-silver/70">
               {(data.user.name ?? data.user.username ?? "U")
                 .split(" ")
                 .map((w) => w[0])
@@ -118,13 +118,13 @@ export default async function PortfolioPage({ params }: Props) {
               {data.user.name ?? data.user.username}
             </h1>
             {data.user.bio && (
-              <p className="mx-auto mt-2 max-w-md text-sm text-neutral-400 sm:text-base">
+              <p className="mx-auto mt-2 max-w-md text-sm text-silver/70 sm:text-base">
                 {data.user.bio}
               </p>
             )}
           </div>
           <SocialIcons links={data.user.socialLinks ?? {}} />
-          <p className="text-xs tracking-[0.2em] text-neutral-600 uppercase">
+          <p className="text-xs tracking-[0.2em] text-silver/40 uppercase">
             {data.presentations.length} presentation{data.presentations.length !== 1 ? "s" : ""}
           </p>
         </header>

@@ -64,7 +64,7 @@ export function PersonalInfoSection({ profile, onUpdate }: Props) {
     <>
       {/* Name */}
       <div className="space-y-1.5">
-        <label className="block text-[10px] font-medium uppercase tracking-wider text-neutral-500">
+        <label className="block text-[10px] font-medium uppercase tracking-wider text-silver/50">
           {t.dashboard.profileName ?? "Nombre"}
         </label>
         <div className="flex gap-2">
@@ -72,12 +72,12 @@ export function PersonalInfoSection({ profile, onUpdate }: Props) {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder={profile.email}
-            className="flex-1 border-b border-neutral-700 bg-transparent px-2 py-2 text-sm text-neutral-200 outline-none focus:border-white transition-colors"
+            className="flex-1 border-b border-steel bg-transparent px-2 py-2 text-sm text-silver outline-none focus:border-white transition-colors"
           />
           <button
             onClick={handleSaveName}
             disabled={saving || !name.trim() || name === profile.name}
-            className="shrink-0 bg-white px-4 py-2 text-xs font-medium tracking-widest text-[#161616] uppercase hover:bg-neutral-200 transition-colors disabled:opacity-30"
+            className="shrink-0 bg-accent px-4 py-2 text-xs font-medium tracking-widest text-white uppercase hover:bg-accent-hover transition-colors disabled:opacity-30"
           >
             {saving ? "..." : t.common.save}
           </button>
@@ -86,10 +86,10 @@ export function PersonalInfoSection({ profile, onUpdate }: Props) {
 
       {/* Email */}
       <div className="space-y-1.5">
-        <label className="block text-[10px] font-medium uppercase tracking-wider text-neutral-500">
+        <label className="block text-[10px] font-medium uppercase tracking-wider text-silver/50">
           Email
         </label>
-        <p className="border-b border-neutral-800 px-2 py-2 text-sm text-neutral-400">
+        <p className="border-b border-steel/30 px-2 py-2 text-sm text-silver/70">
           {profile.email}
         </p>
       </div>
@@ -97,19 +97,19 @@ export function PersonalInfoSection({ profile, onUpdate }: Props) {
       {/* Username + Bio */}
       <div className="space-y-3">
         <div className="space-y-1.5">
-          <label className="block text-[10px] font-medium uppercase tracking-wider text-neutral-500">
+          <label className="block text-[10px] font-medium uppercase tracking-wider text-silver/50">
             Username
           </label>
           <input
             value={username}
             onChange={(e) => { setUsername(e.target.value); setUsernameError(""); }}
             placeholder="your-username"
-            className="w-full border-b border-neutral-700 bg-transparent px-2 py-2 text-sm text-neutral-200 outline-none focus:border-white transition-colors"
+            className="w-full border-b border-steel bg-transparent px-2 py-2 text-sm text-silver outline-none focus:border-white transition-colors"
           />
           {usernameError && <p className="text-xs text-red-400">{usernameError}</p>}
         </div>
         <div className="space-y-1.5">
-          <label className="block text-[10px] font-medium uppercase tracking-wider text-neutral-500">
+          <label className="block text-[10px] font-medium uppercase tracking-wider text-silver/50">
             Bio
           </label>
           <textarea
@@ -118,14 +118,14 @@ export function PersonalInfoSection({ profile, onUpdate }: Props) {
             placeholder="Short bio for your portfolio page"
             maxLength={300}
             rows={3}
-            className="w-full resize-none border-b border-neutral-700 bg-transparent px-2 py-2 text-sm text-neutral-200 outline-none focus:border-white transition-colors"
+            className="w-full resize-none border-b border-steel bg-transparent px-2 py-2 text-sm text-silver outline-none focus:border-white transition-colors"
           />
           <div className="flex items-center justify-between">
-            <p className="text-xs text-neutral-600">{bio.length}/300</p>
+            <p className="text-xs text-silver/40">{bio.length}/300</p>
             <button
               onClick={handleSaveProfile}
               disabled={saving || (username === (profile.username ?? "") && bio === (profile.bio ?? ""))}
-              className="shrink-0 bg-white px-4 py-2 text-xs font-medium tracking-widest text-[#161616] uppercase hover:bg-neutral-200 transition-colors disabled:opacity-30"
+              className="shrink-0 bg-accent px-4 py-2 text-xs font-medium tracking-widest text-white uppercase hover:bg-accent-hover transition-colors disabled:opacity-30"
             >
               {saving ? "..." : t.common.save}
             </button>

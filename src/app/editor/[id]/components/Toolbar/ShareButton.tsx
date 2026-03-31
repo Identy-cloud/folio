@@ -239,7 +239,7 @@ export function ShareButton() {
     <div ref={popRef} className="relative" data-onboarding="share">
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-1 rounded px-2 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 transition-colors md:px-3"
+        className="flex items-center gap-1 rounded px-2 py-1 text-xs text-silver/70 hover:bg-white/5 hover:text-silver transition-colors md:px-3"
         aria-label={t.editor.share}
         aria-expanded={open}
       >
@@ -248,9 +248,9 @@ export function ShareButton() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-2 z-50 w-[calc(100vw-2rem)] max-w-72 rounded border border-neutral-700 bg-[#1e1e1e] p-4 shadow-xl sm:max-w-80 max-h-[80vh] overflow-y-auto">
+        <div className="absolute right-0 top-full mt-2 z-50 w-[calc(100vw-2rem)] max-w-72 rounded border border-steel bg-slate p-4 shadow-xl sm:max-w-80 max-h-[80vh] overflow-y-auto">
           {!meta ? (
-            <p className="text-xs text-neutral-500">{t.common.loading}</p>
+            <p className="text-xs text-silver/50">{t.common.loading}</p>
           ) : (
             <div className="space-y-4">
               {/* Toggle */}
@@ -259,9 +259,9 @@ export function ShareButton() {
                   {meta.isPublic ? (
                     <Globe size={16} className="text-green-500" />
                   ) : (
-                    <Lock size={16} className="text-neutral-500" />
+                    <Lock size={16} className="text-silver/50" />
                   )}
-                  <span className="text-sm text-neutral-200">
+                  <span className="text-sm text-silver">
                     {meta.isPublic ? t.editor.publicLabel : t.editor.privateLabel}
                   </span>
                 </div>
@@ -272,7 +272,7 @@ export function ShareButton() {
                   aria-checked={meta.isPublic}
                   aria-label={t.editor.shareLabel}
                   className={`relative h-6 w-11 cursor-pointer rounded-full transition-colors ${
-                    meta.isPublic ? "bg-green-600" : "bg-neutral-700"
+                    meta.isPublic ? "bg-green-600" : "bg-steel"
                   }`}
                 >
                   <span
@@ -285,18 +285,18 @@ export function ShareButton() {
 
               {meta.isPublic ? (
                 <>
-                  <p className="text-xs text-neutral-500">
+                  <p className="text-xs text-silver/50">
                     {t.editor.publicDesc}
                   </p>
                   {/* URL + Copy */}
                   <div className="flex items-center gap-2">
-                    <div className="flex-1 truncate rounded bg-[#111111] px-3 py-2 text-xs text-neutral-400">
+                    <div className="flex-1 truncate rounded bg-navy px-3 py-2 text-xs text-silver/70">
                       {window.location.origin}/p/{meta.slug}
                     </div>
                     <button
                       onClick={copyLink}
                       aria-label="Copy link"
-                      className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded bg-white text-[#161616] hover:bg-neutral-200 transition-colors"
+                      className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded bg-accent text-white hover:bg-accent-hover transition-colors"
                     >
                       {copied ? <Check size={14} /> : <LinkIcon size={14} />}
                     </button>
@@ -305,8 +305,8 @@ export function ShareButton() {
                   {/* Expiration */}
                   <div className="space-y-2">
                     <div className="flex items-center gap-1.5">
-                      <Clock size={14} className="text-neutral-500" />
-                      <span className="text-xs font-medium text-neutral-300">
+                      <Clock size={14} className="text-silver/50" />
+                      <span className="text-xs font-medium text-silver">
                         {t.editor.linkExpiration}
                       </span>
                     </div>
@@ -322,7 +322,7 @@ export function ShareButton() {
                         <button
                           key={opt.value}
                           onClick={() => setExpiration(opt.value)}
-                          className="rounded border border-neutral-700 px-1.5 py-1 text-[10px] text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 transition-colors"
+                          className="rounded border border-steel px-1.5 py-1 text-[10px] text-silver/70 hover:bg-white/5 hover:text-silver transition-colors"
                         >
                           {opt.label}
                         </button>
@@ -336,12 +336,12 @@ export function ShareButton() {
                           value={customDate}
                           onChange={(e) => setCustomDate(e.target.value)}
                           min={new Date().toISOString().slice(0, 16)}
-                          className="flex-1 rounded border border-neutral-700 bg-[#111111] px-2 py-1 text-xs text-neutral-300 outline-none focus:border-neutral-500"
+                          className="flex-1 rounded border border-steel bg-navy px-2 py-1 text-xs text-silver outline-none focus:border-silver/50"
                         />
                         <button
                           onClick={setCustomExpiration}
                           disabled={!customDate}
-                          className="shrink-0 rounded bg-neutral-800 px-2 py-1 text-[10px] text-neutral-300 hover:bg-neutral-700 transition-colors disabled:opacity-40"
+                          className="shrink-0 rounded bg-white/5 px-2 py-1 text-[10px] text-silver hover:bg-steel transition-colors disabled:opacity-40"
                         >
                           {t.common.save}
                         </button>
@@ -363,7 +363,7 @@ export function ShareButton() {
                       value={pw}
                       onChange={(e) => setPw(e.target.value)}
                       placeholder={t.editor.passwordPlaceholder}
-                      className="flex-1 rounded border border-neutral-700 bg-[#111111] px-2 py-1.5 text-xs text-neutral-300 outline-none placeholder:text-neutral-600 focus:border-neutral-500"
+                      className="flex-1 rounded border border-steel bg-navy px-2 py-1.5 text-xs text-silver outline-none placeholder:text-silver/40 focus:border-silver/50"
                     />
                     {pw.trim().length > 0 && pw.trim().length < 6 && (
                       <span className="absolute -bottom-4 left-0 text-xs text-amber-500">Weak password</span>
@@ -383,7 +383,7 @@ export function ShareButton() {
                           toast.error(t.common.error ?? "Failed to save");
                         }
                       }}
-                      className="shrink-0 rounded bg-neutral-800 px-2 py-1.5 text-[10px] text-neutral-300 hover:bg-neutral-700 transition-colors"
+                      className="shrink-0 rounded bg-white/5 px-2 py-1.5 text-[10px] text-silver hover:bg-steel transition-colors"
                     >
                       {pw.trim() ? "Set" : "Clear"}
                     </button>
@@ -392,20 +392,20 @@ export function ShareButton() {
                   {/* Private token link */}
                   <div className="space-y-2">
                     <div className="flex items-center gap-1.5">
-                      <Key size={14} className="text-neutral-500" />
-                      <span className="text-xs font-medium text-neutral-300">
+                      <Key size={14} className="text-silver/50" />
+                      <span className="text-xs font-medium text-silver">
                         {t.editor.privateLink}
                       </span>
                     </div>
                     {meta.shareToken ? (
                       <div className="space-y-1.5">
                         <div className="flex items-center gap-2">
-                          <div className="flex-1 truncate rounded bg-[#111111] px-2 py-1.5 text-[10px] text-neutral-500">
+                          <div className="flex-1 truncate rounded bg-navy px-2 py-1.5 text-[10px] text-silver/50">
                             ...?token={meta.shareToken.slice(0, 12)}...
                           </div>
                           <button
                             onClick={copyTokenLink}
-                            className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded bg-neutral-800 text-neutral-300 hover:bg-neutral-700 transition-colors"
+                            className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded bg-white/5 text-silver hover:bg-steel transition-colors"
                           >
                             {copiedToken ? <Check size={12} /> : <LinkIcon size={12} />}
                           </button>
@@ -420,12 +420,12 @@ export function ShareButton() {
                     ) : (
                       <button
                         onClick={generateToken}
-                        className="w-full rounded border border-neutral-700 py-1.5 text-[10px] text-neutral-400 hover:bg-neutral-800 transition-colors"
+                        className="w-full rounded border border-steel py-1.5 text-[10px] text-silver/70 hover:bg-white/5 transition-colors"
                       >
                         {t.editor.generatePrivateLink}
                       </button>
                     )}
-                    <p className="text-[10px] text-neutral-600">
+                    <p className="text-[10px] text-silver/40">
                       {t.editor.privateLinkDesc}
                     </p>
                   </div>
@@ -445,7 +445,7 @@ export function ShareButton() {
                         href={s.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex-1 rounded border border-neutral-700 py-1.5 text-center text-[10px] text-neutral-400 hover:bg-neutral-800 transition-colors"
+                        className="flex-1 rounded border border-steel py-1.5 text-center text-[10px] text-silver/70 hover:bg-white/5 transition-colors"
                       >
                         {s.label}
                       </a>
@@ -454,19 +454,19 @@ export function ShareButton() {
                 </>
               ) : (
                 <>
-                  <p className="text-xs text-neutral-500">
+                  <p className="text-xs text-silver/50">
                     {t.editor.privateDesc}
                   </p>
 
                   {/* Schedule publish */}
                   <div className="space-y-2">
                     <div className="flex items-center gap-1.5">
-                      <Clock size={14} className="text-neutral-500" />
-                      <span className="text-xs font-medium text-neutral-300">
+                      <Clock size={14} className="text-silver/50" />
+                      <span className="text-xs font-medium text-silver">
                         {t.editor.schedulePublish}
                       </span>
                     </div>
-                    <p className="text-[10px] text-neutral-600">
+                    <p className="text-[10px] text-silver/40">
                       {t.editor.schedulePublishDesc}
                     </p>
 
@@ -489,12 +489,12 @@ export function ShareButton() {
                           value={scheduleDate}
                           onChange={(e) => setScheduleDate(e.target.value)}
                           min={new Date().toISOString().slice(0, 16)}
-                          className="flex-1 rounded border border-neutral-700 bg-[#111111] px-2 py-1.5 text-xs text-neutral-300 outline-none focus:border-neutral-500"
+                          className="flex-1 rounded border border-steel bg-navy px-2 py-1.5 text-xs text-silver outline-none focus:border-silver/50"
                         />
                         <button
                           onClick={schedulePublish}
                           disabled={!scheduleDate || scheduling}
-                          className="shrink-0 rounded bg-white px-3 py-1.5 text-[10px] font-medium text-[#161616] hover:bg-neutral-200 transition-colors disabled:opacity-40"
+                          className="shrink-0 rounded bg-accent px-3 py-1.5 text-[10px] font-medium text-white hover:bg-accent-hover transition-colors disabled:opacity-40"
                         >
                           {t.editor.schedulePublish}
                         </button>

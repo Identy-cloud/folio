@@ -79,12 +79,12 @@ export function ThemeCustomizer({ open, onClose }: Props) {
 
   return (
     <>
-      <div className="fixed top-14 left-2 md:left-60 z-50 w-64 rounded border border-neutral-700 bg-[#1e1e1e] p-4 shadow-xl">
+      <div className="fixed top-14 left-2 md:left-60 z-50 w-64 rounded border border-steel bg-slate p-4 shadow-xl">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">Themes</span>
-          <button onClick={onClose} aria-label="Close" className="rounded p-1.5 text-neutral-500 hover:bg-neutral-700 hover:text-neutral-300 transition-colors"><X size={14} /></button>
+          <span className="text-[11px] font-medium text-silver/70 uppercase tracking-wider">Themes</span>
+          <button onClick={onClose} aria-label="Close" className="rounded p-1.5 text-silver/50 hover:bg-steel hover:text-silver transition-colors"><X size={14} /></button>
         </div>
-        <p className="text-[10px] text-neutral-600 mb-2">Current: {themeObj.label}</p>
+        <p className="text-[10px] text-silver/40 mb-2">Current: {themeObj.label}</p>
         <div className="space-y-1 max-h-48 overflow-y-auto">
           {builtInKeys.map((key) => {
             const t = THEMES[key];
@@ -93,10 +93,10 @@ export function ThemeCustomizer({ open, onClose }: Props) {
                 key={key}
                 onClick={() => selectTheme(key)}
                 className={`flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-[11px] transition-colors ${
-                  theme === key ? "bg-white text-[#161616]" : "text-neutral-300 hover:bg-neutral-800"
+                  theme === key ? "bg-accent text-white" : "text-silver hover:bg-white/5"
                 }`}
               >
-                <span className="h-3 w-3 rounded-full border border-neutral-600 shrink-0" style={{ backgroundColor: t.accent }} />
+                <span className="h-3 w-3 rounded-full border border-steel/60 shrink-0" style={{ backgroundColor: t.accent }} />
                 {t.label}
               </button>
             );
@@ -104,7 +104,7 @@ export function ThemeCustomizer({ open, onClose }: Props) {
         </div>
         {customKeys.length > 0 && (
           <>
-            <div className="mt-3 mb-1 text-[9px] text-neutral-600 uppercase tracking-wider">Custom</div>
+            <div className="mt-3 mb-1 text-[9px] text-silver/40 uppercase tracking-wider">Custom</div>
             <div className="space-y-1">
               {customKeys.map((key) => {
                 const t = customThemes[key];
@@ -113,13 +113,13 @@ export function ThemeCustomizer({ open, onClose }: Props) {
                     <button
                       onClick={() => selectTheme(key)}
                       className={`flex flex-1 items-center gap-2 rounded px-2 py-1.5 text-left text-[11px] transition-colors ${
-                        theme === key ? "bg-white text-[#161616]" : "text-neutral-300 hover:bg-neutral-800"
+                        theme === key ? "bg-accent text-white" : "text-silver hover:bg-white/5"
                       }`}
                     >
-                      <span className="h-3 w-3 rounded-full border border-neutral-600 shrink-0" style={{ backgroundColor: t.accent }} />
+                      <span className="h-3 w-3 rounded-full border border-steel/60 shrink-0" style={{ backgroundColor: t.accent }} />
                       {t.label}
                     </button>
-                    <button onClick={() => handleDeleteCustom(key)} className="rounded p-1 text-neutral-600 hover:text-red-400 transition-colors">
+                    <button onClick={() => handleDeleteCustom(key)} className="rounded p-1 text-silver/40 hover:text-red-400 transition-colors">
                       <Trash size={12} />
                     </button>
                   </div>
@@ -133,18 +133,18 @@ export function ThemeCustomizer({ open, onClose }: Props) {
             if (!limits.canUseBrandKit) { setShowUpgrade(true); return; }
             setBuilderOpen(true);
           }}
-          className="mt-3 flex w-full items-center justify-center gap-1.5 rounded border border-dashed border-neutral-600 px-3 py-2 text-[11px] text-neutral-400 hover:border-neutral-400 hover:text-neutral-200 transition-colors"
+          className="mt-3 flex w-full items-center justify-center gap-1.5 rounded border border-dashed border-steel/60 px-3 py-2 text-[11px] text-silver/70 hover:border-silver hover:text-silver transition-colors"
         >
           <Plus size={12} /> Create Theme
           {!limits.canUseBrandKit && <span className="text-[9px] text-amber-400 ml-1">PRO</span>}
         </button>
-        <div className="mt-3 space-y-2 border-t border-neutral-700 pt-3">
+        <div className="mt-3 space-y-2 border-t border-steel pt-3">
           <div>
-            <span className="text-[10px] text-neutral-500">Background (all slides)</span>
+            <span className="text-[10px] text-silver/50">Background (all slides)</span>
             <ColorPicker value={themeObj.background} onChange={applyColorToAllSlides} />
           </div>
           <div>
-            <span className="text-[10px] text-neutral-500">Accent color (all slides)</span>
+            <span className="text-[10px] text-silver/50">Accent color (all slides)</span>
             <ColorPicker value={themeObj.accent} onChange={applyAccentToAll} />
           </div>
         </div>

@@ -314,11 +314,11 @@ export default function DashboardPage() {
   if (fetchError) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center sm:py-32">
-        <p className="font-display text-3xl tracking-tight text-neutral-700 sm:text-5xl">{t.common.error}</p>
-        <p className="mt-3 text-sm text-neutral-400">{t.common.connectionError}</p>
+        <p className="font-display text-3xl tracking-tight text-silver/40 sm:text-5xl">{t.common.error}</p>
+        <p className="mt-3 text-sm text-silver/70">{t.common.connectionError}</p>
         <button
           onClick={() => { setLoading(true); setFetchError(false); window.location.reload(); }}
-          className="mt-6 bg-white px-8 py-3 text-sm font-medium tracking-widest text-[#161616] uppercase hover:bg-neutral-200 transition-colors"
+          className="mt-6 bg-accent px-8 py-3 text-sm font-medium tracking-widest text-white uppercase hover:bg-accent-hover transition-colors"
         >
           {t.common.loading}
         </button>
@@ -382,22 +382,22 @@ export default function DashboardPage() {
         </h2>
         <div className="flex flex-wrap gap-2">
           <div className="relative flex-1 sm:w-48 sm:flex-initial">
-            <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500" />
+            <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-silver/50" />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder={t.common.search}
               aria-label={t.dashboard.searchPlaceholder}
-              className="w-full rounded border border-neutral-700 bg-[#1e1e1e] py-2 pl-8 pr-3 text-xs text-neutral-200 outline-none placeholder:text-neutral-500 focus:border-neutral-500"
+              className="w-full rounded border border-steel bg-slate py-2 pl-8 pr-3 text-xs text-silver outline-none placeholder:text-silver/50 focus:border-silver/50"
             />
           </div>
           <div className="flex items-center gap-1">
-            <SortAscending size={14} className="text-neutral-500" />
+            <SortAscending size={14} className="text-silver/50" />
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as "recent" | "name" | "oldest")}
               aria-label="Ordenar por"
-              className="cursor-pointer rounded border border-neutral-700 bg-[#1e1e1e] px-2 py-1.5 text-xs text-neutral-300 outline-none"
+              className="cursor-pointer rounded border border-steel bg-slate px-2 py-1.5 text-xs text-silver outline-none"
             >
               <option value="recent">Recent</option>
               <option value="oldest">Oldest</option>
@@ -406,12 +406,12 @@ export default function DashboardPage() {
             </select>
           </div>
           <div className="flex items-center gap-1">
-            <Funnel size={14} className="text-neutral-500" />
+            <Funnel size={14} className="text-silver/50" />
             <select
               value={filterBy}
               onChange={(e) => setFilterBy(e.target.value as "all" | "public" | "private" | "starred")}
               aria-label="Filtrar por"
-              className="cursor-pointer rounded border border-neutral-700 bg-[#1e1e1e] px-2 py-1.5 text-xs text-neutral-300 outline-none"
+              className="cursor-pointer rounded border border-steel bg-slate px-2 py-1.5 text-xs text-silver outline-none"
             >
               <option value="all">All</option>
               <option value="public">Public</option>
@@ -419,12 +419,12 @@ export default function DashboardPage() {
               <option value="starred">{t.dashboard.starredFilter}</option>
             </select>
           </div>
-          <div className="flex rounded border border-neutral-700 p-0.5">
+          <div className="flex rounded border border-steel p-0.5">
             <button
               onClick={() => setViewMode("grid")}
               aria-label="Vista en cuadrícula"
               aria-pressed={viewMode === "grid"}
-              className={`rounded p-1.5 transition-colors ${viewMode === "grid" ? "bg-neutral-700 text-white" : "text-neutral-500 hover:text-neutral-300"}`}
+              className={`rounded p-1.5 transition-colors ${viewMode === "grid" ? "bg-steel text-white" : "text-silver/50 hover:text-silver"}`}
             >
               <SquaresFour size={14} />
             </button>
@@ -432,20 +432,20 @@ export default function DashboardPage() {
               onClick={() => setViewMode("list")}
               aria-label="Vista en lista"
               aria-pressed={viewMode === "list"}
-              className={`rounded p-1.5 transition-colors ${viewMode === "list" ? "bg-neutral-700 text-white" : "text-neutral-500 hover:text-neutral-300"}`}
+              className={`rounded p-1.5 transition-colors ${viewMode === "list" ? "bg-steel text-white" : "text-silver/50 hover:text-silver"}`}
             >
               <List size={14} />
             </button>
           </div>
           <button
             onClick={handleImportJson}
-            className="shrink-0 border border-neutral-700 px-4 py-2 text-xs font-medium tracking-widest text-neutral-300 uppercase hover:bg-neutral-800 transition-colors"
+            className="shrink-0 border border-steel px-4 py-2 text-xs font-medium tracking-widest text-silver uppercase hover:bg-white/5 transition-colors"
           >
             <UploadSimple size={14} className="inline" /> Import
           </button>
           <button
             onClick={() => setModalOpen(true)}
-            className="shrink-0 bg-neutral-200 px-5 py-2 text-xs font-medium tracking-widest text-[#161616] uppercase hover:bg-neutral-300 transition-colors"
+            className="shrink-0 bg-silver px-5 py-2 text-xs font-medium tracking-widest text-white uppercase hover:bg-silver transition-colors"
           >
             <Plus size={14} className="inline" /> {t.dashboard.new}
           </button>
@@ -458,7 +458,7 @@ export default function DashboardPage() {
           onOpenAI={() => setAiDialogOpen(true)}
         />
       ) : filtered.length === 0 ? (
-        <p className="py-12 text-center text-sm text-neutral-500">
+        <p className="py-12 text-center text-sm text-silver/50">
           {t.dashboard.noResults} &ldquo;{search}&rdquo;
         </p>
       ) : (
@@ -472,12 +472,12 @@ export default function DashboardPage() {
                   if (allSelected) bulk.clearSelection();
                   else bulk.selectAll(allIds);
                 }}
-                className="flex h-11 items-center gap-2 rounded px-3 text-xs font-medium text-neutral-300 hover:bg-neutral-800 transition-colors"
+                className="flex h-11 items-center gap-2 rounded px-3 text-xs font-medium text-silver hover:bg-white/5 transition-colors"
               >
                 <span className={`flex h-5 w-5 items-center justify-center rounded border ${
                   filtered.length > 0 && filtered.every((p) => bulk.selectedIds.has(p.id))
-                    ? "border-white bg-white text-[#161616]"
-                    : "border-neutral-500"
+                    ? "border-white bg-accent text-white"
+                    : "border-silver/50"
                 }`}>
                   {filtered.length > 0 && filtered.every((p) => bulk.selectedIds.has(p.id)) && (
                     <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
@@ -485,7 +485,7 @@ export default function DashboardPage() {
                 </span>
                 {t.dashboard.bulkSelectAll}
               </button>
-              <span className="text-xs text-neutral-500">
+              <span className="text-xs text-silver/50">
                 {bulk.selectedIds.size} {t.dashboard.bulkSelected}
               </span>
             </div>

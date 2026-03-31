@@ -9,7 +9,7 @@ import {
 import { Tooltip } from "@/components/ui/Tooltip";
 
 const btn =
-  "flex h-8 w-8 items-center justify-center rounded text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 transition-colors";
+  "flex h-8 w-8 items-center justify-center rounded text-silver/70 hover:bg-white/5 hover:text-silver transition-colors";
 
 export function MultiSelectControls({ elementIds }: { elementIds: string[] }) {
   const updateElement = useEditorStore((s) => s.updateElement);
@@ -65,23 +65,23 @@ export function MultiSelectControls({ elementIds }: { elementIds: string[] }) {
 
   return (
     <div className="space-y-2">
-      <span className="block text-[11px] font-medium text-neutral-400 uppercase tracking-wider">Align</span>
+      <span className="block text-[11px] font-medium text-silver/70 uppercase tracking-wider">Align</span>
       <div className="flex gap-1">
         <Tooltip content="Align left"><button onClick={() => alignAll((_el, b) => ({ x: b.minX }))} className={btn} aria-label="Align left"><AlignLeft size={14} weight="regular" /></button></Tooltip>
         <Tooltip content="Align center"><button onClick={() => alignAll((el, b) => ({ x: b.midX - el.w / 2 }))} className={btn} aria-label="Align center H"><AlignCenterHorizontalSimple size={14} weight="regular" /></button></Tooltip>
         <Tooltip content="Align right"><button onClick={() => alignAll((_el, b) => ({ x: b.maxX - _el.w }))} className={btn} aria-label="Align right"><AlignRight size={14} weight="regular" /></button></Tooltip>
-        <div className="w-px bg-neutral-700" />
+        <div className="w-px bg-steel" />
         <Tooltip content="Align top"><button onClick={() => alignAll((_el, b) => ({ y: b.minY }))} className={btn} aria-label="Align top"><AlignTop size={14} weight="regular" /></button></Tooltip>
         <Tooltip content="Align middle"><button onClick={() => alignAll((el, b) => ({ y: b.midY - el.h / 2 }))} className={btn} aria-label="Align center V"><AlignCenterVerticalSimple size={14} weight="regular" /></button></Tooltip>
         <Tooltip content="Align bottom"><button onClick={() => alignAll((_el, b) => ({ y: b.maxY - _el.h }))} className={btn} aria-label="Align bottom"><AlignBottom size={14} weight="regular" /></button></Tooltip>
       </div>
       <div className="flex gap-1">
-        <button onClick={() => useEditorStore.getState().groupSelection()} className="flex-1 rounded border border-neutral-700 py-1.5 text-[10px] text-neutral-400 hover:bg-neutral-800 transition-colors">Group</button>
-        <button onClick={() => useEditorStore.getState().ungroupSelection()} className="flex-1 rounded border border-neutral-700 py-1.5 text-[10px] text-neutral-400 hover:bg-neutral-800 transition-colors">Ungroup</button>
+        <button onClick={() => useEditorStore.getState().groupSelection()} className="flex-1 rounded border border-steel py-1.5 text-[10px] text-silver/70 hover:bg-white/5 transition-colors">Group</button>
+        <button onClick={() => useEditorStore.getState().ungroupSelection()} className="flex-1 rounded border border-steel py-1.5 text-[10px] text-silver/70 hover:bg-white/5 transition-colors">Ungroup</button>
       </div>
       {selected.length >= 3 && (
         <>
-          <span className="block text-[11px] font-medium text-neutral-400 uppercase tracking-wider">Distribute</span>
+          <span className="block text-[11px] font-medium text-silver/70 uppercase tracking-wider">Distribute</span>
           <div className="flex gap-1">
             <Tooltip content="Distribute horizontal"><button onClick={distributeH} className={btn} aria-label="Distribute horizontal"><ArrowsHorizontal size={14} weight="regular" /></button></Tooltip>
             <Tooltip content="Distribute vertical"><button onClick={distributeV} className={btn} aria-label="Distribute vertical"><ArrowsVertical size={14} weight="regular" /></button></Tooltip>

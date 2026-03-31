@@ -95,7 +95,7 @@ export function OnboardingTooltip({
       {/* Tooltip */}
       <div
         ref={tooltipRef}
-        className="absolute w-[calc(100%-2rem)] max-w-xs rounded-lg bg-[#1e1e1e] border border-neutral-700 p-4 shadow-2xl"
+        className="absolute w-[calc(100%-2rem)] max-w-xs rounded-lg bg-slate border border-steel p-4 shadow-2xl"
         style={{ top: tooltipPos.top, left: tooltipPos.left }}
         role="dialog"
         aria-modal="true"
@@ -105,21 +105,21 @@ export function OnboardingTooltip({
         <span className={`absolute border-[6px] ${arrowMap[position]}`} />
 
         <div className="mb-1 flex items-center justify-between">
-          <span className="text-[10px] font-medium text-neutral-500 uppercase tracking-wider">
+          <span className="text-[10px] font-medium text-silver/50 uppercase tracking-wider">
             {stepNumber} of {totalSteps}
           </span>
           <button
             onClick={onSkip}
-            className="text-[10px] text-neutral-500 hover:text-neutral-300 min-h-[44px] min-w-[44px] flex items-center justify-end"
+            className="text-[10px] text-silver/50 hover:text-silver min-h-[44px] min-w-[44px] flex items-center justify-end"
           >
             Skip
           </button>
         </div>
 
-        <h3 className="font-display text-base tracking-tight text-neutral-200 uppercase">
+        <h3 className="font-display text-base tracking-tight text-silver uppercase">
           {title}
         </h3>
-        <p className="mt-1 text-xs text-neutral-400 leading-relaxed">
+        <p className="mt-1 text-xs text-silver/70 leading-relaxed">
           {description}
         </p>
 
@@ -127,14 +127,14 @@ export function OnboardingTooltip({
           {stepNumber > 1 && (
             <button
               onClick={onPrevious}
-              className="flex-1 rounded border border-neutral-600 py-2 text-[10px] font-medium tracking-widest text-neutral-300 uppercase hover:bg-neutral-800 min-h-[44px]"
+              className="flex-1 rounded border border-steel/60 py-2 text-[10px] font-medium tracking-widest text-silver uppercase hover:bg-white/5 min-h-[44px]"
             >
               Back
             </button>
           )}
           <button
             onClick={onNext}
-            className="flex-1 rounded bg-white py-2 text-[10px] font-medium tracking-widest text-[#161616] uppercase hover:bg-neutral-200 min-h-[44px]"
+            className="flex-1 rounded bg-accent py-2 text-[10px] font-medium tracking-widest text-white uppercase hover:bg-accent-hover min-h-[44px]"
           >
             {stepNumber >= totalSteps ? "Get started" : "Next"}
           </button>

@@ -24,8 +24,8 @@ export function TextShadowControls({ element }: { element: TextElement }) {
   return (
     <div className="space-y-1.5">
       <div className="flex items-center justify-between">
-        <span className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">Text Shadow</span>
-        <button onClick={toggle} className={`rounded px-2 py-0.5 text-[10px] transition-colors ${enabled ? "bg-white text-[#161616]" : "text-neutral-500 hover:bg-neutral-800"}`}>
+        <span className="text-[11px] font-medium text-silver/70 uppercase tracking-wider">Text Shadow</span>
+        <button onClick={toggle} className={`rounded px-2 py-0.5 text-[10px] transition-colors ${enabled ? "bg-accent text-white" : "text-silver/50 hover:bg-white/5"}`}>
           {enabled ? "On" : "Off"}
         </button>
       </div>
@@ -33,7 +33,7 @@ export function TextShadowControls({ element }: { element: TextElement }) {
         <div className="space-y-1">
           {(["offsetX", "offsetY", "blur"] as const).map((key) => (
             <label key={key} className="flex items-center gap-2">
-              <span className="text-[10px] text-neutral-500 w-10 shrink-0">
+              <span className="text-[10px] text-silver/50 w-10 shrink-0">
                 {key === "offsetX" ? "X" : key === "offsetY" ? "Y" : "Blur"}
               </span>
               <input
@@ -43,18 +43,18 @@ export function TextShadowControls({ element }: { element: TextElement }) {
                 onChange={(e) => update({ [key]: parseInt(e.target.value) })}
                 className="flex-1 accent-white"
               />
-              <span className="text-[10px] text-neutral-600 w-5 text-right">{ts[key]}</span>
+              <span className="text-[10px] text-silver/40 w-5 text-right">{ts[key]}</span>
             </label>
           ))}
           <label className="flex items-center gap-2">
-            <span className="text-[10px] text-neutral-500 w-10 shrink-0">Color</span>
+            <span className="text-[10px] text-silver/50 w-10 shrink-0">Color</span>
             <input
               type="color"
               value={ts.color.startsWith("rgba") ? "#000000" : ts.color}
               onChange={(e) => update({ color: e.target.value })}
-              className="h-5 w-8 cursor-pointer rounded border border-neutral-700 bg-transparent"
+              className="h-5 w-8 cursor-pointer rounded border border-steel bg-transparent"
             />
-            <span className="text-[10px] text-neutral-600 truncate flex-1">{ts.color}</span>
+            <span className="text-[10px] text-silver/40 truncate flex-1">{ts.color}</span>
           </label>
         </div>
       )}

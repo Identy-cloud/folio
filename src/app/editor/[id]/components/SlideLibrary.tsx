@@ -91,8 +91,8 @@ export function SlideLibrary({ open, onClose }: Props) {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[10vh] md:pt-[15vh]" onClick={onClose}>
-      <div className="mx-4 flex w-full max-w-lg flex-col rounded border border-neutral-700 bg-[#1e1e1e] shadow-2xl" onClick={(e) => e.stopPropagation()}>
-        <div className="flex items-center justify-between border-b border-neutral-700 px-4 py-3">
+      <div className="mx-4 flex w-full max-w-lg flex-col rounded border border-steel bg-slate shadow-2xl" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center justify-between border-b border-steel px-4 py-3">
           <h2 className="flex items-center gap-2 text-sm font-medium text-white">
             <BookmarkSimple size={16} /> Slide Library
           </h2>
@@ -100,36 +100,36 @@ export function SlideLibrary({ open, onClose }: Props) {
             <button onClick={saveCurrent} className="flex items-center gap-1 rounded bg-blue-600 px-2.5 py-1 text-xs text-white hover:bg-blue-500 transition-colors">
               <Plus size={12} /> Save current
             </button>
-            <button onClick={onClose} aria-label="Close" className="text-neutral-400 hover:text-white"><X size={16} /></button>
+            <button onClick={onClose} aria-label="Close" className="text-silver/70 hover:text-white"><X size={16} /></button>
           </div>
         </div>
-        <div className="border-b border-neutral-700 px-4 py-2">
-          <div className="flex items-center gap-2 rounded bg-neutral-800 px-2">
-            <MagnifyingGlass size={14} className="text-neutral-500" />
-            <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search by name or category..." className="w-full bg-transparent py-1.5 text-xs text-white outline-none placeholder:text-neutral-500" />
+        <div className="border-b border-steel px-4 py-2">
+          <div className="flex items-center gap-2 rounded bg-white/5 px-2">
+            <MagnifyingGlass size={14} className="text-silver/50" />
+            <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search by name or category..." className="w-full bg-transparent py-1.5 text-xs text-white outline-none placeholder:text-silver/50" />
           </div>
           {categories.length > 0 && (
             <div className="mt-2 flex flex-wrap gap-1">
               {categories.map((c) => (
-                <button key={c} onClick={() => setQuery(c)} className="rounded-full bg-neutral-800 px-2 py-0.5 text-[10px] text-neutral-400 hover:bg-neutral-700 hover:text-white transition-colors">{c}</button>
+                <button key={c} onClick={() => setQuery(c)} className="rounded-full bg-white/5 px-2 py-0.5 text-[10px] text-silver/70 hover:bg-steel hover:text-white transition-colors">{c}</button>
               ))}
             </div>
           )}
         </div>
         <div className="max-h-[50vh] overflow-y-auto p-3">
-          {loading && <p className="py-4 text-center text-xs text-neutral-500">Loading...</p>}
-          {!loading && filtered.length === 0 && <p className="py-4 text-center text-xs text-neutral-500">No saved slides yet</p>}
+          {loading && <p className="py-4 text-center text-xs text-silver/50">Loading...</p>}
+          {!loading && filtered.length === 0 && <p className="py-4 text-center text-xs text-silver/50">No saved slides yet</p>}
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
             {filtered.map((saved) => (
-              <div key={saved.id} className="group relative cursor-pointer rounded border border-neutral-700 bg-neutral-800/50 hover:border-neutral-500 transition-colors" onClick={() => insert(saved)}>
+              <div key={saved.id} className="group relative cursor-pointer rounded border border-steel bg-white/5 hover:border-silver/50 transition-colors" onClick={() => insert(saved)}>
                 <div className="aspect-video w-full overflow-hidden rounded-t" style={{ backgroundColor: saved.backgroundColor }}>
                   <div className="flex h-full items-center justify-center p-2">
-                    <span className="text-[8px] text-neutral-400 line-clamp-2">{saved.elements.length} elements</span>
+                    <span className="text-[8px] text-silver/70 line-clamp-2">{saved.elements.length} elements</span>
                   </div>
                 </div>
                 <div className="px-2 py-1.5">
-                  <p className="truncate text-[10px] font-medium text-neutral-300">{saved.name}</p>
-                  {saved.category && <p className="truncate text-[9px] text-neutral-500">{saved.category}</p>}
+                  <p className="truncate text-[10px] font-medium text-silver">{saved.name}</p>
+                  {saved.category && <p className="truncate text-[9px] text-silver/50">{saved.category}</p>}
                 </div>
                 <button onClick={(e) => { e.stopPropagation(); remove(saved.id); }} className="absolute top-1 right-1 hidden h-5 w-5 items-center justify-center rounded bg-red-500/80 text-white group-hover:flex hover:bg-red-500 transition-colors">
                   <Trash size={10} />

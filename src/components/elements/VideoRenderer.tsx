@@ -20,8 +20,8 @@ export const VideoRenderer = memo(function VideoRenderer({ element, mode = "edit
       );
     }
     return (
-      <div className="flex h-full w-full items-center justify-center bg-neutral-900/60">
-        <VideoCamera size={32} className="text-neutral-500" weight="duotone" />
+      <div className="flex h-full w-full items-center justify-center bg-navy/60">
+        <VideoCamera size={32} className="text-silver/50" weight="duotone" />
       </div>
     );
   }

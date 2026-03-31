@@ -18,11 +18,11 @@ export function QuickActions({ element, scale }: Props) {
   const sendBackward = useEditorStore((s) => s.sendBackward);
   const pushHistory = useEditorStore((s) => s.pushHistory);
 
-  const btn = "flex h-7 w-7 items-center justify-center rounded text-neutral-300 hover:bg-white/20 hover:text-white transition-colors";
+  const btn = "flex h-7 w-7 items-center justify-center rounded text-silver hover:bg-white/20 hover:text-white transition-colors";
 
   return (
     <div
-      className="pointer-events-auto absolute z-50 flex gap-0.5 rounded-lg bg-neutral-900/90 px-1 py-0.5 shadow-lg backdrop-blur-sm"
+      className="pointer-events-auto absolute z-50 flex gap-0.5 rounded-lg bg-navy/90 px-1 py-0.5 shadow-lg backdrop-blur-sm"
       style={{
         left: element.x + element.w / 2,
         top: element.y - 40 / scale,
@@ -55,7 +55,7 @@ export function QuickActions({ element, scale }: Props) {
           {element.locked ? <LockSimpleOpen size={14} /> : <LockSimple size={14} />}
         </button>
       </Tooltip>
-      <div className="w-px bg-neutral-700" />
+      <div className="w-px bg-steel" />
       <Tooltip content="Delete" side="top">
         <button onClick={() => deleteElement(element.id)} className={`${btn} hover:text-red-400`} aria-label="Eliminar">
           <Trash size={14} />

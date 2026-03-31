@@ -1,8 +1,12 @@
 @import "tailwindcss";
 
+a, button, [role="button"], input[type="submit"], input[type="reset"], input[type="button"], select, summary {
+  cursor: pointer;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #0a0a0a;
+  --background: #082032;
+  --foreground: #D2D2D2;
 
   --font-display-editorial-blue: var(--font-bebas-neue);
   --font-body-editorial-blue: var(--font-dm-sans);
@@ -25,12 +29,27 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-dm-sans);
   --font-display: var(--font-bebas-neue);
+
+  /* Base palette */
+  --color-navy: #082032;
+  --color-slate: #2C394B;
+  --color-steel: #334756;
+  --color-silver: #D2D2D2;
+  --color-accent: #FF4C29;
+  --color-accent-hover: #c93a1e;
 }
 
 body {
-  background: var(--background);
+  background: var(--color-navy);
   color: var(--foreground);
 }
+
+/* Gradients */
+.gradient-dark { background: linear-gradient(135deg, #082032, #2C394B); }
+.gradient-slate { background: linear-gradient(135deg, #2C394B, #334756); }
+.gradient-accent { background: linear-gradient(135deg, #FF4C29, #c93a1e); }
+.gradient-silver { background: linear-gradient(135deg, #D2D2D2, #a8a8a8); }
+.gradient-hero { background: linear-gradient(135deg, #082032 0%, #334756 60%, #FF4C29 100%); }
 
 /* Viewer animations */
 @keyframes fade-out {
@@ -225,6 +244,6 @@ body {
 
 /* Focus visibility on dark backgrounds */
 *:focus-visible {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }

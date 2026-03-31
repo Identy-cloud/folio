@@ -18,25 +18,25 @@ export function LocaleSelector() {
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="rounded px-2 py-1 text-xs text-neutral-400 uppercase tracking-wider hover:text-neutral-200 transition-colors"
+        className="rounded px-2 py-1 text-xs text-silver/70 uppercase tracking-wider hover:text-silver transition-colors"
         aria-label="Idioma"
         aria-expanded={open}
       >
         {current?.code ?? "ES"}
       </button>
       {open && (
-        <div className="absolute right-0 top-full mt-1 z-50 w-36 rounded border border-neutral-700 bg-[#1e1e1e] py-1 shadow-xl">
+        <div className="absolute right-0 top-full mt-1 z-50 w-36 rounded border border-steel bg-slate py-1 shadow-xl">
           {LOCALES.map((l) => (
             <button
               key={l.code}
               onClick={() => { setLocale(l.code); setOpen(false); }}
               className={`block w-full px-3 py-1.5 text-left text-xs transition-colors ${
                 locale === l.code
-                  ? "bg-white text-[#161616]"
-                  : "text-neutral-300 hover:bg-neutral-800"
+                  ? "bg-accent text-white"
+                  : "text-silver hover:bg-white/5"
               }`}
             >
-              <span className="uppercase mr-2 text-neutral-500">{l.code}</span>
+              <span className="uppercase mr-2 text-silver/50">{l.code}</span>
               {l.label}
             </button>
           ))}

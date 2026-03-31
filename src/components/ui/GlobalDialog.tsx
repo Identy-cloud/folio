@@ -44,10 +44,10 @@ export function GlobalDialog() {
       open
       ariaLabel={title}
       onClose={handleCancel}
-      className="w-full max-w-sm rounded bg-[#1e1e1e] border border-neutral-700 p-5 shadow-xl mx-4"
+      className="w-full max-w-sm rounded bg-slate border border-steel p-5 shadow-xl mx-4"
     >
       <h3 className="text-sm font-medium text-white">{title}</h3>
-      <p className="mt-2 text-xs text-neutral-400 leading-relaxed">{message}</p>
+      <p className="mt-2 text-xs text-silver/70 leading-relaxed">{message}</p>
 
       {type === "prompt" && (
         <input
@@ -56,14 +56,14 @@ export function GlobalDialog() {
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter") handleConfirm(); }}
           placeholder={placeholder}
-          className="mt-3 w-full rounded border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-white outline-none placeholder:text-neutral-500 focus:border-neutral-500"
+          className="mt-3 w-full rounded border border-steel bg-navy px-3 py-2 text-sm text-white outline-none placeholder:text-silver/50 focus:border-silver/50"
         />
       )}
 
       <div className="mt-4 flex items-center justify-end gap-2">
         <button
           onClick={handleCancel}
-          className="rounded px-3 py-1.5 text-xs text-neutral-400 hover:text-neutral-200 transition-colors"
+          className="rounded px-3 py-1.5 text-xs text-silver/70 hover:text-silver transition-colors"
         >
           Cancel
         </button>
@@ -73,7 +73,7 @@ export function GlobalDialog() {
           className={`rounded px-3 py-1.5 text-xs font-medium transition-colors ${
             isDanger
               ? "bg-red-600 text-white hover:bg-red-500"
-              : "bg-white text-[#161616] hover:bg-neutral-200"
+              : "bg-accent text-white hover:bg-accent-hover"
           }`}
         >
           {confirmLabel}

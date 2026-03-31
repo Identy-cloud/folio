@@ -13,7 +13,7 @@ export function LayerControls({ elementId }: { elementId: string }) {
   const sendBackward = useEditorStore((s) => s.sendBackward);
   const isBusy = useEditorStore((s) => s.busyElementIds.has(elementId));
 
-  const btn = `flex h-8 w-8 items-center justify-center rounded text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 transition-colors ${isBusy ? "opacity-40 pointer-events-none" : ""}`;
+  const btn = `flex h-8 w-8 items-center justify-center rounded text-silver/70 hover:bg-white/5 hover:text-silver transition-colors ${isBusy ? "opacity-40 pointer-events-none" : ""}`;
 
   return (
     <div>

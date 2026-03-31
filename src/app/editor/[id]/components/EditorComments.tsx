@@ -86,28 +86,28 @@ export function EditorComments({ open, onClose }: Props) {
   const otherComments = comments.filter((c) => c.slideIndex !== activeSlideIndex);
 
   return (
-    <div className="fixed top-14 right-4 md:right-60 z-50 w-[calc(100vw-2rem)] md:w-72 max-h-[60vh] flex flex-col rounded border border-neutral-700 bg-[#1e1e1e] shadow-xl">
-      <div className="flex items-center justify-between border-b border-neutral-800 px-3 py-2">
+    <div className="fixed top-14 right-4 md:right-60 z-50 w-[calc(100vw-2rem)] md:w-72 max-h-[60vh] flex flex-col rounded border border-steel bg-slate shadow-xl">
+      <div className="flex items-center justify-between border-b border-steel/30 px-3 py-2">
         <div className="flex items-center gap-1.5">
-          <ChatCircle size={14} className="text-neutral-400" />
-          <span className="text-xs font-medium text-neutral-400 uppercase tracking-wider">
+          <ChatCircle size={14} className="text-silver/70" />
+          <span className="text-xs font-medium text-silver/70 uppercase tracking-wider">
             Comments ({comments.length})
           </span>
         </div>
-        <button onClick={onClose} className="rounded p-1.5 text-neutral-500 hover:bg-neutral-700 hover:text-neutral-300 transition-colors">
+        <button onClick={onClose} className="rounded p-1.5 text-silver/50 hover:bg-steel hover:text-silver transition-colors">
           <X size={14} />
         </button>
       </div>
       <div className="flex-1 overflow-y-auto p-3 space-y-2">
-        {loading && <p className="text-xs text-neutral-600 py-4 text-center">Loading...</p>}
+        {loading && <p className="text-xs text-silver/40 py-4 text-center">Loading...</p>}
         {!loading && comments.length === 0 && (
-          <p className="text-xs text-neutral-600 py-4 text-center">
+          <p className="text-xs text-silver/40 py-4 text-center">
             No comments yet.<br />Comments from viewers appear here.
           </p>
         )}
         {slideComments.length > 0 && (
           <div>
-            <p className="text-[10px] text-neutral-500 uppercase tracking-wider mb-1">
+            <p className="text-[10px] text-silver/50 uppercase tracking-wider mb-1">
               Slide {activeSlideIndex + 1}
             </p>
             {slideComments.map((c) => (
@@ -117,7 +117,7 @@ export function EditorComments({ open, onClose }: Props) {
         )}
         {otherComments.length > 0 && (
           <div>
-            <p className="text-[10px] text-neutral-500 uppercase tracking-wider mb-1">Other slides</p>
+            <p className="text-[10px] text-silver/50 uppercase tracking-wider mb-1">Other slides</p>
             {otherComments.map((c) => (
               <CommentThread key={c.id} comment={c} showSlide onReply={handleReply} replyingTo={replyingTo} replyContent={replyContent} onReplyContentChange={setReplyContent} onSubmitReply={submitReply} submitting={submitting} />
             ))}

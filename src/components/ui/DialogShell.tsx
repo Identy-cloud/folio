@@ -39,7 +39,7 @@ export function DialogShell({ open, ariaLabel, onClose, children, className }: P
     >
       <div
         ref={trapRef}
-        className={className ?? "w-full max-w-sm rounded bg-[#1e1e1e] border border-neutral-700 p-6 shadow-xl mx-4"}
+        className={className ?? "w-full max-w-sm rounded bg-slate border border-steel p-6 shadow-xl mx-4"}
         onClick={(e) => e.stopPropagation()}
       >
         {children}

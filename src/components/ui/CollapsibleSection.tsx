@@ -18,12 +18,12 @@ export function CollapsibleSection({ title, defaultOpen = true, children }: Prop
         onClick={() => setOpen((v) => !v)}
         className="flex w-full items-center justify-between py-1 cursor-pointer"
       >
-        <span className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">
+        <span className="text-[11px] font-medium text-silver/70 uppercase tracking-wider">
           {title}
         </span>
         <CaretDown
           size={12}
-          className={`text-neutral-500 transition-transform duration-200 ${open ? "" : "-rotate-90"}`}
+          className={`text-silver/50 transition-transform duration-200 ${open ? "" : "-rotate-90"}`}
         />
       </button>
       <div

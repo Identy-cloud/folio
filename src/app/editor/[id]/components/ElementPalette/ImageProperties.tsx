@@ -50,14 +50,14 @@ export function ImageProperties({ element }: Props) {
 
   return (
     <div className="space-y-2">
-      <span className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">
+      <span className="text-[11px] font-medium text-silver/70 uppercase tracking-wider">
         {t.editor.image}
       </span>
 
       <button
         onClick={trigger}
         disabled={uploading}
-        className="flex w-full items-center gap-2 rounded border border-neutral-700 px-3 py-2 text-xs text-neutral-300 hover:bg-neutral-800 disabled:opacity-50"
+        className="flex w-full items-center gap-2 rounded border border-steel px-3 py-2 text-xs text-silver hover:bg-white/5 disabled:opacity-50"
       >
         <ImageIcon size={14} weight="regular" />
         {uploading ? t.editor.uploading : t.editor.changeImage}
@@ -66,7 +66,7 @@ export function ImageProperties({ element }: Props) {
       <div className="flex gap-1">
         <button
           onClick={() => window.dispatchEvent(new CustomEvent("folio:crop-image", { detail: element.id }))}
-          className="flex flex-1 items-center justify-center gap-1 rounded border border-neutral-700 px-3 py-2 text-xs text-neutral-300 hover:bg-neutral-800"
+          className="flex flex-1 items-center justify-center gap-1 rounded border border-steel px-3 py-2 text-xs text-silver hover:bg-white/5"
         >
           <Crop size={14} weight="regular" /> Crop
         </button>
@@ -76,7 +76,7 @@ export function ImageProperties({ element }: Props) {
               updateElement(element.id, { cropX: 0, cropY: 0, cropWidth: 1, cropHeight: 1 });
               pushHistory();
             }}
-            className="rounded border border-neutral-700 px-2 py-2 text-[10px] text-neutral-500 hover:bg-neutral-800 hover:text-neutral-300"
+            className="rounded border border-steel px-2 py-2 text-[10px] text-silver/50 hover:bg-white/5 hover:text-silver"
           >
             Reset
           </button>
@@ -90,8 +90,8 @@ export function ImageProperties({ element }: Props) {
             onClick={() => setObjectFit(f.value)}
             className={`flex-1 rounded px-2 py-1 text-[10px] ${
               element.objectFit === f.value
-                ? "bg-neutral-700 text-neutral-100"
-                : "text-neutral-400 hover:bg-neutral-800"
+                ? "bg-steel text-white"
+                : "text-silver/70 hover:bg-white/5"
             }`}
           >
             {f.label}
@@ -101,7 +101,7 @@ export function ImageProperties({ element }: Props) {
 
       {/* Border radius */}
       <label className="flex items-center gap-2">
-        <span className="text-[10px] text-neutral-500 shrink-0">Radius</span>
+        <span className="text-[10px] text-silver/50 shrink-0">Radius</span>
         <input
           type="range"
           min={0}
@@ -110,7 +110,7 @@ export function ImageProperties({ element }: Props) {
           onChange={(e) => { updateElement(element.id, { borderRadius: parseInt(e.target.value) }); pushHistory(); }}
           className="flex-1 accent-white"
         />
-        <span className="text-[10px] text-neutral-600 w-6 text-right">{element.borderRadius ?? 0}</span>
+        <span className="text-[10px] text-silver/40 w-6 text-right">{element.borderRadius ?? 0}</span>
       </label>
 
       {/* Flip */}
@@ -118,7 +118,7 @@ export function ImageProperties({ element }: Props) {
         <button
           onClick={() => { updateElement(element.id, { flipX: !element.flipX }); pushHistory(); }}
           className={`flex-1 flex items-center justify-center gap-1 rounded py-1 text-[10px] transition-colors ${
-            element.flipX ? "bg-white text-[#161616]" : "text-neutral-500 hover:bg-neutral-800"
+            element.flipX ? "bg-accent text-white" : "text-silver/50 hover:bg-white/5"
           }`}
         >
           <FlipHorizontal size={14} /> Flip H
@@ -126,7 +126,7 @@ export function ImageProperties({ element }: Props) {
         <button
           onClick={() => { updateElement(element.id, { flipY: !element.flipY }); pushHistory(); }}
           className={`flex-1 flex items-center justify-center gap-1 rounded py-1 text-[10px] transition-colors ${
-            element.flipY ? "bg-white text-[#161616]" : "text-neutral-500 hover:bg-neutral-800"
+            element.flipY ? "bg-accent text-white" : "text-silver/50 hover:bg-white/5"
           }`}
         >
           <FlipVertical size={14} /> Flip V
@@ -135,7 +135,7 @@ export function ImageProperties({ element }: Props) {
 
       {/* Filters */}
       <div>
-        <span className="mb-1 block text-[10px] text-neutral-500">Filter</span>
+        <span className="mb-1 block text-[10px] text-silver/50">Filter</span>
         <div className="grid grid-cols-3 gap-1">
           {FILTERS.map((f) => (
             <button
@@ -146,8 +146,8 @@ export function ImageProperties({ element }: Props) {
               }}
               className={`rounded px-1.5 py-1 text-[10px] transition-colors ${
                 (element.filter || "") === f.value
-                  ? "bg-white text-[#161616]"
-                  : "text-neutral-500 hover:bg-neutral-800"
+                  ? "bg-accent text-white"
+                  : "text-silver/50 hover:bg-white/5"
               }`}
             >
               {f.label}

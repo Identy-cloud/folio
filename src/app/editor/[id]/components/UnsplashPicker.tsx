@@ -77,19 +77,19 @@ export function UnsplashPicker({ onClose }: Props) {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[8vh] px-4" onClick={onClose}>
-      <div className="w-full max-w-sm rounded border border-neutral-700 bg-[#1e1e1e] shadow-2xl md:max-w-lg" onClick={(e) => e.stopPropagation()}>
-        <div className="flex items-center justify-between border-b border-neutral-700 px-4 py-2">
-          <span className="text-xs font-medium text-neutral-300 uppercase tracking-wider">Stock Images</span>
-          <button onClick={onClose} aria-label="Close" className="p-1 text-neutral-500 hover:text-neutral-300"><X size={16} /></button>
+      <div className="w-full max-w-sm rounded border border-steel bg-slate shadow-2xl md:max-w-lg" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center justify-between border-b border-steel px-4 py-2">
+          <span className="text-xs font-medium text-silver uppercase tracking-wider">Stock Images</span>
+          <button onClick={onClose} aria-label="Close" className="p-1 text-silver/50 hover:text-silver"><X size={16} /></button>
         </div>
         <div className="relative px-4 pt-3">
-          <MagnifyingGlass size={14} className="absolute left-7 top-1/2 mt-1.5 -translate-y-1/2 text-neutral-500" />
+          <MagnifyingGlass size={14} className="absolute left-7 top-1/2 mt-1.5 -translate-y-1/2 text-silver/50" />
           <input
             ref={inputRef}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search free photos..."
-            className="w-full rounded border border-neutral-700 bg-[#111] py-2 pl-8 pr-3 text-xs text-neutral-200 outline-none placeholder:text-neutral-600 focus:border-neutral-500"
+            className="w-full rounded border border-steel bg-navy py-2 pl-8 pr-3 text-xs text-silver outline-none placeholder:text-silver/40 focus:border-silver/50"
           />
         </div>
         <div className="max-h-80 overflow-y-auto p-3">
@@ -97,7 +97,7 @@ export function UnsplashPicker({ onClose }: Props) {
             {photos.map((photo) => (
               <button key={photo.id} onClick={() => insertPhoto(photo)} className="group relative overflow-hidden rounded hover:ring-2 hover:ring-blue-500">
                 <img src={photo.urls.small} alt={photo.alt_description ?? ""} loading="lazy" className="aspect-[4/3] w-full object-cover" />
-                <span className="absolute inset-x-0 bottom-0 bg-black/60 px-1.5 py-1 text-[9px] text-neutral-300 opacity-0 transition-opacity group-hover:opacity-100 truncate">
+                <span className="absolute inset-x-0 bottom-0 bg-black/60 px-1.5 py-1 text-[9px] text-silver opacity-0 transition-opacity group-hover:opacity-100 truncate">
                   <a href={`${photo.user.links.html}?utm_source=folio&utm_medium=referral`} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="underline">
                     {photo.user.name}
                   </a>
@@ -107,17 +107,17 @@ export function UnsplashPicker({ onClose }: Props) {
             ))}
           </div>
           {photos.length === 0 && !loading && query && (
-            <p className="py-8 text-center text-xs text-neutral-600">No results</p>
+            <p className="py-8 text-center text-xs text-silver/40">No results</p>
           )}
-          {loading && <p className="py-6 text-center text-xs text-neutral-500">Searching...</p>}
+          {loading && <p className="py-6 text-center text-xs text-silver/50">Searching...</p>}
           {page < totalPages && !loading && photos.length > 0 && (
-            <button onClick={loadMore} className="mt-3 w-full rounded border border-neutral-700 py-2 text-xs text-neutral-400 hover:bg-neutral-800">
+            <button onClick={loadMore} className="mt-3 w-full rounded border border-steel py-2 text-xs text-silver/70 hover:bg-white/5">
               Load more
             </button>
           )}
         </div>
-        <div className="border-t border-neutral-800 px-4 py-1.5">
-          <p className="text-[9px] text-neutral-600">Photos by <a href="https://unsplash.com/?utm_source=folio&utm_medium=referral" target="_blank" rel="noopener noreferrer" className="underline">Unsplash</a></p>
+        <div className="border-t border-steel/30 px-4 py-1.5">
+          <p className="text-[9px] text-silver/40">Photos by <a href="https://unsplash.com/?utm_source=folio&utm_medium=referral" target="_blank" rel="noopener noreferrer" className="underline">Unsplash</a></p>
         </div>
       </div>
     </div>

@@ -1,8 +1,8 @@
 export function DmcaSections() {
   return (
-    <div className="mt-12 space-y-10 text-sm leading-relaxed text-neutral-400">
+    <div className="mt-12 space-y-10 text-sm leading-relaxed text-silver/70">
       <section>
-        <h2 className="mb-3 font-display text-lg tracking-tight text-neutral-200">
+        <h2 className="mb-3 font-display text-lg tracking-tight text-silver">
           1. Politica General
         </h2>
         <p>
@@ -15,19 +15,19 @@ export function DmcaSections() {
       </section>
 
       <section>
-        <h2 className="mb-3 font-display text-lg tracking-tight text-neutral-200">
+        <h2 className="mb-3 font-display text-lg tracking-tight text-silver">
           2. Agente Designado DMCA
         </h2>
         <p className="mb-3">
           Las notificaciones de infraccion deben enviarse al agente designado:
         </p>
-        <div className="border border-neutral-800 p-4 text-xs leading-relaxed">
-          <p className="text-neutral-200">Identy Cloud — Agente DMCA</p>
+        <div className="border border-steel/30 p-4 text-xs leading-relaxed">
+          <p className="text-silver">Identy Cloud — Agente DMCA</p>
           <p className="mt-1">
             Email:{" "}
             <a
               href="mailto:dmca@identy.cloud"
-              className="text-neutral-200 underline underline-offset-4 hover:text-white transition-colors"
+              className="text-silver underline underline-offset-4 hover:text-white transition-colors"
             >
               dmca@identy.cloud
             </a>
@@ -36,14 +36,14 @@ export function DmcaSections() {
       </section>
 
       <section>
-        <h2 className="mb-3 font-display text-lg tracking-tight text-neutral-200">
+        <h2 className="mb-3 font-display text-lg tracking-tight text-silver">
           3. Procedimiento de Notificacion
         </h2>
         <p className="mb-3">
           Para presentar una notificacion valida de infraccion (takedown), debe
           incluir:
         </p>
-        <ol className="list-inside list-decimal space-y-2 text-neutral-500">
+        <ol className="list-inside list-decimal space-y-2 text-silver/50">
           <li>Identificacion de la obra protegida que considera infringida.</li>
           <li>
             Identificacion del material infractor en Folio, incluyendo URL o
@@ -63,14 +63,14 @@ export function DmcaSections() {
       </section>
 
       <section>
-        <h2 className="mb-3 font-display text-lg tracking-tight text-neutral-200">
+        <h2 className="mb-3 font-display text-lg tracking-tight text-silver">
           4. Contra-Notificacion
         </h2>
         <p className="mb-3">
           Si crees que tu contenido fue retirado por error, puedes enviar una
           contra-notificacion que incluya:
         </p>
-        <ol className="list-inside list-decimal space-y-2 text-neutral-500">
+        <ol className="list-inside list-decimal space-y-2 text-silver/50">
           <li>Identificacion del material retirado y su ubicacion original.</li>
           <li>
             Declaracion bajo pena de perjurio de que el material fue retirado
@@ -91,7 +91,7 @@ export function DmcaSections() {
       </section>
 
       <section>
-        <h2 className="mb-3 font-display text-lg tracking-tight text-neutral-200">
+        <h2 className="mb-3 font-display text-lg tracking-tight text-silver">
           5. Politica de Infractores Reincidentes
         </h2>
         <p>
@@ -103,14 +103,14 @@ export function DmcaSections() {
       </section>
 
       <section>
-        <h2 className="mb-3 font-display text-lg tracking-tight text-neutral-200">
+        <h2 className="mb-3 font-display text-lg tracking-tight text-silver">
           6. Contacto
         </h2>
         <p>
           Para consultas generales sobre derechos de autor, escribe a{" "}
           <a
             href="mailto:dmca@identy.cloud"
-            className="text-neutral-200 underline underline-offset-4 hover:text-white transition-colors"
+            className="text-silver underline underline-offset-4 hover:text-white transition-colors"
           >
             dmca@identy.cloud
           </a>

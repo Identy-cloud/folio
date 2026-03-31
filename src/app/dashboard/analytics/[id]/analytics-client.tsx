@@ -57,13 +57,13 @@ export function AnalyticsClient({ presentationId }: { presentationId: string }) 
   }, [presentationId]);
 
   return (
-    <div className="min-h-screen bg-[#161616] text-white">
-      <header className="flex items-center gap-4 border-b border-neutral-800 px-4 py-3 sm:px-6">
-        <Link href="/dashboard" className="text-neutral-500 hover:text-white transition-colors">
+    <div className="min-h-screen bg-navy text-white">
+      <header className="flex items-center gap-4 border-b border-steel/30 px-4 py-3 sm:px-6">
+        <Link href="/dashboard" className="text-silver/50 hover:text-white transition-colors">
           <ArrowLeft size={18} />
         </Link>
         <FolioLogo size={18} className="text-lg text-white/40" />
-        <span className="text-xs text-neutral-500">/ Analytics</span>
+        <span className="text-xs text-silver/50">/ Analytics</span>
       </header>
 
       <main className="mx-auto max-w-4xl px-4 py-6 sm:px-6 sm:py-8">
@@ -74,20 +74,20 @@ export function AnalyticsClient({ presentationId }: { presentationId: string }) 
           </div>
           <Link
             href={`/editor/${presentationId}`}
-            className="flex items-center gap-1.5 rounded border border-neutral-700 px-3 py-1.5 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 transition-colors w-fit"
+            className="flex items-center gap-1.5 rounded border border-steel px-3 py-1.5 text-xs text-silver/70 hover:bg-white/5 hover:text-silver transition-colors w-fit"
           >
             <PencilSimple size={12} /> Open in editor
           </Link>
         </div>
 
-        {loading && <p className="py-12 text-center text-neutral-500">Loading analytics...</p>}
+        {loading && <p className="py-12 text-center text-silver/50">Loading analytics...</p>}
         {error && (
           <div className="py-12 text-center">
-            <p className="text-neutral-500">{error}</p>
+            <p className="text-silver/50">{error}</p>
             {error.includes("Upgrade") && (
               <button
                 onClick={() => setShowUpgrade(true)}
-                className="mt-4 rounded bg-white px-6 py-2 text-xs font-medium text-[#161616] hover:bg-neutral-200 transition-colors"
+                className="mt-4 rounded bg-accent px-6 py-2 text-xs font-medium text-white hover:bg-accent-hover transition-colors"
               >
                 Upgrade
               </button>
@@ -117,19 +117,19 @@ export function AnalyticsClient({ presentationId }: { presentationId: string }) 
 function StatsCards({ data }: { data: Analytics }) {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-      <StatCard icon={<Eye size={24} className="text-neutral-500" />} value={data.totalViews} label="Total views" />
-      <StatCard icon={<Users size={24} className="text-neutral-500" />} value={data.uniqueViewers} label="Unique viewers" />
-      <StatCard icon={<Timer size={24} className="text-neutral-500" />} value={`${data.avgDuration}s`} label="Avg. duration" />
+      <StatCard icon={<Eye size={24} className="text-silver/50" />} value={data.totalViews} label="Total views" />
+      <StatCard icon={<Users size={24} className="text-silver/50" />} value={data.uniqueViewers} label="Unique viewers" />
+      <StatCard icon={<Timer size={24} className="text-silver/50" />} value={`${data.avgDuration}s`} label="Avg. duration" />
     </div>
   );
 }
 
 function StatCard({ icon, value, label }: { icon: React.ReactNode; value: string | number; label: string }) {
   return (
-    <div className="rounded border border-neutral-800 p-6 text-center">
+    <div className="rounded border border-steel/30 p-6 text-center">
       <div className="mx-auto w-fit">{icon}</div>
       <p className="mt-2 font-display text-3xl sm:text-4xl">{value}</p>
-      <p className="mt-1 text-xs text-neutral-500 uppercase tracking-wider">{label}</p>
+      <p className="mt-1 text-xs text-silver/50 uppercase tracking-wider">{label}</p>
     </div>
   );
 }
@@ -137,16 +137,16 @@ function StatCard({ icon, value, label }: { icon: React.ReactNode; value: string
 function RecentViews({ views }: { views: Analytics["recentViews"] }) {
   return (
     <section>
-      <h2 className="mb-4 text-xs font-medium uppercase tracking-wider text-neutral-400">
+      <h2 className="mb-4 text-xs font-medium uppercase tracking-wider text-silver/70">
         Recent views (last 50)
       </h2>
-      <div className="rounded border border-neutral-800 divide-y divide-neutral-800">
+      <div className="rounded border border-steel/30 divide-y divide-neutral-800">
         {views.map((v, i) => (
           <div key={i} className="flex items-center justify-between px-4 py-2">
-            <span className="text-xs text-neutral-400">
+            <span className="text-xs text-silver/70">
               {formatDistanceToNow(new Date(v.createdAt), { addSuffix: true })}
             </span>
-            <span className="text-xs text-neutral-500">
+            <span className="text-xs text-silver/50">
               {v.duration ? `${v.duration}s` : "\u2014"}
             </span>
           </div>

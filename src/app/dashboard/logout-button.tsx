@@ -18,7 +18,7 @@ export function LogoutButton() {
   return (
     <button
       onClick={handleLogout}
-      className="text-sm text-neutral-500 hover:text-white transition-colors"
+      className="text-sm text-silver/50 hover:text-white transition-colors"
     >
       {t.dashboard.logout}
     </button>

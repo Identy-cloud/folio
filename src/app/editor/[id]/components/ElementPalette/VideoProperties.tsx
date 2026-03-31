@@ -38,21 +38,21 @@ export function VideoProperties({ element }: Props) {
   }
 
   const inputCls =
-    "w-full rounded border border-neutral-700 bg-[#161616] px-2 py-1.5 text-xs text-neutral-200 outline-none placeholder:text-neutral-600 focus:border-neutral-500";
+    "w-full rounded border border-steel bg-navy px-2 py-1.5 text-xs text-silver outline-none placeholder:text-silver/40 focus:border-silver/50";
   const toggleCls = (on: boolean) =>
     `min-h-[44px] flex items-center justify-between rounded border px-3 py-2 text-xs transition-colors ${
       on
         ? "border-blue-600 bg-blue-950/30 text-blue-300"
-        : "border-neutral-700 text-neutral-400 hover:bg-neutral-800"
+        : "border-steel text-silver/70 hover:bg-white/5"
     }`;
 
   return (
     <div className="space-y-2">
-      <span className="text-[10px] font-medium uppercase tracking-wider text-neutral-400">
+      <span className="text-[10px] font-medium uppercase tracking-wider text-silver/70">
         Video
       </span>
       <label className="flex flex-col gap-0.5">
-        <span className="text-[10px] text-neutral-500">Source URL</span>
+        <span className="text-[10px] text-silver/50">Source URL</span>
         <input
           value={src}
           onChange={(e) => setSrc(e.target.value)}
@@ -63,7 +63,7 @@ export function VideoProperties({ element }: Props) {
         />
       </label>
       <label className="flex flex-col gap-0.5">
-        <span className="text-[10px] text-neutral-500">Poster URL</span>
+        <span className="text-[10px] text-silver/50">Poster URL</span>
         <input
           value={poster}
           onChange={(e) => setPoster(e.target.value)}
@@ -87,7 +87,7 @@ export function VideoProperties({ element }: Props) {
           <span className="text-[10px]">{element.muted ? "ON" : "OFF"}</span>
         </button>
       </div>
-      <p className="text-[10px] leading-relaxed text-neutral-600">
+      <p className="text-[10px] leading-relaxed text-silver/40">
         Video plays only in viewer mode. Editor shows poster or thumbnail.
       </p>
     </div>

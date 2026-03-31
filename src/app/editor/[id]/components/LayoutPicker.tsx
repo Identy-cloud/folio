@@ -97,7 +97,7 @@ export function LayoutPicker({ open, onClose }: Props) {
       onClick={onClose}
     >
       <div
-        className="w-full max-w-lg rounded border border-neutral-700 bg-[#1e1e1e] p-4 shadow-2xl"
+        className="w-full max-w-lg rounded border border-steel bg-slate p-4 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <h2 className="mb-3 text-sm font-medium text-white">Slide Layouts</h2>
@@ -108,11 +108,11 @@ export function LayoutPicker({ open, onClose }: Props) {
               <button
                 key={layout.id}
                 onClick={() => applyLayout(layout.id)}
-                className="group flex flex-col items-center gap-1.5 rounded p-2 transition-colors hover:bg-neutral-800"
+                className="group flex flex-col items-center gap-1.5 rounded p-2 transition-colors hover:bg-white/5"
               >
                 <svg
                   viewBox="0 0 100 62.5"
-                  className="w-full rounded border border-neutral-700 bg-neutral-900 group-hover:border-neutral-500"
+                  className="w-full rounded border border-steel bg-navy group-hover:border-silver/50"
                   style={{ "--accent": theme.accent } as React.CSSProperties}
                 >
                   {rects.map((r, i) => (
@@ -127,7 +127,7 @@ export function LayoutPicker({ open, onClose }: Props) {
                     />
                   ))}
                 </svg>
-                <span className="text-[10px] text-neutral-400 group-hover:text-neutral-200">
+                <span className="text-[10px] text-silver/70 group-hover:text-silver">
                   {layout.name}
                 </span>
               </button>

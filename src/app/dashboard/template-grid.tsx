@@ -37,10 +37,10 @@ export function TemplateGrid({ onSelectTemplate, onBlank, onAIGenerate, disabled
           <button
             key={cat.key}
             onClick={() => setCategory(cat.key)}
-            className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition-colors sm:px-4 sm:py-2 sm:text-sm ${
+            className={`shrink-0 px-3 py-1.5 text-xs font-medium transition-colors sm:px-4 sm:py-2 sm:text-sm ${
               category === cat.key
                 ? "bg-white/10 text-white"
-                : "text-neutral-400 hover:bg-white/5 hover:text-neutral-200"
+                : "text-silver/70 hover:bg-white/5 hover:text-silver"
             }`}
           >
             {cat.label}
@@ -54,23 +54,20 @@ export function TemplateGrid({ onSelectTemplate, onBlank, onAIGenerate, disabled
             key={tpl.id}
             onClick={() => onSelectTemplate(tpl)}
             disabled={disabled}
-            className="group relative overflow-hidden rounded border border-neutral-700 text-left transition-all hover:border-neutral-500 hover:shadow-lg disabled:opacity-50"
+            className="group relative overflow-hidden border border-steel text-left transition-all hover:border-silver/50 hover:shadow-lg disabled:opacity-50"
           >
-            <div className="flex aspect-video items-end bg-neutral-900 p-4">
+            <div className="flex aspect-video items-end bg-navy p-4">
               <div>
                 <p className="font-display text-xl leading-none tracking-tight text-white">
                   {tpl.name}
                 </p>
-                <p className="mt-1.5 text-[10px] text-neutral-500">
-                  {tpl.slideCount} slides
-                </p>
               </div>
-              <span className="absolute right-3 top-3 rounded-full bg-white/5 px-2 py-0.5 text-[10px] capitalize text-neutral-400">
+              <span className="absolute right-3 top-3 bg-white/5 px-2.5 py-0.5 text-xs capitalize text-silver/70">
                 {tpl.category}
               </span>
             </div>
             <div className="px-4 py-2.5">
-              <p className="text-[11px] leading-relaxed text-neutral-400">
+              <p className="text-xs leading-relaxed text-silver/70">
                 {tpl.description}
               </p>
             </div>
@@ -80,7 +77,7 @@ export function TemplateGrid({ onSelectTemplate, onBlank, onAIGenerate, disabled
         <button
           onClick={onAIGenerate}
           disabled={disabled}
-          className="group relative overflow-hidden rounded border border-amber-800/40 bg-amber-950/20 text-left transition-all hover:border-amber-700/60 hover:shadow-lg disabled:opacity-50"
+          className="group relative overflow-hidden border border-amber-800/40 bg-amber-950/20 text-left transition-all hover:border-amber-700/60 hover:shadow-lg disabled:opacity-50"
         >
           <div className="flex aspect-video items-center justify-center">
             <div className="flex flex-col items-center">
@@ -91,7 +88,7 @@ export function TemplateGrid({ onSelectTemplate, onBlank, onAIGenerate, disabled
             </div>
           </div>
           <div className="px-4 py-2.5">
-            <p className="text-[11px] leading-relaxed text-neutral-400">
+            <p className="text-[11px] leading-relaxed text-silver/70">
               Describe a topic and AI creates a full presentation
             </p>
           </div>
@@ -100,7 +97,7 @@ export function TemplateGrid({ onSelectTemplate, onBlank, onAIGenerate, disabled
         <button
           onClick={onBlank}
           disabled={disabled}
-          className="relative overflow-hidden rounded border-2 border-dashed border-neutral-700 text-neutral-500 transition-colors hover:border-neutral-500 hover:text-neutral-300 disabled:opacity-50"
+          className="relative overflow-hidden border-2 border-dashed border-steel text-silver/50 transition-colors hover:border-silver/50 hover:text-silver disabled:opacity-50"
         >
           <div className="flex aspect-video items-center justify-center">
             <div className="flex flex-col items-center">
@@ -111,11 +108,11 @@ export function TemplateGrid({ onSelectTemplate, onBlank, onAIGenerate, disabled
             </div>
           </div>
           <div className="px-4 py-2">
-            <p className="text-xs text-neutral-400">{t.common.noTemplate}</p>
+            <p className="text-xs text-silver/70">{t.common.noTemplate}</p>
           </div>
           {creatingBlank && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/70">
-              <span className="text-xs text-neutral-400">{t.common.creating}</span>
+              <span className="text-xs text-silver/70">{t.common.creating}</span>
             </div>
           )}
         </button>

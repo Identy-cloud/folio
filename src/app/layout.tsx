@@ -115,7 +115,7 @@ export const metadata: Metadata = {
     title: "Folio",
   },
   other: {
-    "theme-color": "#161616",
+    "theme-color": "#082032",
   },
 };
 
@@ -128,7 +128,7 @@ export default function RootLayout({
     <html lang="es" className={`${fontVars} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-sans">
         <I18nProvider>
-          <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[9999] focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:text-black">
+          <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[9999] focus:rounded focus:bg-accent focus:px-4 focus:py-2 focus:text-sm focus:text-white">
             Saltar al contenido
           </a>
           {children}
@@ -143,9 +143,9 @@ export default function RootLayout({
           theme="dark"
           toastOptions={{
             style: {
-              background: "#1e1e1e",
-              border: "1px solid #333",
-              color: "#e5e5e5",
+              background: "var(--color-slate)",
+              border: "1px solid var(--color-steel)",
+              color: "var(--color-silver)",
               fontSize: "13px",
             },
           }}

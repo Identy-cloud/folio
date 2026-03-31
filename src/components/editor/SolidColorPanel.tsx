@@ -53,11 +53,11 @@ export function SolidColorPanel({ value, hex, setHex, applyColor, commitHex, has
     <>
       {themeColors.length > 0 && (
         <div className="mb-1.5">
-          <span className="text-[9px] text-neutral-600 uppercase tracking-wider">Theme</span>
+          <span className="text-[9px] text-silver/40 uppercase tracking-wider">Theme</span>
           <div className="mt-0.5 flex gap-1">
             {themeColors.map((c) => (
               <button key={c} onClick={() => applyColor(c)}
-                className={`h-5 w-5 rounded-sm border transition-transform hover:scale-110 ${value === c && active ? "border-white ring-1 ring-white" : "border-neutral-600"}`}
+                className={`h-5 w-5 rounded-sm border transition-transform hover:scale-110 ${value === c && active ? "border-white ring-1 ring-white" : "border-steel/60"}`}
                 style={{ backgroundColor: c }} title={c} />
             ))}
           </div>
@@ -65,27 +65,27 @@ export function SolidColorPanel({ value, hex, setHex, applyColor, commitHex, has
       )}
       {recentColors.length > 0 && (
         <div className="mb-1.5">
-          <span className="text-[9px] text-neutral-600 uppercase tracking-wider">Recent</span>
+          <span className="text-[9px] text-silver/40 uppercase tracking-wider">Recent</span>
           <div className="mt-0.5 flex gap-1">
             {recentColors.map((c) => (
               <button key={c} onClick={() => applyColor(c)}
-                className={`h-5 w-5 rounded-sm border transition-transform hover:scale-110 ${value === c && active ? "border-white ring-1 ring-white" : "border-neutral-600"}`}
+                className={`h-5 w-5 rounded-sm border transition-transform hover:scale-110 ${value === c && active ? "border-white ring-1 ring-white" : "border-steel/60"}`}
                 style={{ backgroundColor: c }} />
             ))}
           </div>
         </div>
       )}
-      <div className="grid grid-cols-8 gap-1 rounded bg-[#2a2a2a] p-1">
+      <div className="grid grid-cols-8 gap-1 rounded bg-steel p-1">
         {PRESETS.map((c) => (
           <button key={c} onClick={() => applyColor(c)} aria-label={c}
-            className={`h-6 w-6 rounded-sm border transition-transform hover:scale-110 ${value === c && active ? "border-white ring-1 ring-white" : "border-neutral-500"}`}
+            className={`h-6 w-6 rounded-sm border transition-transform hover:scale-110 ${value === c && active ? "border-white ring-1 ring-white" : "border-silver/50"}`}
             style={{ backgroundColor: c }} />
         ))}
       </div>
       <div className="mt-2 flex gap-1">
         <input value={hex} onChange={(e) => setHex(e.target.value)} onBlur={commitHex}
           onKeyDown={(e) => e.key === "Enter" && commitHex()}
-          className="flex-1 rounded border border-neutral-700 bg-[#161616] px-2 py-1 text-[11px] text-neutral-200 outline-none focus:border-neutral-500"
+          className="flex-1 rounded border border-steel bg-navy px-2 py-1 text-[11px] text-silver outline-none focus:border-silver/50"
           placeholder="#000000" />
         {"EyeDropper" in window && (
           <button
@@ -96,7 +96,7 @@ export function SolidColorPanel({ value, hex, setHex, applyColor, commitHex, has
                 applyColor(result.sRGBHex);
               } catch { /* user cancelled */ }
             }}
-            className="rounded border border-neutral-700 px-2 py-1 text-[11px] text-neutral-400 hover:bg-neutral-800 hover:text-white transition-colors"
+            className="rounded border border-steel px-2 py-1 text-[11px] text-silver/70 hover:bg-white/5 hover:text-white transition-colors"
             title="Pick color from screen">
             💧
           </button>
@@ -104,7 +104,7 @@ export function SolidColorPanel({ value, hex, setHex, applyColor, commitHex, has
       </div>
       {!value.startsWith("linear-gradient") && !value.startsWith("radial-gradient") && (
         <div className="mt-1.5 flex items-center gap-1.5">
-          <span className="text-[9px] text-neutral-600">Alpha</span>
+          <span className="text-[9px] text-silver/40">Alpha</span>
           <input type="range" min={0} max={100}
             value={(() => { const m = value.match(/rgba?\([^)]+,\s*([\d.]+)\)/); return m ? Math.round(parseFloat(m[1]) * 100) : 100; })()}
             onChange={(e) => {

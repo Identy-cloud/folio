@@ -73,15 +73,15 @@ export function PresenterClient({ title, slides, slug, presentationId }: Props) 
   const nextSlide = slides[current + 1];
 
   return (
-    <div className="flex h-screen bg-[#0a0a0a] text-white">
+    <div className="flex h-screen bg-navy text-white">
       {/* Main slide */}
       <div className="flex flex-1 flex-col">
         {/* Progress bar */}
-        <div className="h-0.5 w-full bg-neutral-800">
+        <div className="h-0.5 w-full bg-white/5">
           <div className="h-full bg-blue-500 transition-all duration-300" style={{ width: `${((current + 1) / total) * 100}%` }} />
         </div>
-        <div className="flex items-center justify-between border-b border-neutral-800 px-4 py-2">
-          <span className="text-xs text-neutral-400">{title}</span>
+        <div className="flex items-center justify-between border-b border-steel/30 px-4 py-2">
+          <span className="text-xs text-silver/70">{title}</span>
           <div className="flex items-center gap-3">
             {canShow && (
               <button
@@ -89,13 +89,13 @@ export function PresenterClient({ title, slides, slug, presentationId }: Props) 
                 className={`rounded px-3 py-1 text-[10px] font-medium tracking-wider uppercase transition-colors ${
                   audienceOpen
                     ? "bg-blue-600 text-white hover:bg-blue-500"
-                    : "bg-neutral-800 text-neutral-300 hover:bg-neutral-700"
+                    : "bg-white/5 text-silver hover:bg-steel"
                 }`}
               >
                 {audienceOpen ? "Close audience" : "Present to audience"}
               </button>
             )}
-            <span className="text-xs text-neutral-500">
+            <span className="text-xs text-silver/50">
               {current + 1} / {total}
             </span>
           </div>
@@ -112,7 +112,7 @@ export function PresenterClient({ title, slides, slug, presentationId }: Props) 
           {currentSlide && (
             <SlidePreview
               slide={currentSlide}
-              className="w-full max-w-4xl border border-neutral-800"
+              className="w-full max-w-4xl border border-steel/30"
             />
           )}
           {laser && (
@@ -125,19 +125,19 @@ export function PresenterClient({ title, slides, slug, presentationId }: Props) 
       </div>
 
       {/* Sidebar: next slide + notes */}
-      <div className="hidden w-80 flex-col border-l border-neutral-800 md:flex lg:w-96">
+      <div className="hidden w-80 flex-col border-l border-steel/30 md:flex lg:w-96">
         {/* Next slide preview */}
-        <div className="border-b border-neutral-800 p-3">
-          <p className="mb-2 text-[10px] font-medium uppercase tracking-wider text-neutral-500">
+        <div className="border-b border-steel/30 p-3">
+          <p className="mb-2 text-[10px] font-medium uppercase tracking-wider text-silver/50">
             Next
           </p>
           {nextSlide ? (
             <SlidePreview
               slide={nextSlide}
-              className="w-full border border-neutral-800 opacity-70"
+              className="w-full border border-steel/30 opacity-70"
             />
           ) : (
-            <div className="flex aspect-video items-center justify-center rounded bg-neutral-900 text-xs text-neutral-600">
+            <div className="flex aspect-video items-center justify-center rounded bg-navy text-xs text-silver/40">
               End
             </div>
           )}
@@ -152,46 +152,46 @@ export function PresenterClient({ title, slides, slug, presentationId }: Props) 
           }}
         >
           <div className="flex-1 overflow-y-auto p-4">
-            <p className="mb-2 text-[10px] font-medium uppercase tracking-wider text-neutral-500">
+            <p className="mb-2 text-[10px] font-medium uppercase tracking-wider text-silver/50">
               Notes
             </p>
             {currentSlide?.notes ? (
-              <p className="whitespace-pre-wrap text-sm leading-relaxed text-neutral-300">
+              <p className="whitespace-pre-wrap text-sm leading-relaxed text-silver">
                 {currentSlide.notes}
               </p>
             ) : (
-              <p className="text-xs italic text-neutral-600">No notes for this slide</p>
+              <p className="text-xs italic text-silver/40">No notes for this slide</p>
             )}
           </div>
         </div>
 
         {/* Q&A */}
-        <div className="border-t border-neutral-800 flex-1 overflow-hidden">
+        <div className="border-t border-steel/30 flex-1 overflow-hidden">
           <QaPresenter presentationId={presentationId} />
         </div>
 
         {/* Controls */}
-        <div className="flex items-center justify-between border-t border-neutral-800 px-4 py-3">
+        <div className="flex items-center justify-between border-t border-steel/30 px-4 py-3">
           <button
             onClick={goPrev}
             disabled={current === 0}
-            className="rounded bg-neutral-800 px-4 py-2 text-xs text-neutral-300 hover:bg-neutral-700 disabled:opacity-30 transition-colors"
+            className="rounded bg-white/5 px-4 py-2 text-xs text-silver hover:bg-steel disabled:opacity-30 transition-colors"
           >
             ← Prev
           </button>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setTimerRunning(!timerRunning)}
-              className="text-[10px] text-neutral-500 hover:text-neutral-300 transition-colors"
+              className="text-[10px] text-silver/50 hover:text-silver transition-colors"
             >
               {timerRunning ? "⏸" : "▶"}
             </button>
-            <span className="font-mono text-sm text-neutral-300 tabular-nums">
+            <span className="font-mono text-sm text-silver tabular-nums">
               {formatTime(elapsed)}
             </span>
             <button
               onClick={() => { setElapsed(0); setTimerRunning(true); }}
-              className="text-[10px] text-neutral-500 hover:text-neutral-300 transition-colors"
+              className="text-[10px] text-silver/50 hover:text-silver transition-colors"
             >
               ↺
             </button>
@@ -200,14 +200,14 @@ export function PresenterClient({ title, slides, slug, presentationId }: Props) 
             href={`/p/${slug}`}
             target="_blank"
             rel="noopener"
-            className="text-[10px] text-neutral-500 hover:text-neutral-300 transition-colors"
+            className="text-[10px] text-silver/50 hover:text-silver transition-colors"
           >
             Open viewer ↗
           </a>
           <button
             onClick={goNext}
             disabled={current === total - 1}
-            className="rounded bg-neutral-800 px-4 py-2 text-xs text-neutral-300 hover:bg-neutral-700 disabled:opacity-30 transition-colors"
+            className="rounded bg-white/5 px-4 py-2 text-xs text-silver hover:bg-steel disabled:opacity-30 transition-colors"
           >
             Next →
           </button>

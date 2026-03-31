@@ -18,7 +18,7 @@ interface Props {
 
 export function ProfileTabs({ active, onChange }: Props) {
   return (
-    <div className="flex gap-1 overflow-x-auto border-b border-neutral-800 pb-px scrollbar-none">
+    <div className="flex gap-1 overflow-x-auto border-b border-steel/30 pb-px scrollbar-none">
       {TABS.map(({ id, label, Icon }) => (
         <button
           key={id}
@@ -26,7 +26,7 @@ export function ProfileTabs({ active, onChange }: Props) {
           className={`flex shrink-0 items-center gap-1.5 px-3 py-2 text-xs font-medium tracking-wider transition-colors ${
             active === id
               ? "border-b-2 border-white text-white"
-              : "text-neutral-500 hover:text-neutral-300"
+              : "text-silver/50 hover:text-silver"
           }`}
         >
           <Icon size={14} />

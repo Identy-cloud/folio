@@ -16,14 +16,14 @@ export default function ViewerError({
   }, [error]);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-[#161616] px-4 text-center">
-      <p className="text-[10px] tracking-[0.5em] text-neutral-600 uppercase">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-navy px-4 text-center">
+      <p className="text-[10px] tracking-[0.5em] text-silver/40 uppercase">
         Viewer error
       </p>
       <h1 className="mt-4 font-display text-4xl tracking-tight text-white sm:text-6xl">
         COULDN&apos;T LOAD PRESENTATION
       </h1>
-      <p className="mt-4 max-w-md text-sm leading-relaxed text-neutral-400">
+      <p className="mt-4 max-w-md text-sm leading-relaxed text-silver/70">
         This presentation failed to load. It may have been removed or there was a
         temporary issue.
       </p>
@@ -33,20 +33,20 @@ export default function ViewerError({
         </pre>
       )}
       {error?.digest && (
-        <p className="mt-2 font-mono text-[10px] text-neutral-700">
+        <p className="mt-2 font-mono text-[10px] text-silver/40">
           ID: {error.digest}
         </p>
       )}
       <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:gap-4">
         <button
           onClick={reset}
-          className="bg-white px-6 py-2.5 text-xs font-semibold tracking-[0.2em] text-black uppercase transition-colors hover:bg-neutral-200"
+          className="bg-accent px-6 py-2.5 text-xs font-semibold tracking-[0.2em] text-white uppercase transition-colors hover:bg-accent-hover"
         >
           Try again
         </button>
         <Link
           href="/"
-          className="border border-neutral-700 px-6 py-2.5 text-xs tracking-[0.2em] text-neutral-300 uppercase transition-colors hover:border-white hover:text-white"
+          className="border border-steel px-6 py-2.5 text-xs tracking-[0.2em] text-silver uppercase transition-colors hover:border-white hover:text-white"
         >
           Go home
         </Link>

@@ -1,10 +1,19 @@
 "use client";
 
-import { THEMES, ALL_FONTS } from "@/lib/templates/themes";
+import { THEMES } from "@/lib/templates/themes";
 import { FREE_THEMES } from "@/lib/plan-limits";
 import { toast } from "sonner";
+import { Lock } from "@phosphor-icons/react";
 import { useTranslation } from "@/lib/i18n/context";
 import type { usePlanLimits } from "@/hooks/usePlanLimits";
+
+const THEME_DESCRIPTIONS: Record<string, string> = {
+  "editorial-blue": "Bold headlines, clean agency feel",
+  monochrome: "Elegant black & white contrast",
+  "dark-editorial": "Modern dark with industrial edge",
+  "warm-magazine": "Classic editorial warmth",
+  "swiss-minimal": "Clean Swiss-style typography",
+};
 
 interface Props {
   themeKeys: string[];
@@ -33,12 +42,12 @@ export function ThemeGrid({ themeKeys, creating, limits, onSelect }: Props) {
               onSelect(key);
             }}
             disabled={creating !== null}
-            className={`group relative overflow-hidden rounded border text-left transition-shadow hover:shadow-lg disabled:opacity-50 ${
-              isLocked ? "border-neutral-800 opacity-60" : "border-neutral-700"
+            className={`group relative overflow-hidden border text-left transition-shadow hover:shadow-lg disabled:opacity-50 ${
+              isLocked ? "border-steel/30" : "border-steel"
             }`}
           >
             <div
-              className="flex aspect-video items-end p-4"
+              className={`flex aspect-video items-end p-4 ${isLocked ? "opacity-50" : ""}`}
               style={{ backgroundColor: th.background }}
             >
               <div>
@@ -58,23 +67,20 @@ export function ThemeGrid({ themeKeys, creating, limits, onSelect }: Props) {
                 style={{ backgroundColor: th.accent }}
               />
             </div>
-            <div className="flex items-center justify-between px-4 py-2">
-              <p className="text-xs text-neutral-400">
-                {ALL_FONTS.find((f) => f.value === th.fontDisplay)?.label ??
-                  th.fontDisplay}{" "}
-                +{" "}
-                {ALL_FONTS.find((f) => f.value === th.fontBody)?.label ??
-                  th.fontBody}
+            <div className="flex items-center justify-between gap-3 px-4 py-2.5">
+              <p className="truncate text-sm text-silver/70">
+                {THEME_DESCRIPTIONS[key] ?? th.label}
               </p>
               {isLocked && (
-                <span className="rounded bg-amber-500/20 px-1.5 py-0.5 text-[9px] font-medium text-amber-400">
+                <span className="flex items-center gap-1 bg-amber-500/15 px-2 py-0.5 text-[10px] font-semibold text-amber-400">
+                  <Lock size={10} weight="fill" />
                   PRO
                 </span>
               )}
             </div>
             {creating === key && (
               <div className="absolute inset-0 flex items-center justify-center bg-black/70">
-                <span className="text-xs text-neutral-400">
+                <span className="text-xs text-silver/70">
                   {t.common.creating}
                 </span>
               </div>

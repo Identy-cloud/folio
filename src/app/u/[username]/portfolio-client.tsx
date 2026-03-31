@@ -19,7 +19,7 @@ interface Props {
 export function PortfolioClient({ presentations }: Props) {
   if (presentations.length === 0) {
     return (
-      <p className="py-16 text-center text-sm text-neutral-600">
+      <p className="py-16 text-center text-sm text-silver/40">
         No public presentations yet.
       </p>
     );
@@ -31,9 +31,9 @@ export function PortfolioClient({ presentations }: Props) {
         <Link
           key={p.id}
           href={`/p/${p.slug}`}
-          className="group overflow-hidden border border-neutral-800 bg-[#1a1a1a] transition-colors hover:border-neutral-600"
+          className="group overflow-hidden border border-steel/30 bg-navy transition-colors hover:border-silver/40"
         >
-          <div className="relative aspect-video w-full bg-neutral-900">
+          <div className="relative aspect-video w-full bg-navy">
             {p.thumbnailUrl ? (
               <img
                 src={p.thumbnailUrl}
@@ -43,17 +43,17 @@ export function PortfolioClient({ presentations }: Props) {
               />
             ) : (
               <div className="flex h-full w-full items-center justify-center">
-                <span className="text-xs tracking-[0.2em] text-neutral-700 uppercase">
+                <span className="text-xs tracking-[0.2em] text-silver/40 uppercase">
                   No preview
                 </span>
               </div>
             )}
           </div>
           <div className="p-3 sm:p-4">
-            <h3 className="truncate text-sm font-medium text-neutral-200 group-hover:text-white">
+            <h3 className="truncate text-sm font-medium text-silver group-hover:text-white">
               {p.title}
             </h3>
-            <div className="mt-2 flex items-center gap-4 text-xs text-neutral-500">
+            <div className="mt-2 flex items-center gap-4 text-xs text-silver/50">
               <span className="flex items-center gap-1">
                 <Eye size={14} />
                 {p.viewCount}

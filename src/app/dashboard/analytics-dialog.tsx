@@ -49,24 +49,24 @@ export function AnalyticsDialog({ open, presentationId, title, onClose }: Props)
       open={open}
       ariaLabel="Analytics"
       onClose={onClose}
-      className="w-full max-w-md rounded bg-[#1e1e1e] border border-neutral-700 p-6 shadow-xl mx-4"
+      className="w-full max-w-md rounded bg-slate border border-steel p-6 shadow-xl mx-4"
     >
       <div className="flex items-center gap-2 mb-4">
         <ChartBar size={18} weight="duotone" className="text-blue-400" />
-        <h3 className="font-display text-lg tracking-tight text-neutral-200">Analytics</h3>
+        <h3 className="font-display text-lg tracking-tight text-silver">Analytics</h3>
       </div>
-      <p className="text-xs text-neutral-500 mb-4">{title}</p>
+      <p className="text-xs text-silver/50 mb-4">{title}</p>
 
-      {loading && <p className="py-8 text-center text-xs text-neutral-500">Loading...</p>}
+      {loading && <p className="py-8 text-center text-xs text-silver/50">Loading...</p>}
 
       {error && !data && (
         <div className="py-8 text-center">
-          <p className="text-xs text-neutral-500 mb-3">
+          <p className="text-xs text-silver/50 mb-3">
             Upgrade to Creator plan to access analytics.
           </p>
           <button
             onClick={() => setShowUpgrade(true)}
-            className="rounded bg-white px-4 py-2 text-xs font-medium text-[#161616] hover:bg-neutral-200 transition-colors"
+            className="rounded bg-accent px-4 py-2 text-xs font-medium text-white hover:bg-accent-hover transition-colors"
           >
             Upgrade
           </button>
@@ -82,26 +82,26 @@ export function AnalyticsDialog({ open, presentationId, title, onClose }: Props)
       {data && (
         <div className="space-y-4">
           <div className="grid grid-cols-3 gap-3">
-            <div className="rounded border border-neutral-700 p-3 text-center">
-              <Eye size={16} className="mx-auto text-neutral-500" />
+            <div className="rounded border border-steel p-3 text-center">
+              <Eye size={16} className="mx-auto text-silver/50" />
               <p className="mt-1 font-display text-2xl text-white">{data.totalViews}</p>
-              <p className="text-[9px] text-neutral-500 uppercase tracking-wider">Views</p>
+              <p className="text-[9px] text-silver/50 uppercase tracking-wider">Views</p>
             </div>
-            <div className="rounded border border-neutral-700 p-3 text-center">
-              <Users size={16} className="mx-auto text-neutral-500" />
+            <div className="rounded border border-steel p-3 text-center">
+              <Users size={16} className="mx-auto text-silver/50" />
               <p className="mt-1 font-display text-2xl text-white">{data.uniqueViewers}</p>
-              <p className="text-[9px] text-neutral-500 uppercase tracking-wider">Unique</p>
+              <p className="text-[9px] text-silver/50 uppercase tracking-wider">Unique</p>
             </div>
-            <div className="rounded border border-neutral-700 p-3 text-center">
-              <Timer size={16} className="mx-auto text-neutral-500" />
+            <div className="rounded border border-steel p-3 text-center">
+              <Timer size={16} className="mx-auto text-silver/50" />
               <p className="mt-1 font-display text-2xl text-white">{data.avgDuration}s</p>
-              <p className="text-[9px] text-neutral-500 uppercase tracking-wider">Avg time</p>
+              <p className="text-[9px] text-silver/50 uppercase tracking-wider">Avg time</p>
             </div>
           </div>
 
           {data.viewsBySlide.length > 0 && (
             <div>
-              <p className="mb-2 text-[10px] font-medium text-neutral-400 uppercase tracking-wider">
+              <p className="mb-2 text-[10px] font-medium text-silver/70 uppercase tracking-wider">
                 Views by slide
               </p>
               <div className="space-y-1">
@@ -109,16 +109,16 @@ export function AnalyticsDialog({ open, presentationId, title, onClose }: Props)
                   const max = Math.max(...data.viewsBySlide.map((v) => v.views), 1);
                   return (
                     <div key={s.slideIndex} className="flex items-center gap-2">
-                      <span className="w-8 text-right text-[10px] text-neutral-500">
+                      <span className="w-8 text-right text-[10px] text-silver/50">
                         #{s.slideIndex + 1}
                       </span>
-                      <div className="flex-1 h-4 rounded bg-neutral-800 overflow-hidden">
+                      <div className="flex-1 h-4 rounded bg-white/5 overflow-hidden">
                         <div
                           className="h-full rounded bg-blue-500/40"
                           style={{ width: `${(s.views / max) * 100}%` }}
                         />
                       </div>
-                      <span className="w-8 text-[10px] text-neutral-400">{s.views}</span>
+                      <span className="w-8 text-[10px] text-silver/70">{s.views}</span>
                     </div>
                   );
                 })}
@@ -132,14 +132,14 @@ export function AnalyticsDialog({ open, presentationId, title, onClose }: Props)
         {presentationId && data && (
           <a
             href={`/dashboard/analytics/${presentationId}`}
-            className="flex-1 rounded border border-neutral-700 py-2 text-center text-xs text-neutral-400 hover:bg-neutral-800 transition-colors"
+            className="flex-1 rounded border border-steel py-2 text-center text-xs text-silver/70 hover:bg-white/5 transition-colors"
           >
             Full report →
           </a>
         )}
         <button
           onClick={onClose}
-          className="flex-1 rounded px-4 py-2 text-xs text-neutral-400 hover:bg-neutral-800 transition-colors"
+          className="flex-1 rounded px-4 py-2 text-xs text-silver/70 hover:bg-white/5 transition-colors"
         >
           Close
         </button>

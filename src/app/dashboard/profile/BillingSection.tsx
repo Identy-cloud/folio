@@ -49,7 +49,7 @@ export function BillingSection() {
   if (loading) return (
     <div className="space-y-4">
       <Bone className="h-3 w-24" />
-      <div className="border border-neutral-800 p-4 space-y-3">
+      <div className="border border-steel/30 p-4 space-y-3">
         <Bone className="h-6 w-20" />
         <Bone className="h-3 w-32" />
       </div>
@@ -61,15 +61,15 @@ export function BillingSection() {
 
   return (
     <div className="space-y-4">
-      <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-500">
+      <p className="text-[10px] font-medium uppercase tracking-wider text-silver/50">
         Facturacion
       </p>
 
       {/* Plan + status */}
-      <div className="border border-neutral-800 p-4">
+      <div className="border border-steel/30 p-4">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-lg font-medium text-neutral-200">
+            <p className="text-lg font-medium text-silver">
               {PLAN_LABELS[data.plan] ?? data.plan}
             </p>
             <div className="mt-1 flex items-center gap-2">
@@ -78,24 +78,24 @@ export function BillingSection() {
                 {status.text}
               </span>
               {data.plan !== "free" && (
-                <span className="text-[11px] text-neutral-500">
+                <span className="text-[11px] text-silver/50">
                   {data.billingPeriod === "annual" ? "Anual" : "Mensual"}
                 </span>
               )}
             </div>
             {data.currentPeriodEnd && data.plan !== "free" && (
-              <p className="mt-1 text-[11px] text-neutral-500">
+              <p className="mt-1 text-[11px] text-silver/50">
                 Renueva el {new Date(data.currentPeriodEnd).toLocaleDateString()}
               </p>
             )}
           </div>
           <div className="flex flex-col items-end gap-2">
             {data.plan !== "free" && (
-              <button onClick={openPortal} className="text-xs tracking-[0.15em] text-neutral-500 uppercase hover:text-white transition-colors">
+              <button onClick={openPortal} className="text-xs tracking-[0.15em] text-silver/50 uppercase hover:text-white transition-colors">
                 Gestionar
               </button>
             )}
-            <Link href="/pricing" className="text-xs tracking-[0.15em] text-neutral-400 uppercase hover:text-white transition-colors">
+            <Link href="/pricing" className="text-xs tracking-[0.15em] text-silver/70 uppercase hover:text-white transition-colors">
               {data.plan === "free" ? "Upgrade" : (t.dashboard.profileUpgrade ?? "Ver planes")}
             </Link>
           </div>
@@ -104,20 +104,20 @@ export function BillingSection() {
 
       {/* Payment method */}
       {data.paymentMethod && (
-        <div className="border border-neutral-800 p-4">
+        <div className="border border-steel/30 p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <CreditCard size={20} className="text-neutral-500" />
+              <CreditCard size={20} className="text-silver/50" />
               <div>
-                <p className="text-xs text-neutral-200">
+                <p className="text-xs text-silver">
                   {data.paymentMethod.brand.charAt(0).toUpperCase() + data.paymentMethod.brand.slice(1)} **** {data.paymentMethod.last4}
                 </p>
-                <p className="text-[11px] text-neutral-500">
+                <p className="text-[11px] text-silver/50">
                   Exp. {String(data.paymentMethod.expMonth).padStart(2, "0")}/{data.paymentMethod.expYear}
                 </p>
               </div>
             </div>
-            <button onClick={openPortal} className="text-xs text-neutral-500 hover:text-white transition-colors">
+            <button onClick={openPortal} className="text-xs text-silver/50 hover:text-white transition-colors">
               Cambiar
             </button>
           </div>
@@ -126,21 +126,21 @@ export function BillingSection() {
 
       {/* Invoices */}
       {data.invoices.length > 0 && (
-        <div className="border border-neutral-800 p-4">
+        <div className="border border-steel/30 p-4">
           <div className="mb-3 flex items-center gap-2">
-            <Receipt size={14} className="text-neutral-500" />
-            <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-500">Facturas recientes</p>
+            <Receipt size={14} className="text-silver/50" />
+            <p className="text-[10px] font-medium uppercase tracking-wider text-silver/50">Facturas recientes</p>
           </div>
           <div className="space-y-2">
             {data.invoices.map((inv) => (
               <div key={inv.id} className="flex items-center justify-between text-xs">
-                <span className="text-neutral-400">{new Date(inv.date).toLocaleDateString()}</span>
-                <span className="text-neutral-300">{formatAmount(inv.amount, inv.currency)}</span>
-                <span className={`text-[10px] ${inv.status === "paid" ? "text-green-500" : "text-neutral-500"}`}>
+                <span className="text-silver/70">{new Date(inv.date).toLocaleDateString()}</span>
+                <span className="text-silver">{formatAmount(inv.amount, inv.currency)}</span>
+                <span className={`text-[10px] ${inv.status === "paid" ? "text-green-500" : "text-silver/50"}`}>
                   {inv.status === "paid" ? "Pagada" : inv.status}
                 </span>
                 {inv.url && (
-                  <a href={inv.url} target="_blank" rel="noopener noreferrer" aria-label="Ver factura" className="text-neutral-500 hover:text-white transition-colors">
+                  <a href={inv.url} target="_blank" rel="noopener noreferrer" aria-label="Ver factura" className="text-silver/50 hover:text-white transition-colors">
                     <ArrowSquareOut size={14} />
                   </a>
                 )}

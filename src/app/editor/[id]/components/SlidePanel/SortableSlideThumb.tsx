@@ -70,7 +70,7 @@ export const SortableSlideThumb = memo(function SortableSlideThumb({
         } ${
           isActive
             ? "border-blue-500"
-            : "border-transparent hover:border-neutral-600"
+            : "border-transparent hover:border-silver/40"
         }`}
       >
         <SlidePreview slide={slide} className="w-full rounded-sm" />

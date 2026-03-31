@@ -32,17 +32,17 @@ export function IconProperties({ element }: Props) {
 
   return (
     <div className="space-y-3">
-      <span className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">Icon</span>
+      <span className="text-[11px] font-medium text-silver/70 uppercase tracking-wider">Icon</span>
 
       {IconComponent && (
-        <div className="flex items-center gap-2 rounded border border-neutral-800 px-3 py-2">
+        <div className="flex items-center gap-2 rounded border border-steel/30 px-3 py-2">
           <IconComponent size={20} weight={element.iconWeight} color={element.color} />
-          <span className="text-xs text-neutral-300">{entry.label}</span>
+          <span className="text-xs text-silver">{entry.label}</span>
         </div>
       )}
 
       <div>
-        <span className="mb-1 block text-[10px] text-neutral-500">Weight</span>
+        <span className="mb-1 block text-[10px] text-silver/50">Weight</span>
         <div className="grid grid-cols-3 gap-1">
           {WEIGHTS.map((w) => (
             <button
@@ -50,8 +50,8 @@ export function IconProperties({ element }: Props) {
               onClick={() => update({ iconWeight: w.value })}
               className={`rounded px-2 py-1 text-[10px] transition-colors ${
                 element.iconWeight === w.value
-                  ? "bg-white text-[#161616]"
-                  : "text-neutral-500 hover:bg-neutral-800"
+                  ? "bg-accent text-white"
+                  : "text-silver/50 hover:bg-white/5"
               }`}
             >
               {w.label}

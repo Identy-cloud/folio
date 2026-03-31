@@ -87,8 +87,8 @@ export function AIImageDialog({ open, onClose }: Props) {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[10vh] md:pt-[20vh] px-4" role="dialog" aria-modal="true" onClick={onClose}>
-      <div className="w-full max-w-md rounded border border-neutral-700 bg-[#1e1e1e] shadow-2xl" onClick={(e) => e.stopPropagation()}>
-        <div className="flex items-center gap-2 border-b border-neutral-700 px-4 py-3">
+      <div className="w-full max-w-md rounded border border-steel bg-slate shadow-2xl" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center gap-2 border-b border-steel px-4 py-3">
           <Sparkle size={16} weight="fill" className="text-amber-400" />
           <span className="text-sm font-medium text-white">AI Image</span>
         </div>
@@ -99,31 +99,31 @@ export function AIImageDialog({ open, onClose }: Props) {
             onChange={(e) => setPrompt(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Escape") onClose(); if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) handleGenerate(); }}
             placeholder="Describe the image you want..."
-            className="h-20 w-full resize-none rounded border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-white outline-none placeholder:text-neutral-500 focus:border-neutral-500"
+            className="h-20 w-full resize-none rounded border border-steel bg-navy px-3 py-2 text-sm text-white outline-none placeholder:text-silver/50 focus:border-silver/50"
             maxLength={1000}
           />
           <div className="flex gap-1.5">
             {SIZE_PRESETS.map((p, i) => (
-              <button key={p.label} onClick={() => setSizeIdx(i)} className={`rounded px-2.5 py-1 text-xs transition-colors ${i === sizeIdx ? "bg-white text-[#161616]" : "bg-neutral-800 text-neutral-400 hover:bg-neutral-700"}`}>
+              <button key={p.label} onClick={() => setSizeIdx(i)} className={`rounded px-2.5 py-1 text-xs transition-colors ${i === sizeIdx ? "bg-accent text-white" : "bg-white/5 text-silver/70 hover:bg-steel"}`}>
                 {p.label}
               </button>
             ))}
           </div>
           {error && <p className="text-xs text-red-400">{error}</p>}
           {loading && (
-            <div className="flex items-center justify-center gap-2 rounded border border-neutral-800 bg-neutral-900/50 py-8">
-              <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-neutral-500 border-t-white" />
-              <span className="text-xs text-neutral-400">Generating image (5-15s)...</span>
+            <div className="flex items-center justify-center gap-2 rounded border border-steel/30 bg-navy/50 py-8">
+              <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-silver/50 border-t-white" />
+              <span className="text-xs text-silver/70">Generating image (5-15s)...</span>
             </div>
           )}
           {preview && (
             <div className="space-y-2">
-              <img src={preview.url} alt="AI generated preview" className="w-full rounded border border-neutral-700 object-contain max-h-48" />
+              <img src={preview.url} alt="AI generated preview" className="w-full rounded border border-steel object-contain max-h-48" />
               <div className="flex gap-2">
-                <button onClick={handleGenerate} disabled={loading} className="flex-1 rounded border border-neutral-700 px-3 py-1.5 text-xs text-neutral-300 hover:bg-neutral-800 transition-colors disabled:opacity-40">
+                <button onClick={handleGenerate} disabled={loading} className="flex-1 rounded border border-steel px-3 py-1.5 text-xs text-silver hover:bg-white/5 transition-colors disabled:opacity-40">
                   Regenerate
                 </button>
-                <button onClick={handleInsert} className="flex-1 flex items-center justify-center gap-1.5 rounded bg-white px-3 py-1.5 text-xs font-medium text-[#161616] hover:bg-neutral-200 transition-colors">
+                <button onClick={handleInsert} className="flex-1 flex items-center justify-center gap-1.5 rounded bg-accent px-3 py-1.5 text-xs font-medium text-white hover:bg-accent-hover transition-colors">
                   <ImageSquare size={14} /> Insert
                 </button>
               </div>
@@ -131,10 +131,10 @@ export function AIImageDialog({ open, onClose }: Props) {
           )}
           {!preview && !loading && (
             <div className="flex items-center justify-between">
-              <span className="text-[10px] text-neutral-600">{prompt.length}/1000 | Ctrl+Enter</span>
+              <span className="text-[10px] text-silver/40">{prompt.length}/1000 | Ctrl+Enter</span>
               <div className="flex gap-2">
-                <button onClick={onClose} className="rounded px-3 py-1.5 text-xs text-neutral-400 hover:text-neutral-200 transition-colors">Cancel</button>
-                <button onClick={handleGenerate} disabled={!prompt.trim()} className="flex items-center gap-1.5 rounded bg-white px-3 py-1.5 text-xs font-medium text-[#161616] hover:bg-neutral-200 disabled:opacity-40 disabled:pointer-events-none transition-colors">
+                <button onClick={onClose} className="rounded px-3 py-1.5 text-xs text-silver/70 hover:text-silver transition-colors">Cancel</button>
+                <button onClick={handleGenerate} disabled={!prompt.trim()} className="flex items-center gap-1.5 rounded bg-accent px-3 py-1.5 text-xs font-medium text-white hover:bg-accent-hover disabled:opacity-40 disabled:pointer-events-none transition-colors">
                   Generate
                 </button>
               </div>

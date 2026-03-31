@@ -45,22 +45,22 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#161616] px-4">
+    <div className="flex min-h-screen items-center justify-center bg-navy px-4">
       <div className="w-full max-w-sm space-y-8">
         <div className="text-center">
           <h1 className="font-display text-5xl tracking-tight text-white sm:text-7xl">
             FOLIO
           </h1>
-          <p className="mt-2 text-[11px] tracking-[0.4em] text-neutral-500 uppercase">
+          <p className="mt-2 text-[11px] tracking-[0.4em] text-silver/50 uppercase">
             {t.auth.resetPassword}
           </p>
-          <div className="mx-auto mt-6 h-px w-12 bg-neutral-700" />
+          <div className="mx-auto mt-6 h-px w-12 bg-steel" />
         </div>
 
         {done ? (
           <div className="text-center">
             <p className="text-sm text-green-400">{t.auth.passwordUpdated}</p>
-            <p className="mt-2 text-xs text-neutral-500">{t.auth.redirecting}</p>
+            <p className="mt-2 text-xs text-silver/50">{t.auth.redirecting}</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-3">
@@ -73,7 +73,7 @@ export default function ResetPasswordPage() {
               minLength={6}
               autoFocus
               aria-label={t.auth.newPassword}
-              className="w-full border-b border-neutral-700 bg-transparent px-2 py-3 text-sm text-white placeholder-neutral-500 outline-none focus:border-white transition-colors"
+              className="w-full border-b border-steel bg-transparent px-2 py-3 text-sm text-white placeholder-neutral-500 outline-none focus:border-white transition-colors"
             />
             <input
               type="password"
@@ -83,7 +83,7 @@ export default function ResetPasswordPage() {
               required
               minLength={6}
               aria-label={t.auth.confirmPassword}
-              className="w-full border-b border-neutral-700 bg-transparent px-2 py-3 text-sm text-white placeholder-neutral-500 outline-none focus:border-white transition-colors"
+              className="w-full border-b border-steel bg-transparent px-2 py-3 text-sm text-white placeholder-neutral-500 outline-none focus:border-white transition-colors"
             />
 
             {error && (
@@ -93,7 +93,7 @@ export default function ResetPasswordPage() {
             <button
               type="submit"
               disabled={loading}
-              className="mt-4 w-full bg-white py-3 text-xs font-semibold tracking-[0.25em] text-black uppercase hover:bg-neutral-200 disabled:opacity-50 transition-colors"
+              className="mt-4 w-full bg-accent py-3 text-xs font-semibold tracking-[0.25em] text-white uppercase hover:bg-accent-hover disabled:opacity-50 transition-colors"
             >
               {loading ? "..." : t.auth.updatePassword}
             </button>

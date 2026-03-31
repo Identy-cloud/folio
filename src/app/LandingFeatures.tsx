@@ -16,16 +16,16 @@ export function LandingFeatures() {
   ];
 
   return (
-    <section className="border-t border-neutral-800 px-4 py-16 sm:px-8 sm:py-24">
-      <p className="text-center text-[10px] tracking-[0.5em] text-neutral-500 uppercase">{l.featuresLabel}</p>
+    <section className="border-t border-steel/30 px-4 py-16 sm:px-8 sm:py-24">
+      <p className="text-center text-[10px] tracking-[0.5em] text-silver/50 uppercase">{l.featuresLabel}</p>
       <h2 className="mt-3 text-center font-display text-3xl tracking-tight sm:text-5xl">
         {l.featuresHeading}
       </h2>
       <div className="mx-auto mt-12 grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {features.map((f) => (
-          <div key={f.title} className="border border-neutral-800 p-6">
+          <div key={f.title} className="border border-steel/30 p-6">
             <h3 className="font-display text-lg tracking-tight">{f.title}</h3>
-            <p className="mt-2 text-xs leading-relaxed text-neutral-400">{f.desc}</p>
+            <p className="mt-2 text-xs leading-relaxed text-silver/70">{f.desc}</p>
           </div>
         ))}
       </div>

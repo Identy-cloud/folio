@@ -65,14 +65,14 @@ export function ReportModal({ presentationId, onClose }: Props) {
         onClick={onClose}
       >
         <div
-          className="w-full max-w-md rounded-t-xl bg-neutral-900 p-6 text-center md:rounded-xl"
+          className="w-full max-w-md rounded-t-xl bg-navy p-6 text-center md:rounded-xl"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-green-500/20 text-green-400">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 6L9 17l-5-5" /></svg>
           </div>
           <h3 className="text-sm font-semibold text-white">Report submitted</h3>
-          <p className="mt-1 text-xs text-neutral-400">
+          <p className="mt-1 text-xs text-silver/70">
             Thank you. We will review this content shortly.
           </p>
           <button
@@ -93,20 +93,20 @@ export function ReportModal({ presentationId, onClose }: Props) {
     >
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-md space-y-4 rounded-t-xl bg-neutral-900 p-6 md:rounded-xl"
+        className="w-full max-w-md space-y-4 rounded-t-xl bg-navy p-6 md:rounded-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <h3 className="text-sm font-semibold text-white">Report content</h3>
-        <p className="text-xs text-neutral-400">
+        <p className="text-xs text-silver/70">
           If this presentation violates our guidelines, please let us know.
         </p>
 
         <label className="block">
-          <span className="text-xs text-neutral-400">Reason</span>
+          <span className="text-xs text-silver/70">Reason</span>
           <select
             value={reason}
             onChange={(e) => setReason(e.target.value as Reason)}
-            className="mt-1 w-full cursor-pointer rounded border border-neutral-700 bg-neutral-800 px-3 py-2.5 text-sm text-white outline-none focus:border-neutral-500"
+            className="mt-1 w-full cursor-pointer rounded border border-steel bg-white/5 px-3 py-2.5 text-sm text-white outline-none focus:border-silver/50"
           >
             {REASONS.map((r) => (
               <option key={r.value} value={r.value}>{r.label}</option>
@@ -115,25 +115,25 @@ export function ReportModal({ presentationId, onClose }: Props) {
         </label>
 
         <label className="block">
-          <span className="text-xs text-neutral-400">Description (required)</span>
+          <span className="text-xs text-silver/70">Description (required)</span>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={3}
             maxLength={2000}
             placeholder="Describe the issue in detail..."
-            className="mt-1 w-full resize-none rounded border border-neutral-700 bg-neutral-800 px-3 py-2.5 text-sm text-white placeholder-neutral-500 outline-none focus:border-neutral-500"
+            className="mt-1 w-full resize-none rounded border border-steel bg-white/5 px-3 py-2.5 text-sm text-white placeholder-neutral-500 outline-none focus:border-silver/50"
           />
         </label>
 
         <label className="block">
-          <span className="text-xs text-neutral-400">Your email (optional)</span>
+          <span className="text-xs text-silver/70">Your email (optional)</span>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@example.com"
-            className="mt-1 w-full rounded border border-neutral-700 bg-neutral-800 px-3 py-2.5 text-sm text-white placeholder-neutral-500 outline-none focus:border-neutral-500"
+            className="mt-1 w-full rounded border border-steel bg-white/5 px-3 py-2.5 text-sm text-white placeholder-neutral-500 outline-none focus:border-silver/50"
           />
         </label>
 

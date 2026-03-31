@@ -30,7 +30,7 @@ export function AlignControls({ elementId }: { elementId: string }) {
     pushHistory();
   }
 
-  const btn = "flex h-8 w-8 items-center justify-center rounded text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 transition-colors";
+  const btn = "flex h-8 w-8 items-center justify-center rounded text-silver/70 hover:bg-white/5 hover:text-silver transition-colors";
 
   return (
     <div>
@@ -50,7 +50,7 @@ export function AlignControls({ elementId }: { elementId: string }) {
             <AlignRight size={14} weight="regular" />
           </button>
         </Tooltip>
-        <div className="w-px bg-neutral-700" />
+        <div className="w-px bg-steel" />
         <Tooltip content="Align top">
           <button onClick={() => align({ y: 0 })} className={btn} aria-label="Align top">
             <AlignTop size={14} weight="regular" />

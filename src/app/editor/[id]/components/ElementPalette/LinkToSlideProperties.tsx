@@ -35,11 +35,11 @@ export function LinkToSlideProperties({ element }: Props) {
 
   return (
     <div className="space-y-2">
-      <label className="text-[10px] text-neutral-500">Link to slide</label>
+      <label className="text-[10px] text-silver/50">Link to slide</label>
       <select
         value={currentValue !== undefined ? String(currentValue) : ""}
         onChange={(e) => handleChange(e.target.value)}
-        className="w-full cursor-pointer rounded border border-neutral-700 bg-[#111] px-2 py-1.5 text-xs text-neutral-300 outline-none focus:border-neutral-500"
+        className="w-full cursor-pointer rounded border border-steel bg-navy px-2 py-1.5 text-xs text-silver outline-none focus:border-silver/50"
       >
         <option value="">None</option>
         {slides.map((slide, i) => (
@@ -51,7 +51,7 @@ export function LinkToSlideProperties({ element }: Props) {
       {currentValue !== undefined && (
         <button
           onClick={() => handleChange("")}
-          className="w-full rounded border border-neutral-700 px-2 py-1.5 text-[10px] text-red-400 hover:bg-neutral-800 transition-colors"
+          className="w-full rounded border border-steel px-2 py-1.5 text-[10px] text-red-400 hover:bg-white/5 transition-colors"
         >
           Clear link
         </button>

@@ -312,17 +312,17 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
           className="w-full max-w-xs space-y-4 text-center"
         >
           <h1 className="font-display text-3xl tracking-tight text-white">FOLIO</h1>
-          <p className="text-xs text-neutral-500">This presentation is password protected</p>
+          <p className="text-xs text-silver/50">This presentation is password protected</p>
           <input
             type="password"
             value={pwInput}
             onChange={(e) => { setPwInput(e.target.value); setPwError(false); }}
             placeholder="Enter password"
             autoFocus
-            className="w-full border-b border-neutral-700 bg-transparent px-2 py-3 text-sm text-white placeholder-neutral-500 outline-none focus:border-white transition-colors"
+            className="w-full border-b border-steel bg-transparent px-2 py-3 text-sm text-white placeholder-neutral-500 outline-none focus:border-white transition-colors"
           />
           {pwError && <p className="text-xs text-red-400">Incorrect password</p>}
-          <button type="submit" className="w-full bg-white py-3 text-xs font-semibold tracking-[0.25em] text-black uppercase hover:bg-neutral-200 transition-colors">
+          <button type="submit" className="w-full bg-accent py-3 text-xs font-semibold tracking-[0.25em] text-white uppercase hover:bg-accent-hover transition-colors">
             Enter
           </button>
         </form>

@@ -39,16 +39,16 @@ export function BottomSheet({ open, title, onClose, children }: Props) {
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className="absolute bottom-0 left-0 right-0 flex max-h-[70vh] flex-col rounded-t-xl bg-[#1e1e1e] shadow-2xl"
+        className="absolute bottom-0 left-0 right-0 flex max-h-[70vh] flex-col rounded-t-xl bg-slate shadow-2xl"
       >
-        <div className="flex shrink-0 items-center justify-between border-b border-neutral-700 px-4 py-3">
-          <span className="text-xs font-medium uppercase tracking-wider text-neutral-400">
+        <div className="flex shrink-0 items-center justify-between border-b border-steel px-4 py-3">
+          <span className="text-xs font-medium uppercase tracking-wider text-silver/70">
             {title}
           </span>
           <button
             onClick={onClose}
             autoFocus
-            className="p-2 text-neutral-300 hover:text-white"
+            className="p-2 text-silver hover:text-white"
             aria-label={t.common.close}
           >
             <X size={18} />

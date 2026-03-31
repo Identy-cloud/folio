@@ -55,18 +55,18 @@ export function SocialLinksSection({ socialLinks, onUpdate }: Props) {
 
   return (
     <div className="space-y-3">
-      <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-500">
+      <p className="text-[10px] font-medium uppercase tracking-wider text-silver/50">
         Redes sociales
       </p>
       {FIELDS.map(({ key, label, Icon, placeholder }) => (
         <div key={key} className="flex items-center gap-2">
-          <Icon size={16} className="shrink-0 text-neutral-500" />
+          <Icon size={16} className="shrink-0 text-silver/50" />
           <input
             value={links[key] ?? ""}
             onChange={(e) => setLinks((prev) => ({ ...prev, [key]: e.target.value }))}
             placeholder={placeholder}
             aria-label={label}
-            className="flex-1 border-b border-neutral-700 bg-transparent px-2 py-1.5 text-sm text-neutral-200 outline-none placeholder:text-neutral-600 focus:border-white transition-colors"
+            className="flex-1 border-b border-steel bg-transparent px-2 py-1.5 text-sm text-silver outline-none placeholder:text-silver/40 focus:border-white transition-colors"
           />
         </div>
       ))}
@@ -74,7 +74,7 @@ export function SocialLinksSection({ socialLinks, onUpdate }: Props) {
         <button
           onClick={handleSave}
           disabled={saving || !hasChanges}
-          className="shrink-0 bg-white px-4 py-2 text-xs font-medium tracking-widest text-[#161616] uppercase hover:bg-neutral-200 transition-colors disabled:opacity-30"
+          className="shrink-0 bg-accent px-4 py-2 text-xs font-medium tracking-widest text-white uppercase hover:bg-accent-hover transition-colors disabled:opacity-30"
         >
           {saving ? "..." : t.common.save}
         </button>

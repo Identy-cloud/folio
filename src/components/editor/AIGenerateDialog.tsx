@@ -94,10 +94,10 @@ export function AIGenerateDialog({ open, onClose }: Props) {
       onClick={onClose}
     >
       <div
-        className="w-full max-w-md rounded border border-neutral-700 bg-[#1e1e1e] shadow-2xl"
+        className="w-full max-w-md rounded border border-steel bg-slate shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center gap-2 border-b border-neutral-700 px-4 py-3">
+        <div className="flex items-center gap-2 border-b border-steel px-4 py-3">
           <Sparkle size={16} weight="fill" className="text-amber-400" />
           <span className="text-sm font-medium text-white">Generate with AI</span>
         </div>
@@ -111,30 +111,30 @@ export function AIGenerateDialog({ open, onClose }: Props) {
               if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) handleGenerate();
             }}
             placeholder="Describe the slide you want... e.g. 'A title slide with company name ACME and tagline'"
-            className="h-24 w-full resize-none rounded border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-white outline-none placeholder:text-neutral-500 focus:border-neutral-500"
+            className="h-24 w-full resize-none rounded border border-steel bg-navy px-3 py-2 text-sm text-white outline-none placeholder:text-silver/50 focus:border-silver/50"
             maxLength={2000}
           />
           {error && (
             <p className="mt-2 text-xs text-red-400">{error}</p>
           )}
           <div className="mt-3 flex items-center justify-between">
-            <span className="text-[10px] text-neutral-600">
+            <span className="text-[10px] text-silver/40">
               {prompt.length}/2000 | Ctrl+Enter to generate
             </span>
             <div className="flex gap-2">
               <button
                 onClick={onClose}
-                className="rounded px-3 py-1.5 text-xs text-neutral-400 hover:text-neutral-200 transition-colors"
+                className="rounded px-3 py-1.5 text-xs text-silver/70 hover:text-silver transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleGenerate}
                 disabled={!prompt.trim() || loading}
-                className="flex items-center gap-1.5 rounded bg-white px-3 py-1.5 text-xs font-medium text-[#161616] hover:bg-neutral-200 disabled:opacity-40 disabled:pointer-events-none transition-colors"
+                className="flex items-center gap-1.5 rounded bg-accent px-3 py-1.5 text-xs font-medium text-white hover:bg-accent-hover disabled:opacity-40 disabled:pointer-events-none transition-colors"
               >
                 {loading && (
-                  <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-neutral-400 border-t-[#161616]" />
+                  <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-silver/50 border-t-navy" />
                 )}
                 {loading ? "Generating..." : "Generate"}
               </button>

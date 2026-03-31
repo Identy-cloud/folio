@@ -79,7 +79,7 @@ export function NotificationBell() {
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="relative flex h-8 w-8 items-center justify-center rounded-full text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 transition-colors"
+        className="relative flex h-8 w-8 items-center justify-center rounded-full text-silver/70 hover:bg-white/5 hover:text-silver transition-colors"
         aria-label="Notificaciones"
       >
         <Bell size={18} weight={unreadCount > 0 ? "fill" : "regular"} />
@@ -91,13 +91,13 @@ export function NotificationBell() {
       </button>
       {open && (
         <div className="fixed inset-x-0 top-14 z-50 mx-auto max-w-sm sm:absolute sm:inset-x-auto sm:top-full sm:right-0 sm:mt-2 sm:w-80">
-          <div className="mx-2 rounded-lg border border-neutral-700 bg-[#1e1e1e] shadow-xl sm:mx-0">
-            <div className="flex items-center justify-between border-b border-neutral-700 px-4 py-2.5">
-              <span className="text-xs font-medium text-neutral-200">Notificaciones</span>
+          <div className="mx-2 rounded-lg border border-steel bg-slate shadow-xl sm:mx-0">
+            <div className="flex items-center justify-between border-b border-steel px-4 py-2.5">
+              <span className="text-xs font-medium text-silver">Notificaciones</span>
               {unreadCount > 0 && (
                 <button
                   onClick={() => markAsRead("all")}
-                  className="flex items-center gap-1 text-[10px] text-neutral-400 hover:text-neutral-200 transition-colors"
+                  className="flex items-center gap-1 text-[10px] text-silver/70 hover:text-silver transition-colors"
                 >
                   <Check size={12} /> Marcar todo leido
                 </button>
@@ -105,19 +105,19 @@ export function NotificationBell() {
             </div>
             <div className="max-h-80 overflow-y-auto">
               {items.length === 0 ? (
-                <p className="px-4 py-6 text-center text-xs text-neutral-500">Sin notificaciones</p>
+                <p className="px-4 py-6 text-center text-xs text-silver/50">Sin notificaciones</p>
               ) : (
                 items.map((n) => {
                   const Icon = typeIcon[n.type] ?? Bell;
                   const inner = (
                     <div
-                      className={`flex gap-3 px-4 py-3 transition-colors hover:bg-neutral-800/50 ${!n.read ? "bg-neutral-800/30" : ""}`}
+                      className={`flex gap-3 px-4 py-3 transition-colors hover:bg-white/5 ${!n.read ? "bg-white/5/30" : ""}`}
                     >
-                      <Icon size={16} className="mt-0.5 shrink-0 text-neutral-400" weight="regular" />
+                      <Icon size={16} className="mt-0.5 shrink-0 text-silver/70" weight="regular" />
                       <div className="min-w-0 flex-1">
-                        <p className={`text-xs truncate ${!n.read ? "text-neutral-100 font-medium" : "text-neutral-300"}`}>{n.title}</p>
-                        <p className="mt-0.5 text-[11px] text-neutral-500 line-clamp-2">{n.message}</p>
-                        <p className="mt-1 text-[10px] text-neutral-600">{relativeTime(n.createdAt)}</p>
+                        <p className={`text-xs truncate ${!n.read ? "text-white font-medium" : "text-silver"}`}>{n.title}</p>
+                        <p className="mt-0.5 text-[11px] text-silver/50 line-clamp-2">{n.message}</p>
+                        <p className="mt-1 text-[10px] text-silver/40">{relativeTime(n.createdAt)}</p>
                       </div>
                       {!n.read && <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-blue-500" />}
                     </div>

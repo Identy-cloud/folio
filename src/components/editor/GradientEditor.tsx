@@ -37,43 +37,43 @@ export function GradientEditor({ value, onChange }: Props) {
       <div className="grid grid-cols-5 gap-1">
         {GRADIENT_PRESETS.map((p, i) => (
           <button key={i} onClick={() => { onChange(p); setStopHex(p.stops[0]?.color ?? "#000"); setEditIdx(0); }}
-            className="h-6 w-full rounded-sm border border-neutral-600 transition-transform hover:scale-105"
+            className="h-6 w-full rounded-sm border border-steel/60 transition-transform hover:scale-105"
             style={{ background: gradientToCSS(p) }} title={`${p.type} gradient`} />
         ))}
       </div>
-      <div className="h-6 w-full rounded border border-neutral-600" style={{ background: gradientToCSS(g) }} />
+      <div className="h-6 w-full rounded border border-steel/60" style={{ background: gradientToCSS(g) }} />
       <div className="flex gap-1.5 items-center">
         <select value={g.type} onChange={(e) => onChange({ ...g, type: e.target.value as "linear" | "radial" })}
-          className="cursor-pointer rounded border border-neutral-700 bg-[#161616] px-1.5 py-1 text-[10px] text-neutral-300 outline-none">
+          className="cursor-pointer rounded border border-steel bg-navy px-1.5 py-1 text-[10px] text-silver outline-none">
           <option value="linear">Linear</option>
           <option value="radial">Radial</option>
         </select>
         {g.type === "linear" && (
           <label className="flex items-center gap-1 flex-1">
-            <span className="text-[9px] text-neutral-500">Angle</span>
+            <span className="text-[9px] text-silver/50">Angle</span>
             <input type="range" min={0} max={360} value={g.angle ?? 135}
               onChange={(e) => onChange({ ...g, angle: parseInt(e.target.value) })} className="flex-1 accent-white" />
-            <span className="text-[9px] text-neutral-500 w-6 text-right">{g.angle ?? 135}</span>
+            <span className="text-[9px] text-silver/50 w-6 text-right">{g.angle ?? 135}</span>
           </label>
         )}
       </div>
       <div className="space-y-1">
         <div className="flex items-center justify-between">
-          <span className="text-[9px] text-neutral-500 uppercase tracking-wider">Stops</span>
+          <span className="text-[9px] text-silver/50 uppercase tracking-wider">Stops</span>
           {g.stops.length < 4 && (
-            <button onClick={addStop} className="text-[9px] text-neutral-500 hover:text-white transition-colors">+ Add</button>
+            <button onClick={addStop} className="text-[9px] text-silver/50 hover:text-white transition-colors">+ Add</button>
           )}
         </div>
         {g.stops.map((stop, i) => (
           <div key={i} className="flex items-center gap-1">
             <button onClick={() => { setEditIdx(i); setStopHex(stop.color); }}
-              className={`h-5 w-5 shrink-0 rounded-sm border transition-transform hover:scale-110 ${editIdx === i ? "border-white ring-1 ring-white" : "border-neutral-600"}`}
+              className={`h-5 w-5 shrink-0 rounded-sm border transition-transform hover:scale-110 ${editIdx === i ? "border-white ring-1 ring-white" : "border-steel/60"}`}
               style={{ backgroundColor: stop.color }} />
             <input type="range" min={0} max={100} value={stop.position}
               onChange={(e) => updateStop(i, { position: parseInt(e.target.value) })} className="flex-1 accent-white" />
-            <span className="text-[9px] text-neutral-500 w-6 text-right">{stop.position}</span>
+            <span className="text-[9px] text-silver/50 w-6 text-right">{stop.position}</span>
             {g.stops.length > 2 && (
-              <button onClick={() => removeStop(i)} className="text-[9px] text-neutral-600 hover:text-red-400 transition-colors">x</button>
+              <button onClick={() => removeStop(i)} className="text-[9px] text-silver/40 hover:text-red-400 transition-colors">x</button>
             )}
           </div>
         ))}
@@ -81,7 +81,7 @@ export function GradientEditor({ value, onChange }: Props) {
       <div className="flex gap-1">
         <input value={stopHex} onChange={(e) => setStopHex(e.target.value)} onBlur={commitHex}
           onKeyDown={(e) => e.key === "Enter" && commitHex()}
-          className="flex-1 rounded border border-neutral-700 bg-[#161616] px-2 py-1 text-[10px] text-neutral-200 outline-none focus:border-neutral-500"
+          className="flex-1 rounded border border-steel bg-navy px-2 py-1 text-[10px] text-silver outline-none focus:border-silver/50"
           placeholder="#000000" />
       </div>
     </div>

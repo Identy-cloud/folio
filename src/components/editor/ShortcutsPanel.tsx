@@ -104,13 +104,13 @@ export function ShortcutsPanel({ open, onClose, onRestartTour }: Props) {
       open={open}
       ariaLabel="Keyboard shortcuts"
       onClose={onClose}
-      className="fixed inset-0 flex flex-col bg-[#1e1e1e] md:static md:inset-auto md:w-full md:max-w-lg md:max-h-[80vh] md:rounded md:border md:border-neutral-700 md:shadow-xl md:mx-4"
+      className="fixed inset-0 flex flex-col bg-slate md:static md:inset-auto md:w-full md:max-w-lg md:max-h-[80vh] md:rounded md:border md:border-steel md:shadow-xl md:mx-4"
     >
       <div className="flex items-center justify-between px-5 pt-5 pb-3">
-        <h3 className="font-display text-sm tracking-tight text-neutral-200 uppercase">
+        <h3 className="font-display text-sm tracking-tight text-silver uppercase">
           Keyboard Shortcuts
         </h3>
-        <button onClick={onClose} className="text-neutral-500 hover:text-neutral-300 text-xs">
+        <button onClick={onClose} className="text-silver/50 hover:text-silver text-xs">
           Esc
         </button>
       </div>
@@ -121,23 +121,23 @@ export function ShortcutsPanel({ open, onClose, onRestartTour }: Props) {
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search shortcuts..."
           autoFocus
-          className="w-full rounded bg-neutral-800 border border-neutral-700 px-3 py-2 text-xs text-neutral-200 placeholder:text-neutral-500 outline-none focus:border-neutral-500"
+          className="w-full rounded bg-white/5 border border-steel px-3 py-2 text-xs text-silver placeholder:text-silver/50 outline-none focus:border-silver/50"
         />
       </div>
       <div className="flex-1 overflow-y-auto px-5 pb-5 space-y-4">
         {filtered.length === 0 && (
-          <p className="text-xs text-neutral-500 py-4 text-center">No matching shortcuts</p>
+          <p className="text-xs text-silver/50 py-4 text-center">No matching shortcuts</p>
         )}
         {filtered.map((g) => (
           <div key={g.title}>
-            <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-500 mb-1.5">
+            <p className="text-[10px] font-medium uppercase tracking-wider text-silver/50 mb-1.5">
               {g.title}
             </p>
             <div className="space-y-0.5">
               {g.items.map((s) => (
                 <div key={s.keys} className="flex items-center justify-between py-1">
-                  <span className="text-xs text-neutral-400">{s.label}</span>
-                  <kbd className="shrink-0 ml-4 rounded bg-neutral-800 px-2 py-0.5 text-[10px] font-mono text-neutral-300">
+                  <span className="text-xs text-silver/70">{s.label}</span>
+                  <kbd className="shrink-0 ml-4 rounded bg-white/5 px-2 py-0.5 text-[10px] font-mono text-silver">
                     {s.keys}
                   </kbd>
                 </div>
@@ -147,10 +147,10 @@ export function ShortcutsPanel({ open, onClose, onRestartTour }: Props) {
         ))}
       </div>
       {onRestartTour && (
-        <div className="px-5 pb-4 pt-2 border-t border-neutral-800">
+        <div className="px-5 pb-4 pt-2 border-t border-steel/30">
           <button
             onClick={() => { onRestartTour(); onClose(); }}
-            className="w-full rounded bg-neutral-800 py-2.5 text-[10px] font-medium tracking-widest text-neutral-300 uppercase hover:bg-neutral-700 min-h-[44px] transition-colors"
+            className="w-full rounded bg-white/5 py-2.5 text-[10px] font-medium tracking-widest text-silver uppercase hover:bg-steel min-h-[44px] transition-colors"
           >
             Restart editor tour
           </button>

@@ -72,46 +72,46 @@ export function PresentationSettings({ open, onClose }: Props) {
       open={open}
       ariaLabel="Presentation settings"
       onClose={onClose}
-      className="w-full max-w-sm rounded bg-[#1e1e1e] border border-neutral-700 p-5 shadow-xl mx-4"
+      className="w-full max-w-sm rounded bg-slate border border-steel p-5 shadow-xl mx-4"
     >
-      <h3 className="font-display text-lg tracking-tight text-neutral-200">SETTINGS</h3>
+      <h3 className="font-display text-lg tracking-tight text-silver">SETTINGS</h3>
 
       {!data ? (
-        <p className="py-4 text-xs text-neutral-500">Loading...</p>
+        <p className="py-4 text-xs text-silver/50">Loading...</p>
       ) : (
         <div className="mt-4 space-y-4">
           {/* Title */}
           <label className="flex flex-col gap-1">
-            <span className="text-[10px] text-neutral-500 uppercase tracking-wider">Title</span>
+            <span className="text-[10px] text-silver/50 uppercase tracking-wider">Title</span>
             <input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               onBlur={saveTitle}
               onKeyDown={(e) => e.key === "Enter" && saveTitle()}
-              className="rounded border border-neutral-700 bg-[#161616] px-3 py-2 text-sm text-neutral-200 outline-none focus:border-neutral-500"
+              className="rounded border border-steel bg-navy px-3 py-2 text-sm text-silver outline-none focus:border-silver/50"
             />
           </label>
 
           {/* Theme */}
           <div>
-            <span className="text-[10px] text-neutral-500 uppercase tracking-wider">Theme</span>
-            <p className="mt-1 text-sm text-neutral-300">{THEMES[data.theme]?.label ?? data.theme}</p>
+            <span className="text-[10px] text-silver/50 uppercase tracking-wider">Theme</span>
+            <p className="mt-1 text-sm text-silver">{THEMES[data.theme]?.label ?? data.theme}</p>
           </div>
 
           {/* Visibility */}
           <button
             onClick={togglePublic}
-            className="flex w-full items-center gap-2 rounded border border-neutral-700 px-3 py-2 text-xs text-neutral-300 hover:bg-neutral-800 transition-colors"
+            className="flex w-full items-center gap-2 rounded border border-steel px-3 py-2 text-xs text-silver hover:bg-white/5 transition-colors"
           >
-            {data.isPublic ? <Globe size={14} className="text-green-500" /> : <GlobeX size={14} className="text-neutral-500" />}
+            {data.isPublic ? <Globe size={14} className="text-green-500" /> : <GlobeX size={14} className="text-silver/50" />}
             {data.isPublic ? "Public — click to make private" : "Private — click to make public"}
           </button>
 
           {/* Public URL */}
           {data.isPublic && (
-            <div className="rounded bg-[#111] px-3 py-2">
-              <span className="text-[10px] text-neutral-600">Public URL</span>
-              <p className="text-xs text-neutral-400 truncate">{window.location.origin}/p/{data.slug}</p>
+            <div className="rounded bg-navy px-3 py-2">
+              <span className="text-[10px] text-silver/40">Public URL</span>
+              <p className="text-xs text-silver/70 truncate">{window.location.origin}/p/{data.slug}</p>
             </div>
           )}
 
@@ -127,13 +127,13 @@ export function PresentationSettings({ open, onClose }: Props) {
                 toast.error("Failed to duplicate");
               }
             }}
-            className="flex w-full items-center justify-center gap-2 rounded border border-neutral-700 px-3 py-2 text-xs text-neutral-300 hover:bg-neutral-800 transition-colors"
+            className="flex w-full items-center justify-center gap-2 rounded border border-steel px-3 py-2 text-xs text-silver hover:bg-white/5 transition-colors"
           >
             Duplicate presentation
           </button>
 
           {/* Delete */}
-          <div className="border-t border-neutral-800 pt-4">
+          <div className="border-t border-steel/30 pt-4">
             {!deleting ? (
               <button
                 onClick={() => setDeleting(true)}
@@ -151,7 +151,7 @@ export function PresentationSettings({ open, onClose }: Props) {
                 </button>
                 <button
                   onClick={() => setDeleting(false)}
-                  className="flex-1 rounded border border-neutral-700 py-2 text-xs text-neutral-400 hover:bg-neutral-800 transition-colors"
+                  className="flex-1 rounded border border-steel py-2 text-xs text-silver/70 hover:bg-white/5 transition-colors"
                 >
                   Cancel
                 </button>
@@ -163,7 +163,7 @@ export function PresentationSettings({ open, onClose }: Props) {
 
       <button
         onClick={onClose}
-        className="mt-4 w-full rounded px-4 py-2 text-xs text-neutral-400 hover:bg-neutral-800 transition-colors"
+        className="mt-4 w-full rounded px-4 py-2 text-xs text-silver/70 hover:bg-white/5 transition-colors"
       >
         Close
       </button>

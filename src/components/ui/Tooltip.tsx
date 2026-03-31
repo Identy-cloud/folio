@@ -54,11 +54,11 @@ export function Tooltip({ content, children, side = "bottom", shortcut }: Props)
               transform: side === "top" ? "translate(-50%, -100%)" : "translate(-50%, 0)",
               zIndex: 9999,
             }}
-            className="pointer-events-none rounded bg-neutral-900 border border-neutral-700 px-2 py-1 text-[11px] text-neutral-200 shadow-lg whitespace-nowrap"
+            className="pointer-events-none rounded bg-navy border border-steel px-2 py-1 text-[11px] text-silver shadow-lg whitespace-nowrap"
           >
             {content}
             {shortcut && (
-              <kbd className="ml-1.5 rounded bg-neutral-800 px-1 py-0.5 text-[9px] font-mono text-neutral-400">
+              <kbd className="ml-1.5 rounded bg-white/5 px-1 py-0.5 text-[9px] font-mono text-silver/70">
                 {shortcut}
               </kbd>
             )}

@@ -17,15 +17,15 @@ export function InlineTransitionPicker({
   return (
     <div className="flex items-center justify-center py-1.5">
       {open ? (
-        <div className="flex gap-1 rounded-full bg-neutral-800 px-1.5 py-1">
+        <div className="flex gap-1 rounded-full bg-white/5 px-1.5 py-1">
           {TRANSITION_LIST.map((tr) => (
             <button
               key={tr}
               onClick={() => { onChange(tr); setOpen(false); }}
               className={`flex h-7 w-7 items-center justify-center rounded-full transition-colors ${
                 current === tr
-                  ? "bg-white text-[#161616]"
-                  : "text-neutral-400 hover:bg-neutral-700 hover:text-neutral-200"
+                  ? "bg-accent text-white"
+                  : "text-silver/70 hover:bg-steel hover:text-silver"
               }`}
               title={tr}
             >
@@ -36,7 +36,7 @@ export function InlineTransitionPicker({
       ) : (
         <button
           onClick={() => setOpen(true)}
-          className="group flex h-6 items-center gap-1.5 rounded-full bg-neutral-800/50 px-2.5 text-neutral-500 hover:bg-neutral-800 hover:text-neutral-300 transition-colors"
+          className="group flex h-6 items-center gap-1.5 rounded-full bg-white/5 px-2.5 text-silver/50 hover:bg-white/5 hover:text-silver transition-colors"
         >
           <TransitionIcon type={current as SlideTransition} size={11} />
           <span className="text-[9px] uppercase tracking-wider opacity-60 group-hover:opacity-100">
@@ -75,7 +75,7 @@ export function SlideContextMenu({
 }: SlideContextMenuProps) {
   return (
     <div
-      className="fixed z-50 w-44 rounded border border-neutral-700 bg-[#242424] py-1 shadow-lg"
+      className="fixed z-50 w-44 rounded border border-steel bg-steel py-1 shadow-lg"
       style={{ left: menu.x, top: menu.y }}
     >
       <CtxItem label={labels.duplicate} onClick={() => { onDuplicate(menu.slideId); onClose(); }} />
@@ -84,7 +84,7 @@ export function SlideContextMenu({
       <CtxItem label="Add slide after" onClick={() => { onAddSlide(); onClose(); }} />
       {onImportSlide && <CtxItem label="Import slide from..." onClick={() => { onImportSlide(); onClose(); }} />}
       {onSaveToLibrary && <CtxItem label="Save to library" onClick={() => { onSaveToLibrary(menu.slideId); onClose(); }} />}
-      <div className="border-t border-neutral-700">
+      <div className="border-t border-steel">
         <TransitionPicker
           current={slides.find((s) => s.id === menu.slideId)?.transition ?? "fade"}
           onChange={(tr) => onTransition(menu.slideId, tr)}
@@ -109,8 +109,8 @@ export function CtxItem({
   return (
     <button
       onClick={onClick}
-      className={`block w-full px-4 py-2 text-left text-xs hover:bg-neutral-800 ${
-        destructive ? "text-red-500" : "text-neutral-300"
+      className={`block w-full px-4 py-2 text-left text-xs hover:bg-white/5 ${
+        destructive ? "text-red-500" : "text-silver"
       }`}
     >
       {label}

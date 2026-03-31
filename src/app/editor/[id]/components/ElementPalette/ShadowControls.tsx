@@ -25,7 +25,7 @@ export function ShadowControls({ element }: { element: SlideElement }) {
   return (
     <div className="space-y-3">
       <div className="space-y-1.5">
-        <span className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">Box Shadow</span>
+        <span className="text-[11px] font-medium text-silver/70 uppercase tracking-wider">Box Shadow</span>
         <div className="flex flex-wrap gap-1">
           {PRESETS.map((p, i) => (
             <button
@@ -36,8 +36,8 @@ export function ShadowControls({ element }: { element: SlideElement }) {
               }}
               className={`rounded px-2 py-1 text-[10px] transition-colors ${
                 (i === activeIdx || (!current && i === 0))
-                  ? "bg-white text-[#161616]"
-                  : "text-neutral-500 hover:bg-neutral-800"
+                  ? "bg-accent text-white"
+                  : "text-silver/50 hover:bg-white/5"
               }`}
             >
               {p.label}
@@ -46,7 +46,7 @@ export function ShadowControls({ element }: { element: SlideElement }) {
         </div>
         {current && (
           <label className="flex items-center gap-2">
-            <span className="text-[10px] text-neutral-500 shrink-0">Blur</span>
+            <span className="text-[10px] text-silver/50 shrink-0">Blur</span>
             <input
               type="range"
               min={0} max={50}
@@ -57,7 +57,7 @@ export function ShadowControls({ element }: { element: SlideElement }) {
               }}
               className="flex-1 accent-white"
             />
-            <span className="text-[10px] text-neutral-600 w-5 text-right">{current.blur}</span>
+            <span className="text-[10px] text-silver/40 w-5 text-right">{current.blur}</span>
           </label>
         )}
       </div>

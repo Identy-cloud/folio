@@ -94,13 +94,13 @@ export function AIGeneratePresentationDialog({ open, onClose }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 sm:items-center" role="dialog" aria-modal="true" onClick={() => !loading && !creating && onClose()}>
-      <div className="max-h-[90vh] w-full overflow-y-auto rounded-t-xl bg-[#1e1e1e] p-4 shadow-2xl sm:max-w-lg sm:rounded-sm sm:p-6" onClick={(e) => e.stopPropagation()}>
+      <div className="max-h-[90vh] w-full overflow-y-auto rounded-t-xl bg-slate p-4 shadow-2xl sm:max-w-lg sm:rounded-sm sm:p-6" onClick={(e) => e.stopPropagation()}>
         <div className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Sparkle size={18} weight="fill" className="text-amber-400" />
             <h2 className="text-lg font-medium text-white">{showPreview ? "Preview Outline" : "Generate Presentation"}</h2>
           </div>
-          <button onClick={onClose} disabled={loading || creating} className="text-neutral-500 hover:text-neutral-200 disabled:opacity-30" aria-label="Close"><X size={18} /></button>
+          <button onClick={onClose} disabled={loading || creating} className="text-silver/50 hover:text-silver disabled:opacity-30" aria-label="Close"><X size={18} /></button>
         </div>
 
         {!showPreview ? (
@@ -117,13 +117,13 @@ export function AIGeneratePresentationDialog({ open, onClose }: Props) {
           <div>
             <AIGenerateOutlinePreview slides={generatedSlides} />
             <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-between">
-              <button onClick={() => setGeneratedSlides(null)} className="rounded px-3 py-2 text-xs text-neutral-400 hover:text-neutral-200 transition-colors">Back</button>
+              <button onClick={() => setGeneratedSlides(null)} className="rounded px-3 py-2 text-xs text-silver/70 hover:text-silver transition-colors">Back</button>
               <div className="flex gap-2">
-                <button onClick={handleGenerate} disabled={loading} className="rounded border border-neutral-600 px-3 py-2 text-xs text-neutral-300 hover:bg-neutral-800 transition-colors disabled:opacity-40">
+                <button onClick={handleGenerate} disabled={loading} className="rounded border border-steel/60 px-3 py-2 text-xs text-silver hover:bg-white/5 transition-colors disabled:opacity-40">
                   {loading ? "Regenerating..." : "Regenerate"}
                 </button>
-                <button onClick={handleCreate} disabled={creating} className="flex items-center gap-1.5 rounded bg-white px-4 py-2 text-xs font-medium text-[#161616] hover:bg-neutral-200 disabled:opacity-40 transition-colors">
-                  {creating && <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-neutral-400 border-t-[#161616]" />}
+                <button onClick={handleCreate} disabled={creating} className="flex items-center gap-1.5 rounded bg-accent px-4 py-2 text-xs font-medium text-white hover:bg-accent-hover disabled:opacity-40 transition-colors">
+                  {creating && <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-silver/50 border-t-navy" />}
                   {creating ? "Creating..." : "Create Presentation"}
                 </button>
               </div>

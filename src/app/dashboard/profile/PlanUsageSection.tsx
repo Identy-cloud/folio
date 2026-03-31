@@ -25,9 +25,9 @@ function formatBytes(bytes: number): string {
 function ProgressBar({ value, max }: { value: number; max: number }) {
   const pct = max === Infinity ? 0 : Math.min((value / max) * 100, 100);
   return (
-    <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-neutral-800">
+    <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/5">
       <div
-        className={`h-full rounded-full transition-all ${pct > 80 ? "bg-amber-500" : "bg-white"}`}
+        className={`h-full rounded-full transition-all ${pct > 80 ? "bg-amber-500" : "bg-accent"}`}
         style={{ width: `${Math.max(pct, 1)}%` }}
       />
     </div>
@@ -56,23 +56,23 @@ export function PlanUsageSection({ plan, storageUsed }: Props) {
 
   return (
     <div className="space-y-4">
-      <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-500">Uso</p>
+      <p className="text-[10px] font-medium uppercase tracking-wider text-silver/50">Uso</p>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div className="border border-neutral-800 p-4">
-          <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-500">Almacenamiento</p>
-          <p className="mt-1 text-sm text-neutral-200">
+        <div className="border border-steel/30 p-4">
+          <p className="text-[10px] font-medium uppercase tracking-wider text-silver/50">Almacenamiento</p>
+          <p className="mt-1 text-sm text-silver">
             {formatBytes(storageUsed)}
-            <span className="text-neutral-500"> / {formatBytes(maxStorage)}</span>
+            <span className="text-silver/50"> / {formatBytes(maxStorage)}</span>
           </p>
           <ProgressBar value={storageUsed} max={maxStorage} />
         </div>
-        <div className="border border-neutral-800 p-4">
-          <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-500">
+        <div className="border border-steel/30 p-4">
+          <p className="text-[10px] font-medium uppercase tracking-wider text-silver/50">
             {t.dashboard.profilePresentations ?? "Presentaciones"}
           </p>
-          <p className="mt-1 text-sm text-neutral-200">
+          <p className="mt-1 text-sm text-silver">
             {presCount}
-            <span className="text-neutral-500">{maxPres === Infinity ? " / ilimitadas" : ` / ${maxPres}`}</span>
+            <span className="text-silver/50">{maxPres === Infinity ? " / ilimitadas" : ` / ${maxPres}`}</span>
           </p>
           <ProgressBar value={presCount} max={maxPres} />
         </div>

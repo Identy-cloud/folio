@@ -28,8 +28,8 @@ export function LandingTestimonials() {
   ];
 
   return (
-    <section className="border-t border-neutral-800 px-4 py-16 sm:px-8 sm:py-24">
-      <p className="text-center text-[10px] tracking-[0.5em] text-neutral-500 uppercase">
+    <section className="border-t border-steel/30 px-4 py-16 sm:px-8 sm:py-24">
+      <p className="text-center text-[10px] tracking-[0.5em] text-silver/50 uppercase">
         {l.testimonialsLabel}
       </p>
       <h2 className="mt-3 text-center font-display text-3xl tracking-tight sm:text-5xl">
@@ -39,16 +39,16 @@ export function LandingTestimonials() {
         {testimonials.map((item) => (
           <div
             key={item.name}
-            className="border border-neutral-800 p-6"
+            className="border border-steel/30 p-6"
           >
-            <p className="text-sm leading-relaxed text-neutral-300">
+            <p className="text-sm leading-relaxed text-silver">
               &ldquo;{item.quote}&rdquo;
             </p>
             <div className="mt-6">
               <p className="text-xs font-semibold tracking-wide">
                 {item.name}
               </p>
-              <p className="mt-1 text-[10px] tracking-[0.2em] text-neutral-500 uppercase">
+              <p className="mt-1 text-[10px] tracking-[0.2em] text-silver/50 uppercase">
                 {item.title}, {item.company}
               </p>
             </div>

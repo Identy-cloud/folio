@@ -34,27 +34,27 @@ export function PromptDialog({ open, title, message, defaultValue = "", placehol
   return (
     <DialogShell open={open} ariaLabel={title} onClose={onCancel}>
       <form onSubmit={handleSubmit}>
-        <h3 className="font-display text-lg tracking-tight text-neutral-200">{title}</h3>
-        {message && <p className="mt-2 text-sm text-neutral-400">{message}</p>}
+        <h3 className="font-display text-lg tracking-tight text-silver">{title}</h3>
+        {message && <p className="mt-2 text-sm text-silver/70">{message}</p>}
         <input
           ref={inputRef}
           value={value}
           onChange={(e) => setValue(e.target.value)}
           placeholder={placeholder}
           aria-label={title}
-          className="mt-3 w-full rounded border border-neutral-700 bg-[#161616] px-3 py-2 text-sm text-neutral-200 outline-none focus:border-neutral-500"
+          className="mt-3 w-full rounded border border-steel bg-navy px-3 py-2 text-sm text-silver outline-none focus:border-silver/50"
         />
         <div className="mt-4 flex gap-2 justify-end">
           <button
             type="button"
             onClick={onCancel}
-            className="rounded px-4 py-2 text-xs text-neutral-400 hover:bg-neutral-800 transition-colors"
+            className="rounded px-4 py-2 text-xs text-silver/70 hover:bg-white/5 transition-colors"
           >
             {t.common.cancel}
           </button>
           <button
             type="submit"
-            className="rounded bg-white px-4 py-2 text-xs font-medium text-[#161616] hover:bg-neutral-200 transition-colors"
+            className="rounded bg-accent px-4 py-2 text-xs font-medium text-white hover:bg-accent-hover transition-colors"
           >
             {t.common.save}
           </button>

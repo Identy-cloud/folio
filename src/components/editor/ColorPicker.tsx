@@ -57,23 +57,23 @@ export function ColorPicker({ value, onChange, label, gradient, onGradientChange
 
   return (
     <div>
-      {label && <span className="mb-1 block text-[10px] text-neutral-500 uppercase tracking-wider">{label}</span>}
+      {label && <span className="mb-1 block text-[10px] text-silver/50 uppercase tracking-wider">{label}</span>}
       <button ref={triggerRef} onClick={() => setOpen(!open)}
-        className="flex h-7 w-full items-center gap-2 rounded border border-neutral-700 px-2 hover:border-neutral-600">
-        <span className="h-4 w-4 rounded-sm border border-neutral-600" style={{ background: previewBg }} />
-        <span className="text-[11px] text-neutral-400 truncate">{previewLabel}</span>
+        className="flex h-7 w-full items-center gap-2 rounded border border-steel px-2 hover:border-silver/40">
+        <span className="h-4 w-4 rounded-sm border border-steel/60" style={{ background: previewBg }} />
+        <span className="text-[11px] text-silver/70 truncate">{previewLabel}</span>
       </button>
 
       {open && pos && createPortal(
         <div ref={dropdownRef} style={{ position: "fixed", top: pos.top, left: pos.left, zIndex: 9999 }}
-          className="w-55 rounded border border-neutral-700 bg-[#1e1e1e] p-2 shadow-xl">
+          className="w-55 rounded border border-steel bg-slate p-2 shadow-xl">
           {showGradientTab && (
-            <div className="mb-2 flex rounded bg-[#2a2a2a] p-0.5">
+            <div className="mb-2 flex rounded bg-steel p-0.5">
               <button onClick={() => setTab("solid")}
-                className={`flex-1 rounded px-2 py-1 text-[10px] transition-colors ${tab === "solid" ? "bg-neutral-700 text-white" : "text-neutral-500 hover:text-neutral-300"}`}>
+                className={`flex-1 rounded px-2 py-1 text-[10px] transition-colors ${tab === "solid" ? "bg-steel text-white" : "text-silver/50 hover:text-silver"}`}>
                 Solid</button>
               <button onClick={() => setTab("gradient")}
-                className={`flex-1 rounded px-2 py-1 text-[10px] transition-colors ${tab === "gradient" ? "bg-neutral-700 text-white" : "text-neutral-500 hover:text-neutral-300"}`}>
+                className={`flex-1 rounded px-2 py-1 text-[10px] transition-colors ${tab === "gradient" ? "bg-steel text-white" : "text-silver/50 hover:text-silver"}`}>
                 Gradient</button>
             </div>
           )}

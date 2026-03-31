@@ -105,7 +105,7 @@ export function CropOverlay({ element, scale, onApply, onCancel }: Props) {
         >Apply</button>
         <button
           onClick={(e) => { e.stopPropagation(); onCancel(); }}
-          className="rounded bg-neutral-700 px-3 py-1.5 text-[11px] font-medium text-neutral-200 hover:bg-neutral-600 min-h-[44px] min-w-[44px]"
+          className="rounded bg-steel px-3 py-1.5 text-[11px] font-medium text-silver hover:bg-steel/80 min-h-[44px] min-w-[44px]"
         >Cancel</button>
       </div>
     </div>

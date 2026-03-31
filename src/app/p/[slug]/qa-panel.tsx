@@ -79,40 +79,40 @@ export function QaPanel({ presentationId }: Props) {
       </button>
 
       {open && (
-        <div className="fixed bottom-0 right-0 top-0 z-30 flex w-[calc(100%-2rem)] max-w-80 flex-col bg-[#1a1a1a] shadow-2xl sm:max-w-96">
-          <div className="flex items-center justify-between border-b border-neutral-800 px-4 py-3">
-            <span className="text-xs font-medium uppercase tracking-wider text-neutral-400">Q&A</span>
-            <button onClick={() => setOpen(false)} className="text-neutral-400 hover:text-white text-sm">
+        <div className="fixed bottom-0 right-0 top-0 z-30 flex w-[calc(100%-2rem)] max-w-80 flex-col bg-navy shadow-2xl sm:max-w-96">
+          <div className="flex items-center justify-between border-b border-steel/30 px-4 py-3">
+            <span className="text-xs font-medium uppercase tracking-wider text-silver/70">Q&A</span>
+            <button onClick={() => setOpen(false)} className="text-silver/70 hover:text-white text-sm">
               ✕
             </button>
           </div>
           <div className="flex-1 overflow-y-auto p-3 space-y-2">
             {items.length === 0 && (
-              <p className="py-8 text-center text-xs text-neutral-600">No questions yet</p>
+              <p className="py-8 text-center text-xs text-silver/40">No questions yet</p>
             )}
             {unanswered.map((q) => (
               <QCard key={q.id} q={q} onUp={upvote} can={!voted.has(q.id)} />
             ))}
             {answered.length > 0 && (
-              <p className="pt-2 text-[10px] uppercase tracking-wider text-neutral-600">Answered</p>
+              <p className="pt-2 text-[10px] uppercase tracking-wider text-silver/40">Answered</p>
             )}
             {answered.map((q) => (
               <QCard key={q.id} q={q} onUp={upvote} can={!voted.has(q.id)} dim />
             ))}
           </div>
-          <form onSubmit={submit} className="border-t border-neutral-800 p-3 space-y-2">
+          <form onSubmit={submit} className="border-t border-steel/30 p-3 space-y-2">
             <input
               value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" required
-              className="w-full rounded border border-neutral-700 bg-[#111] px-2 py-1.5 text-xs text-neutral-200 outline-none placeholder:text-neutral-600 focus:border-neutral-500"
+              className="w-full rounded border border-steel bg-navy px-2 py-1.5 text-xs text-silver outline-none placeholder:text-silver/40 focus:border-silver/50"
             />
             <div className="flex gap-2">
               <input
                 value={text} onChange={(e) => setText(e.target.value)} placeholder="Ask a question..." required
-                className="flex-1 rounded border border-neutral-700 bg-[#111] px-2 py-1.5 text-xs text-neutral-200 outline-none placeholder:text-neutral-600 focus:border-neutral-500"
+                className="flex-1 rounded border border-steel bg-navy px-2 py-1.5 text-xs text-silver outline-none placeholder:text-silver/40 focus:border-silver/50"
               />
               <button
                 type="submit" disabled={sending || !name.trim() || !text.trim()}
-                className="rounded bg-white px-3 py-1.5 text-xs font-medium text-[#161616] hover:bg-neutral-200 disabled:opacity-30 transition-colors"
+                className="rounded bg-accent px-3 py-1.5 text-xs font-medium text-white hover:bg-accent-hover disabled:opacity-30 transition-colors"
               >
                 Ask
               </button>
@@ -126,17 +126,17 @@ export function QaPanel({ presentationId }: Props) {
 
 function QCard({ q, onUp, can, dim }: { q: Question; onUp: (id: string) => void; can: boolean; dim?: boolean }) {
   return (
-    <div className={`flex gap-2 rounded border px-3 py-2 ${dim ? "border-neutral-800 opacity-50" : "border-neutral-700 bg-neutral-800/50"}`}>
+    <div className={`flex gap-2 rounded border px-3 py-2 ${dim ? "border-steel/30 opacity-50" : "border-steel bg-white/5"}`}>
       <button
         onClick={() => onUp(q.id)} disabled={!can}
-        className="flex flex-col items-center gap-0.5 text-neutral-400 hover:text-orange-400 disabled:opacity-40 transition-colors min-w-[28px]"
+        className="flex flex-col items-center gap-0.5 text-silver/70 hover:text-orange-400 disabled:opacity-40 transition-colors min-w-[28px]"
       >
         <span className="text-[10px]">&#9650;</span>
         <span className="text-xs font-medium">{q.upvotes}</span>
       </button>
       <div className="min-w-0 flex-1">
-        <p className="text-xs text-neutral-200 break-words">{q.text}</p>
-        <span className="text-[10px] text-neutral-500">{q.authorName}</span>
+        <p className="text-xs text-silver break-words">{q.text}</p>
+        <span className="text-[10px] text-silver/50">{q.authorName}</span>
       </div>
     </div>
   );

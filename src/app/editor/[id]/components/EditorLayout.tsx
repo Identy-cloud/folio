@@ -177,7 +177,7 @@ export function EditorLayout() {
   }, []);
 
   return (
-    <div className="flex h-screen flex-col bg-[#111111]">
+    <div className="flex h-screen flex-col bg-navy">
       <OfflineBanner />
       <div data-panel="toolbar">
         <Toolbar
@@ -218,15 +218,15 @@ export function EditorLayout() {
 
         <div data-panel="palette" className={`hidden h-full md:block ${compact ? "md:hidden" : ""}`}>
           {rightPanel === "versions" ? (
-            <div className="flex h-full w-56 flex-col border-l border-neutral-800 bg-[#161616]">
+            <div className="flex h-full w-56 flex-col border-l border-steel/30 bg-navy">
               <VersionHistory onClose={() => setVersionsOpen(false)} />
             </div>
           ) : rightPanel === "history" ? (
-            <div className="flex h-full w-56 flex-col border-l border-neutral-800 bg-[#161616]">
+            <div className="flex h-full w-56 flex-col border-l border-steel/30 bg-navy">
               <HistoryPanel onClose={() => setHistoryOpen(false)} />
             </div>
           ) : rightPanel === "layers" ? (
-            <div className="flex h-full w-56 flex-col border-l border-neutral-800 bg-[#161616]">
+            <div className="flex h-full w-56 flex-col border-l border-steel/30 bg-navy">
               <LayerPanel onClose={() => setLayersOpen(false)} />
             </div>
           ) : (
@@ -239,14 +239,14 @@ export function EditorLayout() {
       <div className="fixed top-14 right-2 z-40 flex gap-1 md:hidden">
         <button
           onClick={() => useEditorStore.getState().undo()}
-          className="flex h-11 w-11 items-center justify-center rounded-full bg-neutral-900/80 text-neutral-400 shadow active:scale-95 active:text-white transition-transform backdrop-blur-sm"
+          className="flex h-11 w-11 items-center justify-center rounded-full bg-navy/80 text-silver/70 shadow active:scale-95 active:text-white transition-transform backdrop-blur-sm"
           aria-label={t.editor.undo}
         >
           <ArrowCounterClockwise size={16} />
         </button>
         <button
           onClick={() => useEditorStore.getState().redo()}
-          className="flex h-11 w-11 items-center justify-center rounded-full bg-neutral-900/80 text-neutral-400 shadow active:scale-95 active:text-white transition-transform backdrop-blur-sm"
+          className="flex h-11 w-11 items-center justify-center rounded-full bg-navy/80 text-silver/70 shadow active:scale-95 active:text-white transition-transform backdrop-blur-sm"
           aria-label={t.editor.redo}
         >
           <ArrowClockwise size={16} />
@@ -257,14 +257,14 @@ export function EditorLayout() {
       <div className="fixed bottom-4 left-4 z-40 flex gap-2 md:hidden">
         <button
           onClick={() => setMobilePanel(mobilePanel === "slides" ? null : "slides")}
-          className="flex h-11 w-11 items-center justify-center rounded-full bg-neutral-900 text-white shadow-lg active:scale-95 transition-transform"
+          className="flex h-11 w-11 items-center justify-center rounded-full bg-navy text-white shadow-lg active:scale-95 transition-transform"
           aria-label={t.editor.slides}
         >
           <StackSimple size={20} weight="regular" />
         </button>
         <button
           onClick={() => setMobilePanel(mobilePanel === "insert" ? null : "insert")}
-          className="flex h-11 w-11 items-center justify-center rounded-full bg-neutral-900 text-white shadow-lg active:scale-95 transition-transform"
+          className="flex h-11 w-11 items-center justify-center rounded-full bg-navy text-white shadow-lg active:scale-95 transition-transform"
           aria-label={t.editor.insertElement}
         >
           <PlusCircle size={20} weight="regular" />
@@ -306,7 +306,7 @@ export function EditorLayout() {
             if (next) markAsRead();
             else markAsClosed();
           }}
-          className="fixed bottom-14 right-4 z-40 flex h-10 w-10 items-center justify-center rounded-full bg-neutral-800/90 text-neutral-400 hover:text-white hover:bg-neutral-700 shadow-lg backdrop-blur-sm transition-colors md:bottom-14"
+          className="fixed bottom-14 right-4 z-40 flex h-10 w-10 items-center justify-center rounded-full bg-white/5/90 text-silver/70 hover:text-white hover:bg-steel shadow-lg backdrop-blur-sm transition-colors md:bottom-14"
           aria-label="Toggle chat"
         >
           <ChatCircleDots size={20} weight="bold" />
@@ -329,7 +329,7 @@ export function EditorLayout() {
       <button
         data-onboarding="help"
         onClick={() => setShortcutsOpen(true)}
-        className="fixed bottom-4 right-4 z-40 flex h-8 w-8 items-center justify-center rounded-full bg-neutral-800/80 text-neutral-400 hover:text-white hover:bg-neutral-700 shadow-lg backdrop-blur-sm transition-colors"
+        className="fixed bottom-4 right-4 z-40 flex h-8 w-8 items-center justify-center rounded-full bg-white/5 text-silver/70 hover:text-white hover:bg-steel shadow-lg backdrop-blur-sm transition-colors"
         aria-label="Keyboard shortcuts"
       >
         <Question size={16} weight="bold" />

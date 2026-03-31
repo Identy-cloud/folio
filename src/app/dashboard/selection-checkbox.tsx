@@ -22,15 +22,15 @@ export function SelectionCheckbox({ checked, visible, onChange, ariaLabel }: Pro
       }}
       className={`flex h-6 w-6 shrink-0 items-center justify-center rounded border transition-all ${
         checked
-          ? "border-white bg-white"
-          : "border-neutral-500 bg-neutral-800/80"
+          ? "border-accent bg-accent"
+          : "border-silver/50 bg-white/5"
       } ${
         visible
           ? "opacity-100"
           : "opacity-0 group-hover:opacity-100"
       }`}
     >
-      {checked && <Check size={14} weight="bold" className="text-[#161616]" />}
+      {checked && <Check size={14} weight="bold" className="text-white" />}
     </button>
   );
 }

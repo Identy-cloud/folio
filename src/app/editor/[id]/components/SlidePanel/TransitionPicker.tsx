@@ -54,7 +54,7 @@ export function TransitionPicker({
 
   return (
     <div className="px-4 py-2">
-      <span className="mb-1.5 block text-[10px] text-neutral-500 uppercase tracking-wider">
+      <span className="mb-1.5 block text-[10px] text-silver/50 uppercase tracking-wider">
         {t.editor.transition}
       </span>
       <div className="flex gap-1">
@@ -65,8 +65,8 @@ export function TransitionPicker({
             title={LABELS[tr]}
             className={`flex h-8 w-8 items-center justify-center rounded text-xs transition-colors ${
               current === tr
-                ? "bg-white text-[#161616]"
-                : "text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200"
+                ? "bg-accent text-white"
+                : "text-silver/70 hover:bg-white/5 hover:text-silver"
             }`}
           >
             <TransitionIcon type={tr} size={14} />
@@ -77,7 +77,7 @@ export function TransitionPicker({
       {showTimingControls && (
         <div className="mt-3 space-y-2">
           <div className="flex items-center gap-2">
-            <span className="shrink-0 text-[10px] text-neutral-500 w-12">Speed</span>
+            <span className="shrink-0 text-[10px] text-silver/50 w-12">Speed</span>
             <input
               type="range"
               min={200}
@@ -85,7 +85,7 @@ export function TransitionPicker({
               step={100}
               value={effectiveDuration}
               onChange={(e) => onTransitionDurationChange(parseInt(e.target.value))}
-              className="h-1 flex-1 cursor-pointer appearance-none rounded-full bg-neutral-700 accent-white [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white"
+              className="h-1 flex-1 cursor-pointer appearance-none rounded-full bg-steel accent-white [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white"
             />
             <input
               type="number"
@@ -97,14 +97,14 @@ export function TransitionPicker({
                 const v = parseInt(e.target.value);
                 if (!isNaN(v)) onTransitionDurationChange(Math.max(200, Math.min(2000, v)));
               }}
-              className="w-14 rounded border border-neutral-700 bg-[#161616] px-1.5 py-0.5 text-right text-[10px] text-neutral-300 outline-none tabular-nums"
+              className="w-14 rounded border border-steel bg-navy px-1.5 py-0.5 text-right text-[10px] text-silver outline-none tabular-nums"
             />
-            <span className="text-[10px] text-neutral-500">ms</span>
+            <span className="text-[10px] text-silver/50">ms</span>
           </div>
 
           {onTransitionEasingChange && (
             <div className="flex items-center gap-2">
-              <span className="shrink-0 text-[10px] text-neutral-500 w-12">Easing</span>
+              <span className="shrink-0 text-[10px] text-silver/50 w-12">Easing</span>
               <div className="flex flex-1 gap-0.5">
                 {EASING_OPTIONS.map((e) => (
                   <button
@@ -112,8 +112,8 @@ export function TransitionPicker({
                     onClick={() => onTransitionEasingChange(e)}
                     className={`flex-1 rounded px-1 py-1 text-[9px] transition-colors ${
                       effectiveEasing === e
-                        ? "bg-white text-[#161616] font-medium"
-                        : "text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200"
+                        ? "bg-accent text-white font-medium"
+                        : "text-silver/70 hover:bg-white/5 hover:text-silver"
                     }`}
                     title={e}
                   >
@@ -134,11 +134,11 @@ export function TransitionPicker({
 
       {onDurationChange && (
         <label className="mt-2 flex items-center gap-2">
-          <span className="text-[10px] text-neutral-500">Auto-advance</span>
+          <span className="text-[10px] text-silver/50">Auto-advance</span>
           <select
             value={duration ?? 0}
             onChange={(e) => onDurationChange(parseInt(e.target.value))}
-            className="cursor-pointer rounded border border-neutral-700 bg-[#161616] px-1.5 py-1 text-[10px] text-neutral-300 outline-none"
+            className="cursor-pointer rounded border border-steel bg-navy px-1.5 py-1 text-[10px] text-silver outline-none"
           >
             <option value={0}>Off</option>
             <option value={3}>3s</option>
@@ -238,12 +238,12 @@ function TransitionPreview({
   return (
     <button
       onClick={play}
-      className="flex w-full items-center justify-center gap-1.5 rounded bg-neutral-800 px-2 py-1.5 text-[10px] text-neutral-400 hover:bg-neutral-700 hover:text-neutral-200 transition-colors"
+      className="flex w-full items-center justify-center gap-1.5 rounded bg-white/5 px-2 py-1.5 text-[10px] text-silver/70 hover:bg-steel hover:text-silver transition-colors"
       title="Preview transition"
     >
-      <div className="relative h-5 w-8 overflow-hidden rounded-sm bg-neutral-900">
+      <div className="relative h-5 w-8 overflow-hidden rounded-sm bg-navy">
         <div
-          className="absolute inset-0 flex items-center justify-center bg-neutral-600 text-[7px] text-white"
+          className="absolute inset-0 flex items-center justify-center bg-steel/80 text-[7px] text-white"
           style={getPreviewStyle()}
         >
           A

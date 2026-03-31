@@ -40,10 +40,10 @@ function UpgradeCelebrationInner() {
               <Confetti size={18} weight="fill" className="text-yellow-400" />
               {t.dashboard.upgradeCelebrationTitle.replace("{plan}", planName)}
             </div>
-            <p className="text-xs text-neutral-400">{t.dashboard.upgradeCelebrationDesc}</p>
+            <p className="text-xs text-silver/70">{t.dashboard.upgradeCelebrationDesc}</p>
             <ul className="space-y-1">
               {features.map((f) => (
-                <li key={f} className="flex items-center gap-1.5 text-xs text-neutral-300">
+                <li key={f} className="flex items-center gap-1.5 text-xs text-silver">
                   <Check size={12} weight="bold" className="text-green-400" />
                   {f}
                 </li>

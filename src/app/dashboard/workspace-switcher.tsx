@@ -64,7 +64,7 @@ export function WorkspaceSwitcher({ activeId, onSelect }: WorkspaceSwitcherProps
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-2 rounded border border-neutral-700 px-3 py-2 text-xs font-medium text-neutral-300 hover:bg-neutral-800 transition-colors"
+        className="flex items-center gap-2 rounded border border-steel px-3 py-2 text-xs font-medium text-silver hover:bg-white/5 transition-colors"
       >
         {active ? (
           <>
@@ -73,22 +73,22 @@ export function WorkspaceSwitcher({ activeId, onSelect }: WorkspaceSwitcherProps
           </>
         ) : (
           <>
-            <User size={14} className="text-neutral-500" />
+            <User size={14} className="text-silver/50" />
             <span>Personal</span>
           </>
         )}
-        <CaretDown size={12} className="text-neutral-500" />
+        <CaretDown size={12} className="text-silver/50" />
       </button>
 
       {open && (
-        <div className="absolute left-0 top-full z-50 mt-1 w-56 rounded border border-neutral-700 bg-[#1e1e1e] py-1 shadow-lg">
+        <div className="absolute left-0 top-full z-50 mt-1 w-56 rounded border border-steel bg-slate py-1 shadow-lg">
           <button
             onClick={() => { onSelect(null); setOpen(false); }}
             className={`flex w-full items-center gap-2 px-3 py-2 text-left text-xs transition-colors ${
-              !activeId ? "bg-neutral-800 text-white" : "text-neutral-300 hover:bg-neutral-800"
+              !activeId ? "bg-white/5 text-white" : "text-silver hover:bg-white/5"
             }`}
           >
-            <User size={14} className="shrink-0 text-neutral-500" />
+            <User size={14} className="shrink-0 text-silver/50" />
             Personal
           </button>
 
@@ -97,20 +97,20 @@ export function WorkspaceSwitcher({ activeId, onSelect }: WorkspaceSwitcherProps
               key={ws.id}
               onClick={() => { onSelect(ws.id); setOpen(false); }}
               className={`flex w-full items-center gap-2 px-3 py-2 text-left text-xs transition-colors ${
-                activeId === ws.id ? "bg-neutral-800 text-white" : "text-neutral-300 hover:bg-neutral-800"
+                activeId === ws.id ? "bg-white/5 text-white" : "text-silver hover:bg-white/5"
               }`}
             >
               <WorkspaceLogo name={ws.name} logoUrl={ws.logoUrl} />
               <span className="min-w-0 flex-1 truncate">{ws.name}</span>
-              <span className="shrink-0 text-[10px] text-neutral-600">{ws.role}</span>
+              <span className="shrink-0 text-[10px] text-silver/40">{ws.role}</span>
             </button>
           ))}
 
-          <div className="my-1 border-t border-neutral-700" />
+          <div className="my-1 border-t border-steel" />
           <button
             onClick={handleCreate}
             disabled={creating}
-            className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 transition-colors disabled:opacity-50"
+            className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs text-silver/70 hover:bg-white/5 hover:text-silver transition-colors disabled:opacity-50"
           >
             <Plus size={14} />
             Create workspace
@@ -128,7 +128,7 @@ function WorkspaceLogo({ name, logoUrl }: { name: string; logoUrl: string | null
     );
   }
   return (
-    <div className="flex h-4 w-4 shrink-0 items-center justify-center rounded bg-neutral-700 text-[8px] font-bold text-neutral-300">
+    <div className="flex h-4 w-4 shrink-0 items-center justify-center rounded bg-steel text-[8px] font-bold text-silver">
       {name.charAt(0).toUpperCase()}
     </div>
   );

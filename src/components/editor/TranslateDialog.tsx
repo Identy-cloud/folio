@@ -88,20 +88,20 @@ export function TranslateDialog({ open, onClose }: Props) {
       onClick={onClose}
     >
       <div
-        className="w-full max-w-sm rounded border border-neutral-700 bg-[#1e1e1e] shadow-2xl"
+        className="w-full max-w-sm rounded border border-steel bg-slate shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center gap-2 border-b border-neutral-700 px-4 py-3">
+        <div className="flex items-center gap-2 border-b border-steel px-4 py-3">
           <GlobeSimple size={16} weight="bold" className="text-blue-400" />
           <span className="text-sm font-medium text-white">Translate presentation</span>
         </div>
         <div className="p-4">
-          <label className="mb-2 block text-xs text-neutral-400">Target language</label>
+          <label className="mb-2 block text-xs text-silver/70">Target language</label>
           <select
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
             disabled={loading}
-            className="w-full cursor-pointer rounded border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm text-white outline-none focus:border-neutral-500"
+            className="w-full cursor-pointer rounded border border-steel bg-navy px-3 py-2 text-sm text-white outline-none focus:border-silver/50"
           >
             {LANGUAGES.map((lang) => (
               <option key={lang} value={lang}>{lang}</option>
@@ -112,7 +112,7 @@ export function TranslateDialog({ open, onClose }: Props) {
           <div className="mt-4 flex items-center justify-end gap-2">
             <button
               onClick={onClose}
-              className="rounded px-3 py-1.5 text-xs text-neutral-400 hover:text-neutral-200 transition-colors"
+              className="rounded px-3 py-1.5 text-xs text-silver/70 hover:text-silver transition-colors"
             >
               {result ? "Done" : "Cancel"}
             </button>
@@ -120,10 +120,10 @@ export function TranslateDialog({ open, onClose }: Props) {
               <button
                 onClick={handleTranslate}
                 disabled={loading}
-                className="flex items-center gap-1.5 rounded bg-white px-3 py-1.5 text-xs font-medium text-[#161616] hover:bg-neutral-200 disabled:opacity-40 disabled:pointer-events-none transition-colors"
+                className="flex items-center gap-1.5 rounded bg-accent px-3 py-1.5 text-xs font-medium text-white hover:bg-accent-hover disabled:opacity-40 disabled:pointer-events-none transition-colors"
               >
                 {loading && (
-                  <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-neutral-400 border-t-[#161616]" />
+                  <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-silver/50 border-t-navy" />
                 )}
                 {loading ? "Translating..." : "Translate"}
               </button>

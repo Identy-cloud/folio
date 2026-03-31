@@ -6,7 +6,7 @@ import { FolioLogo } from "@/components/FolioLogo";
 import { Tooltip } from "@/components/ui/Tooltip";
 
 function Spinner() {
-  return <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-neutral-500 border-t-white" />;
+  return <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-silver/50 border-t-white" />;
 }
 import { toast } from "sonner";
 import { useEditorStore } from "@/store/editorStore";
@@ -175,11 +175,11 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
     saved: "bg-green-500",
     saving: "bg-amber-500 animate-pulse",
     error: "bg-red-500",
-    unsaved: "bg-neutral-600",
+    unsaved: "bg-steel/80",
   };
 
   return (
-    <div className="flex h-12 items-center justify-between border-b border-neutral-800 bg-[#161616] px-2 md:px-4">
+    <div className="flex h-12 items-center justify-between border-b border-steel/30 bg-navy px-2 md:px-4">
       <div className="flex items-center gap-2 md:gap-4">
         <Link
           href="/dashboard"
@@ -187,7 +187,7 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
         >
           <FolioLogo size={20} />
         </Link>
-        <div className="hidden sm:block h-5 w-px bg-neutral-700" />
+        <div className="hidden sm:block h-5 w-px bg-steel" />
         <input
           ref={titleRef}
           value={title}
@@ -195,57 +195,57 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
           onBlur={saveTitle}
           onKeyDown={(e) => { if (e.key === "Enter") { saveTitle(); titleRef.current?.blur(); } }}
           aria-label="Título de la presentación"
-          className="hidden sm:block w-28 md:w-40 truncate bg-transparent text-xs text-neutral-400 outline-none hover:text-neutral-200 focus:text-white"
+          className="hidden sm:block w-28 md:w-40 truncate bg-transparent text-xs text-silver/70 outline-none hover:text-silver focus:text-white"
           placeholder="Untitled"
         />
-        <span className="hidden sm:inline text-[10px] text-neutral-600">{slides.length}s</span>
+        <span className="hidden sm:inline text-[10px] text-silver/40">{slides.length}s</span>
         <Tooltip content="Settings">
           <button
             onClick={() => setSettingsOpen(true)}
-            className="hidden sm:flex rounded p-1.5 text-neutral-500 hover:bg-neutral-800 hover:text-neutral-300 transition-colors"
+            className="hidden sm:flex rounded p-1.5 text-silver/50 hover:bg-white/5 hover:text-silver transition-colors"
           >
             <GearSix size={14} />
           </button>
         </Tooltip>
         {onToggleSorter && (
           <Tooltip content="Slide sorter (F2)">
-            <button onClick={onToggleSorter} className="hidden sm:flex rounded p-1.5 text-neutral-500 hover:bg-neutral-800 hover:text-neutral-300 transition-colors">
+            <button onClick={onToggleSorter} className="hidden sm:flex rounded p-1.5 text-silver/50 hover:bg-white/5 hover:text-silver transition-colors">
               <SquaresFour size={14} />
             </button>
           </Tooltip>
         )}
         {onToggleThemeCustomizer && (
           <Tooltip content="Theme colors">
-            <button onClick={onToggleThemeCustomizer} className="hidden sm:flex rounded p-1.5 text-neutral-500 hover:bg-neutral-800 hover:text-neutral-300 transition-colors">
+            <button onClick={onToggleThemeCustomizer} className="hidden sm:flex rounded p-1.5 text-silver/50 hover:bg-white/5 hover:text-silver transition-colors">
               <Palette size={14} />
             </button>
           </Tooltip>
         )}
         {onToggleLayoutPicker && (
           <Tooltip content="Slide layout">
-            <button onClick={onToggleLayoutPicker} className="hidden sm:flex rounded p-1.5 text-neutral-500 hover:bg-neutral-800 hover:text-neutral-300 transition-colors">
+            <button onClick={onToggleLayoutPicker} className="hidden sm:flex rounded p-1.5 text-silver/50 hover:bg-white/5 hover:text-silver transition-colors">
               <Layout size={14} />
             </button>
           </Tooltip>
         )}
         <Tooltip content="Slide library">
-          <button onClick={() => window.dispatchEvent(new CustomEvent("folio:open-slide-library"))} className="hidden sm:flex rounded p-1.5 text-neutral-500 hover:bg-neutral-800 hover:text-neutral-300 transition-colors">
+          <button onClick={() => window.dispatchEvent(new CustomEvent("folio:open-slide-library"))} className="hidden sm:flex rounded p-1.5 text-silver/50 hover:bg-white/5 hover:text-silver transition-colors">
             <BookmarkSimple size={14} />
           </button>
         </Tooltip>
-        <div className="h-5 w-px bg-neutral-700" />
+        <div className="h-5 w-px bg-steel" />
         <div className="flex gap-1">
           <Tooltip content={t.editor.undo} shortcut="Ctrl+Z">
-            <button onClick={undo} disabled={!canUndo} className="rounded p-2 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 disabled:opacity-30 disabled:pointer-events-none" aria-label={t.editor.undo}><ArrowCounterClockwise size={16} weight="regular" /></button>
+            <button onClick={undo} disabled={!canUndo} className="rounded p-2 text-silver/70 hover:bg-white/5 hover:text-silver disabled:opacity-30 disabled:pointer-events-none" aria-label={t.editor.undo}><ArrowCounterClockwise size={16} weight="regular" /></button>
           </Tooltip>
           <Tooltip content={t.editor.redo} shortcut="Ctrl+Y">
-            <button onClick={redo} disabled={!canRedo} className="rounded p-2 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 disabled:opacity-30 disabled:pointer-events-none" aria-label={t.editor.redo}><ArrowClockwise size={16} weight="regular" /></button>
+            <button onClick={redo} disabled={!canRedo} className="rounded p-2 text-silver/70 hover:bg-white/5 hover:text-silver disabled:opacity-30 disabled:pointer-events-none" aria-label={t.editor.redo}><ArrowClockwise size={16} weight="regular" /></button>
           </Tooltip>
           {onToggleHistory && (
             <Tooltip content="History">
               <button
                 onClick={onToggleHistory}
-                className={`hidden md:flex rounded p-2 transition-colors ${historyOpen ? "bg-neutral-700 text-white" : "text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200"}`}
+                className={`hidden md:flex rounded p-2 transition-colors ${historyOpen ? "bg-steel text-white" : "text-silver/70 hover:bg-white/5 hover:text-silver"}`}
                 aria-label="History"
                 aria-pressed={historyOpen}
               >
@@ -257,7 +257,7 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
             <Tooltip content="Version history">
               <button
                 onClick={onToggleVersions}
-                className={`hidden md:flex rounded p-2 transition-colors ${versionsOpen ? "bg-neutral-700 text-white" : "text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200"}`}
+                className={`hidden md:flex rounded p-2 transition-colors ${versionsOpen ? "bg-steel text-white" : "text-silver/70 hover:bg-white/5 hover:text-silver"}`}
                 aria-label="Version history"
                 aria-pressed={versionsOpen}
               >
@@ -269,7 +269,7 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
             <Tooltip content="Layers">
               <button
                 onClick={onToggleLayers}
-                className={`hidden md:flex rounded p-2 transition-colors ${layersOpen ? "bg-neutral-700 text-white" : "text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200"}`}
+                className={`hidden md:flex rounded p-2 transition-colors ${layersOpen ? "bg-steel text-white" : "text-silver/70 hover:bg-white/5 hover:text-silver"}`}
                 aria-label="Layers"
                 aria-pressed={layersOpen}
               >
@@ -281,7 +281,7 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
             <Tooltip content="Notes">
               <button
                 onClick={onToggleNotes}
-                className={`hidden md:flex rounded p-2 transition-colors ${notesOpen ? "bg-neutral-700 text-white" : "text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200"}`}
+                className={`hidden md:flex rounded p-2 transition-colors ${notesOpen ? "bg-steel text-white" : "text-silver/70 hover:bg-white/5 hover:text-silver"}`}
                 aria-label="Slide notes"
                 aria-pressed={notesOpen}
               >
@@ -293,7 +293,7 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
             <Tooltip content="Comments">
               <button
                 onClick={onToggleComments}
-                className="hidden md:flex rounded p-2 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 transition-colors"
+                className="hidden md:flex rounded p-2 text-silver/70 hover:bg-white/5 hover:text-silver transition-colors"
                 aria-label="Comments"
               >
                 <ChatCircle size={16} weight="regular" />
@@ -301,12 +301,12 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
             </Tooltip>
           )}
         </div>
-        <div className="hidden md:block h-5 w-px bg-neutral-700" />
+        <div className="hidden md:block h-5 w-px bg-steel" />
         <Tooltip content={t.editor.image}>
           <button
             onClick={triggerUpload}
             disabled={uploading}
-            className="hidden md:flex items-center gap-1 rounded px-3 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 disabled:opacity-50"
+            className="hidden md:flex items-center gap-1 rounded px-3 py-1 text-xs text-silver/70 hover:bg-white/5 hover:text-silver disabled:opacity-50"
           >
             <ImageIcon size={14} weight="regular" />
             {uploading ? <Spinner /> : t.editor.image}
@@ -318,7 +318,7 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
               if (!limits.canUseAI) { setUpgradeFeature({ feature: "AI Slide Generation", key: "canUseAI" }); return; }
               window.dispatchEvent(new CustomEvent("folio:open-ai-generate"));
             }}
-            className="hidden md:flex items-center gap-1 rounded px-3 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 transition-colors"
+            className="hidden md:flex items-center gap-1 rounded px-3 py-1 text-xs text-silver/70 hover:bg-white/5 hover:text-silver transition-colors"
           >
             <Sparkle size={14} weight="fill" className="text-amber-400" />
             AI
@@ -330,7 +330,7 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
               if (!limits.canUseAI) { setUpgradeFeature({ feature: "AI Translate", key: "canUseAI" }); return; }
               window.dispatchEvent(new CustomEvent("folio:open-translate"));
             }}
-            className="hidden md:flex items-center gap-1 rounded px-3 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 transition-colors"
+            className="hidden md:flex items-center gap-1 rounded px-3 py-1 text-xs text-silver/70 hover:bg-white/5 hover:text-silver transition-colors"
           >
             <GlobeSimple size={14} weight="bold" className="text-blue-400" />
           </button>
@@ -346,17 +346,17 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
           onExportAllPng={handleExportAllPng}
           onExportPptx={handleExportPptx}
         />
-        <div className="hidden md:block h-5 w-px bg-neutral-700" />
+        <div className="hidden md:block h-5 w-px bg-steel" />
         <div className="hidden md:block">
           <RecordingControls />
         </div>
-        <div className="hidden md:flex gap-0.5 rounded border border-neutral-700 p-0.5" role="group" aria-label={t.editor.editMode}>
+        <div className="hidden md:flex gap-0.5 rounded border border-steel p-0.5" role="group" aria-label={t.editor.editMode}>
           <button
             onClick={() => setEditingMode("desktop")}
             aria-label={t.editor.modeDesktop}
             aria-pressed={editingMode === "desktop"}
             className={`flex items-center gap-1 rounded px-2.5 py-1.5 text-xs transition-colors ${
-              editingMode === "desktop" ? "bg-white text-[#161616]" : "text-neutral-500 hover:text-neutral-300"
+              editingMode === "desktop" ? "bg-accent text-white" : "text-silver/50 hover:text-silver"
             }`}
           >
             <Desktop size={14} />
@@ -366,7 +366,7 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
             aria-label={t.editor.modeMobile}
             aria-pressed={editingMode === "mobile"}
             className={`flex items-center gap-1 rounded px-2.5 py-1.5 text-xs transition-colors ${
-              editingMode === "mobile" ? "bg-white text-[#161616]" : "text-neutral-500 hover:text-neutral-300"
+              editingMode === "mobile" ? "bg-accent text-white" : "text-silver/50 hover:text-silver"
             }`}
           >
             <DeviceMobile size={14} />
@@ -378,7 +378,7 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
           {limits.canUseAnalytics ? (
             <Link
               href={`/dashboard/analytics/${presentationId}`}
-              className="hidden md:flex items-center gap-1 rounded px-2.5 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 transition-colors"
+              className="hidden md:flex items-center gap-1 rounded px-2.5 py-1 text-xs text-silver/70 hover:bg-white/5 hover:text-silver transition-colors"
             >
               <ChartBar size={14} />
               <span className="hidden lg:inline">Analytics</span>
@@ -386,7 +386,7 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
           ) : (
             <button
               onClick={() => setUpgradeFeature({ feature: "Analytics", key: "canUseAnalytics" })}
-              className="hidden md:flex items-center gap-1 rounded px-2.5 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 transition-colors"
+              className="hidden md:flex items-center gap-1 rounded px-2.5 py-1 text-xs text-silver/70 hover:bg-white/5 hover:text-silver transition-colors"
             >
               <ChartBar size={14} />
               <span className="hidden lg:inline">Analytics</span>
@@ -397,7 +397,7 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
           <Link
             href={`/preview/${useEditorStore.getState().presentationId}`}
             target="_blank"
-            className="flex items-center gap-1 rounded bg-white px-2.5 py-1 text-xs font-medium text-[#161616] hover:bg-neutral-200 transition-colors md:px-3"
+            className="flex items-center gap-1 rounded bg-accent px-2.5 py-1 text-xs font-medium text-white hover:bg-accent-hover transition-colors md:px-3"
           >
             <Play size={12} weight="fill" />
             <span className="hidden sm:inline">Preview</span>
@@ -412,7 +412,7 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
                 if (!limits.canCollaborate) { setUpgradeFeature({ feature: "Collaboration", key: "canCollaborate" }); return; }
                 onToggleCollaborators();
               }}
-              className={`hidden md:flex rounded p-2 transition-colors ${collaboratorsOpen ? "bg-neutral-700 text-white" : "text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200"}`}
+              className={`hidden md:flex rounded p-2 transition-colors ${collaboratorsOpen ? "bg-steel text-white" : "text-silver/70 hover:bg-white/5 hover:text-silver"}`}
               aria-label="Collaborators"
               aria-pressed={collaboratorsOpen}
             >
@@ -421,7 +421,7 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
           </Tooltip>
         )}
         {peerCount > 0 && (
-          <span className="hidden md:inline text-xs text-neutral-500">
+          <span className="hidden md:inline text-xs text-silver/50">
             {peerCount} {peerCount > 1 ? t.editor.collaborators : t.editor.collaborator}
           </span>
         )}
@@ -436,7 +436,7 @@ export function Toolbar({ connected, peerCount = 0, onToggleHistory, historyOpen
               </span>
             </span>
             {saveStatus === "saved" && lastSaved && (
-              <span className="hidden lg:inline text-[10px] text-neutral-600">
+              <span className="hidden lg:inline text-[10px] text-silver/40">
                 {new Date(lastSaved).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
               </span>
             )}
@@ -472,20 +472,20 @@ function ExportDropdown({ exporting, exportProgress, exportingPptx, canExportPdf
     return () => document.removeEventListener("mousedown", close);
   }, [open]);
 
-  const item = "flex w-full items-center gap-2 px-3 py-2 text-xs text-neutral-300 hover:bg-neutral-800 disabled:opacity-40 disabled:pointer-events-none transition-colors";
+  const item = "flex w-full items-center gap-2 px-3 py-2 text-xs text-silver hover:bg-white/5 disabled:opacity-40 disabled:pointer-events-none transition-colors";
 
   return (
     <div ref={ref} className="relative hidden md:block">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-1 rounded px-3 py-1 text-xs text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200 transition-colors"
+        className="flex items-center gap-1 rounded px-3 py-1 text-xs text-silver/70 hover:bg-white/5 hover:text-silver transition-colors"
       >
         <Export size={14} weight="regular" />
         {exporting ? exportProgress : "Export"}
         <CaretDown size={10} />
       </button>
       {open && (
-        <div className="absolute left-0 top-full mt-1 z-50 w-44 rounded border border-neutral-700 bg-[#242424] py-1 shadow-lg">
+        <div className="absolute left-0 top-full mt-1 z-50 w-44 rounded border border-steel bg-steel py-1 shadow-lg">
           <button onClick={() => {
             if (!canExportPdf) { setUpgradeFor("canExportPdf"); setOpen(false); return; }
             onExportPdf(); setOpen(false);

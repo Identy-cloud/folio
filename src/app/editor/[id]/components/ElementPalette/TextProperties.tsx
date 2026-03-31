@@ -40,13 +40,13 @@ export function TextProperties({ element }: Props) {
 
   return (
     <div className="space-y-3">
-      <span className="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">{t.editor.text}</span>
+      <span className="text-[11px] font-medium text-silver/70 uppercase tracking-wider">{t.editor.text}</span>
 
       {/* Font family */}
       <select
         value={element.fontFamily}
         onChange={(e) => update({ fontFamily: e.target.value })}
-        className="w-full cursor-pointer rounded border border-neutral-700 bg-[#161616] px-2 py-1.5 text-xs text-neutral-200 outline-none"
+        className="w-full cursor-pointer rounded border border-steel bg-navy px-2 py-1.5 text-xs text-silver outline-none"
         style={{ fontFamily: element.fontFamily }}
       >
         {ALL_FONTS.map((f) => (
@@ -63,7 +63,7 @@ export function TextProperties({ element }: Props) {
 
       {/* Font size */}
       <div>
-        <span className="mb-1 block text-[10px] text-neutral-500">{t.editor.fontSize}</span>
+        <span className="mb-1 block text-[10px] text-silver/50">{t.editor.fontSize}</span>
         <div className="flex gap-1">
           <input
             type="number"
@@ -71,7 +71,7 @@ export function TextProperties({ element }: Props) {
             onChange={(e) => setSizeInput(e.target.value)}
             onBlur={commitSize}
             onKeyDown={(e) => e.key === "Enter" && commitSize()}
-            className="w-16 rounded border border-neutral-700 bg-[#161616] px-2 py-1 text-xs text-neutral-200 outline-none focus:border-neutral-500"
+            className="w-16 rounded border border-steel bg-navy px-2 py-1 text-xs text-silver outline-none focus:border-silver/50"
           />
           <div className="flex flex-wrap gap-1">
             {SIZES.map((s) => (
@@ -80,8 +80,8 @@ export function TextProperties({ element }: Props) {
                 onClick={() => { update({ fontSize: s }); setSizeInput(String(s)); }}
                 className={`rounded px-1.5 py-0.5 text-[10px] transition-colors ${
                   element.fontSize === s
-                    ? "bg-white text-[#161616]"
-                    : "text-neutral-500 hover:bg-neutral-800 hover:text-neutral-300"
+                    ? "bg-accent text-white"
+                    : "text-silver/50 hover:bg-white/5 hover:text-silver"
                 }`}
               >
                 {s}
@@ -99,8 +99,8 @@ export function TextProperties({ element }: Props) {
             onClick={() => update({ fontWeight: w.value })}
             className={`rounded px-2 py-1 text-[10px] transition-colors ${
               element.fontWeight === w.value
-                ? "bg-white text-[#161616]"
-                : "text-neutral-500 hover:bg-neutral-800"
+                ? "bg-accent text-white"
+                : "text-silver/50 hover:bg-white/5"
             }`}
           >
             {w.label}
@@ -110,8 +110,8 @@ export function TextProperties({ element }: Props) {
           onClick={() => update({ fontStyle: element.fontStyle === "italic" ? "normal" : "italic" })}
           className={`rounded p-1 transition-colors ${
             element.fontStyle === "italic"
-              ? "bg-white text-[#161616]"
-              : "text-neutral-500 hover:bg-neutral-800"
+              ? "bg-accent text-white"
+              : "text-silver/50 hover:bg-white/5"
           }`}
           aria-label="Italic"
         >
@@ -121,8 +121,8 @@ export function TextProperties({ element }: Props) {
           onClick={() => update({ textDecoration: element.textDecoration === "underline" ? "none" : "underline" })}
           className={`rounded p-1 transition-colors ${
             element.textDecoration === "underline"
-              ? "bg-white text-[#161616]"
-              : "text-neutral-500 hover:bg-neutral-800"
+              ? "bg-accent text-white"
+              : "text-silver/50 hover:bg-white/5"
           }`}
           aria-label="Underline"
         >
@@ -132,8 +132,8 @@ export function TextProperties({ element }: Props) {
           onClick={() => update({ textDecoration: element.textDecoration === "line-through" ? "none" : "line-through" })}
           className={`rounded p-1 transition-colors ${
             element.textDecoration === "line-through"
-              ? "bg-white text-[#161616]"
-              : "text-neutral-500 hover:bg-neutral-800"
+              ? "bg-accent text-white"
+              : "text-silver/50 hover:bg-white/5"
           }`}
           aria-label="Strikethrough"
         >
@@ -150,8 +150,8 @@ export function TextProperties({ element }: Props) {
               onClick={() => update({ textAlign: a })}
               className={`rounded p-1 transition-colors ${
                 element.textAlign === a
-                  ? "bg-white text-[#161616]"
-                  : "text-neutral-500 hover:bg-neutral-800"
+                  ? "bg-accent text-white"
+                  : "text-silver/50 hover:bg-white/5"
               }`}
             >
               {a === "left" && <TextAlignLeft size={14} />}
@@ -160,7 +160,7 @@ export function TextProperties({ element }: Props) {
             </button>
           ))}
         </div>
-        <div className="w-px bg-neutral-700" />
+        <div className="w-px bg-steel" />
         <div className="flex gap-0.5">
           {(["top", "middle", "bottom"] as const).map((v) => (
             <button
@@ -168,8 +168,8 @@ export function TextProperties({ element }: Props) {
               onClick={() => update({ verticalAlign: v })}
               className={`rounded p-1 transition-colors ${
                 element.verticalAlign === v
-                  ? "bg-white text-[#161616]"
-                  : "text-neutral-500 hover:bg-neutral-800"
+                  ? "bg-accent text-white"
+                  : "text-silver/50 hover:bg-white/5"
               }`}
               aria-label={`Align ${v}`}
             >
@@ -184,7 +184,7 @@ export function TextProperties({ element }: Props) {
       {/* Line height + Letter spacing */}
       <div className="grid grid-cols-2 gap-2">
         <label className="flex flex-col gap-0.5">
-          <span className="text-[10px] text-neutral-500">Line height</span>
+          <span className="text-[10px] text-silver/50">Line height</span>
           <input
             type="range"
             min={0.8}
@@ -194,10 +194,10 @@ export function TextProperties({ element }: Props) {
             onChange={(e) => update({ lineHeight: parseFloat(e.target.value) })}
             className="w-full accent-white"
           />
-          <span className="text-[9px] text-neutral-600 text-center">{element.lineHeight.toFixed(1)}</span>
+          <span className="text-[9px] text-silver/40 text-center">{element.lineHeight.toFixed(1)}</span>
         </label>
         <label className="flex flex-col gap-0.5">
-          <span className="text-[10px] text-neutral-500">Spacing</span>
+          <span className="text-[10px] text-silver/50">Spacing</span>
           <input
             type="range"
             min={-0.1}
@@ -207,7 +207,7 @@ export function TextProperties({ element }: Props) {
             onChange={(e) => update({ letterSpacing: parseFloat(e.target.value) })}
             className="w-full accent-white"
           />
-          <span className="text-[9px] text-neutral-600 text-center">{element.letterSpacing.toFixed(2)}em</span>
+          <span className="text-[9px] text-silver/40 text-center">{element.letterSpacing.toFixed(2)}em</span>
         </label>
       </div>
 
@@ -217,10 +217,10 @@ export function TextProperties({ element }: Props) {
       {/* Text stroke */}
       <div>
         <div className="flex items-center justify-between">
-          <span className="text-[10px] text-neutral-500">Text outline</span>
+          <span className="text-[10px] text-silver/50">Text outline</span>
           <button
             onClick={() => update({ textStroke: element.textStroke ? undefined : { width: 1, color: "#000000" } })}
-            className={`rounded px-2 py-0.5 text-[10px] transition-colors ${element.textStroke ? "bg-white text-[#161616]" : "text-neutral-500 hover:bg-neutral-800"}`}
+            className={`rounded px-2 py-0.5 text-[10px] transition-colors ${element.textStroke ? "bg-accent text-white" : "text-silver/50 hover:bg-white/5"}`}
           >
             {element.textStroke ? "On" : "Off"}
           </button>
@@ -228,7 +228,7 @@ export function TextProperties({ element }: Props) {
         {element.textStroke && (
           <div className="mt-1.5 flex gap-2">
             <label className="flex items-center gap-1 flex-1">
-              <span className="text-[9px] text-neutral-600">W</span>
+              <span className="text-[9px] text-silver/40">W</span>
               <input
                 type="number"
                 min={0.5}
@@ -236,7 +236,7 @@ export function TextProperties({ element }: Props) {
                 step={0.5}
                 value={element.textStroke.width}
                 onChange={(e) => update({ textStroke: { ...element.textStroke!, width: parseFloat(e.target.value) || 1 } })}
-                className="w-12 rounded border border-neutral-700 bg-[#161616] px-1.5 py-0.5 text-[10px] text-neutral-300 outline-none"
+                className="w-12 rounded border border-steel bg-navy px-1.5 py-0.5 text-[10px] text-silver outline-none"
               />
             </label>
             <ColorPicker value={element.textStroke.color} onChange={(c) => update({ textStroke: { ...element.textStroke!, color: c } })} />
