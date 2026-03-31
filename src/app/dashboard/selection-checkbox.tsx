@@ -23,7 +23,7 @@ export function SelectionCheckbox({ checked, visible, onChange, ariaLabel }: Pro
       className={`flex h-6 w-6 shrink-0 items-center justify-center rounded border transition-all ${
         checked
           ? "border-accent bg-accent"
-          : "border-silver/50 bg-white/5"
+          : "border-silver/50 bg-white"
       } ${
         visible
           ? "opacity-100"

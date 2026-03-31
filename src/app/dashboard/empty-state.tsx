@@ -13,14 +13,14 @@ export function EmptyState({ onOpenTemplates, onOpenAI }: EmptyStateProps) {
 
   return (
     <div className="flex flex-col items-center justify-center px-4 py-16 text-center sm:py-24">
-      <div className="mb-8 flex h-24 w-24 items-center justify-center rounded-2xl bg-gradient-to-br from-neutral-700 to-neutral-800 shadow-lg shadow-neutral-900/50 sm:h-28 sm:w-28">
-        <Presentation size={48} weight="thin" className="text-silver" />
+      <div className="mb-8 flex h-24 w-24 items-center justify-center rounded-2xl bg-gradient-to-br from-silver/30 to-silver/50 shadow-lg shadow-silver/20 sm:h-28 sm:w-28">
+        <Presentation size={48} weight="thin" className="text-steel" />
       </div>
 
-      <h2 className="font-display text-3xl tracking-tight text-white sm:text-5xl">
+      <h2 className="font-display text-3xl tracking-tight text-navy sm:text-5xl">
         {t.dashboard.emptyHeadline}
       </h2>
-      <p className="mt-4 max-w-md text-sm leading-relaxed text-silver/70 sm:text-base">
+      <p className="mt-4 max-w-md text-sm leading-relaxed text-slate sm:text-base">
         {t.dashboard.emptySubtitle}
       </p>
 
@@ -34,24 +34,24 @@ export function EmptyState({ onOpenTemplates, onOpenAI }: EmptyStateProps) {
         </button>
         <button
           onClick={onOpenAI}
-          className="flex items-center justify-center gap-2 border border-steel/60 px-8 py-3.5 text-sm font-medium tracking-widest text-silver uppercase transition-colors hover:border-silver hover:bg-white/5"
+          className="flex items-center justify-center gap-2 border border-silver/50 px-8 py-3.5 text-sm font-medium tracking-widest text-slate uppercase transition-colors hover:border-navy/30 hover:bg-[#FAFAFA]"
         >
           <Sparkle size={16} weight="bold" />
           {t.dashboard.emptyGenerateAI}
         </button>
       </div>
 
-      <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-xs text-silver/50 sm:gap-8">
+      <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-xs text-steel sm:gap-8">
         <span className="flex items-center gap-1.5">
-          <Layout size={14} className="text-silver/40" />
+          <Layout size={14} className="text-steel/60" />
           {t.dashboard.emptyFeature1}
         </span>
         <span className="flex items-center gap-1.5">
-          <Sparkle size={14} className="text-silver/40" />
+          <Sparkle size={14} className="text-steel/60" />
           {t.dashboard.emptyFeature2}
         </span>
         <span className="flex items-center gap-1.5">
-          <Users size={14} className="text-silver/40" />
+          <Users size={14} className="text-steel/60" />
           {t.dashboard.emptyFeature3}
         </span>
       </div>

@@ -116,23 +116,23 @@ export function TemplateModal({ open, onClose }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 sm:items-center" role="dialog" aria-modal="true" aria-label={t.dashboard.newPresentation} onClick={() => creating === null && onClose()}>
-      <div ref={trapRef} className="max-h-[90vh] w-full overflow-y-auto bg-slate p-4 shadow-2xl sm:max-w-4xl sm:p-8" onClick={(e) => e.stopPropagation()}>
+      <div ref={trapRef} className="max-h-[90vh] w-full overflow-y-auto bg-white p-4 shadow-2xl sm:max-w-4xl sm:p-8" onClick={(e) => e.stopPropagation()}>
         <div className="mb-6 sm:mb-8">
           <div className="flex items-center justify-between">
             {showBack ? (
-              <button onClick={goBack} className="flex items-center gap-1.5 text-base text-silver/70 transition-colors hover:text-white">
+              <button onClick={goBack} className="flex items-center gap-1.5 text-base text-slate transition-colors hover:text-navy">
                 <CaretLeft size={18} />
                 {backLabel}
               </button>
             ) : (
               <div />
             )}
-            <button onClick={onClose} disabled={creating !== null} className="p-1.5 text-silver/50 transition-colors hover:bg-white/5 hover:text-silver disabled:opacity-30" aria-label={t.common.close}>
+            <button onClick={onClose} disabled={creating !== null} className="p-1.5 text-steel transition-colors hover:bg-[#FAFAFA] hover:text-navy disabled:opacity-30" aria-label={t.common.close}>
               <X size={24} />
             </button>
           </div>
-          <h2 className="mt-6 font-display text-3xl tracking-tight text-silver sm:text-4xl">{title}</h2>
-          <p className="mt-1.5 text-sm text-silver/70">{desc}</p>
+          <h2 className="mt-6 font-display text-3xl tracking-tight text-navy sm:text-4xl">{title}</h2>
+          <p className="mt-1.5 text-sm text-slate">{desc}</p>
         </div>
 
         <div key={step} style={{ animation: "fade-in 0.25s ease" }}>

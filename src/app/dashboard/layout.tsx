@@ -39,11 +39,11 @@ export default async function DashboardLayout({
 
   return (
     <WorkspaceProvider>
-    <div className="flex min-h-screen flex-col bg-navy text-silver">
-      <header className="flex h-14 items-center justify-between border-b border-steel/30 px-3 sm:h-16 sm:px-6">
+    <div className="flex min-h-screen flex-col bg-white text-navy">
+      <header className="flex h-14 items-center justify-between border-b border-silver/30 px-3 sm:h-16 sm:px-6">
         <div className="flex items-center gap-2 sm:gap-3">
-          <h1 className="text-xl text-white sm:text-2xl">
-            <FolioLogo size={22} />
+          <h1 className="text-xl text-navy sm:text-2xl">
+            <FolioLogo size={22} className="text-navy" />
           </h1>
           <div className="hidden sm:block">
             <WorkspaceSwitcherWrapper />
@@ -51,7 +51,7 @@ export default async function DashboardLayout({
         </div>
         <div className="flex items-center gap-1.5 sm:gap-4">
           <Link href="/dashboard/profile" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-            <span className="hidden text-sm text-silver/70 sm:block">
+            <span className="hidden text-sm text-slate sm:block">
               {user.user_metadata?.full_name ?? user.email}
             </span>
             {user.user_metadata?.avatar_url ? (
@@ -63,7 +63,7 @@ export default async function DashboardLayout({
                 className="rounded-full"
               />
             ) : (
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-silver text-xs font-medium text-white">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-navy text-xs font-medium text-white">
                 {initials}
               </div>
             )}
@@ -71,7 +71,7 @@ export default async function DashboardLayout({
           {dbUser?.username && (
             <Link
               href={`/u/${dbUser.username}`}
-              className="hidden text-[10px] tracking-[0.15em] text-silver/50 uppercase hover:text-white transition-colors sm:block"
+              className="hidden text-[10px] tracking-[0.15em] text-steel uppercase hover:text-navy transition-colors sm:block"
             >
               Portfolio
             </Link>
@@ -84,15 +84,15 @@ export default async function DashboardLayout({
         </div>
       </header>
       <main id="main-content" className="flex-1 p-4 sm:p-6">{children}</main>
-      <footer className="border-t border-steel/30 px-4 py-3 sm:px-6">
+      <footer className="border-t border-silver/30 px-4 py-3 sm:px-6">
         <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 sm:gap-x-4">
-          <Link href="/terms" className="text-[10px] tracking-[0.15em] text-silver/40 uppercase hover:text-silver/70 transition-colors">
+          <Link href="/terms" className="text-[10px] tracking-[0.15em] text-steel/60 uppercase hover:text-navy transition-colors">
             Legal
           </Link>
-          <Link href="/privacy" className="text-[10px] tracking-[0.15em] text-silver/40 uppercase hover:text-silver/70 transition-colors">
+          <Link href="/privacy" className="text-[10px] tracking-[0.15em] text-steel/60 uppercase hover:text-navy transition-colors">
             Privacidad
           </Link>
-          <Link href="/accessibility" className="hidden text-[10px] tracking-[0.15em] text-silver/40 uppercase hover:text-silver/70 transition-colors sm:block">
+          <Link href="/accessibility" className="hidden text-[10px] tracking-[0.15em] text-steel/60 uppercase hover:text-navy transition-colors sm:block">
             Accesibilidad
           </Link>
         </div>

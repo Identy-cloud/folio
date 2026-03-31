@@ -56,15 +56,15 @@ export default function ProfilePage() {
   }, []);
 
   if (loading) return <ProfileSkeleton />;
-  if (!profile) return <div className="flex items-center justify-center py-32"><span className="text-sm text-red-400">{t.common.error}</span></div>;
+  if (!profile) return <div className="flex items-center justify-center py-32"><span className="text-sm text-red-500">{t.common.error}</span></div>;
 
   return (
     <div className="mx-auto max-w-2xl py-4 sm:py-8">
       <div className="mb-6 flex items-center gap-3">
-        <Link href="/dashboard" className="flex h-8 w-8 items-center justify-center rounded text-silver/70 hover:bg-white/5 hover:text-white transition-colors" aria-label="Back">
+        <Link href="/dashboard" className="flex h-8 w-8 items-center justify-center rounded text-slate hover:bg-[#FAFAFA] hover:text-navy transition-colors" aria-label="Back">
           <ArrowLeft size={18} />
         </Link>
-        <h2 className="font-display text-2xl tracking-tight sm:text-3xl">{t.dashboard.profile ?? "PERFIL"}</h2>
+        <h2 className="font-display text-2xl tracking-tight text-navy sm:text-3xl">{t.dashboard.profile ?? "PERFIL"}</h2>
       </div>
 
       <ProfileTabs active={tab} onChange={setTab} />
@@ -77,9 +77,9 @@ export default function ProfilePage() {
             <SocialLinksSection socialLinks={profile.socialLinks ?? {}} onUpdate={patch} />
             {profile.username && <PortfolioLinkSection username={profile.username} />}
             <PreferencesSection emailDigest={profile.emailDigest} onToggleDigest={(next) => patch({ emailDigest: next })} />
-            <div className="border border-steel/30 p-4">
-              <p className="text-[10px] font-medium uppercase tracking-wider text-silver/50">{t.dashboard.profileMember ?? "Miembro desde"}</p>
-              <p className="mt-1 text-sm text-silver">{new Date(profile.createdAt).toLocaleDateString()}</p>
+            <div className="border border-silver/30 p-4">
+              <p className="text-[10px] font-medium uppercase tracking-wider text-steel">{t.dashboard.profileMember ?? "Miembro desde"}</p>
+              <p className="mt-1 text-sm text-slate">{new Date(profile.createdAt).toLocaleDateString()}</p>
             </div>
           </>
         )}

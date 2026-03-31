@@ -83,7 +83,7 @@ export function SlidePreviewMini({ slide }: Props) {
           return (
             <div
               key={el.id}
-              className="absolute overflow-hidden bg-white/5"
+              className="absolute overflow-hidden bg-[#FAFAFA]"
               style={{
                 left: el.x,
                 top: el.y,

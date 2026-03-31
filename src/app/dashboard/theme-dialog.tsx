@@ -25,9 +25,9 @@ export function ThemeDialog({ open, currentTheme, onSelect, onCancel }: Props) {
       open={open}
       ariaLabel={t.dashboard.themeTitle}
       onClose={onCancel}
-      className="w-full max-w-xs rounded bg-slate border border-steel p-5 shadow-xl mx-4"
+      className="w-full max-w-xs rounded bg-white border border-silver/40 p-5 shadow-xl mx-4"
     >
-      <h3 className="font-display text-lg tracking-tight text-silver">{t.dashboard.themeTitle}</h3>
+      <h3 className="font-display text-lg tracking-tight text-navy">{t.dashboard.themeTitle}</h3>
       <div className="mt-3 space-y-1.5">
         {themeKeys.map((key) => {
           const th = THEMES[key];
@@ -43,11 +43,11 @@ export function ThemeDialog({ open, currentTheme, onSelect, onCancel }: Props) {
               className={`flex w-full items-center gap-3 rounded px-3 py-2.5 text-left text-sm transition-colors ${
                 currentTheme === key
                   ? "bg-accent text-white"
-                  : "text-silver hover:bg-white/5"
+                  : "text-navy hover:bg-[#FAFAFA]"
               }`}
             >
               <span
-                className="h-4 w-4 rounded-full border border-steel/60"
+                className="h-4 w-4 rounded-full border border-silver/50"
                 style={{ backgroundColor: th.accent }}
               />
               {th.label}
@@ -58,7 +58,7 @@ export function ThemeDialog({ open, currentTheme, onSelect, onCancel }: Props) {
       </div>
       <button
         onClick={onCancel}
-        className="mt-4 w-full rounded px-4 py-2 text-xs text-silver/70 hover:bg-white/5 transition-colors"
+        className="mt-4 w-full rounded px-4 py-2 text-xs text-slate hover:bg-[#FAFAFA] transition-colors"
       >
         {t.common.cancel}
       </button>

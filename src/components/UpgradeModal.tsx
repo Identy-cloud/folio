@@ -57,17 +57,17 @@ export function UpgradeModal({ open, onClose, feature, requiredPlan }: Props) {
   return (
     <DialogShell open={open} ariaLabel="Upgrade" onClose={onClose}>
       <div className="text-center">
-        <p className="text-[10px] tracking-[0.4em] text-silver/50 uppercase">
+        <p className="text-[10px] tracking-[0.4em] text-steel uppercase">
           Upgrade
         </p>
-        <h3 className="mt-3 font-display text-2xl tracking-tight text-silver">
+        <h3 className="mt-3 font-display text-2xl tracking-tight text-navy">
           {feature}
         </h3>
-        <p className="mt-3 text-sm text-silver/70">
+        <p className="mt-3 text-sm text-slate">
           Disponible en el plan{" "}
-          <span className="font-medium text-white">{PLAN_LABELS[requiredPlan]}</span>
+          <span className="font-medium text-navy">{PLAN_LABELS[requiredPlan]}</span>
           {" "}por{" "}
-          <span className="font-medium text-white">${PLAN_PRICES[requiredPlan]}/mes</span>
+          <span className="font-medium text-navy">${PLAN_PRICES[requiredPlan]}/mes</span>
         </p>
         <div className="mt-6 flex flex-col gap-2">
           <button
@@ -79,7 +79,7 @@ export function UpgradeModal({ open, onClose, feature, requiredPlan }: Props) {
           </button>
           <button
             onClick={onClose}
-            className="w-full py-2 text-xs text-silver/50 hover:text-silver transition-colors"
+            className="w-full py-2 text-xs text-steel hover:text-navy transition-colors"
           >
             Ahora no
           </button>

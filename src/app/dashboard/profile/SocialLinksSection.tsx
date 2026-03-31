@@ -55,18 +55,18 @@ export function SocialLinksSection({ socialLinks, onUpdate }: Props) {
 
   return (
     <div className="space-y-3">
-      <p className="text-[10px] font-medium uppercase tracking-wider text-silver/50">
+      <p className="text-[10px] font-medium uppercase tracking-wider text-steel">
         Redes sociales
       </p>
       {FIELDS.map(({ key, label, Icon, placeholder }) => (
         <div key={key} className="flex items-center gap-2">
-          <Icon size={16} className="shrink-0 text-silver/50" />
+          <Icon size={16} className="shrink-0 text-steel" />
           <input
             value={links[key] ?? ""}
             onChange={(e) => setLinks((prev) => ({ ...prev, [key]: e.target.value }))}
             placeholder={placeholder}
             aria-label={label}
-            className="flex-1 border-b border-steel bg-transparent px-2 py-1.5 text-sm text-silver outline-none placeholder:text-silver/40 focus:border-white transition-colors"
+            className="flex-1 border-b border-silver/40 bg-transparent px-2 py-1.5 text-sm text-navy outline-none placeholder:text-steel/50 focus:border-navy transition-colors"
           />
         </div>
       ))}

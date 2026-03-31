@@ -39,8 +39,8 @@ export function SecuritySection() {
   }
 
   return (
-    <div className="border border-steel/30 p-4">
-      <p className="text-[10px] font-medium uppercase tracking-wider text-silver/50">
+    <div className="border border-silver/30 p-4">
+      <p className="text-[10px] font-medium uppercase tracking-wider text-steel">
         Cambiar contraseña
       </p>
       <div className="mt-3 space-y-2">
@@ -49,14 +49,14 @@ export function SecuritySection() {
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
           placeholder="Nueva contraseña (min. 8 caracteres)"
-          className="w-full border-b border-steel bg-transparent px-2 py-2 text-sm text-silver outline-none placeholder:text-silver/40 focus:border-white transition-colors"
+          className="w-full border-b border-silver/40 bg-transparent px-2 py-2 text-sm text-navy outline-none placeholder:text-steel/50 focus:border-navy transition-colors"
         />
         <input
           type="password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           placeholder="Confirmar contraseña"
-          className="w-full border-b border-steel bg-transparent px-2 py-2 text-sm text-silver outline-none placeholder:text-silver/40 focus:border-white transition-colors"
+          className="w-full border-b border-silver/40 bg-transparent px-2 py-2 text-sm text-navy outline-none placeholder:text-steel/50 focus:border-navy transition-colors"
         />
         <div className="flex justify-end pt-1">
           <button

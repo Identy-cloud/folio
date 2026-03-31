@@ -72,19 +72,19 @@ export function PlanFeaturesSection({ plan }: Props) {
   const hasLocked = features.some((f) => !f.enabled);
 
   return (
-    <div className="border border-steel/30 p-4">
-      <p className="mb-3 text-[10px] font-medium uppercase tracking-wider text-silver/50">
+    <div className="border border-silver/30 p-4">
+      <p className="mb-3 text-[10px] font-medium uppercase tracking-wider text-steel">
         Tu plan incluye
       </p>
       <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
         {features.map((f) => (
           <div key={f.label} className="flex items-center gap-2">
             {f.enabled ? (
-              <Check size={12} weight="bold" className="shrink-0 text-green-500" />
+              <Check size={12} weight="bold" className="shrink-0 text-green-600" />
             ) : (
-              <Lock size={12} className="shrink-0 text-silver/40" />
+              <Lock size={12} className="shrink-0 text-steel/60" />
             )}
-            <span className={`text-xs ${f.enabled ? "text-silver" : "text-silver/40"}`}>
+            <span className={`text-xs ${f.enabled ? "text-slate" : "text-steel/60"}`}>
               {f.label}
             </span>
           </div>
@@ -93,7 +93,7 @@ export function PlanFeaturesSection({ plan }: Props) {
       {hasLocked && (
         <Link
           href="/pricing"
-          className="mt-3 inline-block text-[11px] text-silver/50 hover:text-white transition-colors"
+          className="mt-3 inline-block text-[11px] text-steel hover:text-navy transition-colors"
         >
           Upgrade para desbloquear todo →
         </Link>

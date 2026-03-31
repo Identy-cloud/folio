@@ -18,12 +18,12 @@ export function ConfirmDialog({ open, title, message, confirmLabel, destructive,
 
   return (
     <DialogShell open={open} ariaLabel={title} onClose={onCancel}>
-      <h3 className="font-display text-lg tracking-tight text-silver">{title}</h3>
-      <p className="mt-2 text-sm text-silver/70">{message}</p>
+      <h3 className="font-display text-lg tracking-tight text-navy">{title}</h3>
+      <p className="mt-2 text-sm text-slate">{message}</p>
       <div className="mt-5 flex gap-2 justify-end">
         <button
           onClick={onCancel}
-          className="rounded px-4 py-2 text-xs text-silver/70 hover:bg-white/5 transition-colors"
+          className="rounded px-4 py-2 text-xs text-slate hover:bg-[#FAFAFA] transition-colors"
         >
           {t.common.cancel}
         </button>

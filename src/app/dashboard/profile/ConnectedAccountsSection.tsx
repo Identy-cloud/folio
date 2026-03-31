@@ -73,7 +73,7 @@ export function ConnectedAccountsSection() {
     <div className="space-y-4">
       <Bone className="h-3 w-36" />
       {[1, 2].map((i) => (
-        <div key={i} className="flex items-center gap-3 border border-steel/30 p-4">
+        <div key={i} className="flex items-center gap-3 border border-silver/30 p-4">
           <Bone className="h-5 w-5" />
           <div className="space-y-1 flex-1">
             <Bone className="h-3 w-16" />
@@ -86,19 +86,19 @@ export function ConnectedAccountsSection() {
 
   return (
     <div className="space-y-4">
-      <p className="text-[10px] font-medium uppercase tracking-wider text-silver/50">
+      <p className="text-[10px] font-medium uppercase tracking-wider text-steel">
         Cuentas conectadas
       </p>
       {PROVIDERS.map(({ id, label, Icon }) => {
         const identity = identities.find((i) => i.provider === id);
         const isBusy = busy === id;
         return (
-          <div key={id} className="flex items-center justify-between border border-steel/30 p-4">
+          <div key={id} className="flex items-center justify-between border border-silver/30 p-4">
             <div className="flex items-center gap-3">
-              <Icon size={20} weight="bold" className="text-silver/70" />
+              <Icon size={20} weight="bold" className="text-slate" />
               <div>
-                <p className="text-xs text-silver">{label}</p>
-                <p className="text-[11px] text-silver/50">
+                <p className="text-xs text-slate">{label}</p>
+                <p className="text-[11px] text-steel">
                   {identity ? `Conectado desde ${new Date(identity.createdAt).toLocaleDateString()}` : "No conectado"}
                 </p>
               </div>
@@ -107,7 +107,7 @@ export function ConnectedAccountsSection() {
               <button
                 onClick={() => handleUnlink(identity)}
                 disabled={isBusy || identities.length <= 1}
-                className="text-xs text-silver/50 hover:text-red-400 transition-colors disabled:opacity-30"
+                className="text-xs text-steel hover:text-red-500 transition-colors disabled:opacity-30"
               >
                 {isBusy ? "..." : "Desconectar"}
               </button>
@@ -115,7 +115,7 @@ export function ConnectedAccountsSection() {
               <button
                 onClick={() => handleLink(id)}
                 disabled={isBusy}
-                className="text-xs text-silver/70 hover:text-white transition-colors disabled:opacity-30"
+                className="text-xs text-slate hover:text-navy transition-colors disabled:opacity-30"
               >
                 {isBusy ? "..." : "Conectar"}
               </button>

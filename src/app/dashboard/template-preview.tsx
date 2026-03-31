@@ -48,7 +48,7 @@ export function TemplatePreview({ template, onConfirm }: Props) {
       <div className="flex flex-col gap-4 lg:flex-row lg:gap-6">
         <div className="flex-1">
           <div
-            className="relative aspect-video w-full overflow-hidden border border-steel"
+            className="relative aspect-video w-full overflow-hidden border border-silver/40"
             style={{ backgroundColor: currentSlide?.backgroundColor ?? "#1e1e1e" }}
           >
             <div className="absolute inset-0 transition-opacity duration-150" style={{ opacity: fading ? 0 : 1 }}>
@@ -58,16 +58,16 @@ export function TemplatePreview({ template, onConfirm }: Props) {
         </div>
 
         <div className="flex w-full flex-col lg:w-72">
-          <h3 className="font-display text-3xl tracking-tight text-white sm:text-4xl">
+          <h3 className="font-display text-3xl tracking-tight text-navy sm:text-4xl">
             {template.name}
           </h3>
-          <span className="mt-2 self-start bg-white/5 px-2.5 py-1 text-xs capitalize text-silver/70">
+          <span className="mt-2 self-start bg-[#FAFAFA] px-2.5 py-1 text-xs capitalize text-slate">
             {template.category}
           </span>
-          <p className="mt-3 text-sm leading-relaxed text-silver/70">
+          <p className="mt-3 text-sm leading-relaxed text-slate">
             {template.description}
           </p>
-          <p className="mt-2 text-sm text-silver/50">
+          <p className="mt-2 text-sm text-steel">
             {template.slideCount} slides
           </p>
           <button
@@ -87,8 +87,8 @@ export function TemplatePreview({ template, onConfirm }: Props) {
             onClick={() => goTo(i)}
             className={`relative shrink-0 overflow-hidden border transition-all duration-200 ${
               i === current
-                ? "border-white/40 ring-1 ring-white/20"
-                : "border-steel opacity-60 hover:opacity-100"
+                ? "border-navy/40 ring-1 ring-navy/20"
+                : "border-silver/40 opacity-60 hover:opacity-100"
             }`}
             style={{ width: 120, height: 68, backgroundColor: s.backgroundColor }}
           >
@@ -101,17 +101,17 @@ export function TemplatePreview({ template, onConfirm }: Props) {
         <button
           onClick={() => goTo(Math.max(0, current - 1))}
           disabled={current === 0}
-          className="p-1.5 text-silver/70 transition-colors hover:bg-white/5 hover:text-white disabled:opacity-30"
+          className="p-1.5 text-slate transition-colors hover:bg-[#FAFAFA] hover:text-navy disabled:opacity-30"
         >
           <ArrowLeft size={16} />
         </button>
-        <span className="text-xs tabular-nums text-silver/70">
+        <span className="text-xs tabular-nums text-slate">
           {current + 1} / {total}
         </span>
         <button
           onClick={() => goTo(Math.min(total - 1, current + 1))}
           disabled={current === total - 1}
-          className="p-1.5 text-silver/70 transition-colors hover:bg-white/5 hover:text-white disabled:opacity-30"
+          className="p-1.5 text-slate transition-colors hover:bg-[#FAFAFA] hover:text-navy disabled:opacity-30"
         >
           <ArrowRight size={16} />
         </button>

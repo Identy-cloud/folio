@@ -93,8 +93,8 @@ export function PresentationCard({
 
   return (
     <div
-      className={`group relative flex flex-col border bg-slate transition-shadow hover:shadow-lg ${
-        isSelected ? "border-white" : "border-steel/30"
+      className={`group relative flex flex-col border bg-white transition-shadow hover:shadow-lg ${
+        isSelected ? "border-navy" : "border-silver/30"
       }`}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
@@ -121,8 +121,8 @@ export function PresentationCard({
             className="w-full"
           />
         ) : (
-          <div className="flex aspect-video items-center justify-center bg-white/5">
-            <span className="font-display text-2xl tracking-tight text-silver/60">
+          <div className="flex aspect-video items-center justify-center bg-[#FAFAFA]">
+            <span className="font-display text-2xl tracking-tight text-steel">
               {presentation.title}
             </span>
           </div>
@@ -148,8 +148,8 @@ export function PresentationCard({
 
       <div className="flex items-center justify-between px-4 py-3">
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-medium text-silver">{presentation.title}</p>
-          <p className="text-xs text-silver/50">
+          <p className="truncate text-sm font-medium text-navy">{presentation.title}</p>
+          <p className="text-xs text-steel">
             {formatDistanceToNow(new Date(presentation.updatedAt), {
               addSuffix: true,
               locale: es,
@@ -162,7 +162,7 @@ export function PresentationCard({
         {onToggleStar && (
           <button
             onClick={onToggleStar}
-            className="ml-1 rounded p-1.5 text-silver/40 hover:text-amber-400 transition-colors"
+            className="ml-1 rounded p-1.5 text-steel/60 hover:text-amber-400 transition-colors"
             aria-label={isStarred ? "Unstar" : "Star"}
           >
             <Star size={16} weight={isStarred ? "fill" : "regular"} className={isStarred ? "text-amber-400" : ""} />
@@ -171,7 +171,7 @@ export function PresentationCard({
         <div ref={menuRef} className="relative">
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="ml-2 rounded p-2 text-silver/50 hover:bg-white/5 hover:text-silver"
+            className="ml-2 rounded p-2 text-steel hover:bg-[#FAFAFA] hover:text-navy"
             aria-label={t.dashboard.options}
             aria-expanded={menuOpen}
           >
@@ -220,7 +220,7 @@ function MenuContainer({ onClose, children }: { onClose: () => void; children: R
   }, [onClose]);
 
   return (
-    <div ref={ref} className="absolute right-0 bottom-full mb-1 z-50 w-44 border border-steel bg-steel py-1 shadow-lg rounded" role="menu">
+    <div ref={ref} className="absolute right-0 bottom-full mb-1 z-50 w-44 border border-silver/30 bg-white py-1 shadow-xl rounded" role="menu">
       {children}
     </div>
   );
@@ -239,8 +239,8 @@ function MenuItem({
     <button
       role="menuitem"
       onClick={onClick}
-      className={`block w-full px-4 py-2 text-left text-sm hover:bg-white/5 focus:bg-white/5 focus:outline-none ${
-        destructive ? "text-red-500" : "text-silver"
+      className={`block w-full px-4 py-2 text-left text-sm hover:bg-[#FAFAFA] focus:bg-[#FAFAFA] focus:outline-none ${
+        destructive ? "text-red-500" : "text-slate"
       }`}
     >
       {label}

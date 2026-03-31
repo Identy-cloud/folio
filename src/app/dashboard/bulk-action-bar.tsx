@@ -23,9 +23,9 @@ export function BulkActionBar({
   const { t } = useTranslation();
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-steel bg-slate/95 backdrop-blur-sm lg:sticky lg:top-0 lg:bottom-auto lg:border-t-0 lg:border-b">
+    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-silver/30 bg-white/95 backdrop-blur-sm lg:sticky lg:top-0 lg:bottom-auto lg:border-t-0 lg:border-b">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 px-4 py-3">
-        <span className="text-sm font-medium text-silver">
+        <span className="text-sm font-medium text-navy">
           {count} {t.dashboard.bulkSelected}
         </span>
 
@@ -53,7 +53,7 @@ export function BulkActionBar({
           />
           <button
             onClick={onCancel}
-            className="ml-2 flex h-11 w-11 items-center justify-center rounded text-silver/70 hover:bg-white/5 hover:text-silver transition-colors lg:h-auto lg:w-auto lg:px-3 lg:py-2"
+            className="ml-2 flex h-11 w-11 items-center justify-center rounded text-slate hover:bg-[#FAFAFA] hover:text-navy transition-colors lg:h-auto lg:w-auto lg:px-3 lg:py-2"
             aria-label={t.common.cancel}
           >
             <X size={16} className="lg:mr-1" />
@@ -81,8 +81,8 @@ function BulkButton({
       onClick={onClick}
       className={`flex h-11 items-center gap-1.5 rounded px-3 py-2 text-xs font-medium transition-colors ${
         destructive
-          ? "text-red-400 hover:bg-red-900/30"
-          : "text-silver hover:bg-white/5"
+          ? "text-red-500 hover:bg-red-50"
+          : "text-slate hover:bg-[#FAFAFA]"
       }`}
       title={label}
     >

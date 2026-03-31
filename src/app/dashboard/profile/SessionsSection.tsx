@@ -77,7 +77,7 @@ export function SessionsSection() {
   }
 
   if (loading) return (
-    <div className="border border-steel/30 p-4 space-y-3">
+    <div className="border border-silver/30 p-4 space-y-3">
       <Bone className="h-3 w-28" />
       {[1, 2].map((i) => (
         <div key={i} className="flex items-center gap-3">
@@ -92,16 +92,16 @@ export function SessionsSection() {
   );
 
   return (
-    <div className="border border-steel/30 p-4">
+    <div className="border border-silver/30 p-4">
       <div className="mb-3 flex items-center justify-between">
-        <p className="text-[10px] font-medium uppercase tracking-wider text-silver/50">
+        <p className="text-[10px] font-medium uppercase tracking-wider text-steel">
           Sesiones activas
         </p>
         {items.length > 1 && (
           <button
             onClick={revokeAll}
             disabled={busy === "all"}
-            className="flex items-center gap-1 text-[11px] text-silver/50 hover:text-red-400 transition-colors disabled:opacity-30"
+            className="flex items-center gap-1 text-[11px] text-steel hover:text-red-500 transition-colors disabled:opacity-30"
           >
             <SignOut size={12} />
             {busy === "all" ? "..." : "Cerrar todas"}
@@ -109,19 +109,19 @@ export function SessionsSection() {
         )}
       </div>
       {items.length === 0 ? (
-        <p className="text-xs text-silver/50">No hay sesiones registradas</p>
+        <p className="text-xs text-steel">No hay sesiones registradas</p>
       ) : (
         <div className="space-y-2">
           {items.map((s) => {
             const Icon = DEVICE_ICON[s.device ?? ""] ?? Desktop;
             return (
-              <div key={s.id} className="flex items-center gap-3 rounded p-2 hover:bg-white/5 transition-colors">
-                <Icon size={18} className="shrink-0 text-silver/50" />
+              <div key={s.id} className="flex items-center gap-3 rounded p-2 hover:bg-[#FAFAFA] transition-colors">
+                <Icon size={18} className="shrink-0 text-steel" />
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-xs text-silver">
+                  <p className="truncate text-xs text-slate">
                     {s.browser ?? "Unknown"} · {s.os ?? "Unknown"}
                   </p>
-                  <p className="text-[11px] text-silver/50">
+                  <p className="text-[11px] text-steel">
                     {s.ip ?? "—"} · {relativeTime(s.lastActiveAt)}
                   </p>
                 </div>
@@ -129,7 +129,7 @@ export function SessionsSection() {
                   onClick={() => revoke(s.id)}
                   disabled={busy === s.id}
                   aria-label="Revocar sesion"
-                  className="shrink-0 text-silver/40 hover:text-red-400 transition-colors disabled:opacity-30"
+                  className="shrink-0 text-steel/60 hover:text-red-500 transition-colors disabled:opacity-30"
                 >
                   <X size={14} />
                 </button>

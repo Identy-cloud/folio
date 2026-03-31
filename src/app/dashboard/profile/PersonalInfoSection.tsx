@@ -64,7 +64,7 @@ export function PersonalInfoSection({ profile, onUpdate }: Props) {
     <>
       {/* Name */}
       <div className="space-y-1.5">
-        <label className="block text-[10px] font-medium uppercase tracking-wider text-silver/50">
+        <label className="block text-[10px] font-medium uppercase tracking-wider text-steel">
           {t.dashboard.profileName ?? "Nombre"}
         </label>
         <div className="flex gap-2">
@@ -72,7 +72,7 @@ export function PersonalInfoSection({ profile, onUpdate }: Props) {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder={profile.email}
-            className="flex-1 border-b border-steel bg-transparent px-2 py-2 text-sm text-silver outline-none focus:border-white transition-colors"
+            className="flex-1 border-b border-silver/40 bg-transparent px-2 py-2 text-sm text-navy outline-none focus:border-navy transition-colors"
           />
           <button
             onClick={handleSaveName}
@@ -86,10 +86,10 @@ export function PersonalInfoSection({ profile, onUpdate }: Props) {
 
       {/* Email */}
       <div className="space-y-1.5">
-        <label className="block text-[10px] font-medium uppercase tracking-wider text-silver/50">
+        <label className="block text-[10px] font-medium uppercase tracking-wider text-steel">
           Email
         </label>
-        <p className="border-b border-steel/30 px-2 py-2 text-sm text-silver/70">
+        <p className="border-b border-silver/30 px-2 py-2 text-sm text-slate">
           {profile.email}
         </p>
       </div>
@@ -97,19 +97,19 @@ export function PersonalInfoSection({ profile, onUpdate }: Props) {
       {/* Username + Bio */}
       <div className="space-y-3">
         <div className="space-y-1.5">
-          <label className="block text-[10px] font-medium uppercase tracking-wider text-silver/50">
+          <label className="block text-[10px] font-medium uppercase tracking-wider text-steel">
             Username
           </label>
           <input
             value={username}
             onChange={(e) => { setUsername(e.target.value); setUsernameError(""); }}
             placeholder="your-username"
-            className="w-full border-b border-steel bg-transparent px-2 py-2 text-sm text-silver outline-none focus:border-white transition-colors"
+            className="w-full border-b border-silver/40 bg-transparent px-2 py-2 text-sm text-navy outline-none focus:border-navy transition-colors"
           />
-          {usernameError && <p className="text-xs text-red-400">{usernameError}</p>}
+          {usernameError && <p className="text-xs text-red-500">{usernameError}</p>}
         </div>
         <div className="space-y-1.5">
-          <label className="block text-[10px] font-medium uppercase tracking-wider text-silver/50">
+          <label className="block text-[10px] font-medium uppercase tracking-wider text-steel">
             Bio
           </label>
           <textarea
@@ -118,10 +118,10 @@ export function PersonalInfoSection({ profile, onUpdate }: Props) {
             placeholder="Short bio for your portfolio page"
             maxLength={300}
             rows={3}
-            className="w-full resize-none border-b border-steel bg-transparent px-2 py-2 text-sm text-silver outline-none focus:border-white transition-colors"
+            className="w-full resize-none border-b border-silver/40 bg-transparent px-2 py-2 text-sm text-navy outline-none focus:border-navy transition-colors"
           />
           <div className="flex items-center justify-between">
-            <p className="text-xs text-silver/40">{bio.length}/300</p>
+            <p className="text-xs text-steel/60">{bio.length}/300</p>
             <button
               onClick={handleSaveProfile}
               disabled={saving || (username === (profile.username ?? "") && bio === (profile.bio ?? ""))}

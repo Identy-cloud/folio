@@ -43,7 +43,7 @@ export function ThemeGrid({ themeKeys, creating, limits, onSelect }: Props) {
             }}
             disabled={creating !== null}
             className={`group relative overflow-hidden border text-left transition-shadow hover:shadow-lg disabled:opacity-50 ${
-              isLocked ? "border-steel/30" : "border-steel"
+              isLocked ? "border-silver/30" : "border-silver/40"
             }`}
           >
             <div
@@ -68,7 +68,7 @@ export function ThemeGrid({ themeKeys, creating, limits, onSelect }: Props) {
               />
             </div>
             <div className="flex items-center justify-between gap-3 px-4 py-2.5">
-              <p className="truncate text-sm text-silver/70">
+              <p className="truncate text-sm text-slate">
                 {THEME_DESCRIPTIONS[key] ?? th.label}
               </p>
               {isLocked && (
@@ -80,7 +80,7 @@ export function ThemeGrid({ themeKeys, creating, limits, onSelect }: Props) {
             </div>
             {creating === key && (
               <div className="absolute inset-0 flex items-center justify-center bg-black/70">
-                <span className="text-xs text-silver/70">
+                <span className="text-xs text-silver">
                   {t.common.creating}
                 </span>
               </div>

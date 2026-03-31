@@ -30,14 +30,14 @@ export function AnalyticsOverview() {
 
   if (gated) {
     return (
-      <div className="mb-6 rounded border border-steel/60 bg-gradient-to-r from-neutral-900 to-neutral-800 p-4 md:p-6">
+      <div className="mb-6 rounded border border-silver/40 bg-gradient-to-r from-[#FAFAFA] to-white p-4 md:p-6">
         <div className="flex items-center gap-3">
-          <Lock size={20} className="text-silver/50" />
+          <Lock size={20} className="text-steel" />
           <div>
-            <p className="text-sm font-medium text-silver">
+            <p className="text-sm font-medium text-navy">
               Unlock analytics
             </p>
-            <p className="text-xs text-silver/50">
+            <p className="text-xs text-steel">
               Upgrade to Creator plan to see views, unique visitors, and trends.
             </p>
           </div>
@@ -72,14 +72,14 @@ export function AnalyticsOverview() {
       <div className="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
         <div className="flex gap-3 min-w-[600px] md:grid md:grid-cols-4 md:min-w-0">
           {/* Total views */}
-          <div className="flex-1 rounded border border-steel/60 bg-slate p-4">
+          <div className="flex-1 rounded border border-silver/40 bg-white p-4">
             <div className="flex items-center gap-2 mb-2">
-              <Eye size={14} className="text-silver/50" />
-              <span className="text-[10px] font-medium uppercase tracking-wider text-silver/50">
+              <Eye size={14} className="text-steel" />
+              <span className="text-[10px] font-medium uppercase tracking-wider text-steel">
                 Total views
               </span>
             </div>
-            <p className="font-display text-2xl text-white md:text-3xl">
+            <p className="font-display text-2xl text-navy md:text-3xl">
               {data.totalViews.toLocaleString()}
             </p>
             {weekTotal > 0 && (
@@ -90,43 +90,43 @@ export function AnalyticsOverview() {
           </div>
 
           {/* Unique viewers */}
-          <div className="flex-1 rounded border border-steel/60 bg-slate p-4">
+          <div className="flex-1 rounded border border-silver/40 bg-white p-4">
             <div className="flex items-center gap-2 mb-2">
-              <Users size={14} className="text-silver/50" />
-              <span className="text-[10px] font-medium uppercase tracking-wider text-silver/50">
+              <Users size={14} className="text-steel" />
+              <span className="text-[10px] font-medium uppercase tracking-wider text-steel">
                 Unique viewers
               </span>
             </div>
-            <p className="font-display text-2xl text-white md:text-3xl">
+            <p className="font-display text-2xl text-navy md:text-3xl">
               {data.uniqueViewers.toLocaleString()}
             </p>
           </div>
 
           {/* Most popular */}
-          <div className="flex-1 rounded border border-steel/60 bg-slate p-4">
+          <div className="flex-1 rounded border border-silver/40 bg-white p-4">
             <div className="flex items-center gap-2 mb-2">
               <Crown size={14} className="text-amber-500" />
-              <span className="text-[10px] font-medium uppercase tracking-wider text-silver/50">
+              <span className="text-[10px] font-medium uppercase tracking-wider text-steel">
                 Most popular
               </span>
             </div>
             {data.mostViewed ? (
               <>
-                <p className="truncate text-sm font-medium text-white">
+                <p className="truncate text-sm font-medium text-navy">
                   {data.mostViewed.title}
                 </p>
-                <p className="mt-1 text-[10px] text-silver/50">
+                <p className="mt-1 text-[10px] text-steel">
                   {data.mostViewed.views.toLocaleString()} views
                 </p>
               </>
             ) : (
-              <p className="text-xs text-silver/50">No views yet</p>
+              <p className="text-xs text-steel">No views yet</p>
             )}
           </div>
 
           {/* Last 7 days chart */}
-          <div className="flex-1 rounded border border-steel/60 bg-slate p-4">
-            <span className="text-[10px] font-medium uppercase tracking-wider text-silver/50">
+          <div className="flex-1 rounded border border-silver/40 bg-white p-4">
+            <span className="text-[10px] font-medium uppercase tracking-wider text-steel">
               Last 7 days
             </span>
             <div className="mt-2 flex items-end gap-1 h-12">
@@ -136,7 +136,7 @@ export function AnalyticsOverview() {
                     className="w-full rounded-sm bg-blue-500/50 transition-all"
                     style={{ height: `${Math.max((d.views / maxBar) * 48, 2)}px` }}
                   />
-                  <span className="text-[8px] text-silver/40">{dayLabels[i]}</span>
+                  <span className="text-[8px] text-steel/60">{dayLabels[i]}</span>
                 </div>
               ))}
             </div>

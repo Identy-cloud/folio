@@ -72,28 +72,28 @@ export function GettingStarted({ presentationCount }: GettingStartedProps) {
   }
 
   return (
-    <div className="mb-4 rounded border border-steel/30 bg-navy/50 p-4">
+    <div className="mb-4 rounded border border-silver/30 bg-[#FAFAFA] p-4">
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium tracking-wide text-silver">
+          <span className="text-sm font-medium tracking-wide text-navy">
             {t.dashboard.gettingStartedTitle}
           </span>
-          <span className="text-[10px] text-silver/50">
+          <span className="text-[10px] text-steel">
             {completed}/{items.length}
           </span>
         </div>
         <button
           onClick={dismiss}
           aria-label={t.dashboard.gettingStartedDismiss}
-          className="p-1 text-silver/50 transition-colors hover:text-silver"
+          className="p-1 text-steel transition-colors hover:text-navy"
         >
           <X size={14} />
         </button>
       </div>
 
-      <div className="h-1 w-full overflow-hidden rounded-full bg-white/5">
+      <div className="h-1 w-full overflow-hidden rounded-full bg-navy/5">
         <div
-          className="h-full rounded-full bg-silver/50 transition-all"
+          className="h-full rounded-full bg-navy/30 transition-all"
           style={{ width: `${(completed / items.length) * 100}%` }}
         />
       </div>
@@ -104,13 +104,13 @@ export function GettingStarted({ presentationCount }: GettingStartedProps) {
             <span
               className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border ${
                 item.done
-                  ? "border-green-600 bg-green-600/20 text-green-400"
-                  : "border-steel text-transparent"
+                  ? "border-green-600 bg-green-600/20 text-green-600"
+                  : "border-silver/40 text-transparent"
               }`}
             >
               {item.done && <Check size={10} weight="bold" />}
             </span>
-            <span className={`text-xs ${item.done ? "text-silver/50 line-through" : "text-silver"}`}>
+            <span className={`text-xs ${item.done ? "text-steel line-through" : "text-navy"}`}>
               {item.label}
             </span>
           </li>
