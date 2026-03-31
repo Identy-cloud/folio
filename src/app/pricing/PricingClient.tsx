@@ -3,9 +3,9 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Notebook } from "@phosphor-icons/react";
 import { useTranslation } from "@/lib/i18n/context";
-import { LocaleSelector } from "@/components/LocaleSelector";
+import { PublicHeader } from "@/components/PublicHeader";
+import { PublicFooter } from "@/components/PublicFooter";
 import { PricingTierCard } from "./PricingTierCard";
 import { PricingToggle } from "./PricingToggle";
 import { toast } from "sonner";
@@ -71,22 +71,14 @@ export function PricingClient() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-navy text-white">
-      <header className="flex items-center justify-between px-4 py-6 sm:px-8">
-        <Link href="/" className="flex items-center gap-1.5 font-display text-xl tracking-tight sm:text-2xl">
-          <Notebook size={22} weight="duotone" />FOLIO
-        </Link>
-        <div className="flex items-center gap-4">
-          <LocaleSelector />
-          <Link href="/" className="text-xs tracking-[0.25em] text-silver/70 uppercase transition-colors hover:text-white">{p.back}</Link>
-        </div>
-      </header>
+    <div className="flex min-h-screen flex-col bg-white text-navy">
+      <PublicHeader />
 
-      <main className="flex flex-1 flex-col items-center px-4 py-8 sm:px-6 lg:py-16">
-        <p className="text-[10px] tracking-[0.5em] text-accent uppercase">{p.label}</p>
+      <main className="flex flex-1 flex-col items-center px-5 py-8 sm:px-8 lg:py-16">
+        <p className="text-[10px] font-semibold tracking-[0.5em] text-accent uppercase">{p.label}</p>
         <h1 className="mt-4 font-display text-4xl tracking-tight sm:text-5xl lg:text-7xl">{p.heading}</h1>
         <div className="mx-auto mt-3 h-px w-12 bg-accent/40" />
-        <p className="mt-5 max-w-lg text-center text-sm leading-relaxed text-silver/60">{p.description}</p>
+        <p className="mt-5 max-w-lg text-center text-sm leading-relaxed text-slate">{p.description}</p>
 
         <PricingToggle annual={annual} setAnnual={setAnnual} monthlyLabel={p.monthly} annualLabel={p.annual} discountLabel={p.discount} />
 
@@ -104,12 +96,10 @@ export function PricingClient() {
             );
           })}
         </div>
-        <p className="mt-10 text-xs text-silver/40">{p.allPricesNote}</p>
+        <p className="mt-10 text-xs text-steel/60">{p.allPricesNote}</p>
       </main>
 
-      <footer className="flex items-center justify-center py-8">
-        <p className="text-[10px] tracking-[0.3em] text-silver/40 uppercase">{t.landing.footer}</p>
-      </footer>
+      <PublicFooter />
     </div>
   );
 }

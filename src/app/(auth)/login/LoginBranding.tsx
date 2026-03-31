@@ -11,12 +11,12 @@ export function LoginBranding({ subtitle }: Props) {
     <>
       {/* Mobile branding header */}
       <div className="absolute inset-x-0 top-0 z-10 flex items-center gap-2 px-6 py-5 lg:hidden">
-        <Notebook size={24} weight="duotone" className="text-white" />
-        <span className="font-display text-xl tracking-tight text-white">FOLIO</span>
+        <Notebook size={24} weight="duotone" className="text-navy" />
+        <span className="font-display text-xl tracking-tight text-navy">FOLIO</span>
       </div>
 
       {/* Desktop branding panel */}
-      <div className="hidden lg:flex lg:w-1/2 lg:flex-col lg:items-center lg:justify-center lg:relative lg:overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 lg:flex-col lg:items-center lg:justify-center lg:relative lg:overflow-hidden lg:bg-navy">
         {/* Animated gradient background */}
         <div className="absolute inset-0 gradient-hero opacity-80 animate-gradient-shift" />
 

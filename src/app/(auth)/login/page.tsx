@@ -2,10 +2,8 @@
 
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { useState } from "react";
 import { useTranslation } from "@/lib/i18n/context";
-import { Notebook, GithubLogo, GoogleLogo } from "@phosphor-icons/react";
 import { LoginBranding } from "./LoginBranding";
 import { LoginForm } from "./LoginForm";
 
@@ -86,7 +84,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen bg-navy">
+    <div className="flex min-h-screen bg-white">
       <LoginBranding subtitle={t.auth.subtitle} />
       <LoginForm
         email={email}

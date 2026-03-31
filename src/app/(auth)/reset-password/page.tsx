@@ -17,7 +17,7 @@ function SuccessCheckmark() {
 }
 
 const inputCls =
-  "w-full rounded-sm border border-steel/40 bg-slate/30 px-4 py-3 text-sm text-white placeholder-silver/30 outline-none transition-all duration-200 focus:border-accent focus:bg-slate/50 focus:ring-1 focus:ring-accent/30";
+  "w-full rounded-sm border border-silver/40 bg-[#FAFAFA] px-4 py-3 text-sm text-navy placeholder-steel/40 outline-none transition-all duration-200 focus:border-accent focus:bg-white focus:ring-1 focus:ring-accent/30";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
@@ -42,17 +42,17 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="flex min-h-screen bg-navy">
+    <div className="flex min-h-screen bg-white">
       <LoginBranding subtitle={t.auth.subtitle} />
 
       <div className="flex w-full flex-col items-center justify-center px-6 py-12 lg:w-1/2 lg:px-16">
         <div className="mb-10 flex items-center gap-2 lg:hidden">
-          <Notebook size={24} weight="duotone" className="text-white" />
-          <span className="font-display text-xl tracking-tight text-white">FOLIO</span>
+          <Notebook size={24} weight="duotone" className="text-navy" />
+          <span className="font-display text-xl tracking-tight text-navy">FOLIO</span>
         </div>
 
         <div className="w-full max-w-sm animate-slide-in">
-          <h2 className="font-display text-4xl tracking-tight text-white sm:text-5xl">
+          <h2 className="font-display text-4xl tracking-tight text-navy sm:text-5xl">
             {t.auth.resetPassword}
           </h2>
           <div className="mt-2 h-px w-8 bg-accent" />
@@ -60,24 +60,24 @@ export default function ResetPasswordPage() {
           {done ? (
             <div className="mt-12 text-center animate-slide-in">
               <SuccessCheckmark />
-              <p className="mt-6 text-sm font-medium text-green-400">{t.auth.passwordUpdated}</p>
-              <p className="mt-2 text-xs text-silver/50">{t.auth.redirecting}</p>
+              <p className="mt-6 text-sm font-medium text-green-600">{t.auth.passwordUpdated}</p>
+              <p className="mt-2 text-xs text-slate">{t.auth.redirecting}</p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="mt-8 space-y-5">
               <div>
-                <label className="mb-1.5 block text-[11px] font-medium tracking-wide text-silver/60 uppercase">{t.auth.newPassword}</label>
+                <label className="mb-1.5 block text-[11px] font-medium tracking-wide text-steel uppercase">{t.auth.newPassword}</label>
                 <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} autoFocus aria-label={t.auth.newPassword} className={inputCls} />
               </div>
               <div>
-                <label className="mb-1.5 block text-[11px] font-medium tracking-wide text-silver/60 uppercase">{t.auth.confirmPassword}</label>
+                <label className="mb-1.5 block text-[11px] font-medium tracking-wide text-steel uppercase">{t.auth.confirmPassword}</label>
                 <input type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} required minLength={6} aria-label={t.auth.confirmPassword} className={inputCls} />
               </div>
 
               {error && (
-                <div className="animate-slide-in flex items-start gap-2.5 rounded-sm border border-red-500/20 bg-red-950/20 px-4 py-3" role="alert">
-                  <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-red-400" />
-                  <p className="text-xs leading-relaxed text-red-400">{error}</p>
+                <div className="animate-slide-in flex items-start gap-2.5 rounded-sm border border-red-200 bg-red-50 px-4 py-3" role="alert">
+                  <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-red-500" />
+                  <p className="text-xs leading-relaxed text-red-600">{error}</p>
                 </div>
               )}
 

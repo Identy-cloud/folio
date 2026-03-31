@@ -4,7 +4,7 @@ import Link from "next/link";
 import { FolioLogo } from "@/components/FolioLogo";
 import { useTranslation } from "@/lib/i18n/context";
 
-export function LandingFooter() {
+export function PublicFooter() {
   const { t } = useTranslation();
   const l = t.landing;
 
