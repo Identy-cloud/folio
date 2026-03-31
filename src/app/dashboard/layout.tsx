@@ -43,7 +43,7 @@ export default async function DashboardLayout({
       <header className="flex h-14 items-center justify-between border-b border-silver/30 px-3 sm:h-16 sm:px-6">
         <div className="flex items-center gap-2 sm:gap-3">
           <h1 className="text-xl text-navy sm:text-2xl">
-            <FolioLogo size={22} className="text-navy" />
+            <Link href="/"><FolioLogo size={22} className="text-navy" /></Link>
           </h1>
           <div className="hidden sm:block">
             <WorkspaceSwitcherWrapper />
