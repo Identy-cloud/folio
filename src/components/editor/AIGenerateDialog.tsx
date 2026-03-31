@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Sparkle } from "@phosphor-icons/react";
 import { useEditorStore } from "@/store/editorStore";
+import { useDialogStore } from "@/store/dialogStore";
 import type { SlideElement } from "@/types/elements";
 
 interface Props {
@@ -33,8 +34,14 @@ export function AIGenerateDialog({ open, onClose }: Props) {
     if (!prompt.trim() || loading) return;
 
     const hasElements = (activeSlide?.elements.length ?? 0) > 0;
-    if (hasElements && !confirm("This will replace all elements on the current slide. Continue?")) {
-      return;
+    if (hasElements) {
+      const ok = await useDialogStore.getState().showConfirm({
+        title: "Replace elements",
+        message: "This will replace all elements on the current slide.",
+        confirmLabel: "Replace",
+        confirmVariant: "danger",
+      });
+      if (!ok) return;
     }
 
     setLoading(true);

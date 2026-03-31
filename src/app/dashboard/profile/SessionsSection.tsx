@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Desktop, DeviceMobile, DeviceTablet, X, SignOut } from "@phosphor-icons/react";
+import { Bone } from "./ProfileSkeleton";
 
 interface Session {
   id: string;
@@ -77,13 +78,13 @@ export function SessionsSection() {
 
   if (loading) return (
     <div className="border border-neutral-800 p-4 space-y-3">
-      <div className="h-3 w-28 animate-pulse rounded bg-neutral-800" />
+      <Bone className="h-3 w-28" />
       {[1, 2].map((i) => (
         <div key={i} className="flex items-center gap-3">
-          <div className="h-5 w-5 animate-pulse rounded bg-neutral-800" />
+          <Bone className="h-5 w-5" />
           <div className="flex-1 space-y-1">
-            <div className="h-3 w-32 animate-pulse rounded bg-neutral-800" />
-            <div className="h-3 w-24 animate-pulse rounded bg-neutral-800" />
+            <Bone className="h-3 w-32" />
+            <Bone className="h-3 w-24" />
           </div>
         </div>
       ))}

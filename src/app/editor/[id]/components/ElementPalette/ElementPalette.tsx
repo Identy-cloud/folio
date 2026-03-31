@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { useEditorStore } from "@/store/editorStore";
+import { useDialogStore } from "@/store/dialogStore";
 import { nanoid } from "nanoid";
 import { TextT, Rectangle, Circle, Triangle, Image as ImageIcon, ArrowRight, Minus, Diamond, Star, Pentagon, Hexagon, Code, LineSegment, GridNine, Smiley, VideoCamera, ImageSquare, Sparkle } from "@phosphor-icons/react";
 import { useImageUpload } from "../../hooks/useImageUpload";
@@ -107,8 +108,8 @@ export function ElementPalette() {
           <ImageIcon size={16} weight="regular" /> {uploading ? t.editor.uploading : t.editor.image}
         </button>
         <button
-          onClick={() => {
-            const url = prompt("Paste video or embed URL (YouTube, Vimeo, Loom):");
+          onClick={async () => {
+            const url = await useDialogStore.getState().showPrompt({ title: "Embed URL", message: "Paste video or embed URL:", placeholder: "YouTube, Vimeo, Loom URL" });
             if (!url) return;
             add({ id: nanoid(), type: "embed", x: 200, y: 200, w: 640, h: 360, rotation: 0, opacity: 1, zIndex: zBase, locked: false, url } as import("@/types/elements").EmbedElement);
           }}
@@ -117,8 +118,8 @@ export function ElementPalette() {
           <Code size={16} weight="regular" /> Embed
         </button>
         <button
-          onClick={() => {
-            const url = prompt("Paste video URL (.mp4, .webm, etc.):");
+          onClick={async () => {
+            const url = await useDialogStore.getState().showPrompt({ title: "Video URL", message: "Paste video URL:", placeholder: ".mp4, .webm URL" });
             if (!url) return;
             add({ id: nanoid(), type: "video", x: 200, y: 200, w: 640, h: 360, rotation: 0, opacity: 1, zIndex: zBase, locked: false, src: url, ...videoDefaults() } satisfies VideoElement);
           }}

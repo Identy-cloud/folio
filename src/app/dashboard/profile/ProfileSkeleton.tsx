@@ -1,6 +1,6 @@
 "use client";
 
-function Bone({ className }: { className: string }) {
+export function Bone({ className }: { className: string }) {
   return <div className={`animate-pulse rounded bg-neutral-800 ${className}`} />;
 }
 
@@ -66,85 +66,3 @@ export function ProfileSkeleton() {
   );
 }
 
-export function BillingSkeleton() {
-  return (
-    <div className="space-y-8">
-      {/* Plan card */}
-      <div className="space-y-4">
-        <Bone className="h-3 w-24" />
-        <div className="border border-neutral-800 p-4 space-y-3">
-          <Bone className="h-6 w-20" />
-          <Bone className="h-3 w-32" />
-          <Bone className="h-3 w-40" />
-        </div>
-      </div>
-
-      {/* Features */}
-      <div className="border border-neutral-800 p-4 space-y-3">
-        <Bone className="h-3 w-28" />
-        <div className="grid grid-cols-2 gap-2">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <Bone key={i} className="h-4 w-full" />
-          ))}
-        </div>
-      </div>
-
-      {/* Usage bars */}
-      <div className="space-y-4">
-        <Bone className="h-3 w-10" />
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div className="border border-neutral-800 p-4 space-y-2">
-            <Bone className="h-3 w-28" />
-            <Bone className="h-4 w-24" />
-            <Bone className="h-1.5 w-full rounded-full" />
-          </div>
-          <div className="border border-neutral-800 p-4 space-y-2">
-            <Bone className="h-3 w-28" />
-            <Bone className="h-4 w-20" />
-            <Bone className="h-1.5 w-full rounded-full" />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export function SecuritySkeleton() {
-  return (
-    <div className="space-y-8">
-      {/* Password */}
-      <div className="border border-neutral-800 p-4 space-y-3">
-        <Bone className="h-3 w-32" />
-        <Bone className="h-9 w-full" />
-        <Bone className="h-9 w-full" />
-      </div>
-
-      {/* Sessions */}
-      <div className="border border-neutral-800 p-4 space-y-3">
-        <Bone className="h-3 w-28" />
-        {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="flex items-center gap-3">
-            <Bone className="h-5 w-5" />
-            <div className="flex-1 space-y-1">
-              <Bone className="h-3 w-32" />
-              <Bone className="h-3 w-24" />
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Connected accounts */}
-      <div className="space-y-4">
-        <Bone className="h-3 w-36" />
-        <div className="border border-neutral-800 p-4 flex items-center gap-3">
-          <Bone className="h-5 w-5" />
-          <Bone className="h-4 w-24" />
-        </div>
-        <div className="border border-neutral-800 p-4 flex items-center gap-3">
-          <Bone className="h-5 w-5" />
-          <Bone className="h-4 w-24" />
-        </div>
-      </div>
-    </div>
-  );
-}

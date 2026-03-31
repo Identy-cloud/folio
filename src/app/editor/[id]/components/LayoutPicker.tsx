@@ -1,6 +1,7 @@
 "use client";
 
 import { useEditorStore } from "@/store/editorStore";
+import { useDialogStore } from "@/store/dialogStore";
 import { SLIDE_LAYOUTS } from "@/lib/slide-layouts";
 import { THEMES } from "@/lib/templates/themes";
 
@@ -56,13 +57,20 @@ export function LayoutPicker({ open, onClose }: Props) {
 
   if (!open) return null;
 
-  function applyLayout(layoutId: string) {
+  async function applyLayout(layoutId: string) {
     const layout = SLIDE_LAYOUTS.find((l) => l.id === layoutId);
     if (!layout) return;
     const slide = useEditorStore.getState().getActiveSlide();
     if (!slide) return;
     const hasContent = slide.elements.length > 0;
-    if (hasContent && !confirm("Replace current slide content with this layout?")) return;
+    if (hasContent) {
+      const ok = await useDialogStore.getState().showConfirm({
+        title: "Replace content",
+        message: "Replace current slide content with this layout?",
+        confirmLabel: "Replace",
+      });
+      if (!ok) return;
+    }
 
     const state = useEditorStore.getState();
     const th = state.customThemes[state.theme] ?? THEMES[state.theme] ?? THEMES["editorial-blue"];

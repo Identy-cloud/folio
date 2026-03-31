@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { nanoid } from "nanoid";
 import { useEditorStore } from "@/store/editorStore";
+import { useDialogStore } from "@/store/dialogStore";
 import { textDefaults, shapeDefaults, arrowDefaults, dividerDefaults, lineDefaults, tableDefaults, videoDefaults, iconDefaults } from "@/lib/templates/element-defaults";
 import { THEMES } from "@/lib/templates/themes";
 import { SLIDE_LAYOUTS } from "@/lib/slide-layouts";
@@ -14,7 +15,7 @@ interface Command {
   id: string;
   label: string;
   category: string;
-  action: () => void;
+  action: () => void | Promise<void>;
 }
 
 interface Props {
@@ -50,8 +51,8 @@ export function CommandPalette({ open, onClose }: Props) {
     { id: "arrow", label: "Arrow", category: "Insert", action: () => addElement({ id: nanoid(), type: "arrow", x: 200, y: 400, w: 300, h: 60, rotation: 0, opacity: 1, zIndex: zBase, locked: false, direction: "right", ...arrowDefaults(theme) } satisfies ArrowElement) },
     { id: "line", label: "Line / Divider", category: "Insert", action: () => addElement({ id: nanoid(), type: "divider", x: 100, y: 500, w: 600, h: 10, rotation: 0, opacity: 1, zIndex: zBase, locked: false, ...dividerDefaults(theme) } satisfies DividerElement) },
     { id: "connector", label: "Connector / Line", category: "Insert", action: () => addElement({ id: nanoid(), type: "line", x: 200, y: 300, w: 300, h: 200, rotation: 0, opacity: 1, zIndex: zBase, locked: false, x1: 0, y1: 0, x2: 300, y2: 200, ...lineDefaults(theme) } satisfies LineElement) },
-    { id: "embed", label: "Embed (YouTube, Vimeo)", category: "Insert", action: () => { const url = prompt("Paste video URL:"); if (url) addElement({ id: nanoid(), type: "embed", x: 200, y: 200, w: 640, h: 360, rotation: 0, opacity: 1, zIndex: zBase, locked: false, url } as EmbedElement); } },
-    { id: "video", label: "Video", category: "Insert", action: () => { const url = prompt("Paste video URL (.mp4, .webm):"); if (url) addElement({ id: nanoid(), type: "video", x: 200, y: 200, w: 640, h: 360, rotation: 0, opacity: 1, zIndex: zBase, locked: false, src: url, ...videoDefaults() } satisfies VideoElement); } },
+    { id: "embed", label: "Embed (YouTube, Vimeo)", category: "Insert", action: async () => { const url = await useDialogStore.getState().showPrompt({ title: "Embed URL", message: "Paste video URL:", placeholder: "https://youtube.com/..." }); if (url) addElement({ id: nanoid(), type: "embed", x: 200, y: 200, w: 640, h: 360, rotation: 0, opacity: 1, zIndex: zBase, locked: false, url } as EmbedElement); } },
+    { id: "video", label: "Video", category: "Insert", action: async () => { const url = await useDialogStore.getState().showPrompt({ title: "Video URL", message: "Paste video URL (.mp4, .webm):", placeholder: "https://example.com/video.mp4" }); if (url) addElement({ id: nanoid(), type: "video", x: 200, y: 200, w: 640, h: 360, rotation: 0, opacity: 1, zIndex: zBase, locked: false, src: url, ...videoDefaults() } satisfies VideoElement); } },
     { id: "table", label: "Table", category: "Insert", action: () => addElement({ id: nanoid(), type: "table", x: 200, y: 200, w: 600, h: 300, rotation: 0, opacity: 1, zIndex: zBase, locked: false, ...tableDefaults(theme) } satisfies TableElement) },
     { id: "icon", label: "Icon (Star)", category: "Insert", action: () => addElement({ id: nanoid(), type: "icon", x: 200, y: 200, w: 120, h: 120, rotation: 0, opacity: 1, zIndex: zBase, locked: false, iconName: "Star", ...iconDefaults(theme) } satisfies IconElement) },
     { id: "slide", label: "New slide", category: "Slide", action: () => addSlide() },
@@ -220,10 +221,17 @@ export function CommandPalette({ open, onClose }: Props) {
     { id: "toggle-grid", label: "Toggle grid", category: "View", action: () => {
       window.dispatchEvent(new CustomEvent("folio:toggle-grid"));
     }},
-    { id: "delete-all", label: "Delete all elements on slide", category: "Edit", action: () => {
+    { id: "delete-all", label: "Delete all elements on slide", category: "Edit", action: async () => {
       const s = useEditorStore.getState();
       const slide = s.getActiveSlide();
-      if (!slide || !confirm(`Delete all ${slide.elements.length} elements?`)) return;
+      if (!slide || slide.elements.length === 0) return;
+      const ok = await useDialogStore.getState().showConfirm({
+        title: "Delete all elements",
+        message: `Delete all ${slide.elements.length} elements on this slide?`,
+        confirmLabel: "Delete all",
+        confirmVariant: "danger",
+      });
+      if (!ok) return;
       slide.elements.forEach((el) => s.deleteElement(el.id));
     }},
     { id: "match-x", label: "Match X position", category: "Align", action: () => {
@@ -343,11 +351,18 @@ export function CommandPalette({ open, onClose }: Props) {
       id: `layout-${layout.id}`,
       label: `Apply layout: ${layout.name}`,
       category: "Layout",
-      action: () => {
+      action: async () => {
         const state = useEditorStore.getState();
         const slide = state.getActiveSlide();
         if (!slide) return;
-        if (slide.elements.length > 0 && !confirm("Replace current slide content with this layout?")) return;
+        if (slide.elements.length > 0) {
+          const ok = await useDialogStore.getState().showConfirm({
+            title: "Replace content",
+            message: "Replace current slide content with this layout?",
+            confirmLabel: "Replace",
+          });
+          if (!ok) return;
+        }
         const th = state.customThemes[state.theme] ?? THEMES[state.theme] ?? THEMES["editorial-blue"];
         const elements = layout.generate(th, 1);
         const { slides, activeSlideIndex } = state;
@@ -364,9 +379,9 @@ export function CommandPalette({ open, onClose }: Props) {
     ? commands.filter((c) => c.label.toLowerCase().includes(query.toLowerCase()) || c.category.toLowerCase().includes(query.toLowerCase()))
     : commands;
 
-  function run(cmd: Command) {
-    cmd.action();
+  async function run(cmd: Command) {
     onClose();
+    await cmd.action();
   }
 
   return (

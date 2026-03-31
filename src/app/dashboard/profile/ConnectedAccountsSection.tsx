@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { GoogleLogo, GithubLogo } from "@phosphor-icons/react";
 import { createClient } from "@/lib/supabase/client";
+import { Bone } from "./ProfileSkeleton";
 
 interface Identity {
   provider: string;
@@ -70,13 +71,13 @@ export function ConnectedAccountsSection() {
 
   if (loading) return (
     <div className="space-y-4">
-      <div className="h-3 w-36 animate-pulse rounded bg-neutral-800" />
+      <Bone className="h-3 w-36" />
       {[1, 2].map((i) => (
         <div key={i} className="flex items-center gap-3 border border-neutral-800 p-4">
-          <div className="h-5 w-5 animate-pulse rounded bg-neutral-800" />
+          <Bone className="h-5 w-5" />
           <div className="space-y-1 flex-1">
-            <div className="h-3 w-16 animate-pulse rounded bg-neutral-800" />
-            <div className="h-3 w-28 animate-pulse rounded bg-neutral-800" />
+            <Bone className="h-3 w-16" />
+            <Bone className="h-3 w-28" />
           </div>
         </div>
       ))}

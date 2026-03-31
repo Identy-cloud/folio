@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { GlobeSimple } from "@phosphor-icons/react";
 import { useEditorStore } from "@/store/editorStore";
+import { useDialogStore } from "@/store/dialogStore";
 
 const LANGUAGES = [
   "English", "Spanish", "French", "German", "Italian",
@@ -30,9 +31,12 @@ export function TranslateDialog({ open, onClose }: Props) {
   async function handleTranslate() {
     if (loading || !presentationId) return;
 
-    if (!confirm(`This will translate all text to ${language}. Continue?`)) {
-      return;
-    }
+    const ok = await useDialogStore.getState().showConfirm({
+      title: "Translate presentation",
+      message: `This will translate all text to ${language}.`,
+      confirmLabel: "Translate",
+    });
+    if (!ok) return;
 
     setLoading(true);
     setError("");

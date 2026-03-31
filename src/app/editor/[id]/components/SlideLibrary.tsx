@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { nanoid } from "nanoid";
 import { X, MagnifyingGlass, BookmarkSimple, Trash, Plus } from "@phosphor-icons/react";
 import { useEditorStore } from "@/store/editorStore";
+import { useDialogStore } from "@/store/dialogStore";
 import type { SlideElement, GradientDef } from "@/types/elements";
 
 interface SavedSlide {
@@ -53,7 +54,7 @@ export function SlideLibrary({ open, onClose }: Props) {
 
   async function saveCurrent() {
     if (!activeSlide) return;
-    const cat = prompt("Category (optional):", "") ?? "";
+    const cat = await useDialogStore.getState().showPrompt({ title: "Category", message: "Category for this slide (optional):", placeholder: "Category name" }) ?? "";
     const res = await fetch("/api/slides/library", {
       method: "POST",
       headers: { "Content-Type": "application/json" },

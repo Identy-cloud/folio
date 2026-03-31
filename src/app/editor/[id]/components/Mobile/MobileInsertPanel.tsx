@@ -4,6 +4,7 @@ import { useState } from "react";
 import { nanoid } from "nanoid";
 import { TextT, Rectangle, Circle, Triangle, Image as ImageIcon, Diamond, Star, ArrowRight, Minus, LineSegment, GridNine, Smiley, VideoCamera, ImageSquare, Sparkle } from "@phosphor-icons/react";
 import { useEditorStore } from "@/store/editorStore";
+import { useDialogStore } from "@/store/dialogStore";
 import { textDefaults, shapeDefaults } from "@/lib/templates/element-defaults";
 import { THEMES } from "@/lib/templates/themes";
 import { useImageUpload } from "../../hooks/useImageUpload";
@@ -92,8 +93,8 @@ export function MobileInsertPanel({ onClose }: { onClose: () => void }) {
       }} className="flex items-center gap-2 rounded border border-neutral-700 px-4 py-3 text-sm text-neutral-200 hover:bg-neutral-800">
         <GridNine size={18} weight="regular" /> Table
       </button>
-      <button onClick={() => {
-        const url = prompt("Paste video URL (.mp4, .webm, etc.):");
+      <button onClick={async () => {
+        const url = await useDialogStore.getState().showPrompt({ title: "Video URL", message: "Paste video URL:", placeholder: ".mp4, .webm URL" });
         if (!url) return;
         addElement({ id: nanoid(), type: "video", x: 200, y: 200, w: 640, h: 360, rotation: 0, opacity: 1, zIndex: (activeSlide?.elements.length ?? 0) + 1, locked: false, src: url, ...videoDefaults() } satisfies VideoElement);
         onClose();

@@ -145,7 +145,8 @@ export default function DashboardPage() {
   }
 
   async function handleCreateFolder() {
-    const name = prompt("Folder name:");
+    const { showPrompt } = await import("@/store/dialogStore").then((m) => m.useDialogStore.getState());
+    const name = await showPrompt({ title: "New folder", message: "Enter folder name:", placeholder: "My folder" });
     if (!name?.trim()) return;
     const res = await fetch("/api/folders", {
       method: "POST",

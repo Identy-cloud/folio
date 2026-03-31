@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { CreditCard, Receipt, ArrowSquareOut } from "@phosphor-icons/react";
 import { useTranslation } from "@/lib/i18n/context";
+import { Bone } from "./ProfileSkeleton";
 
 interface BillingData {
   plan: string;
@@ -45,7 +46,15 @@ export function BillingSection() {
     if (d.url) window.location.href = d.url;
   }
 
-  if (loading) return (<div className="space-y-4"><div className="h-3 w-24 animate-pulse rounded bg-neutral-800" /><div className="border border-neutral-800 p-4 space-y-3"><div className="h-6 w-20 animate-pulse rounded bg-neutral-800" /><div className="h-3 w-32 animate-pulse rounded bg-neutral-800" /></div></div>);
+  if (loading) return (
+    <div className="space-y-4">
+      <Bone className="h-3 w-24" />
+      <div className="border border-neutral-800 p-4 space-y-3">
+        <Bone className="h-6 w-20" />
+        <Bone className="h-3 w-32" />
+      </div>
+    </div>
+  );
   if (!data) return null;
 
   const status = STATUS_LABELS[data.status] ?? STATUS_LABELS.active;

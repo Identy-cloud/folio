@@ -42,7 +42,8 @@ export function WorkspaceSwitcher({ activeId, onSelect }: WorkspaceSwitcherProps
   const active = workspaces.find((w) => w.id === activeId);
 
   async function handleCreate() {
-    const name = prompt("Workspace name:");
+    const { showPrompt } = await import("@/store/dialogStore").then((m) => m.useDialogStore.getState());
+    const name = await showPrompt({ title: "New workspace", message: "Enter workspace name:", placeholder: "Workspace name" });
     if (!name?.trim()) return;
     setCreating(true);
     const res = await fetch("/api/workspaces", {

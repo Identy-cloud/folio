@@ -12,6 +12,7 @@ import {
 import { Toaster } from "sonner";
 import { I18nProvider } from "@/lib/i18n/context";
 import { CookieBanner } from "@/components/CookieBanner";
+import { GlobalDialog } from "@/components/ui/GlobalDialog";
 import { PostHogProvider } from "@/components/PostHogProvider";
 import { ServiceWorkerRegistrar } from "@/components/ServiceWorkerRegistrar";
 import "./globals.css";
@@ -131,6 +132,7 @@ export default function RootLayout({
             Saltar al contenido
           </a>
           {children}
+          <GlobalDialog />
           <CookieBanner />
           <PostHogProvider />
           <ServiceWorkerRegistrar />
