@@ -46,17 +46,26 @@ export function PricingClient() {
   async function handleCheckout(plan: string) {
     setLoading(plan);
     try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 15_000);
       const res = await fetch("/api/stripe/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ plan, period: annual ? "annual" : "monthly" }),
+        signal: controller.signal,
       });
+      clearTimeout(timeout);
       if (res.status === 401) { router.push(`/login?redirect=/pricing`); return; }
       const data = await res.json() as { url?: string; error?: string };
-      if (data.url) { window.location.href = data.url; }
-      else { toast.error(data.error ?? "Error creating checkout session"); setLoading(null); }
-    } catch {
-      toast.error("Connection error. Please try again.");
+      if (data.url) { window.location.href = data.url; return; }
+      toast.error(data.error ?? "Error creating checkout session");
+    } catch (err) {
+      if (err instanceof DOMException && err.name === "AbortError") {
+        toast.error("Request timed out. Check your connection and try again.");
+      } else {
+        toast.error("Connection error. Please try again.");
+      }
+    } finally {
       setLoading(null);
     }
   }

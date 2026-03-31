@@ -24,7 +24,7 @@ export async function POST(request: Request) {
   }
 
   const { plan, period } = parsed.data;
-  const priceId = PRICE_IDS[`${plan}_${period}`];
+  const priceId = PRICE_IDS[`${plan}_${period}`] || "";
 
   if (!priceId) {
     return Response.json({ error: "Plan not configured" }, { status: 500 });
@@ -33,15 +33,24 @@ export async function POST(request: Request) {
   const customerId = await getOrCreateStripeCustomer(user.id, user.email);
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
-  const session = await getStripe().checkout.sessions.create({
-    mode: "subscription",
-    customer: customerId,
-    metadata: { userId: user.id, plan },
-    line_items: [{ price: priceId, quantity: 1 }],
-    success_url: `${appUrl}/dashboard?upgraded=true`,
-    cancel_url: `${appUrl}/pricing`,
-    allow_promotion_codes: true,
-  });
+  try {
+    const session = await getStripe().checkout.sessions.create({
+      mode: "subscription",
+      customer: customerId,
+      metadata: { userId: user.id, plan },
+      line_items: [{ price: priceId, quantity: 1 }],
+      success_url: `${appUrl}/dashboard?upgraded=true`,
+      cancel_url: `${appUrl}/pricing`,
+      allow_promotion_codes: true,
+    });
 
-  return Response.json({ url: session.url });
+    if (!session.url) {
+      return Response.json({ error: "Stripe did not return a checkout URL" }, { status: 502 });
+    }
+
+    return Response.json({ url: session.url });
+  } catch (err) {
+    console.error("Stripe checkout session error:", err);
+    return Response.json({ error: "Failed to create checkout session" }, { status: 502 });
+  }
 }

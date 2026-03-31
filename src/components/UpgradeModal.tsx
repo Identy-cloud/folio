@@ -32,24 +32,22 @@ export function UpgradeModal({ open, onClose, feature, requiredPlan }: Props) {
   async function handleUpgrade() {
     setLoading(true);
     try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 15_000);
       const res = await fetch("/api/stripe/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ plan: requiredPlan, period: "monthly" }),
+        signal: controller.signal,
       });
-      if (res.status === 401) {
-        router.push("/login");
-        return;
-      }
+      clearTimeout(timeout);
+      if (res.status === 401) { router.push("/login"); return; }
       const data = await res.json() as { url?: string; error?: string };
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        console.error("Stripe checkout error:", data.error);
-        setLoading(false);
-      }
+      if (data.url) { window.location.href = data.url; return; }
+      console.error("Stripe checkout error:", data.error);
     } catch (err) {
       console.error("Checkout failed:", err);
+    } finally {
       setLoading(false);
     }
   }

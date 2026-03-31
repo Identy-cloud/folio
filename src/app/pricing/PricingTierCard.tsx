@@ -111,7 +111,7 @@ export function PricingTierCard({
           <button
             onClick={() => onCheckout(plan)}
             disabled={loading !== null}
-            className={`flex w-full min-h-[48px] items-center justify-center rounded-sm text-xs font-semibold tracking-[0.2em] uppercase transition-all duration-200 active:scale-[0.98] disabled:opacity-50 ${
+            className={`flex w-full min-h-[48px] touch-manipulation select-none items-center justify-center rounded-sm text-xs font-semibold tracking-[0.2em] uppercase transition-all duration-200 active:scale-[0.98] disabled:opacity-50 ${
               highlighted
                 ? "bg-accent text-white shadow-lg shadow-accent/20 hover:bg-accent-hover hover:shadow-accent/30"
                 : "bg-slate text-silver hover:bg-steel hover:text-white"
