@@ -5,7 +5,7 @@ a, button, [role="button"], input[type="submit"], input[type="reset"], input[typ
 }
 
 :root {
-  --background: #082032;
+  --background: #1E2A3A;
   --foreground: #D2D2D2;
 
   --font-display-editorial-blue: var(--font-bebas-neue);
@@ -31,7 +31,7 @@ a, button, [role="button"], input[type="submit"], input[type="reset"], input[typ
   --font-display: var(--font-bebas-neue);
 
   /* Base palette */
-  --color-navy: #082032;
+  --color-navy: #1E2A3A;
   --color-slate: #2C394B;
   --color-steel: #334756;
   --color-silver: #D2D2D2;
@@ -45,11 +45,11 @@ body {
 }
 
 /* Gradients */
-.gradient-dark { background: linear-gradient(135deg, #082032, #2C394B); }
+.gradient-dark { background: linear-gradient(135deg, #1E2A3A, #2C394B); }
 .gradient-slate { background: linear-gradient(135deg, #2C394B, #334756); }
 .gradient-accent { background: linear-gradient(135deg, #FF4C29, #c93a1e); }
 .gradient-silver { background: linear-gradient(135deg, #D2D2D2, #a8a8a8); }
-.gradient-hero { background: linear-gradient(135deg, #082032 0%, #334756 60%, #FF4C29 100%); }
+.gradient-hero { background: linear-gradient(135deg, #1E2A3A 0%, #334756 60%, #FF4C29 100%); }
 
 /* Viewer animations */
 @keyframes fade-out {
@@ -228,6 +228,61 @@ body {
     orphans: 3;
     widows: 3;
   }
+}
+
+/* Landing page animations */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) perspective(800px) rotateX(5deg) rotateY(-3deg); }
+  50% { transform: translateY(-12px) perspective(800px) rotateX(5deg) rotateY(-3deg); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(255, 76, 41, 0.3), 0 0 40px rgba(255, 76, 41, 0.1); }
+  50% { box-shadow: 0 0 30px rgba(255, 76, 41, 0.5), 0 0 60px rgba(255, 76, 41, 0.2); }
+}
+
+@keyframes fade-up-in {
+  from { opacity: 0; transform: translateY(32px); }
+  to { opacity: 1; transform: none; }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+.animate-gradient-shift {
+  background-size: 200% 200%;
+  animation: gradient-shift 8s ease infinite;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+.fade-up-element {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-up-element.visible {
+  opacity: 1;
+  transform: none;
 }
 
 /* Accessibility: reduced motion */

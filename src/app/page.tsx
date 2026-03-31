@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import { LandingClient } from "./LandingClient";
 
 export const metadata: Metadata = {
-  title: "Folio — Editorial Slides for Agencies & Creatives",
-  description: "Create stunning editorial-style presentations with beautiful typography, agency-grade aesthetics, real-time collaboration, and public sharing. Free to start.",
-  keywords: ["presentations", "slides", "editorial design", "agency presentations", "collaboration", "portfolio", "templates"],
+  title: "Folio — Presentations crafted to impress",
+  description: "Create presentations that impress. Curated themes, precise typography, real-time collaboration, and responsive viewer. Free to start.",
+  keywords: ["presentations", "slides", "professional design", "crafted presentations", "collaboration", "portfolio", "templates"],
   openGraph: {
-    title: "Folio — Editorial Slides for Agencies & Creatives",
-    description: "Create stunning editorial-style presentations with beautiful typography, agency-grade aesthetics, and real-time collaboration.",
+    title: "Folio — Presentations crafted to impress",
+    description: "Create presentations that impress. Curated themes, precise typography, and real-time collaboration.",
     type: "website",
   },
 };
@@ -20,7 +20,7 @@ export default function LandingPage() {
     "@type": "Organization",
     name: "Folio",
     url: appUrl,
-    description: "Editorial-style presentation platform for agencies and creatives.",
+    description: "Modern presentation platform where design quality comes built-in.",
     sameAs: [],
     offers: {
       "@type": "Offer",

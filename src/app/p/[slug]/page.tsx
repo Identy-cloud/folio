@@ -81,7 +81,7 @@ export async function generateMetadata({
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "";
 
-  const description = `${data.presentation.title} — Presentación editorial creada con Folio`;
+  const description = `${data.presentation.title} — Presentación creada con Folio`;
 
   return {
     title: data.presentation.title,

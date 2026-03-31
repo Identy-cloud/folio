@@ -648,7 +648,7 @@ export function ViewerClient({ title, slides, showWatermark, presentationId, has
             onClick={(e) => e.stopPropagation()}
             className="text-[10px] text-white/30 hover:text-white/50 transition-colors sm:text-xs"
           >
-            Folio — Editorial Slides
+            Folio — Crafted to impress
           </a>
           <div className="flex items-center gap-3">
             {localForkCount > 0 && (

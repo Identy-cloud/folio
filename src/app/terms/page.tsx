@@ -32,7 +32,7 @@ export default function TermsPage() {
               1. Aceptacion de los Terminos
             </h2>
             <p>
-              Al acceder y utilizar Folio, la plataforma de presentaciones editoriales
+              Al acceder y utilizar Folio, la plataforma de presentaciones
               de Identy Cloud, aceptas quedar vinculado por estos Terminos de Servicio.
               Si no estas de acuerdo con alguno de estos terminos, no debes utilizar
               el servicio.

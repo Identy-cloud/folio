@@ -90,23 +90,23 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "Folio — Editorial Slides",
+    default: "Folio — Presentations crafted to impress",
     template: "%s | Folio",
   },
-  description: "Create stunning editorial-style presentations. Beautiful typography, agency-grade aesthetics, real-time collaboration, and public sharing.",
-  keywords: ["presentations", "slides", "editorial", "design", "agency", "collaboration", "templates", "portfolio"],
+  description: "Presentations crafted to impress. Curated themes, precise typography, real-time collaboration, and responsive viewer.",
+  keywords: ["presentations", "slides", "design", "professional", "collaboration", "templates", "portfolio", "crafted"],
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"),
   openGraph: {
     type: "website",
     siteName: "Folio",
-    title: "Folio — Editorial Slides",
-    description: "Create stunning editorial-style presentations. Beautiful typography, agency-grade aesthetics, real-time collaboration.",
+    title: "Folio — Presentations crafted to impress",
+    description: "Presentations crafted to impress. Curated themes, precise typography, real-time collaboration.",
     locale: "es_ES",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Folio — Editorial Slides",
-    description: "Create stunning editorial-style presentations with agency-grade aesthetics.",
+    title: "Folio — Presentations crafted to impress",
+    description: "Presentations crafted to impress. Curated themes, precise typography, real-time collaboration.",
   },
   manifest: "/manifest.json",
   appleWebApp: {
@@ -115,7 +115,7 @@ export const metadata: Metadata = {
     title: "Folio",
   },
   other: {
-    "theme-color": "#082032",
+    "theme-color": "#1E2A3A",
   },
 };
 
@@ -125,7 +125,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={`${fontVars} h-full antialiased`}>
+    <html lang="es" className={`${fontVars} h-full antialiased`} suppressHydrationWarning>
       <body className="min-h-full flex flex-col font-sans">
         <I18nProvider>
           <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[9999] focus:rounded focus:bg-accent focus:px-4 focus:py-2 focus:text-sm focus:text-white">

@@ -1,10 +1,10 @@
 @AGENTS.md
 
-# Editorial Slides — CLAUDE.md
+# Folio — CLAUDE.md
 
 ## Proyecto
-Plataforma web de presentaciones con estética editorial de agencia.
-Editor desktop, viewer mobile adaptativo, colaboración realtime, share links públicos.
+Plataforma web de presentaciones diseñadas para impresionar ("Presentations crafted to impress").
+Diseño profesional de serie, temas curados, tipografía precisa, colaboración realtime, viewer responsive, share links públicos.
 
 ## Mobile First — OBLIGATORIO
 - TODO componente y pantalla DEBE funcionar en mobile (375px) antes de pensar en desktop

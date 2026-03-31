@@ -3,7 +3,7 @@ import { PricingClient } from "./PricingClient";
 
 export const metadata: Metadata = {
   title: "Pricing",
-  description: "Choose the right Folio plan for your needs. Free, Creator, Studio, and Agency plans available. Start creating editorial-style presentations today.",
+  description: "Choose the right Folio plan for your needs. Free, Creator, Studio, and Agency plans available. Start creating presentations that impress.",
   openGraph: {
     title: "Pricing | Folio",
     description: "Choose the right Folio plan. Free, Creator ($19/mo), Studio ($49/mo), and Agency ($149/mo) plans.",
@@ -18,7 +18,7 @@ export default function PricingPage() {
     "@context": "https://schema.org",
     "@type": "Product",
     name: "Folio",
-    description: "Editorial-style presentation platform",
+    description: "Modern presentation platform where design quality comes built-in",
     url: `${appUrl}/pricing`,
     offers: [
       {

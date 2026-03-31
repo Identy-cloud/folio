@@ -51,7 +51,7 @@ export function welcomeHtml(name: string): string {
     "Welcome to Folio",
     heading(`Welcome, ${name}!`) +
       paragraph(
-        "Folio is where editorial-quality presentations come to life. Create, collaborate, and share with a single link."
+        "Folio is where presentations are crafted to impress. Create, collaborate, and share with a single link."
       ) +
       paragraph("Start by creating your first presentation from the dashboard.") +
       button(`${APP_URL}/dashboard`, "Go to Dashboard")
