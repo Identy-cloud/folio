@@ -54,12 +54,11 @@ export default function LoginPage() {
     }
   }
 
-  async function handlePasswordReset() {
-    if (!email) { setError(t.auth.enterEmail); return; }
+  async function handlePasswordReset(resetEmail: string) {
     setError(null);
     setLoading(true);
     const supabase = createClient();
-    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+    const { error: resetError } = await supabase.auth.resetPasswordForEmail(resetEmail, {
       redirectTo: `${window.location.origin}/auth/callback`,
     });
     setLoading(false);

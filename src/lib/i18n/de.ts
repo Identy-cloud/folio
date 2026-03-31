@@ -31,6 +31,8 @@ export const de = {
     enterEmail: "Gib zuerst deine Email ein",
     resetSent: "Prüfe deine Email, um dein Passwort zurückzusetzen",
     forgotPassword: "Passwort vergessen",
+    forgotDescription: "Gib deine Email ein und wir senden dir einen Link zum Zurücksetzen deines Passworts.",
+    sendResetLink: "Link senden",
     termsPrefix: "Mit der Erstellung eines Kontos akzeptierst du die",
     termsLink: "Nutzungsbedingungen",
     termsAnd: "und die",

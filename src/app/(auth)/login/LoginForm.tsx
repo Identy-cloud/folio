@@ -1,7 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import { GithubLogo, GoogleLogo } from "@phosphor-icons/react";
+import { GithubLogo, GoogleLogo, ArrowLeft } from "@phosphor-icons/react";
 import type { Dictionary } from "@/lib/i18n/es";
 
 interface Props {
@@ -18,7 +19,7 @@ interface Props {
   termsAccepted: boolean;
   setTermsAccepted: (v: boolean) => void;
   onSubmit: (e: React.FormEvent) => void;
-  onPasswordReset: () => void;
+  onPasswordReset: (email: string) => void;
   onGoogleLogin: () => void;
   onGitHubLogin: () => void;
   t: Dictionary;
@@ -33,6 +34,87 @@ export function LoginForm({
   loading, termsAccepted, setTermsAccepted,
   onSubmit, onPasswordReset, onGoogleLogin, onGitHubLogin, t,
 }: Props) {
+  const [forgotMode, setForgotMode] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+
+  function enterForgotMode() {
+    setForgotMode(true);
+    setResetEmail(email);
+    setError(null);
+  }
+
+  function exitForgotMode() {
+    setForgotMode(false);
+    setError(null);
+  }
+
+  function handleResetSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!resetEmail.trim()) return;
+    onPasswordReset(resetEmail.trim());
+  }
+
+  if (forgotMode) {
+    return (
+      <div className="flex w-full flex-col items-center justify-center px-6 pt-20 pb-8 lg:w-1/2 lg:px-16 lg:pt-0">
+        <div className="w-full max-w-sm animate-slide-in">
+          <button
+            onClick={exitForgotMode}
+            className="mb-6 flex items-center gap-1.5 text-xs text-steel transition-colors hover:text-navy"
+          >
+            <ArrowLeft size={14} />
+            {t.auth.login}
+          </button>
+
+          <h2 className="font-display text-4xl tracking-tight text-navy sm:text-5xl">
+            {t.auth.forgotPassword}
+          </h2>
+          <div className="mt-2 h-px w-8 bg-accent" />
+          <p className="mt-4 text-sm text-slate">
+            {t.auth.forgotDescription ?? "Enter your email and we'll send you a link to reset your password."}
+          </p>
+
+          <form onSubmit={handleResetSubmit} className="mt-8 space-y-5">
+            <div>
+              <label className="mb-1.5 block text-[11px] font-medium tracking-wide text-steel uppercase">{t.auth.email}</label>
+              <input
+                type="email"
+                value={resetEmail}
+                onChange={(e) => setResetEmail(e.target.value)}
+                required
+                autoFocus
+                aria-label={t.auth.email}
+                className={inputCls}
+              />
+            </div>
+
+            {error && (
+              <div className="animate-slide-in flex items-start gap-2.5 rounded-sm border border-red-200 bg-red-50 px-4 py-3" role="alert">
+                <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-red-500" />
+                <p className="text-xs leading-relaxed text-red-600">{error}</p>
+              </div>
+            )}
+            {success && (
+              <div className="animate-slide-in flex items-start gap-2.5 rounded-sm border border-green-200 bg-green-50 px-4 py-3" role="status">
+                <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-green-500" />
+                <p className="text-xs leading-relaxed text-green-600">{success}</p>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading || !resetEmail.trim()}
+              className="mt-2 flex w-full min-h-[48px] items-center justify-center gap-2 rounded-sm bg-accent py-3 text-xs font-semibold tracking-[0.2em] text-white uppercase transition-all duration-200 hover:bg-accent-hover active:scale-[0.98] disabled:opacity-40"
+            >
+              {loading && <span className="h-3.5 w-3.5 rounded-full border-2 border-white/30 border-t-white animate-btn-spin" />}
+              {loading ? "" : (t.auth.sendResetLink ?? "Send reset link")}
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex w-full flex-col items-center justify-center px-6 pt-20 pb-8 lg:w-1/2 lg:px-16 lg:pt-0">
       <div className="w-full max-w-sm animate-slide-in">
@@ -112,7 +194,7 @@ export function LoginForm({
           </button>
 
           {!isSignUp && (
-            <button type="button" onClick={onPasswordReset} className="w-full py-2 text-xs text-steel transition-colors hover:text-accent">
+            <button type="button" onClick={enterForgotMode} className="w-full py-2 text-xs text-steel transition-colors hover:text-accent">
               {t.auth.forgotPassword}
             </button>
           )}

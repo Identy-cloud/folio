@@ -31,6 +31,8 @@ export const pt = {
     enterEmail: "Introduz o teu email primeiro",
     resetSent: "Verifica o teu email para redefinir a tua palavra-passe",
     forgotPassword: "Esqueci a minha palavra-passe",
+    forgotDescription: "Introduz o teu email e enviaremos um link para redefinir a tua palavra-passe.",
+    sendResetLink: "Enviar link",
     termsPrefix: "Ao criar uma conta aceitas os",
     termsLink: "Termos de Serviço",
     termsAnd: "e a",

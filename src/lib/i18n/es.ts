@@ -29,6 +29,8 @@ export const es = {
     enterEmail: "Ingresa tu email primero",
     resetSent: "Revisa tu email para restablecer tu contraseña",
     forgotPassword: "He olvidado mi contraseña",
+    forgotDescription: "Introduce tu email y te enviaremos un enlace para restablecer tu contraseña.",
+    sendResetLink: "Enviar enlace",
     termsPrefix: "Al crear una cuenta aceptas los",
     termsLink: "Términos de Servicio",
     termsAnd: "y la",

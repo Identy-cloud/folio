@@ -31,6 +31,8 @@ export const en = {
     enterEmail: "Enter your email first",
     resetSent: "Check your email to reset your password",
     forgotPassword: "Forgot my password",
+    forgotDescription: "Enter your email and we'll send you a link to reset your password.",
+    sendResetLink: "Send reset link",
     termsPrefix: "By creating an account you accept the",
     termsLink: "Terms of Service",
     termsAnd: "and the",

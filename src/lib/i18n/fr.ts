@@ -31,6 +31,8 @@ export const fr = {
     enterEmail: "Entrez d'abord votre email",
     resetSent: "Vérifiez votre email pour réinitialiser votre mot de passe",
     forgotPassword: "J'ai oublié mon mot de passe",
+    forgotDescription: "Entrez votre email et nous vous enverrons un lien pour réinitialiser votre mot de passe.",
+    sendResetLink: "Envoyer le lien",
     termsPrefix: "En créant un compte, vous acceptez les",
     termsLink: "Conditions d'utilisation",
     termsAnd: "et la",
