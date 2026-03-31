@@ -45,7 +45,8 @@ export function BillingSection() {
     if (d.url) window.location.href = d.url;
   }
 
-  if (loading || !data) return null;
+  if (loading) return (<div className="space-y-4"><div className="h-3 w-24 animate-pulse rounded bg-neutral-800" /><div className="border border-neutral-800 p-4 space-y-3"><div className="h-6 w-20 animate-pulse rounded bg-neutral-800" /><div className="h-3 w-32 animate-pulse rounded bg-neutral-800" /></div></div>);
+  if (!data) return null;
 
   const status = STATUS_LABELS[data.status] ?? STATUS_LABELS.active;
 

@@ -19,6 +19,7 @@ import { SecuritySection } from "./SecuritySection";
 import { SessionsSection } from "./SessionsSection";
 import { DataPrivacySection } from "./DataPrivacySection";
 import { DangerZone } from "./DangerZone";
+import { ProfileSkeleton } from "./ProfileSkeleton";
 
 interface Profile {
   id: string;
@@ -54,7 +55,7 @@ export default function ProfilePage() {
     setProfile((p) => (p ? { ...p, ...data } : p));
   }, []);
 
-  if (loading) return <div className="flex items-center justify-center py-32"><span className="text-sm text-neutral-500">{t.common.loading}</span></div>;
+  if (loading) return <ProfileSkeleton />;
   if (!profile) return <div className="flex items-center justify-center py-32"><span className="text-sm text-red-400">{t.common.error}</span></div>;
 
   return (

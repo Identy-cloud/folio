@@ -68,7 +68,20 @@ export function ConnectedAccountsSection() {
     setBusy(null);
   }
 
-  if (loading) return null;
+  if (loading) return (
+    <div className="space-y-4">
+      <div className="h-3 w-36 animate-pulse rounded bg-neutral-800" />
+      {[1, 2].map((i) => (
+        <div key={i} className="flex items-center gap-3 border border-neutral-800 p-4">
+          <div className="h-5 w-5 animate-pulse rounded bg-neutral-800" />
+          <div className="space-y-1 flex-1">
+            <div className="h-3 w-16 animate-pulse rounded bg-neutral-800" />
+            <div className="h-3 w-28 animate-pulse rounded bg-neutral-800" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
 
   return (
     <div className="space-y-4">
