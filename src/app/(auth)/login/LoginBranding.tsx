@@ -1,6 +1,7 @@
 "use client";
 
 import { Notebook } from "@phosphor-icons/react";
+import { LocaleSelector } from "@/components/LocaleSelector";
 
 interface Props {
   subtitle: string;
@@ -10,9 +11,12 @@ export function LoginBranding({ subtitle }: Props) {
   return (
     <>
       {/* Mobile branding header */}
-      <div className="absolute inset-x-0 top-0 z-10 flex items-center gap-2 px-6 py-5 lg:hidden">
-        <Notebook size={24} weight="duotone" className="text-navy" />
-        <span className="font-display text-xl tracking-tight text-navy">FOLIO</span>
+      <div className="absolute inset-x-0 top-0 z-10 flex items-center justify-between px-6 py-5 lg:hidden">
+        <div className="flex items-center gap-2">
+          <Notebook size={24} weight="duotone" className="text-navy" />
+          <span className="font-display text-xl tracking-tight text-navy">FOLIO</span>
+        </div>
+        <LocaleSelector />
       </div>
 
       {/* Desktop branding panel */}

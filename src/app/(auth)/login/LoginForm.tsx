@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { GithubLogo, GoogleLogo, ArrowLeft } from "@phosphor-icons/react";
+import { LocaleSelector } from "@/components/LocaleSelector";
 import type { Dictionary } from "@/lib/i18n/es";
 
 interface Props {
@@ -56,7 +57,10 @@ export function LoginForm({
 
   if (forgotMode) {
     return (
-      <div className="flex w-full flex-col items-center justify-center px-6 pt-20 pb-8 lg:w-1/2 lg:px-16 lg:pt-0">
+      <div className="relative flex w-full flex-col items-center justify-center px-6 pt-20 pb-8 lg:w-1/2 lg:px-16 lg:pt-0">
+        <div className="absolute right-6 top-5 hidden lg:block">
+          <LocaleSelector />
+        </div>
         <div className="w-full max-w-sm animate-slide-in">
           <button
             onClick={exitForgotMode}
@@ -116,7 +120,10 @@ export function LoginForm({
   }
 
   return (
-    <div className="flex w-full flex-col items-center justify-center px-6 pt-20 pb-8 lg:w-1/2 lg:px-16 lg:pt-0">
+    <div className="relative flex w-full flex-col items-center justify-center px-6 pt-20 pb-8 lg:w-1/2 lg:px-16 lg:pt-0">
+      <div className="absolute right-6 top-5 hidden lg:block">
+        <LocaleSelector />
+      </div>
       <div className="w-full max-w-sm animate-slide-in">
         <div className="mb-10">
           <h2 className="font-display text-4xl tracking-tight text-navy sm:text-5xl">

@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "@/lib/i18n/context";
 import { Notebook } from "@phosphor-icons/react";
+import { LocaleSelector } from "@/components/LocaleSelector";
 import { LoginBranding } from "../login/LoginBranding";
 
 function SuccessCheckmark() {
@@ -45,7 +46,10 @@ export default function ResetPasswordPage() {
     <div className="flex min-h-screen bg-white">
       <LoginBranding subtitle={t.auth.subtitle} />
 
-      <div className="flex w-full flex-col items-center justify-center px-6 py-12 lg:w-1/2 lg:px-16">
+      <div className="relative flex w-full flex-col items-center justify-center px-6 py-12 lg:w-1/2 lg:px-16">
+        <div className="absolute right-6 top-5 hidden lg:block">
+          <LocaleSelector />
+        </div>
         <div className="mb-10 flex items-center gap-2 lg:hidden">
           <Notebook size={24} weight="duotone" className="text-navy" />
           <span className="font-display text-xl tracking-tight text-navy">FOLIO</span>
